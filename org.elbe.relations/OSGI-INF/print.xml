@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.elbe.relations.print">
+   <implementation class="org.elbe.relations.internal.controller.PrintServiceController"/>
+   <reference cardinality="0..n" bind="register" unbind="unregister" interface="org.elbe.relations.services.IPrintService" name="IPrintService" policy="dynamic"/>
+   <service>
+      <provide interface="org.elbe.relations.internal.controller.PrintServiceController"/>
+   </service>
+</scr:component>

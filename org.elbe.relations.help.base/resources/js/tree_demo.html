@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>Tree Demo jsQuery</title>
+
+	<script src="../js/jquery-1.9.1.min.js" type="text/javascript"></script>
+	<script src="../js/jquery.treeview.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="../css/jquery.treeview.css" />
+	<link rel="stylesheet" href="../css/screen.css" />
+
+</head>
+<body>
+
+	<h1>Tree View</h1>
+
+	<ul id="browser" class="filetree">
+		<li><span class="toc">Folder 1</span>
+			<ul>
+				<li><span class="file">Item 1.1</span></li>
+			</ul>
+		</li>
+		<li><span class="toc">Folder 2</span>
+			<ul>
+				<li><span class="toc">Subfolder 2.1</span>
+					<ul id="folder21">
+						<li><span class="file">File 2.1.1</span></li>
+						<li><span class="file">File 2.1.2</span></li>
+					</ul>
+				</li>
+				<li><span class="file">File 2.2</span></li>
+			</ul>
+		</li>
+		<li class="closed"><span class="toc">Folder 3 (closed at start)</span>
+			<ul>
+				<li><span class="file">File 3.1</span></li>
+			</ul>
+		</li>
+		<li><span class="file">File 4</span></li>
+	</ul>
+	
+	<script>
+	$(document).ready(function(){
+		$("#browser").treeview();
+	});	
+	</script>
+
+</body>
+</html>

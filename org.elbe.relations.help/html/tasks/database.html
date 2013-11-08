@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Database backup, restore and import</title>
+  <link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css">
+</head>
+<body>
+<h1>Database backup, restore and import</h1>
+
+
+<p>The Relations application stores the entered information in an
+embedded database. This means, the database lives in the same thread in
+the memory as the application lives, it is started up when you start
+the application and shuted down when you close the application.</p>
+
+
+<p>By default, the data you create is stored in a database named
+"default_db". However, you can create <a href="../tasks/data_source.html">new embedded databases</a>
+to use them afterwards. Distinct from external databases you can delete embedded databases
+you have created e.g. for testing purposes.</p>
+
+
+<h3>Backup of an embedded database</h3>
+
+
+<p>To make the data you enter persistent, the embedded databases
+("default_db" and the embedded databases you
+create) save their data in various folders in the file system. These
+folders are subfolder of a folder&nbsp;named "data" which again is
+contained in the&nbsp;application's workspace. By default, the
+applications <a href="../concepts/workspace.html">workspace</a> is a folder named
+"workspace" that is a subfolder of the folder where you placed the
+Relations application.</p>
+
+<p>A backup of such an embedded database is simply a zip archive of
+such a folder created and stored somewhere in your file system or on
+a backup medium.</p>
+
+<p>You can create such a backup archive using the export wizard <i>Backup data</i>.
+To do this, start the <b>Export...</b> wizard from the
+<b>Data</b> menu and select <i>Backup data</i>. The dialog page
+displayed after allows you to enter the Zip file where the embedded database
+is backuped. Note: You're not allowed to overwrite an existing backup archive.</p>
+
+<p><img src="../img/export_backup.gif" alt="Wizard for data backup" /></p>
+
+<p style="font-style: italic;">Export wizard for data backup.</p>
+
+<h3>Restoring the state of an embedded database</h3>
+
+<p>Restoring the database state is the inverse process: The import wizard
+overwrites the folder of an embedded database with a backuped copy of this
+folder. Start the <b>Import...</b> wizard from the <b>Data</b> menu and
+select <i>Restore data</i>.
+Select the backup archive containing the database state you want to restore.
+(Note that the archive has to contain a state of the database you are actually
+working with.)
+Most probably you want to synchronize the search index with the restored
+state of the database, therefore, tick the according checkbox.</p>
+
+<p><img src="../img/import_restore.gif" alt="Restore database" /></p>
+<p style="font-style: italic;">Import wizard for data restore.</p>
+
+<p>For that the restored database state becomes effective, the application has to
+be restarted. Therefore, the application asks you to restart after the restore
+has been completed.</p>
+
+
+<h3>Importing the backuped contend of an embedded database</h3>
+
+<p>Instead of restoring the state of an embedded database, you can use the backup of such a database
+to import data to a different embedded database. This new database might be
+managed by the same Relations application as well as a Relations application
+running on a completely different computer. To do this, start the <b>Import...</b> wizard
+from the <b>Data</b> menu and select <i>Import database</i>.</p>
+
+<p><img src="../img/import_db.gif" alt="Import database" /></p>
+<p style="font-style: italic;">Import wizard for database import.</p>
+
+<p>Name the new database you want to create and fill with the content of the exportet database.
+(Note: you can't choose the name of an existing database catalog.)
+Then select the backup archive containing the exportet database.
+Most probably you want to create a search index for the imported the database,
+therefore, tick the according checkbox.
+After clicking the "Finish" button, the application starts importing,
+then changes to the imported database and creates the search index if requested.</p>
+
+<img src="../img/ngrelc.png" alt="Related concepts"><br>
+
+<ul>
+  <li><a href="../concepts/wizards.html">Wizards to create items and databases</a></li>
+  <li><a href="../concepts/workspace.html">Workspace</a></li>
+</ul>
+
+<img src="../img/ngrelt.png" alt="Related tasks"><br>
+
+<ul>
+  <li><a href="data_source.html">Creating and connecting a different data source</a></li>
+  <li><a href="reindex_database.html">Reindexing the database</a></li>
+</ul>
+<p></p>
+
+</body>
+</html>

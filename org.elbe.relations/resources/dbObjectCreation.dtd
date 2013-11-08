@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT Create (Table+, Index*)>
+<!ELEMENT Table (Field*, PrimaryKey, Key*, Index*) >
+<!ATTLIST Table name CDATA #REQUIRED>
+<!ELEMENT Field EMPTY>
+<!ATTLIST Field name CDATA #REQUIRED>
+<!ATTLIST Field type (string | clob | blob | integer | tinyinteger | biginteger | real | double | float | decimal | date | time | timestamp) #REQUIRED>
+<!ATTLIST Field size CDATA #IMPLIED>
+<!ATTLIST Field nullable (yes | no) #IMPLIED>
+<!ATTLIST Field default CDATA #IMPLIED>
+<!ATTLIST Field auto_increment (yes | no) #IMPLIED>
+<!ATTLIST Field unsigned (yes | no) #IMPLIED>
+<!ELEMENT PrimaryKey (Column+)>
+<!ELEMENT Column EMPTY>
+<!ATTLIST Column name CDATA #REQUIRED>
+<!ELEMENT Key (Column+)>
+<!ATTLIST Key name CDATA #REQUIRED>
+<!ELEMENT Index (Column+)>
+<!ATTLIST Index name CDATA #REQUIRED>
+<!ATTLIST Index tablename CDATA #REQUIRED>

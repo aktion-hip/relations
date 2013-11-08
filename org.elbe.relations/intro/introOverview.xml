@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<introContent>
+  	<extensionContent id="org.elbe.relations.introExtensionOverview" name="Relations overview" style="css/relations.css" path="overview/@">
+		<group style-id="content-group" id="org.elbe.relations-introLink-group">
+			<link label="Relations application" id="relations-introLink" style-id="content-link">
+          		<text>The Relations application is a tool for knowledge management. It is a combination of a personal Wiki and an electronic slip box.
+You can easily create items of three types (terms, texts and persons) and set them in relation to other items already entered, 
+thus creating a rich context for your items. </text>
+       		</link>
+       	</group>
+  		<group style-id="content-group" id="org.elbe.relations-introLink-addition">
+  			<hr />
+  			<text>To start working with the Relations application, click 'Workbench' or close this welcome page.</text>  			
+  		</group>
+  	</extensionContent>
+</introContent>

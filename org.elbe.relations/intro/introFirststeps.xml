@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<introContent>
+  	<extensionContent id="org.elbe.relations.introExtensionFirststeps" name="Relations first steps" style="css/relations.css" path="firststeps/@">
+		<group style-id="content-group" id="org.elbe.relations-introLink-group">
+			<link label="Click to show the help topic 'Getting started with Relations'" id="relations-introLink"  style-id="content-link"
+       			url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.elbe.relations.help/html/gettingstarted/index.html" />       		
+       	</group>
+  		<group style-id="content-group" id="org.elbe.relations-introLink-addition">
+  			<hr />
+  			<text>To start working with the Relations application, click 'Workbench' or close this welcome page.</text>  			
+  		</group>
+  	</extensionContent>
+</introContent>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Tasks" link_to="toc.xml#tasks">
+	<topic label="Creating items"  href="html/gettingstarted/creating_items.html" />
+	<topic label="Creating relations" href="html/gettingstarted/creating_relations.html" />
+	<topic label="Editing items" href="html/gettingstarted/editing_items.html" />
+	<topic label="Adding styles" href="html/tasks/styles.html" />
+	<topic label="Managing the item&#39;s context" href="html/gettingstarted/editing_context.html" />
+	<topic label="Printing items" href="html/tasks/print.html" />
+	<topic label="Changing the data source" href="html/tasks/data_source.html" />
+	<topic label="Reindexing the database" href="html/tasks/reindex_database.html" />
+	<topic label="Backup, restore and import" href="html/tasks/database.html" />
+	<topic label="Export to XML and import" href="html/tasks/xml_export.html"/>
+	<topic label="BibTEX export" href="html/tasks/export_bibtex.html" />
+	<topic label="Software update" href="html/tasks/update.html" />
+	<topic label="Working with views" href="html/tasks/views.html" />
+	<topic label="Modifying shortcut keys" href="html/tasks/modify_keys.html" />
+</toc>

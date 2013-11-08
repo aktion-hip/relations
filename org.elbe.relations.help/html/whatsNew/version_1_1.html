@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>What's New in Relations 1.1</title>
+  <link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css">
+  <style type="text/css">
+	  td {border-top: solid thin black;}
+	  td table tbody tr td {border-top: none;} /* no border for nested tables */
+	  img[alt] {background-color:#ffdddd;}
+	  tr {vertical-align: top;}
+	  ul {padding-left: 1.2em;}
+  </style>
+</head>
+<body>
+	<h2>What's New in Relations 1.1</h2>
+	
+<table cellpadding="10" cellspacing="0" width="600" summary="New and noteworthy items">
+  <colgroup>
+  <col width="30%">
+  <col width="70%">
+  </colgroup>
+  <tbody>  
+  <tr>
+    <td><p align="right"><b>Added export/backup of content to XML file</b></p></td>
+    <td>
+      <p>You can use the <b>Export to XML file</b> wizard to export the application's content to a file in a future proof XML format. 
+	  You can use this export as backup for the actual database used by the application or to transfer the content to another Relations database. 
+	  You might even apply an XSL transformation and use the exported data in a completely different application. 
+	  </p>	  
+	  <p align="center"><img src="../img/wizard_export.gif" alt="Export wizards" border="0"/>
+	  </p>
+    </td>
+  </tr>
+  <tr>
+  	<td><p align="right"><b>Added import/restore of content from XML file</b></p></td>
+	<td>
+		<p>You can import the XML export into a new database catalog. You can import both in an embedded or an external database. 
+		To start the XML import, call the <b>Import...</b> wizard from the <b>Data</b> menu and select <i>Import from XML File</i>.
+		</p>
+		<p align="center"><img src="../img/import_xml.gif" alt="Import wizard" border="0" /></p>
+	</td>
+  </tr>
+  <tr>
+  	<td><p align="right"><b>Creating new catalogs in all databases</b></p></td>
+	<td>
+		<p>Relations 1.1 makes it possible to create the set of tables needed to hold the data not only for the embedded database,
+		but for all databases (provided that a plug-in to connect to the respective RDMS exists).</p>
+		<p>
+		In particular, you can easily create the Relations table set in a MySQL database now.
+		The only thing you have to do is to create a "MySQL database" (a database catalog, to be correct) and to specify a
+		user having the rights to create and modify table items on this catalog.
+		</p>
+		<p align="center"><img src="../img/wizard_new_db.gif" alt="New Database wizard" border="0" /></p>
+	</td>
+  </tr>
+
+  </tbody>
+ </table>	
+</body>
+</html>

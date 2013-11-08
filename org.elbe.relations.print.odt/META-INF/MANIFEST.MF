@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: OpenOffice Print-out Plug-in for Relations application
+Bundle-SymbolicName: org.elbe.relations.print.odt
+Bundle-Version: 1.2.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.elbe.relations.services,
+ org.elbe.relations.utility
+Bundle-Vendor: RelationWare
+Service-Component: OSGI-INF/print.xml

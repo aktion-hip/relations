@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Lucene Indexer Plug-in
+Bundle-SymbolicName: org.elbe.relations.indexer.lucene
+Bundle-Version: 1.0.2
+Bundle-Vendor: RelationWare
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: lib/lucene-analyzers-2.4.0.jar,
+ lib/lucene-core-2.4.0.jar,
+ .
+Import-Package: org.elbe.relations.data.search,
+ org.elbe.relations.data.utility,
+ org.elbe.relations.search,
+ org.hip.kernel.exc
+Service-Component: OSGI-INF/indexerService.xml

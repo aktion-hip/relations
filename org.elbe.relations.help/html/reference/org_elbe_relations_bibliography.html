@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+
+  <title>Bibliography</title>
+  <link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css">
+
+  <link rel="STYLESHEET" href="../css/schema.css" charset="ISO-8859-1" type="text/css">
+</head>
+
+
+<body>
+
+<h1>
+<center>Bibliography</center>
+</h1>
+
+<p></p>
+
+<h6 class="CaptionFigColumn" id="header">Identifier: </h6>
+org.elbe.relations.bibliography
+<p></p>
+
+<h6 class="CaptionFigColumn" id="header">Since: </h6>
+0.9
+<p></p>
+
+
+<p>
+</p>
+<h6 class="CaptionFigColumn" id="header">Description: </h6>
+This extension point allows to plug-in schemes to format bibliographical information (i.e. <i>Text</i> items) into a specified format for that it can be used in a bibliography.
+<p></p>
+
+<p></p>
+<h6 class="CaptionFigColumn" id="header">Configuration Markup:</h6>
+<p></p>
+
+<p class="code" id="dtd">&lt;!ELEMENT <a name="e.extension">extension</a> (<a href="#e.bibliography">bibliography</a>)&gt;</p>
+
+<p class="code" id="dtd">&lt;!ATTLIST extension</p>
+
+<p class="code" id="dtdAttlist">point&nbsp;CDATA #REQUIRED</p>
+<p class="code" id="dtdAttlist">id&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED</p>
+<p class="code" id="dtdAttlist">name&nbsp;&nbsp;CDATA #IMPLIED&gt;</p>
+
+<p></p>
+
+<ul class="ConfigMarkup" id="attlistDesc">
+
+</ul>
+
+<br>
+<p class="code" id="dtd">&lt;!ELEMENT <a name="e.bibliography">bibliography</a> EMPTY&gt;</p>
+
+<p class="code" id="dtd">&lt;!ATTLIST bibliography</p>
+
+<p class="code" id="dtdAttlist">id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED</p>
+<p class="code" id="dtdAttlist">bibliographyName&nbsp;CDATA #REQUIRED</p>
+<p class="code" id="dtdAttlist">class&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED&gt;</p>
+
+<p></p>
+
+<ul class="ConfigMarkup" id="attlistDesc">
+
+  <li><b>id</b> - a unique name that will be used to identify this bibliography schema</li>
+
+  <li><b>bibliographyName</b> - name of the bibliography schema.</li>
+
+  <li><b>class</b> - a fully qualified name of the class that implements <code>org.elbe.relations.IBibliography</code>.</li>
+
+</ul>
+
+<br>
+<h6 class="CaptionFigColumn" id="header">Examples: </h6>
+A bibliography scheme extension's <code>plugin.xml</code> may look as follows:
+
+<pre><p class="code" id="tag">&lt;plugin&gt;</p>
+   <p class="code" id="tag">&lt;extension<br>         point=</p><p class="code" id="cstring">"org.elbe.relations.bibliography"</p><p class="code" id="tag">&gt;</p>
+      <p class="code" id="tag">&lt;bibliography<br>            bibliographyName=</p><p class="code" id="cstring">"MyBibliography (en)"</p><p class="code" id="tag">
+            class=</p><p class="code" id="cstring">"org.xyz.biblio.MyBiblioEn"</p><p class="code" id="tag">
+            id=</p><p class="code" id="cstring">"mybiblio.en"</p><p class="code" id="tag">/&gt;</p>
+   <p class="code" id="tag">&lt;/extension&gt;</p>
+<p class="code" id="tag">&lt;/plugin&gt;</p>
+</pre>
+
+<p></p>
+
+
+<h6 class="CaptionFigColumn" id="header">API Information: </h6>
+The value of the <code>class</code> attribute must be a fully qualified name of the class that implements 
+<code>org.elbe.relations.IBibliography</code>. Developers of a bibliography plug-in may subclass <code>org.elbe.relations.utility.AbstractBibliography</code>.
+<p></p>
+
+
+<h6 class="CaptionFigColumn" id="header">Supplied Implementation: </h6>
+An example of an extension for the <code>Bibliography</code> extension point is the <code>org.elbe.relations.biblio.dft</code> plug-in.
+<p></p>
+
+
+<br>
+
+<p class="note" id="copyright">
+&copy; 2006, RelationWare, Benno Luthiger
+</p>
+<p></p>
+
+
+<p></p>
+
+</body>
+</html>

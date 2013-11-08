@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Relations Help" topic="html/index.html">
+   <topic label="Getting Started" href="html/gettingstarted/index.html">
+	  <link toc="tocgettingstarted.xml" />
+   </topic>
+   <topic label="Concepts" href="html/concepts/index.html">
+	  <link toc="tocconcepts.xml" />
+   </topic>
+   <topic label="Tasks" href="html/tasks/index.html">
+	  <link toc="toctasks.xml" />
+   </topic>
+   <topic label="Reference" href="html/reference/index.html">
+	  <link toc="tocreference.xml" />
+   </topic>
+   <topic label="What's New" href="html/whatsNew/index.html">
+   	  <link toc="tocwhatsNew.xml" />
+   	</topic>
+</toc>

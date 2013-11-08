@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css" />
+<link rel="STYLESHEET" href="../css/schema.css" charset="ISO-8859-1" type="text/css" />
+<title>Extending the PrintOut</title>
+</head>
+
+<body>
+<h1>Creating new Print-out Plug-ins</h1>
+
+<p>The Relations application provides the possibility to print out the content
+of selected items to a document where the content can be processed further. 
+To this effect, the application provides the <code>org.elbe.relations.printOut</code>
+extension point and two plug-ins that implement this extension point:</p>
+<ul>
+<li>a <i>default</i> print-out plug-in that prints the content to a simple text file</li>
+<li>a print-out plug-in that prints the content to an OpenOffice wirter document</li>
+</ul>
+<p>Print-out of the application's content is done using XSL transformation. Additional
+print-out targets (i.e. plug-ins implementing the print-out extension point) are conceivable, 
+e.g. a print-out to html or LaTEX.</p>
+
+<p>This document describes how the Relations application can be extended by
+adding a new print-out plug-in, i.e. by providing additional extensions to the 
+<code>org.elbe.relations.printOut</code> extension point.</p>
+
+<p>Print-out plug-ins must implement the <code>org.elbe.relations.print.IPrintOut</code> interface.
+The easiest way to realize this implementation class is by deriving from 
+<code>org.elbe.relations.print.AbstractPrintOut</code>. This abstract class provides the
+framework for XSL transformation that your plug-in can hook into.</p>
+
+<p>By deriving from <code>AbstractPrintOut</code>, you have to provide two XSLT files.
+The first transforms the frame of the whole document whereas the second transforms
+the content of the selected items. The names of the XSLT files are communicated to
+the application through the methods <code>getXSLNameBody()</code> and
+ <code>getXSLNameContent()</code>.</p>
+
+<h6 class=CaptionFigColumn id=header>XSL for the document body</h6>
+
+<p>The XSL transformation for the print-out's document body is done once per print-out.
+With this transformation, you can format the document title, sub-title as well as footer etc.</p>
+
+<p>The DTD of the XML you transform with the XSL for the document body
+looks as follows:</p>
+
+<p class="code" id="dtd">&lt;!ELEMENT docBody (docTitle, docSubTitle) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT docTitle (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT docSubTitle (#PCDATA) &gt;</p>
+
+<p>Here is a sample XML:</p>
+
+<pre>
+<p class=code id=tag>&lt;?xml version=<p class=code id=cstring>&quot;1.0&quot;</p><p class=code id=tag> encoding=<p class=code id=cstring>&quot;UTF-8&quot;</p><p class=code id=tag>?&gt;</p>
+<p class=code id=tag>&lt;docBody&gt;</p>
+  <p class=code id=tag>&lt;docTitle&gt;</p>Print-out of Relations application<p class=code id=tag>&lt;/docTitle&gt;</p>
+  <p class=code id=tag>&lt;docSubTitle&gt;</p>from "Embedded: default_db", Date: 2007/10/14<p class=code id=tag>&lt;/docSubTitle&gt;</p>
+<p class=code id=tag>&lt;/docBody&gt;</p>
+</pre>
+
+<h6 class=CaptionFigColumn id=header>XSL for the item content</h6>
+
+<p>To print out the selected items' content, a different XSL tranformation is performed. 
+The XSL stylesheet for this transformation ist announced through <code>getXSLNameContent()</code>.
+The XML formatted content transformed by this XSL conforms to the following DTD:</p>
+
+<p class="code" id="dtd">&lt;!ELEMENT Item (Term?, JoinRelatedTerm?, Text?, JoinRelatedText?, Person?, JoinRelatedPerson?, related?) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Term (propertySet)&gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT JoinRelatedTerm (propertySet) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT JoinRelatedText (propertySet) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Person (propertySet) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT JoinRelatedPerson (propertySet) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT propertySet (ID, Title?, Text, Modified, Created, Type?, Author?, CoAuthors?, Subtitle?, Year?, Number?, Volume?, Pages?, Publication?, Publisher?, Place?, Name?, Firstname?, From?, To?) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Text (#PCDATA | para | ul | ol_number | ol_upper | ol_lower | propertySet)* &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT para (#PCDATA | b | i | u)* &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT b (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT i (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT u (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT ul (li*) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST ul indent CDATA #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT li (#PCDATA | b | i | u | ul | ol_number | ol_upper | ol_lower)* &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT ID (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Title (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Modified (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Created (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Type (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Author (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT CoAuthors (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Subtitle (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Year (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Number (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Volume (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Pages (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Publication (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Publisher (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Place (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Name (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Firstname (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT From (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT To (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT related (related_item+) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT related_item (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST related_item type (1 | 2 | 3) #REQUIRED &gt;</p>
+
+<p>A sample XML of a <code>Term</code> item's content (or <code>JoinRelatedTerm</code>) could look as follows:</p>  
+
+<pre>
+<p class=code id=tag>&lt;?xml version=<p class=code id=cstring>&quot;1.0&quot;</p><p class=code id=tag> encoding=<p class=code id=cstring>&quot;UTF-8&quot;</p><p class=code id=tag>?&gt;</p>
+<p class=code id=tag>&lt;Item&gt;</p>
+    <p class=code id=tag>&lt;Term&gt;</p>
+        <p class=code id=tag>&lt;propertySet&gt;</p>
+            <p class=code id=tag>&lt;ID&gt;</p>3<p class=code id=tag>&lt;/ID&gt;</p>
+            <p class=code id=tag>&lt;Title&gt;</p>physics<p class=code id=tag>&lt;/Title&gt;</p>
+            <p class=code id=tag>&lt;Text&gt;</p>
+                <p class=code id=tag>&lt;para&gt;</p>Part of the <p class=code id=tag>&lt;b&gt;</p>natural sciences<p class=code id=tag>&lt;/b&gt;</p>.<p class=code id=tag>&lt;/para&gt;</p>
+                <p class=code id=tag>&lt;para&gt;</p>Physics is a <p class=code id=tag>&lt;i&gt;</p>fundamental<p class=code id=tag>&lt;/i&gt;</p> science where <p class=code id=tag>&lt;u&gt;</p>other<p class=code id=tag>&lt;/u&gt;</p> natural sciences
+                    can be <p class=code id=tag>&lt;i&gt;</p>built<p class=code id=tag>&lt;/i&gt;</p> on, e.g.:<p class=code id=tag>&lt;/para&gt;</p>
+                <p class=code id=tag>&lt;ul indent=<p class=code id=cstring>&quot;0&quot;</p><p class=code id=tag>&gt;</p>
+                    <p class=code id=tag>&lt;li&gt;</p>quantum mechanics<p class=code id=tag>&lt;/li&gt;</p>
+                    <p class=code id=tag>&lt;li&gt;</p>electrodynamics<p class=code id=tag>&lt;/li&gt;</p>
+                    <p class=code id=tag>&lt;li&gt;</p>theory of relativity<p class=code id=tag>&lt;/li&gt;</p>
+                <p class=code id=tag>&lt;/ul&gt;</p>
+            <p class=code id=tag>&lt;/Text&gt;</p>
+            <p class=code id=tag>&lt;Modified&gt;</p>Oct 25, 2007<p class=code id=tag>&lt;/Modified&gt;</p>
+            <p class=code id=tag>&lt;Created&gt;</p>Jan 27, 2007<p class=code id=tag>&lt;/Created&gt;</p>
+        <p class=code id=tag>&lt;/propertySet&gt;</p>
+    <p class=code id=tag>&lt;/Term&gt;</p>
+    <p class=code id=tag>&lt;related&gt;</p>
+        <p class=code id=tag>&lt;related_item type=<p class=code id=cstring>&quot;3&quot;</p><p class=code id=tag>&gt;</p>Einstein, Albert<p class=code id=tag>&lt;/related_item&gt;</p>
+        <p class=code id=tag>&lt;related_item type=<p class=code id=cstring>&quot;1&quot;</p><p class=code id=tag>&gt;</p>electrodynamics<p class=code id=tag>&lt;/related_item&gt;</p>
+        <p class=code id=tag>&lt;related_item type=<p class=code id=cstring>&quot;3&quot;</p><p class=code id=tag>&gt;</p>Planck, Max Karl Ernst Ludwig <p class=code id=tag>&lt;/related_item&gt;</p>
+        <p class=code id=tag>&lt;related_item type=<p class=code id=cstring>&quot;1&quot;</p><p class=code id=tag>&gt;</p>quantum mechanics<p class=code id=tag>&lt;/related_item&gt;</p>
+        <p class=code id=tag>&lt;related_item type=<p class=code id=cstring>&quot;1&quot;</p><p class=code id=tag>&gt;</p>theory of relativity<p class=code id=tag>&lt;/related_item&gt;</p>
+        <p class=code id=tag>&lt;related_item type=<p class=code id=cstring>&quot;2&quot;</p><p class=code id=tag>&gt;</p>Über die Spezielle und Allgemeine Relativitätstheorie<p class=code id=tag>&lt;/related_item&gt;</p>
+        <p class=code id=tag>&lt;related_item type=<p class=code id=cstring>&quot;2&quot;</p><p class=code id=tag>&gt;</p>Zur Elektrodynamik bewegter Körper<p class=code id=tag>&lt;/related_item&gt;</p>
+    <p class=code id=tag>&lt;/related&gt;</p>
+<p class=code id=tag>&lt;/Item&gt;</p>
+</pre>
+
+<p>A sample XML of a <code>Text</code> item's content (or <code>JoinRelatedText</code>) could look as follows:</p>  
+
+<pre><p class="code" id="tag">&lt;?xml version=</p><p class="code" id="cstring">"1.0"</p><p class="code" id="tag"> encoding=</p><p class="code" id="cstring">"UTF-8"</p><p class="code" id="tag">?&gt;</p>
+<p class="code" id="tag">&lt;Item&gt;</p>
+    <p class="code" id="tag">&lt;Text&gt;</p>
+        <p class="code" id="tag">&lt;propertySet&gt;</p>
+            <p class="code" id="tag">&lt;ID&gt;</p>2<p class="code" id="tag">&lt;/ID&gt;</p>
+            <p class="code" id="tag">&lt;Title&gt;</p>Über die Spezielle und Allgemeine Relativitätstheorie<p class="code" id="tag">&lt;/Title&gt;</p>
+            <p class="code" id="tag">&lt;Text&gt;</p>
+                <p class="code" id="tag">&lt;para&gt;</p>Einstein, Albert<p class="code" id="tag">&lt;/para&gt;</p>
+                <p class="code" id="tag">&lt;para&gt;</p>1917. Über die Spezielle und Allgemeine Relativitätstheorie.<p class="code" id="tag">&lt;/para&gt;</p>
+            <p class="code" id="tag">&lt;/Text&gt;</p>
+            <p class="code" id="tag">&lt;Created&gt;</p>Jan 27, 2007<p class="code" id="tag">&lt;/Created&gt;</p>
+            <p class="code" id="tag">&lt;Modified&gt;</p>Sep 8, 2007<p class="code" id="tag">&lt;/Modified&gt;</p>
+            <p class="code" id="tag">&lt;Type&gt;</p>0<p class="code" id="tag">&lt;/Type&gt;</p>
+            <p class="code" id="tag">&lt;Author&gt;</p>Einstein, Albert<p class="code" id="tag">&lt;/Author&gt;</p>
+            <p class="code" id="tag">&lt;CoAuthors/&gt;</p>
+            <p class="code" id="tag">&lt;Subtitle/&gt;</p>
+            <p class="code" id="tag">&lt;Year&gt;</p>1917<p class="code" id="tag">&lt;/Year&gt;</p>
+            <p class="code" id="tag">&lt;Number&gt;</p>0<p class="code" id="tag">&lt;/Number&gt;</p>
+            <p class="code" id="tag">&lt;Volume&gt;</p>0<p class="code" id="tag">&lt;/Volume&gt;</p>
+            <p class="code" id="tag">&lt;Pages/&gt;</p>
+            <p class="code" id="tag">&lt;Publication/&gt;</p>
+            <p class="code" id="tag">&lt;Publisher/&gt;</p>
+            <p class="code" id="tag">&lt;Place/&gt;</p>
+        <p class="code" id="tag">&lt;/propertySet&gt;</p>
+    <p class="code" id="tag">&lt;/Text&gt;</p>
+    <p class="code" id="tag">&lt;related&gt;</p>
+        <p class="code" id="tag">&lt;related_item type=</p><p class="code" id="cstring">"3"</p><p class="code" id="tag">&gt;</p>Einstein, Albert<p class="code" id="tag">&lt;/related_item&gt;</p>
+        <p class="code" id="tag">&lt;related_item type=</p><p class="code" id="cstring">"1"</p><p class="code" id="tag">&gt;</p>physics<p class="code" id="tag">&lt;/related_item&gt;</p>
+        <p class="code" id="tag">&lt;related_item type=</p><p class="code" id="cstring">"1"</p><p class="code" id="tag">&gt;</p>theory of relativity<p class="code" id="tag">&lt;/related_item&gt;</p>
+        <p class="code" id="tag">&lt;related_item type=</p><p class="code" id="cstring">"2"</p><p class="code" id="tag">&gt;</p>Zur Elektrodynamik bewegter Körper<p class="code" id="tag">&lt;/related_item&gt;</p>
+    <p class="code" id="tag">&lt;/related&gt;</p>
+<p class="code" id="tag">&lt;/Item&gt;</p>
+</pre>
+
+<p>A sample XML of a <code>Person</code> item's content (or <code>JoinRelatedPerson</code>) could look as follows:</p>  
+
+<pre><p class="code" id="tag">&lt;?xml version=</p><p class="code" id="cstring">"1.0"</p><p class="code" id="tag"> encoding=</p><p class="code" id="cstring">"UTF-8"</p><p class="code" id="tag">?&gt;</p>
+<p class="code" id="tag">&lt;Item&gt;</p>
+    <p class="code" id="tag">&lt;Person&gt;</p>
+        <p class="code" id="tag">&lt;propertySet&gt;</p>
+            <p class="code" id="tag">&lt;ID&gt;</p>1<p class="code" id="tag">&lt;/ID&gt;</p>
+            <p class="code" id="tag">&lt;Name&gt;</p>Einstein<p class="code" id="tag">&lt;/Name&gt;</p>
+            <p class="code" id="tag">&lt;Firstname&gt;</p>Albert<p class="code" id="tag">&lt;/Firstname&gt;</p>
+            <p class="code" id="tag">&lt;Text&gt;</p>
+                <p class="code" id="tag">&lt;para&gt;</p>Physical scientist and Nobel prize winner.<p class="code" id="tag">&lt;/para&gt;</p>
+            <p class="code" id="tag">&lt;/Text&gt;</p>
+            <p class="code" id="tag">&lt;From&gt;</p>1879<p class="code" id="tag">&lt;/From&gt;</p>
+            <p class="code" id="tag">&lt;To&gt;</p>1955<p class="code" id="tag">&lt;/To&gt;</p>
+            <p class="code" id="tag">&lt;Created&gt;</p>Jan 27, 2007<p class="code" id="tag">&lt;/Created&gt;</p>
+            <p class="code" id="tag">&lt;Modified&gt;</p>Jan 27, 2007<p class="code" id="tag">&lt;/Modified&gt;</p>
+        <p class="code" id="tag">&lt;/propertySet&gt;</p>
+    <p class="code" id="tag">&lt;/Person&gt;</p>
+    <p class="code" id="tag">&lt;related&gt;</p>
+        <p class="code" id="tag">&lt;related_item type=</p><p class="code" id="cstring">"1"</p><p class="code" id="tag">&gt;</p>physics<p class="code" id="tag">&lt;/related_item&gt;</p>
+        <p class="code" id="tag">&lt;related_item type=</p><p class="code" id="cstring">"1"</p><p class="code" id="tag">&gt;</p>quantum mechanics<p class="code" id="tag">&lt;/related_item&gt;</p>
+        <p class="code" id="tag">&lt;related_item type=</p><p class="code" id="cstring">"1"</p><p class="code" id="tag">&gt;</p>theory of relativity<p class="code" id="tag">&lt;/related_item&gt;</p>
+        <p class="code" id="tag">&lt;related_item type=</p><p class="code" id="cstring">"2"</p><p class="code" id="tag">&gt;</p>Über die Spezielle und Allgemeine Relativitätstheorie<p class="code" id="tag">&lt;/related_item&gt;</p>
+        <p class="code" id="tag">&lt;related_item type=</p><p class="code" id="cstring">"2"</p><p class="code" id="tag">&gt;</p>Zur Elektrodynamik bewegter Körper<p class="code" id="tag">&lt;/related_item&gt;</p>
+    <p class="code" id="tag">&lt;/related&gt;</p>
+<p class="code" id="tag">&lt;/Item&gt;</p>
+</pre>
+
+<img src="../img/ngrelr.png" />
+<ul>
+  <li><a href="./org_elbe_relations_printOut.html">PrintOut extension point description</a>
+</ul>
+
+</body>
+</html>

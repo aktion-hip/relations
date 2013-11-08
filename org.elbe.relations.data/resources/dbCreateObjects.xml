@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Create>
+    <Table name="tblTerm">
+        <Field name="TermID" auto_increment="yes" type="biginteger" nullable="no" unsigned="yes"/>
+        <Field name="sTitle" type="string" size="99" nullable="no"/>
+        <Field name="sText" type="clob"/>
+        <Field name="dtCreation" type="timestamp" nullable="no"/>
+        <Field name="dtMutation" type="timestamp" nullable="no"/>
+        <PrimaryKey>
+            <Column name="TermID"/>
+        </PrimaryKey>
+    </Table>
+    <Table name="tblText">
+        <Field name="TextID" auto_increment="yes" type="biginteger" nullable="no"/>
+        <Field name="sTitle" type="string" size="150"/>
+        <Field name="sText" type="clob"/>
+        <Field name="sAuthor" type="string" size="100"/>
+        <Field name="sCoAuthors" type="string" size="150"/>
+        <Field name="sSubtitle" type="string" size="300"/>
+        <Field name="sYear" type="string" size="15"/>
+        <Field name="sPublication" type="string" size="200"/>
+        <Field name="sPages" type="string" size="20"/>
+        <Field name="nVolume" type="integer" />
+        <Field name="nNumber" type="integer" />
+        <Field name="sPublisher" type="string" size="99"/>
+        <Field name="sPlace" type="string" size="99"/>
+        <Field name="nType" type="integer" />
+        <Field name="dtCreation" type="timestamp" nullable="no"/>
+        <Field name="dtMutation" type="timestamp" nullable="no"/>
+        <PrimaryKey>
+            <Column name="TextID"/>
+        </PrimaryKey>
+    </Table>
+    <Table name="tblPerson">
+        <Field name="PersonID" auto_increment="yes" type="biginteger" nullable="no"/>
+        <Field name="sName" type="string" size="99" nullable="no"/>
+        <Field name="sFirstname" type="string" size="50"/>
+        <Field name="sText" type="clob" />
+        <Field name="sFrom" type="string" size="30"/>
+        <Field name="sTo" type="string" size="30"/>
+        <Field name="dtCreation" type="timestamp" nullable="no"/>
+        <Field name="dtMutation" type="timestamp" nullable="no"/>
+        <PrimaryKey>
+            <Column name="PersonID"/>
+        </PrimaryKey>
+    </Table>
+    <Table name="tblRelation">
+        <Field name="RelationID" auto_increment="yes" type="biginteger" nullable="no"/>
+        <Field name="nType1" type="tinyinteger" nullable="no"/>
+        <Field name="nItem1" type="biginteger" nullable="no"/>
+        <Field name="nType2" type="tinyinteger" nullable="no"/>
+        <Field name="nItem2" type="biginteger" nullable="no"/>
+        <PrimaryKey>
+            <Column name="RelationID"/>
+        </PrimaryKey>
+    </Table>
+    <Index name="idxTerm_01" tablename="tblTerm">
+        <Column name="sTitle"/>
+    </Index>
+    <Index name="idxTerm_02" tablename="tblTerm">
+        <Column name="dtCreation"/>
+    </Index>
+    <Index name="idxTerm_03" tablename="tblTerm">
+        <Column name="dtMutation"/>
+    </Index>
+    <Index name="idxText_01" tablename="tblText">
+        <Column name="sTitle"/>
+    </Index>
+    <Index name="idxText_02" tablename="tblText">
+        <Column name="sAuthor"/>
+        <Column name="sCoAuthors"/>
+    </Index>
+    <Index name="idxText_03" tablename="tblText">
+        <Column name="dtCreation"/>
+    </Index>
+    <Index name="idxText_04" tablename="tblText">
+        <Column name="dtMutation"/>
+    </Index>
+    <Index name="idxPerson_01" tablename="tblPerson">
+        <Column name="sName"/>
+        <Column name="sFirstname"/>
+    </Index>
+    <Index name="idxPerson_02" tablename="tblPerson">
+        <Column name="sFrom"/>
+        <Column name="sTo"/>
+    </Index>
+    <Index name="idxPerson_03" tablename="tblPerson">
+        <Column name="dtCreation"/>
+    </Index>
+    <Index name="idxPerson_04" tablename="tblPerson">
+        <Column name="dtMutation"/>
+    </Index>
+    <Index name="idxRelation_01" tablename="tblRelation">
+        <Column name="nType1"/>
+        <Column name="nItem1"/>
+    </Index>
+    <Index name="idxRelation_02" tablename="tblRelation">
+        <Column name="nType2"/>
+        <Column name="nItem2"/>
+    </Index>
+</Create>

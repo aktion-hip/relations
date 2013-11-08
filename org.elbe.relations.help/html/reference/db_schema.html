@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>Relations: Database schema</title>
+  <link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css">
+  <link rel="STYLESHEET" href="../css/schema.css" charset="ISO-8859-1" type="text/css">
+</head>
+<body>
+
+<h1>Database schema</h1>
+<p>This page shows the SQL commands that create the tables needed to
+store the information created by the Relations application in a Derby
+database. The SQL commands for other databases (e.g. MySQL) are
+analogous.</p>
+<br>
+<p class="Code">
+CREATE TABLE tblTerm (<br>
+&nbsp; TermID&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;BIGINT generated always
+as identity,<br>
+&nbsp; sTitle&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;VARCHAR(99) not null,<br>
+&nbsp; sText&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; CLOB,<br>
+&nbsp; dtCreation&nbsp;&nbsp;&nbsp;TIMESTAMP not null,<br>
+&nbsp; dtMutation&nbsp;&nbsp;&nbsp;TIMESTAMP not null,<br>
+&nbsp; PRIMARY KEY (TermID)<br>
+);</p>
+
+<p class="Code"><br>
+
+CREATE INDEX idxTerm_01 ON tblTerm(sTitle);</p>
+<br>
+<p class="Code"><br>
+
+CREATE TABLE tblText (<br>
+&nbsp; TextID&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;BIGINT generated always
+as identity,<br>
+&nbsp; sTitle&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;VARCHAR(150) not null,<br>
+&nbsp; sText&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;CLOB,<br>
+&nbsp; sAuthor&nbsp;&nbsp;&nbsp; &nbsp; VARCHAR(100),<br>
+&nbsp; sCoAuthors&nbsp;&nbsp;&nbsp;VARCHAR(150),<br>
+&nbsp; sSubtitle&nbsp;&nbsp;&nbsp; VARCHAR(200),<br>
+&nbsp; sYear&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; VARCHAR(15),<br>
+&nbsp; sPublication&nbsp;VARCHAR(100),<br>
+&nbsp; sPages&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;VARCHAR(20),<br>
+&nbsp; nVolume&nbsp;&nbsp;&nbsp; &nbsp; INT,<br>
+&nbsp; nNumber&nbsp; &nbsp; &nbsp; INT,<br>
+&nbsp; sPublisher&nbsp;&nbsp; VARCHAR(99),<br>
+&nbsp; sPlace&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;VARCHAR(99),<br>
+&nbsp; nType&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; INT,<br>
+&nbsp; dtCreation&nbsp;&nbsp;&nbsp;TIMESTAMP not null,<br>
+&nbsp; dtMutation&nbsp;&nbsp;&nbsp;TIMESTAMP not null,<br>
+&nbsp; PRIMARY KEY (TextID)<br>
+);</p>
+
+<p class="Code"><br>
+CREATE INDEX idxText_01 ON tblText(sTitle);</p>
+
+
+<p class="Code">CREATE INDEX idxText_02 ON tblText(sAuthor, sCoAuthors);</p>
+<br>
+
+
+
+
+
+
+
+
+
+<p class="Code">
+CREATE TABLE tblPerson (<br>
+&nbsp; PersonID&nbsp;&nbsp;&nbsp; BIGINT generated
+always as identity,<br>
+&nbsp; sName&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;VARCHAR(99) not null,<br>
+&nbsp; sFirstname&nbsp;&nbsp;VARCHAR(50),<br>
+&nbsp; sText&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;CLOB,<br>
+&nbsp; sFrom&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;VARCHAR(30),<br>
+&nbsp; sTo&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;VARCHAR(30),<br>
+&nbsp; dtCreation&nbsp;&nbsp;TIMESTAMP not null,<br>
+&nbsp; dtMutation&nbsp;&nbsp;TIMESTAMP not null,<br>
+&nbsp; PRIMARY KEY (PersonID)<br>
+);</p>
+
+<p class="Code"><br>
+
+CREATE INDEX idxPerson_01 ON tblPerson(sName, sFirstname);</p>
+
+<p class="Code">CREATE INDEX idxPerson_02 ON tblPerson(sFrom, sTo);</p>
+
+<p class="Code"></p>
+<p class="Code"></p>
+<p class="Code">
+CREATE TABLE tblRelation (<br>
+&nbsp; RelationID&nbsp;&nbsp;BIGINT generated
+always as identity,<br>
+&nbsp; nType1&nbsp;&nbsp;&nbsp; &nbsp; SMALLINT not null,<br>
+&nbsp; nItem1&nbsp;&nbsp;&nbsp; &nbsp; BIGINT not null,<br>
+&nbsp; nType2&nbsp;&nbsp;&nbsp; &nbsp; SMALLINT not null,<br>
+&nbsp; nItem2&nbsp;&nbsp;&nbsp; &nbsp; BIGINT not null,<br>
+&nbsp; PRIMARY KEY (RelationID)<br>
+);</p>
+
+<p class="Code"><br>
+
+CREATE INDEX idxRelation_01 ON tblRelation(nType1, nItem1);</p>
+<p class="Code">
+CREATE INDEX idxRelation_02 ON tblRelation(nType2, nItem2);</p>
+
+<p class="Code"><br>
+<br>
+</p>
+
+<img src="../img/ngrelr.png" />
+<ul>
+  <li><a href="./configuration.html">Creating new Database Configuration Plug-ins</a>
+</ul>
+
+</body>
+</html>

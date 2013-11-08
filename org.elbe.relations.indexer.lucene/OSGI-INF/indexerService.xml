@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.elbe.relations.indexer.lucene">
+    <implementation class="org.elbe.relations.indexer.lucene.LuceneIndexer"/>
+    <service>
+        <provide interface="org.elbe.relations.data.search.IIndexer"/>
+    </service>
+</component>

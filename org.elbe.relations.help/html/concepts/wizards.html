@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Relations: wizards</title>
+  <link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css">
+</head>
+<body>
+<h1>Wizards to create items and databases</h1>
+<p>The Relations application provides three wizards to create
+items,
+one for each item type. In addition, there is a wizard to create a
+new Relations database.</p>
+
+<p>The&nbsp;<b>New...</b> wizard is part of the <span style="font-weight: bold;">Data</span> menu. You get
+the same choice entering&nbsp;<code>Ctrl+N.</code></p>
+
+<p><code><img alt="New wizard" src="../img/wizard_new.gif" border="0"></code></p>
+
+<p><span style="font-style: italic;">The
+application's <span style="font-weight: bold;">New...</span>
+wizards.</span></p>
+
+<p><span style="font-style: italic;"></span>A
+shortcut for item creation is clicking one of the three <span style="font-style: italic;">New ITEMTYPE item</span>
+action buttons in the toolbar. This is equivalent with starting the
+New... wizard and selecting one of the <span style="font-style: italic;">New Item Wizards</span>.</p>
+
+<h3>New Item wizards</h3>
+
+<p>Selecting one of the item wizards will open the dialog window
+where you can enter the information needed to create the item. As soon
+as you have entered enough information, you can either finish the
+wizard or proceed to the next page. Both actions will effectively
+create the item. If you proceed to the next page, however, you have to
+possibility to create the new item's initial context by adding the
+appropriate relations from the set of existing items.</p>
+
+<h3>New Database wizard</h3>
+
+<p>The application comes with an embedded database out of the
+box. You may want to create new databases (or, to put it correct, new database <i>tables</i>),
+e.g. for testing purpose or to hold the data in an external database you have already installed on your system (e.g. MySQL).
+To do this, you start the <span style="font-style: italic;">New
+Relations database</span> wizard.</p>
+
+<p><img src="../img/wizard_new_db.gif" border="0" alt="Nes database wizard" /></p>
+<p><i>Wizard to create a new database catalog</i></p>
+
+<p>First, you have to select the database hosting the catalog where you want to create the tables needed by the application.
+You can choose the embedded database provided by the application or
+an external database the application can connect to (e.g. MySQL).</p>
+
+<p>If you chose the embedded database, the only thing you have to do
+is to enter the name of the new catalog. You can enter any character
+except for spaces and special characters.</p>
+
+<p>If you chose an external database, you have to provide the information needed
+to connect to this database. You have to specify where the RDBMS (relational database management system) is installed (the host),
+the name of the database (i.e. the catalog) that is set up to store the information within this RDBMS,
+the user name and password that has the right to access the information stored in this catalog.
+Of course, the catalog has to exist already on the specified database for that you
+can provide the information and for that the application can connect to this database.</p>
+
+<p>After entering the necessary information and clicking the Finish button, the tables in the specified
+database will be created and activated. You will notice the new
+database's name in the application's status line. The Relations browser
+will be empty as well as the selection views and the inspector view.</p>
+
+<p><img src="../img/ngrelt.png" alt="Related tasks" border="0"></p>
+
+<ul>
+  <li><a href="../gettingstarted/creating_items.html">Creating items</a></li>
+  <li><a href="../tasks/data_source.html">Creating and connecting a different data source</a></li>
+</ul>
+<p></p>
+
+</body>
+</html>

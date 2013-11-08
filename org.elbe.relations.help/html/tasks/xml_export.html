@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>Export to XML and import</title>
+  <link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css">
+</head>
+<body>
+<h1>Export to XML - Import from XML</h1>
+
+<p>The content created and managed by the Relations application can be exported to an XML file.
+This export functionality is available both for content stored in the embedded database as well as for such content
+stored in an external database. Thus, exporting to an XML file is a future-proof way to backup the content. Such exportet content, then, can be transfered
+to another Relations database or to a completely different application.</p>
+
+<h3>Export to XML file</h3>
+
+<p>To start the XML export, call the <b>Export...</b> wizard from the <b>Data</b> menu and select <i>Export to XML File</i>.
+The dialog page displayed after allows you to enter the XML or Zip file where to export the actual content of the Relations application.</p>
+<p>
+Note 1: You have to provide a file suffix. By default, the application adds <code>.xml</code> as file ending.
+In this case, the export file will be plain XML.
+However, if you chose <code>.zip</code>, the application will export to a (zip) compressed XML file.<br/>
+Note 2: The XML export is very fast. To export about 2'000 items with 4'000 relations needs about 5 seconds
+and results in a file of 400 KB compressed data.
+</p>
+
+<h3>Import from XML file</h3>
+
+<p>You can import the XML export into a new database catalog. You can import both in an embedded or an external database.
+To start the XML import, call the <b>Import...</b> wizard from the <b>Data</b> menu and select <i>Import from XML File</i>.</p>
+
+<p><img src="../img/import_xml.gif" alt="Import from XML file" border="0" /></p>
+<p><i>Import the content from a (zipped) XML file to a new database</i></p>
+
+<p>In the wizard form displayed, you first have to enter the XML or Zip file containing the content of an XML export.
+Then, you have to provide the information about the database catalog to create and fill with the imported data.
+You can choose the embedded database or an external database as storage place for the data.</p>
+
+<p>If you chose the embedded database, the only information you have to provide is the name of the catalog.
+You can't choose an existing database catalog (therefore, you can't accidentally overwrite existing data).</p>
+
+<p>If you chose the option to import to an external database, you have to create an empty catalog in that database first.
+Having done this, you can enter the information needed to connect to this database.
+You have to specify where the database is installed (the host), the catalog in the database you want to import the data,
+and the user name and password needed to access this catalog.</p>
+
+<p>After you have entered the data and clicked the <code>Finish</code> button, the application
+starts the import. It first creates the tables needed to store the data. After it parses the import file
+and creates the <i>Term</i>, <i>Text</i>, <i>Person</i> and <i>Relations</i> entries.
+In the next step the application has to rebind the relations and to round up it creates a full text search index
+for the newly created database.<br/>
+Note: To import about 2'000 items with 4'000 relations needs about 5 minutes.
+</p>
+
+<p>&#160;</p>
+<img src="../img/ngrelc.png" alt="Related concepts"><br>
+
+<ul>
+  <li><a href="../concepts/wizards.html">Wizards to create items and databases</a></li>
+</ul>
+
+<img src="../img/ngrelt.png" alt="Related tasks"><br>
+
+<ul>
+  <li><a href="database.html">Database backup, restore and import</a></li>
+  <li><a href="data_source.html">Creating and connecting a different data source</a></li>
+</ul>
+
+<img src="../img/ngrelr.png" />
+<ul>
+  <li><a href="../reference/xml_export.html">The DTD of the XML export</a></li>
+</ul>
+<p></p>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Relations Browsers</title>
+<link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css" />
+<link rel="STYLESHEET" href="../css/schema.css" charset="ISO-8859-1" type="text/css" />
+</HEAD>
+<BODY>
+<H1><CENTER>Relations Browsers</CENTER></H1>
+<p></p>
+<h6 class=CaptionFigColumn id=header>Identifier: </h6>org.elbe.relations.browsers<p></p>
+<h6 class=CaptionFigColumn id=header>Since: </h6>0.9
+<p></p>
+
+<p>
+<h6 class=CaptionFigColumn id=header>Description: </h6>Extension point for views (called relation or association browsers) to display an item's associations.</p>
+<p><h6 class=CaptionFigColumn id=header>Configuration Markup:</h6></p>
+<p class=code id=dtd>&lt;!ELEMENT <a name="e.extension">extension</a> (<a href="#e.relationsBrowser">relationsBrowser</a>)&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST extension</p>
+<p class=code id=dtdAttlist>point&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>id&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>name&nbsp;&nbsp;CDATA #IMPLIED&gt;</p>
+<p></p>
+<ul class=ConfigMarkup id=attlistDesc>
+</ul>
+<br><p class=code id=dtd>&lt;!ELEMENT <a name="e.relationsBrowser">relationsBrowser</a> EMPTY&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST relationsBrowser</p>
+<p class=code id=dtdAttlist>id&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>class&nbsp;CDATA #REQUIRED&gt;</p>
+<p></p>
+<ul class=ConfigMarkup id=attlistDesc>
+<li><b>id</b> - a unique name that will be used to identify this view (must be identical with <b><i>org.eclipse.ui.views/view/id</i></b>).</li>
+<li><b>class</b> - a fully qualified name of the class that implements <code>org.elbe.relations.views.IRelationsBrowser</code> (must be identical with <b><i>org.eclipse.ui.views/view/class</i></b>).</li>
+</ul>
+<br><h6 class=CaptionFigColumn id=header>Examples: </h6>The default browser's <code>plugin.xml</code> (see the <code>org.elbe.relations.defaultBrowser</code> plug-in) looks as follows:
+
+<pre>
+<p class=code id=tag>&lt;plugin&gt;</p>
+   <p class=code id=tag>&lt;extension
+         point=<p class=code id=cstring>&quot;org.elbe.relations.browsers&quot;</p><p class=code id=tag>&gt;</p>
+      <p class=code id=tag>&lt;relationsBrowser
+            class=<p class=code id=cstring>&quot;org.elbe.relations.browser.RelationsDefaultBrowser&quot;</p><p class=code id=tag>
+            id=<p class=code id=cstring>&quot;org.elbe.relations.views.RelationsDefaultView&quot;</p><p class=code id=tag>/&gt;</p>
+   <p class=code id=tag>&lt;/extension&gt;</p>
+   <p class=code id=tag>&lt;extension
+         point=<p class=code id=cstring>&quot;org.eclipse.ui.views&quot;</p><p class=code id=tag>&gt;</p>
+      <p class=code id=tag>&lt;view
+            allowMultiple=<p class=code id=cstring>&quot;false&quot;</p><p class=code id=tag>
+            class=<p class=code id=cstring>&quot;org.elbe.relations.browser.RelationsDefaultBrowser&quot;</p><p class=code id=tag>
+            icon=<p class=code id=cstring>&quot;icons/relations.gif&quot;</p><p class=code id=tag>
+            id=<p class=code id=cstring>&quot;org.elbe.relations.views.RelationsDefaultView&quot;</p><p class=code id=tag>
+            name=<p class=code id=cstring>&quot;Relations&quot;</p><p class=code id=tag>/&gt;</p>
+   <p class=code id=tag>&lt;/extension&gt;</p>
+<p class=code id=tag>&lt;/plugin&gt;</p>
+</pre>
+<p></p>
+
+<h6 class=CaptionFigColumn id=header>API Information: </h6><p>
+Browser views must implement the <code>org.elbe.relations.views.IRelationsBrowser</code> interface. 
+At the same time, they use the Eclipse view infrastructure. Thus they have to contribute to the <code>org.eclipse.ui.views</code> 
+extension point and have to extend <code>org.eclipse.ui.part.ViewPart</code>.
+</p>
+<p>
+Items displayed on the browser view must implement the <code>org.elbe.relations.models.IBrowserItem</code> interface.
+</p>
+<p></p>
+
+<h6 class=CaptionFigColumn id=header>Supplied Implementation: </h6>The Relations application provides the <code>org.elbe.relations.defaultBrowser</code> plug-in as default implementation of a relations browser.
+<p></p>
+
+<br>
+<p class=note id=copyright>
+&copy; 2006, RelationWare, Benno Luthiger
+<p></p>
+
+</p>
+</BODY>
+</HTML>

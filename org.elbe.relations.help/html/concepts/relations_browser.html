@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Relations browser</title>
+  <link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css">
+</head>
+
+
+<body>
+
+<h1>The Relations browser</h1>
+
+<p>The Relations browser shows the central item and it's context,
+i.e. it's relations to other items.</p>
+
+<p><img src="../img/relations_browser.gif" alt="Relations browser"></p>
+
+<p>The example shows the central term item "physics" in relation
+with seven other items (three term items,
+two text items and two person items). The related items are
+alphabetically ordered in concentric
+circles around the central item. You can move the focus using the arrow
+buttons. Clicking an item makes
+it focused too. Item having the focus are displayed with white
+background color (see the item "quantum mechanics"
+in the sample). The content of focus items is showed in the inspector
+view.</p>
+
+<p><img src="../img/relations_browser_context.gif" alt="Context menu"></p>
+
+<p><i>Context menu in the Relations browser.</i></p>
+
+<p>You can apply the following actions on the active item (see
+the
+context menu in the Relations browser):</p>
+
+<dl>
+
+  <dt>Edit the item</dt>
+  <dd>Double clicking the item or entering <code>Ctrl+E</code> opens the item editor.</dd>
+
+  <dt>Delete the item</dt>
+  <dd>Entering <code>Ctrl+Delete</code> deletes the item and all it's relations.</dd>
+
+  <dt>Edit the item's relations</dt>
+  <dd>Entering <code>Ctrl+R</code> opens the item's relations editor.</dd>
+
+  <dt>Print</dt>
+  <dd>Entering <code>Ctrl+P</code> opens the print
+manager for that you can print the selected item and all it's relations
+into a document.</dd>
+
+  <dt>Bookmark the item</dt>
+  <dd>Entering <code>Ctrl+B</code> creates a bookmark of the selected item.</dd>
+
+  <dt>Center the item</dt>
+  <dd>Entering <code>Ctrl+C</code> moves the focus
+item to the center. Another possibility for item centering is to click
+an item having the <code>Shift</code> key pressed.</dd>
+
+  <dt>Remove the relation</dt>
+  <dd>Entering <code>Ctrl+Shift+R</code> removes the
+focus item's relation to the central item, thus, removes the focus item
+from the browser display.</dd>
+
+</dl>
+
+<p>There are two other possibilities to remove a relation using
+the Relations browser:</p>
+
+<ul>
+
+  <li>You can click on the line connecting the item with the
+central item. The selected relation is displayed red. Right clicking
+the selected relation displays the context menu which has one single
+menu item "Delete Relation" in this situation. Selecting this menu
+entry removes the selected relation.</li>
+
+  <li>You can drag an item and drop it on the Selection views.
+This removes this item from the browser display thus removing it's
+relation with the central item.</li>
+
+</ul>
+
+<p><b>Note:</b> It is possible to extend the
+application by providing additional, alternative
+Relations browsers. This can be done by implementing a plug-in
+extending the <a href="../reference/org_elbe_relations_browsers.html">org.elbe.relations.browsers</a>
+extension point. The <a href="relations_finder.html">Relations finder</a> is an example where this has been done.</p>
+
+<p><img src="../img/ngrelc.png" alt="related concepts" border="0" /></p>
+<ul>
+  <li><a href="central_item.html">The central item</a></li>
+  <li><a href="active_item.html">The active item</a></li>
+  <li><a href="bookmark_view.html">Bookmarking items</a></li>
+  <li><a href="relations_finder.html">Relations finder</a></li>
+</ul>
+
+<p><img src="../img/ngrelt.png" alt="related tasks" border="0" /></p>
+<ul>
+  <li><a href="../tasks/print.html">Printing items</a></li>
+</ul>
+
+<p><img src="../img/ngrelr.png" alt="related reference" border="0" /></p>
+<ul>
+  <li><a href="../reference/org_elbe_relations_browsers.html">Relations Browsers</a> extension point</li>
+</ul>
+<p></p>
+
+</body>
+</html>

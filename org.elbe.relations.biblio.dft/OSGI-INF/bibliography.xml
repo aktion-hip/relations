@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0">
+   <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.elbe.relations.biblio.dft.bibliography.en">
+      <implementation class="org.elbe.relations.biblio.dft.BibliographyServiceEn"/>
+      <service>
+         <provide interface="org.elbe.relations.services.IBibliographyService"/>
+      </service>
+   </scr:component>
+   <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.elbe.relations.biblio.dft.bibliography.de">
+      <implementation class="org.elbe.relations.biblio.dft.BibliographyServiceDe"/>
+      <service>
+         <provide interface="org.elbe.relations.services.IBibliographyService"/>
+      </service>
+   </scr:component>
+</components>

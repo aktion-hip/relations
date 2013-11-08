@@ -1,0 +1,99 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.elbe.relations.biblio.meta.internal.pdf;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.elbe.relations.biblio.meta.internal.pdf.cos.COSBase;
+import org.elbe.relations.biblio.meta.internal.pdf.cos.COSDocument;
+import org.elbe.relations.biblio.meta.internal.pdf.cos.COSInteger;
+import org.elbe.relations.biblio.meta.internal.pdf.cos.COSObject;
+import org.elbe.relations.biblio.meta.internal.pdf.cos.COSStream;
+
+/**
+ * This will parse a PDF 1.5 object stream and extract all of the objects from the stream.
+ *
+ * @author <a href="mailto:ben@benlitchfield.com">Ben Litchfield</a>
+ * @version copied from org.apache.pdfbox (1.0.0)
+ */
+public class PDFObjectStreamParser extends BaseParser {
+
+    private List<COSObject> streamObjects = null;
+    private List<Integer> objectNumbers = null;
+	private COSStream stream;
+
+	/**
+	 * Constructor
+	 *
+	 * @param inStream COSStream
+	 * @param inDocument COSDocument
+	 * @throws IOException
+	 */
+	public PDFObjectStreamParser(COSStream inStream, COSDocument inDocument) throws IOException {
+       super(inStream.getUnfilteredStream());
+       setDocument(inDocument);
+       stream = inStream;
+	}
+
+    /**
+     * This will parse the tokens in the stream.  This will close the
+     * stream when it is finished parsing.
+     *
+     * @throws IOException If there is an error while parsing the stream.
+     */
+	public void parse() throws IOException {
+        try {
+            //need to first parse the header.
+            int numberOfObjects = stream.getInt("N"); //$NON-NLS-1$
+            objectNumbers = new ArrayList<Integer>(numberOfObjects);
+            streamObjects = new ArrayList<COSObject>(numberOfObjects);
+            for (int i=0; i<numberOfObjects; i++) {
+                int lObjectNumber = readInt();
+                objectNumbers.add(new Integer(lObjectNumber));
+            }
+            COSObject lObject = null;
+            COSBase lCosObject = null;
+            int lOjectCounter = 0;
+            while ((lCosObject = parseDirObject()) != null) {
+                lObject = new COSObject(lCosObject);
+                lObject.setGenerationNumber(COSInteger.ZERO);
+                COSInteger lObjectNumber = new COSInteger(((Integer)objectNumbers.get(lOjectCounter)).intValue());
+                lObject.setObjectNumber(lObjectNumber);
+                streamObjects.add(lObject);
+                //if(log.isDebugEnabled()) {
+                //    log.debug( "parsed=" + object );
+                //}
+                lOjectCounter++;
+            }
+        }
+        finally {
+            pdfSource.close();
+        }
+	}
+
+    /**
+     * This will get the objects that were parsed from the stream.
+     *
+     * @return All of the objects in the stream.
+     */
+	public List<COSObject> getObjects() {
+		return streamObjects;
+	}
+
+}

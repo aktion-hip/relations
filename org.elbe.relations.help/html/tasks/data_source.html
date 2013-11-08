@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Relations: data sources</title>
+
+
+  <link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css">
+
+</head>
+
+
+<body>
+
+<h1>Creating and connecting a different data source</h1>
+
+<p>The Relations application stores the entered information in an
+embedded database. You can create new embedded databases and delete
+them afterwards. Furthermore, you can use an external RDBMS (relational
+database management system) and connect to it.</p>
+
+<h3>Creating a new embedded database</h3>
+
+<p>The RDMBS used by&nbsp;default is an embedded Derby
+database. The application creates and uses a database catalog&nbsp;named "default_db"
+(see the application's status line).
+You can create new storage place in embedded or external databases, see
+<a href="../concepts/wizards.html">Wizards to create items and databases</a>.</p>
+
+<h3>Delete the current embedded database</h3>
+
+<p>You can delete any embedded database except of the
+"default_db". To delete an embedded database, make it the current
+database and select the menu entry <span style="font-weight: bold;">Data
+&gt; Delete current database</span>. This will delete the
+current database and switch to "default_db".<br />
+Note: You can't delete storage place in an external database using this application.</p>
+
+<h3>Connecting a different data source</h3>
+
+<p>You can connect to an already existing database, either
+embedded or external, using the dialog displayed after clicking <code>Ctrl-O</code>
+(<span style="font-weight: bold;">Data &gt; Open
+Database</span>).</p>
+
+<p><img src="../img/change_db.gif" alt="Connect to a different database"></p>
+
+<span style="font-style: italic;">Open another database</span>
+<p>You first have to select the RDBMS you want to connect to. The
+Relations application comes with an embedded Derby database. If you
+have installed a MySQL database, you can use this RDBMS to store the
+item information as well.</p>
+
+<p>If you chose the embedded database, you only have to select
+the catalog (e.g. database) available.</p>
+
+<p>Having chosen an external database, you have to provide the
+information needed to connect to this database. You have to specify
+where the RDBMS is installed (the <span style="font-style: italic;">host</span>),
+the name of the database (i.e. the <span style="font-style: italic;">catalog</span>)
+that is set up to store the item information within this RDBMS, the <span style="font-style: italic;">user name</span> and <span style="font-style: italic;">password</span> that has
+the right to access the information stored in this catalog. Be aware that you can connect to
+an external database catalog only if this catalog has the appropriate database schema (see
+<a href="../reference/db_schema.html">Database schema</a>).</p>
+
+<p>The last information needed is the language of the content you
+store in the database. This information is needed to select the
+appropriate index for full text search. Available content languages are
+English and German.</p>
+
+<span style="font-weight: bold;">Note:</span>
+It is possible to extend the application by providing
+additional&nbsp;database configurations for that you can connect to
+another external RDBMS.
+This can be done by providing a plug-in
+implementing&nbsp;the&nbsp;
+<a href="../reference/org_elbe_relations_configuration.html">org.elbe.relations.configuration</a>
+extension point.
+<p></p>
+
+<img src="../img/ngrelc.png" alt="ngrelc.png"><br>
+
+<ul>
+  <li><a href="../concepts/wizards.html">Wizards to create items and databases</a></li>
+  <li><a href="../concepts/database.html">Database backup</a></li>
+</ul>
+
+<img src="../img/ngrelr.png" alt="ngrelr.png"><br>
+
+<ul>
+  <li><a href="../reference/db_schema.html">Database schema</a></li>
+  <li><a href="../reference/configuration.html">Creating new Database Configuration Plug-ins</a></li>
+</ul>
+<p></p>
+
+</body>
+</html>

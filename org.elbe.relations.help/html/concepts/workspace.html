@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Workspace</title>
+
+
+  <link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css">
+
+</head>
+
+
+<body>
+
+<h1>Workspace</h1>
+
+<p>The Relations application reserves file system space to store
+various application settings and make them available across multiple
+application sessions. If you use the default embedded database, this
+database will store all items you create in the workspace's <span style="font-style: italic;">data</span> subdirectory.</p>
+
+<span style="font-weight: bold;"></span>
+<p>By default, the application's workspace in the file system is
+a directory named <span style="font-style: italic;">workspace</span>.
+This directory is created in the same directory you installed the
+Relations application.</p>
+
+<p>However, you can change this setting and choose as application
+workspace any directory in the file system you want. To achieve this,
+you have to start the Relations application with the optional <span style="font-weight: bold;">-data</span> parameter,
+e.g.:</p>
+
+<p><code>Relations.exe -data C:\Data\MyRelationsWorkspace</code></p>
+
+<p>will use the directory named <span style="font-style: italic;">MyRelationsWorkspace</span>
+in <span style="font-style: italic;">C:\Data</span> as application workspace.</p>
+<p><span style="font-weight: bold;">Note</span>: If you use the
+embedded database to store the items and relations you create, be
+careful to not delete the application's workspace inadvertently.
+Deleting the workspace will delete all items you created. Furthermore,
+it may be a good idea to <a href="database.html">backup the embedded database</a> from time to time.</p>
+
+<p>&#160;</p>
+
+<img src="../img/ngrelc.png" alt="ngrelc.png"><br>
+
+<ul>
+  <li><a href="wizards.html">Wizards to create items and databases</a></li>
+  <li><a href="db_backup.html">Database export and backup</a></li>
+</ul>
+
+<img src="../img/ngrelt.png" alt="ngrelt.png"><br>
+
+<ul>
+  <li><a href="../tasks/data_source.html">Creating and connecting a different data source</a></li>
+  <li><a href="../tasks/reindex_database.html">Reindexing the database</a></li>
+</ul>
+<p></p>
+
+</body>
+</html>

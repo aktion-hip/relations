@@ -1,0 +1,293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css" />
+<link rel="STYLESHEET" href="../css/schema.css" charset="ISO-8859-1" type="text/css" />
+<title>Extending the Configuration</title>
+</head>
+<body>
+<h1>Creating new Database Configuration Plug-ins</h1>
+
+<p>Out of the box, the Relations application stores the data that was created in an embedded <i>Derby</i> database.
+However, user might prefer to store the data created and managed by the Relations application in a RDBMS (relational database management system)
+already installed on their system. The application comes with a connector plug-in that allows to access a database catalog on a MySQL database.
+This connector plug-in implements the <code>org.elbe.relations.configuration</code> extension point. Therefore, it's easily possible to implement additional
+database configuration plug-ins that connect to other RDBMS.</p>
+
+<p>The main task of implementors of the <code>org.elbe.relations.configuration</code> extension point is to provide an XSL stylesheet that transforms 
+the RDBMS independent specification of the application's data model into a database specific set of CREATE TABLE and CREATE INDEX statements. 
+The URL to access this stylesheet has to be returned by the <code>Creator.getXSL()</code> method (where <code>Creator</code> is a class
+implementing the <code>org.elbe.relations.utility.IDBObjectCreator</code> interface.</p>
+
+<p>This document shows the DTD and XML that describe the application's data model in a RDBMS independent way:</p>
+
+<h3>DTD of data model specification</h3>
+<p>This is the DTD of the XML file that has to be transformed:</p>
+
+<p class="code" id="dtd">&lt;!ELEMENT Create (Table+, Index*) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Table (Field*, PrimaryKey, Key*, Index*) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Table name CDATA #REQUIRED&gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Field EMPTY&gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Field name CDATA #REQUIRED&gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Field type (string | clob | blob | integer | tinyinteger | biginteger | real | double | float | decimal | date | time | timestamp) #REQUIRED&gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Field size CDATA #IMPLIED&gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Field nullable (yes | no) #IMPLIED&gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Field default CDATA #IMPLIED&gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Field auto_increment (yes | no) #IMPLIED&gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Field unsigned (yes | no) #IMPLIED&gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT PrimaryKey (Column+)&gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Column EMPTY&gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Column name CDATA #REQUIRED&gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Key (Column+)&gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Key name CDATA #REQUIRED&gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Index (Column+)&gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Index name CDATA #REQUIRED&gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Index tablename CDATA #REQUIRED&gt;</p>
+
+<h3>XML of data model specification</h3>
+<p>This is the XML file that has to be transformed:</p>
+
+<pre>
+<p class=code id=tag>&lt;?xml version=<p class=code id=cstring>&quot;1.0&quot;</p><p class=code id=tag> encoding=<p class=code id=cstring>&quot;UTF-8&quot;</p><p class=code id=tag>?&gt;</p>
+<p class=code id=tag>&lt;Create&gt;</p>
+    <p class=code id=tag>&lt;Table name=<p class=code id=cstring>&quot;tblTerm&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;TermID&quot;</p><p class=code id=tag> auto_increment=<p class=code id=cstring>&quot;yes&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;biginteger&quot;</p><p class=code id=tag> nullable=<p class=code id=cstring>&quot;no&quot;</p><p class=code id=tag> unsigned=<p class=code id=cstring>&quot;yes&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sTitle&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag> size=<p class=code id=cstring>&quot;99&quot;</p><p class=code id=tag> nullable=<p class=code id=cstring>&quot;no&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sText&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;clob&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;dtCreation&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;timestamp&quot;</p><p class=code id=tag> nullable=<p class=code id=cstring>&quot;no&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;dtMutation&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;timestamp&quot;</p><p class=code id=tag> nullable=<p class=code id=cstring>&quot;no&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;PrimaryKey&gt;</p>
+            <p class=code id=tag>&lt;Column name=<p class=code id=cstring>&quot;TermID&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;/PrimaryKey&gt;</p>
+    <p class=code id=tag>&lt;/Table&gt;</p>
+    <p class=code id=tag>&lt;Table name=<p class=code id=cstring>&quot;tblText&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;TextID&quot;</p><p class=code id=tag> auto_increment=<p class=code id=cstring>&quot;yes&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;biginteger&quot;</p><p class=code id=tag> nullable=<p class=code id=cstring>&quot;no&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sTitle&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag> size=<p class=code id=cstring>&quot;150&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sText&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;clob&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sAuthor&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag> size=<p class=code id=cstring>&quot;100&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sCoAuthors&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag> size=<p class=code id=cstring>&quot;150&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sSubtitle&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag> size=<p class=code id=cstring>&quot;200&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sYear&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag> size=<p class=code id=cstring>&quot;15&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sPublication&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag> size=<p class=code id=cstring>&quot;100&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sPages&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag> size=<p class=code id=cstring>&quot;20&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;nVolume&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;integer&quot;</p><p class=code id=tag> /&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;nNumber&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;integer&quot;</p><p class=code id=tag> /&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sPublisher&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag> size=<p class=code id=cstring>&quot;99&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sPlace&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag> size=<p class=code id=cstring>&quot;99&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;nType&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;integer&quot;</p><p class=code id=tag> /&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;dtCreation&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;timestamp&quot;</p><p class=code id=tag> nullable=<p class=code id=cstring>&quot;no&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;dtMutation&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;timestamp&quot;</p><p class=code id=tag> nullable=<p class=code id=cstring>&quot;no&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;PrimaryKey&gt;</p>
+            <p class=code id=tag>&lt;Column name=<p class=code id=cstring>&quot;TextID&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;/PrimaryKey&gt;</p>
+    <p class=code id=tag>&lt;/Table&gt;</p>
+    <p class=code id=tag>&lt;Table name=<p class=code id=cstring>&quot;tblPerson&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;PersonID&quot;</p><p class=code id=tag> auto_increment=<p class=code id=cstring>&quot;yes&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;biginteger&quot;</p><p class=code id=tag> nullable=<p class=code id=cstring>&quot;no&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sName&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag> size=<p class=code id=cstring>&quot;99&quot;</p><p class=code id=tag> nullable=<p class=code id=cstring>&quot;no&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sFirstname&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag> size=<p class=code id=cstring>&quot;50&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sText&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;clob&quot;</p><p class=code id=tag> /&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sFrom&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag> size=<p class=code id=cstring>&quot;30&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;sTo&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag> size=<p class=code id=cstring>&quot;30&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;dtCreation&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;timestamp&quot;</p><p class=code id=tag> nullable=<p class=code id=cstring>&quot;no&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;dtMutation&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;timestamp&quot;</p><p class=code id=tag> nullable=<p class=code id=cstring>&quot;no&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;PrimaryKey&gt;</p>
+            <p class=code id=tag>&lt;Column name=<p class=code id=cstring>&quot;PersonID&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;/PrimaryKey&gt;</p>
+    <p class=code id=tag>&lt;/Table&gt;</p>
+    <p class=code id=tag>&lt;Table name=<p class=code id=cstring>&quot;tblRelation&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;RelationID&quot;</p><p class=code id=tag> auto_increment=<p class=code id=cstring>&quot;yes&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;biginteger&quot;</p><p class=code id=tag> nullable=<p class=code id=cstring>&quot;no&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;nType1&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;tinyinteger&quot;</p><p class=code id=tag> nullable=<p class=code id=cstring>&quot;no&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;nItem1&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;biginteger&quot;</p><p class=code id=tag> nullable=<p class=code id=cstring>&quot;no&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;nType2&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;tinyinteger&quot;</p><p class=code id=tag> nullable=<p class=code id=cstring>&quot;no&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Field name=<p class=code id=cstring>&quot;nItem2&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;biginteger&quot;</p><p class=code id=tag> nullable=<p class=code id=cstring>&quot;no&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;PrimaryKey&gt;</p>
+            <p class=code id=tag>&lt;Column name=<p class=code id=cstring>&quot;RelationID&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;/PrimaryKey&gt;</p>
+    <p class=code id=tag>&lt;/Table&gt;</p>
+    <p class=code id=tag>&lt;Index name=<p class=code id=cstring>&quot;idxTerm_01&quot;</p><p class=code id=tag> tablename=<p class=code id=cstring>&quot;tblTerm&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;Column name=<p class=code id=cstring>&quot;sTitle&quot;</p><p class=code id=tag>/&gt;</p>
+    <p class=code id=tag>&lt;/Index&gt;</p>
+    <p class=code id=tag>&lt;Index name=<p class=code id=cstring>&quot;idxText_01&quot;</p><p class=code id=tag> tablename=<p class=code id=cstring>&quot;tblText&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;Column name=<p class=code id=cstring>&quot;sTitle&quot;</p><p class=code id=tag>/&gt;</p>
+    <p class=code id=tag>&lt;/Index&gt;</p>
+    <p class=code id=tag>&lt;Index name=<p class=code id=cstring>&quot;idxText_02&quot;</p><p class=code id=tag> tablename=<p class=code id=cstring>&quot;tblText&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;Column name=<p class=code id=cstring>&quot;sAuthor&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Column name=<p class=code id=cstring>&quot;sCoAuthors&quot;</p><p class=code id=tag>/&gt;</p>
+    <p class=code id=tag>&lt;/Index&gt;</p>
+    <p class=code id=tag>&lt;Index name=<p class=code id=cstring>&quot;idxPerson_01&quot;</p><p class=code id=tag> tablename=<p class=code id=cstring>&quot;tblPerson&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;Column name=<p class=code id=cstring>&quot;sName&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Column name=<p class=code id=cstring>&quot;sFirstname&quot;</p><p class=code id=tag>/&gt;</p>
+    <p class=code id=tag>&lt;/Index&gt;</p>
+    <p class=code id=tag>&lt;Index name=<p class=code id=cstring>&quot;idxPerson_02&quot;</p><p class=code id=tag> tablename=<p class=code id=cstring>&quot;tblPerson&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;Column name=<p class=code id=cstring>&quot;sFrom&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Column name=<p class=code id=cstring>&quot;sTo&quot;</p><p class=code id=tag>/&gt;</p>
+    <p class=code id=tag>&lt;/Index&gt;</p>
+    <p class=code id=tag>&lt;Index name=<p class=code id=cstring>&quot;idxRelation_01&quot;</p><p class=code id=tag> tablename=<p class=code id=cstring>&quot;tblRelation&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;Column name=<p class=code id=cstring>&quot;nType1&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Column name=<p class=code id=cstring>&quot;nItem1&quot;</p><p class=code id=tag>/&gt;</p>        
+    <p class=code id=tag>&lt;/Index&gt;</p>
+    <p class=code id=tag>&lt;Index name=<p class=code id=cstring>&quot;idxRelation_02&quot;</p><p class=code id=tag> tablename=<p class=code id=cstring>&quot;tblRelation&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;Column name=<p class=code id=cstring>&quot;nType2&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;Column name=<p class=code id=cstring>&quot;nItem2&quot;</p><p class=code id=tag>/&gt;</p>        
+    <p class=code id=tag>&lt;/Index&gt;</p>
+<p class=code id=tag>&lt;/Create&gt;</p>
+</pre>
+
+<h3>The result of the XSL transformation</h3>
+
+<p>The goal is to transfrom the specified XML file into another XML file that contains the SQL CREATE statements. 
+The SQL statements must be text nodes named <code>CreateObject</code> that are childern of the root node named <code>CreateObjects</code>.
+Here is the DTD the result of the XSL transformation must conform to:</p>
+<p class="code" id="dtd">&lt;!ELEMENT CreateObjects (CreateObject+) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT CreateObject (#PCDATA) &gt;</p>
+
+<h3>Example of XSL for MySQL database</h3>
+<pre>
+<p class=code id=tag>&lt;?xml version=<p class=code id=cstring>&quot;1.0&quot;</p><p class=code id=tag> encoding=<p class=code id=cstring>&quot;UTF-8&quot;</p><p class=code id=tag>?&gt;</p>
+<p class=code id=tag>&lt;xsl:stylesheet xmlns:xsl=<p class=code id=cstring>&quot;http://www.w3.org/1999/XSL/Transform&quot;</p><p class=code id=tag> version=<p class=code id=cstring>&quot;1.0&quot;</p><p class=code id=tag>&gt;</p>
+    
+    <p class=code id=tag>&lt;xsl:template match=<p class=code id=cstring>&quot;/&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;CreateObjects&gt;</p>
+            <p class=code id=tag>&lt;xsl:apply-templates /&gt;</p>
+        <p class=code id=tag>&lt;/CreateObjects&gt;</p>    
+    <p class=code id=tag>&lt;/xsl:template&gt;</p>
+    
+    <p class=code id=tag>&lt;xsl:template match=<p class=code id=cstring>&quot;Table&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;CreateObject&gt;</p>
+        CREATE TABLE <p class=code id=tag>&lt;xsl:value-of select=<p class=code id=cstring>&quot;@name&quot;</p><p class=code id=tag>/&gt;</p> (
+        <p class=code id=tag>&lt;xsl:apply-templates select=<p class=code id=cstring>&quot;Field&quot;</p><p class=code id=tag> /&gt;</p>
+        <p class=code id=tag>&lt;xsl:apply-templates select=<p class=code id=cstring>&quot;PrimaryKey&quot;</p><p class=code id=tag> /&gt;</p>);
+    <p class=code id=tag>&lt;/CreateObject&gt;</p>
+    <p class=code id=tag>&lt;/xsl:template&gt;</p>
+    
+    <p class=code id=tag>&lt;xsl:template match=<p class=code id=cstring>&quot;Field&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;xsl:value-of select=<p class=code id=cstring>&quot;@name&quot;</p><p class=code id=tag> /&gt;</p><p class=code id=tag>&lt;xsl:text&gt;</p> <p class=code id=tag>&lt;/xsl:text&gt;</p>
+        <p class=code id=tag>&lt;xsl:choose&gt;</p>
+            <p class=code id=tag>&lt;xsl:when test=<p class=code id=cstring>&quot;@type = 'string'&quot;</p><p class=code id=tag>&gt;</p>VARCHAR(<p class=code id=tag>&lt;xsl:value-of select=<p class=code id=cstring>&quot;@size&quot;</p><p class=code id=tag>/&gt;</p>)<p class=code id=tag>&lt;/xsl:when&gt;</p>
+            <p class=code id=tag>&lt;xsl:when test=<p class=code id=cstring>&quot;@type = 'clob'&quot;</p><p class=code id=tag>&gt;</p>LONGTEXT<p class=code id=tag>&lt;/xsl:when&gt;</p>
+            <p class=code id=tag>&lt;xsl:when test=<p class=code id=cstring>&quot;@type = 'blob'&quot;</p><p class=code id=tag>&gt;</p>BLOB<p class=code id=tag>&lt;/xsl:when&gt;</p>
+            <p class=code id=tag>&lt;xsl:when test=<p class=code id=cstring>&quot;@type = 'integer'&quot;</p><p class=code id=tag>&gt;</p>INTEGER<p class=code id=tag>&lt;/xsl:when&gt;</p>
+            <p class=code id=tag>&lt;xsl:when test=<p class=code id=cstring>&quot;@type = 'tinyinteger'&quot;</p><p class=code id=tag>&gt;</p>TINYINT<p class=code id=tag>&lt;/xsl:when&gt;</p>
+            <p class=code id=tag>&lt;xsl:when test=<p class=code id=cstring>&quot;@type = 'biginteger'&quot;</p><p class=code id=tag>&gt;</p>BIGINT<p class=code id=tag>&lt;/xsl:when&gt;</p>
+            <p class=code id=tag>&lt;xsl:when test=<p class=code id=cstring>&quot;@type = 'real'&quot;</p><p class=code id=tag>&gt;</p>REAL<p class=code id=tag>&lt;/xsl:when&gt;</p>
+            <p class=code id=tag>&lt;xsl:when test=<p class=code id=cstring>&quot;@type = 'double'&quot;</p><p class=code id=tag>&gt;</p>DOUBLE<p class=code id=tag>&lt;/xsl:when&gt;</p>
+            <p class=code id=tag>&lt;xsl:when test=<p class=code id=cstring>&quot;@type = 'float'&quot;</p><p class=code id=tag>&gt;</p>FLOAT<p class=code id=tag>&lt;/xsl:when&gt;</p>
+            <p class=code id=tag>&lt;xsl:when test=<p class=code id=cstring>&quot;@type = 'decimal'&quot;</p><p class=code id=tag>&gt;</p>DECIMAL<p class=code id=tag>&lt;/xsl:when&gt;</p>
+            <p class=code id=tag>&lt;xsl:when test=<p class=code id=cstring>&quot;@type = 'date'&quot;</p><p class=code id=tag>&gt;</p>DATE<p class=code id=tag>&lt;/xsl:when&gt;</p>
+            <p class=code id=tag>&lt;xsl:when test=<p class=code id=cstring>&quot;@type = 'time'&quot;</p><p class=code id=tag>&gt;</p>TIME<p class=code id=tag>&lt;/xsl:when&gt;</p>
+            <p class=code id=tag>&lt;xsl:when test=<p class=code id=cstring>&quot;@type = 'timestamp'&quot;</p><p class=code id=tag>&gt;</p>TIMESTAMP<p class=code id=tag>&lt;/xsl:when&gt;</p>
+        <p class=code id=tag>&lt;/xsl:choose&gt;</p>
+        <p class=code id=tag>&lt;xsl:if test=<p class=code id=cstring>&quot;@unsigned = 'yes'&quot;</p><p class=code id=tag>&gt;</p> unsigned<p class=code id=tag>&lt;/xsl:if&gt;</p>
+        <p class=code id=tag>&lt;xsl:if test=<p class=code id=cstring>&quot;@nullable = 'no'&quot;</p><p class=code id=tag>&gt;</p> not null<p class=code id=tag>&lt;/xsl:if&gt;</p>
+        <p class=code id=tag>&lt;xsl:if test=<p class=code id=cstring>&quot;@auto_increment = 'yes'&quot;</p><p class=code id=tag>&gt;</p> auto_increment<p class=code id=tag>&lt;/xsl:if&gt;</p>
+        <p class=code id=tag>&lt;xsl:if test=<p class=code id=cstring>&quot;@default&quot;</p><p class=code id=tag>&gt;</p> default <p class=code id=tag>&lt;xsl:value-of select=<p class=code id=cstring>&quot;@default&quot;</p><p class=code id=tag>/&gt;</p><p class=code id=tag>&lt;/xsl:if&gt;</p>,
+    <p class=code id=tag>&lt;/xsl:template&gt;</p>
+    
+    <p class=code id=tag>&lt;xsl:template match=<p class=code id=cstring>&quot;PrimaryKey&quot;</p><p class=code id=tag>&gt;</p>
+        PRIMARY KEY (<p class=code id=tag>&lt;xsl:value-of select=<p class=code id=cstring>&quot;Column/@name&quot;</p><p class=code id=tag>/&gt;</p>)
+    <p class=code id=tag>&lt;/xsl:template&gt;</p>
+    
+    <p class=code id=tag>&lt;xsl:template match=<p class=code id=cstring>&quot;Index&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;CreateObject&gt;</p>
+        CREATE INDEX <p class=code id=tag>&lt;xsl:value-of select=<p class=code id=cstring>&quot;@name&quot;</p><p class=code id=tag>/&gt;</p> ON <p class=code id=tag>&lt;xsl:value-of select=<p class=code id=cstring>&quot;@tablename&quot;</p><p class=code id=tag>/&gt;</p>(<p class=code id=tag>&lt;xsl:apply-templates select=<p class=code id=cstring>&quot;Column&quot;</p><p class=code id=tag> /&gt;</p>);
+    <p class=code id=tag>&lt;/CreateObject&gt;</p>
+    <p class=code id=tag>&lt;/xsl:template&gt;</p>
+    
+    <p class=code id=tag>&lt;xsl:template match=<p class=code id=cstring>&quot;Column&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;xsl:value-of select=<p class=code id=cstring>&quot;@name&quot;</p><p class=code id=tag>/&gt;</p>
+        <p class=code id=tag>&lt;xsl:if test=<p class=code id=cstring>&quot;position() != last()&quot;</p><p class=code id=tag>&gt;</p>, <p class=code id=tag>&lt;/xsl:if&gt;</p>
+    <p class=code id=tag>&lt;/xsl:template&gt;</p>
+<p class=code id=tag>&lt;/xsl:stylesheet&gt;</p>
+</pre>
+
+<h3>Example of the transformed XML for MySQL</h3>
+<pre>
+<p class=code id=tag>&lt;?xml version=<p class=code id=cstring>&quot;1.0&quot;</p><p class=code id=tag> encoding=<p class=code id=cstring>&quot;utf-8&quot;</p><p class=code id=tag>?&gt;</p>
+<p class=code id=tag>&lt;CreateObjects&gt;</p>
+    <p class=code id=tag>&lt;CreateObject&gt;</p>
+    CREATE TABLE tblTerm (
+        TermID BIGINT unsigned not null auto_increment,
+        sTitle VARCHAR(99) not null,
+        sText LONGTEXT,
+        dtCreation TIMESTAMP not null,
+        dtMutation TIMESTAMP not null,    
+        PRIMARY KEY (TermID)
+    );
+    <p class=code id=tag>&lt;/CreateObject&gt;</p>
+    <p class=code id=tag>&lt;CreateObject&gt;</p>
+    CREATE TABLE tblText (
+        TextID BIGINT not null auto_increment,
+        sTitle VARCHAR(150),
+        sText LONGTEXT,
+        sAuthor VARCHAR(100),
+        sCoAuthors VARCHAR(150),
+        sSubtitle VARCHAR(200),
+        sYear VARCHAR(15),
+        sPublication VARCHAR(100),
+        sPages VARCHAR(20),
+        nVolume INTEGER,
+        nNumber INTEGER,
+        sPublisher VARCHAR(99),
+        sPlace VARCHAR(99),
+        nType INTEGER,
+        dtCreation TIMESTAMP not null,
+        dtMutation TIMESTAMP not null,    
+        PRIMARY KEY (TextID)
+    );
+    <p class=code id=tag>&lt;/CreateObject&gt;</p>
+    <p class=code id=tag>&lt;CreateObject&gt;</p>
+    CREATE TABLE tblPerson (
+        PersonID BIGINT not null auto_increment,
+        sName VARCHAR(99) not null,
+        sFirstname VARCHAR(50),
+        sText LONGTEXT,
+        sFrom VARCHAR(30),
+        sTo VARCHAR(30),
+        dtCreation TIMESTAMP not null,
+        dtMutation TIMESTAMP not null,    
+        PRIMARY KEY (PersonID)
+    );
+    <p class=code id=tag>&lt;/CreateObject&gt;</p>
+    <p class=code id=tag>&lt;CreateObject&gt;</p>
+    CREATE TABLE tblRelation (
+        RelationID BIGINT not null auto_increment,
+        nType1 TINYINT not null,
+        nItem1 BIGINT not null,
+        nType2 TINYINT not null,
+        nItem2 BIGINT not null,    
+        PRIMARY KEY (RelationID)
+    );
+    <p class=code id=tag>&lt;/CreateObject&gt;</p>
+    <p class=code id=tag>&lt;CreateObject&gt;</p>
+        CREATE INDEX idxTerm_01 ON tblTerm(sTitle);
+    <p class=code id=tag>&lt;/CreateObject&gt;</p>
+    <p class=code id=tag>&lt;CreateObject&gt;</p>
+        CREATE INDEX idxText_01 ON tblText(sTitle);
+    <p class=code id=tag>&lt;/CreateObject&gt;</p>
+    <p class=code id=tag>&lt;CreateObject&gt;</p>
+        CREATE INDEX idxText_02 ON tblText(sAuthor, sCoAuthors);
+    <p class=code id=tag>&lt;/CreateObject&gt;</p>
+    <p class=code id=tag>&lt;CreateObject&gt;</p>
+        CREATE INDEX idxPerson_01 ON tblPerson(sName, sFirstname);
+    <p class=code id=tag>&lt;/CreateObject&gt;</p>
+    <p class=code id=tag>&lt;CreateObject&gt;</p>
+        CREATE INDEX idxPerson_02 ON tblPerson(sFrom, sTo);
+    <p class=code id=tag>&lt;/CreateObject&gt;</p>
+    <p class=code id=tag>&lt;CreateObject&gt;</p>
+        CREATE INDEX idxRelation_01 ON tblRelation(nType1, nItem1);
+    <p class=code id=tag>&lt;/CreateObject&gt;</p>
+    <p class=code id=tag>&lt;CreateObject&gt;</p>
+        CREATE INDEX idxRelation_02 ON tblRelation(nType2, nItem2);
+    <p class=code id=tag>&lt;/CreateObject&gt;</p>
+<p class=code id=tag>&lt;/CreateObjects&gt;</p>
+</pre>
+
+<img src="../img/ngrelr.png" />
+<ul>
+  <li><a href="./org_elbe_relations_configuration.html">Configuration extension point description</a>
+  <li><a href="./db_schema.html">Database schema</a></li>
+</ul>
+
+</body>
+</html>

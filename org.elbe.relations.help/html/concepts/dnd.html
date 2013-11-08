@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Drag and Drop</title>
+  <link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css" />
+	</head>
+	<body>
+  <h1>Drag and Drop</h1>
+  <p>The application's <i>drag and drop</i> capability gives you the possibility to easily create items without the need to enter all information by hand.
+  You can either drop file from your computer's file system or web pages from your web browser.
+  Thus, the Relations application becomes a client for the semantic web.</p>
+  <h2>Dropping files from the file system</h2>
+  <p>Drag a file from your computer's file system and drop in on an item displayed in the Relations browser.</p>
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td><img src="../img/dnd1.gif" alt="Drag and drop a file" /></td>
+		<td>&#160;&gt;&#160;</td>
+        <td><img src="../img/dnd2.gif" alt="Dropped file becomes related item" /></td>
+    </tr>
+  </table>
+
+  <p>This will create a term item that is related to your drop target.</p>
+  <p><img src="../img/dnd3.gif" alt="Dropped files extracted metadata" /></p>
+  <p>The application tries to extract as many metadata as possible and provides this information in the item's text part.</p>
+  <h2>Dropping web pages</h2>
+  <p>You can drag a web page from your browser window and drop it on any item displayed in the Relations browser.</p>
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td><img src="../img/dnd4.gif" alt="Drag and drop a web page" /></td>
+		<td>&#160;&gt;&#160;</td>
+        <td><img src="../img/dnd5.gif" alt="Choice of items that can be created from web drop" /></td>
+    </tr>
+  </table>
+  <p>This time you will be asked what type of item you'd like to create with the metadata extracted from the dropped web page.
+  By default you get the choice to create a <i>Term</i>, <i>Text</i> or <i>Person</i> item.</p>
+  <p>If you select <i>Text</i>, the application will create a text item of type 'Web-Page'. Thus, the extracted information is <i>about the web page</i> you dropped.
+  However, if the web page contains bibliographical metadata and if the application knows how to extract this information, you'll get
+  the additional choice to create a <i>Text (Bibliography)</i> item. In this case, the extracted information and the created item is about the
+  bibliographical item <i>contained in</i> the web page you dropped.</p>
+  <p><img src="../img/dnd6.gif" alt="Bibliographical information extracted from web drop" /><br />
+  <i>The text item created from the bibliographical information contained in the dropped web page.</i></p>
+  <p><b>Note 1:</b> The Relations application can extract bibliographical information formatted in the <i>COinS</i>, <i>unAPI</i> or <i>RDFa</i> format.</p>
+  <p><b>Note 2:</b> The drag and drop capability with web pages gives you the possibility to build up a bibliographical database using Relations without the need
+  to enter every bibliography by hand. You just surfe the internet for the requested book or article and drop the web page you found to an itme on your
+  Relations browser.
+  Unfortunatley, the Relations application is not able to extract bibliographical information from the <i>Amazon</i> online catalog.
+  However, you can use <i>WorldCat</i> (The World's Largest Library Catalog: <a href="http://www.worldcat.org/">www.worldcat.org</a>) to look
+  for bibliographies you can drop on your Relations browser.</p>
+
+<p><img src="../img/ngrelc.png" alt="Related concepts" border="0"></p>
+<ul>
+  <li><a href="./items.html">Items</a></li>
+  <li><a href="./relations_browser.html">Relations browser</a></li>
+</ul>
+
+<p><img src="../img/ngrelt.png" alt="Related tasks" border="0"></p>
+<ul>
+  <li><a href="../gettingstarted/creating_items.html">Creating items</a></li>
+  <li><a href="../gettingstarted/creating_relations.html">Creating relations</a></li>
+</ul>
+
+<p></p>
+	</body>
+</html>

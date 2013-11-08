@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css" />
+<link rel="STYLESHEET" href="../css/schema.css" charset="ISO-8859-1" type="text/css" />
+<title>XML export: DTD</title>
+</head>
+<body>
+<h1>The DTD of the XML export</h1>
+<p>The content of the Relations databases can be exported to an XML file (that can be compressed).
+XML is a future-proof format that makes it possible to process the content, e.g. by use of XSL transformation.
+This document shows the DTD and an example of an XML export.</p>
+
+<h3>Document Type Definition (DTD) of the exported XML</h3>
+
+<style type="text/css">
+<!--
+p.code#dtd {
+text-indent:-2em;
+margin-left:2em
+}
+-->
+</style>
+
+<p class="code" id="dtd">&lt;!ELEMENT RelationsExport (TermEntries, TextEntries, PersonEntries, RelationEntries) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST RelationsExport date CDATA #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT TermEntries (TermEntry*) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT TextEntries (TextEntry*) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT PersonEntries (PersonEntry*) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT RelationEntries (RelationEntry*) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT TermEntry (ID, Title, Text, Created, Modified) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT TextEntry (ID, Type, Title, Subtitle, Author, CoAuthors, Year, Place, Publisher, Publication, Number, Volume, Pages, Text, Created, Modified) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT PersonEntry (ID, Name, Firstname, From, To, Created, Modified) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT RelationEntry (ID, Type1, Item1, Type2, Item2) &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT ID (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST ID field CDATA #REQUIRED <br/>
+                type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Title (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Title field CDATA #REQUIRED  <br/>
+                type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Created (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Created field CDATA #REQUIRED  <br/>
+                  type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Modified (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Modified field CDATA #REQUIRED  <br/>
+                   type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Type (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Type field CDATA #REQUIRED  <br/>
+               type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Subtitle (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Subtitle field CDATA #REQUIRED <br/>
+                   type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Author (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Author field CDATA #REQUIRED <br/>
+                 type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT CoAuthors (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST CoAuthors field CDATA #REQUIRED <br/>
+                    type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Year (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Year field CDATA #REQUIRED  <br/>
+               type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Place (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Place field CDATA #REQUIRED <br/>
+                type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Publisher (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Publisher field CDATA #REQUIRED <br/>
+                    type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Publication (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Publication field CDATA #REQUIRED <br/>
+                      type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Number (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Number field CDATA #REQUIRED <br/>
+                 type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Volume (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Volume field CDATA #REQUIRED <br/>
+                 type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Pages (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Pages field CDATA #REQUIRED <br/>
+                type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Name (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Name field CDATA #REQUIRED <br/>
+               type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Firstname (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Firstname field CDATA #REQUIRED <br/>
+                    type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT From (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST From field CDATA #REQUIRED <br/>
+               type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT To (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST To field CDATA #REQUIRED <br/>
+             type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Type1 (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Type1 field CDATA #REQUIRED <br/>
+                type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Item1 (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Item1 field CDATA #REQUIRED <br/>
+                type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Type2 (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Type2 field CDATA #REQUIRED <br/>
+                type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Item2 (#PCDATA) &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Item2 field CDATA #REQUIRED <br/>
+                type (Number | String | Timestamp) #REQUIRED &gt;</p>
+<p class="code" id="dtd">&lt;!ELEMENT Text ANY &gt;</p>
+<p class="code" id="dtd">&lt;!ATTLIST Text field CDATA #REQUIRED <br/>
+               type (Number | String | Timestamp) #REQUIRED &gt;</p>
+
+<h3>Example of XML export</h3>
+
+<pre>
+<p class=code id=tag>&lt;?xml version=<p class=code id=cstring>&quot;1.0&quot;</p><p class=code id=tag> encoding=<p class=code id=cstring>&quot;UTF-8&quot;</p><p class=code id=tag>?&gt;</p>
+<p class=code id=tag>&lt;RelationsExport date=<p class=code id=cstring>&quot;Oct 31, 2008 11:40:38 PM&quot;</p><p class=code id=tag>&gt;</p>
+<p class=code id=tag>&lt;TermEntries&gt;</p>
+<p class=code id=tag>&lt;TermEntry&gt;</p>
+        <p class=code id=tag>&lt;ID field=<p class=code id=cstring>&quot;TERMID&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>1
+        <p class=code id=tag>&lt;/ID&gt;</p>
+        <p class=code id=tag>&lt;Title field=<p class=code id=cstring>&quot;STITLE&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>theory of relativity
+        <p class=code id=tag>&lt;/Title&gt;</p>
+        <p class=code id=tag>&lt;Modified field=<p class=code id=cstring>&quot;DTMUTATION&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Timestamp&quot;</p><p class=code id=tag>&gt;</p>2007-09-08 19:58:16.0
+        <p class=code id=tag>&lt;/Modified&gt;</p>
+        <p class=code id=tag>&lt;Text field=<p class=code id=cstring>&quot;STEXT&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>theory of relativity
+        <p class=code id=tag>&lt;/Text&gt;</p>
+        <p class=code id=tag>&lt;Created field=<p class=code id=cstring>&quot;DTCREATION&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Timestamp&quot;</p><p class=code id=tag>&gt;</p>2007-01-27 11:20:21.0
+        <p class=code id=tag>&lt;/Created&gt;</p>
+<p class=code id=tag>&lt;/TermEntry&gt;</p>
+<p class=code id=tag>&lt;TermEntry&gt;</p>
+        <p class=code id=tag>&lt;ID field=<p class=code id=cstring>&quot;TERMID&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>2
+        <p class=code id=tag>&lt;/ID&gt;</p>
+        <p class=code id=tag>&lt;Title field=<p class=code id=cstring>&quot;STITLE&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>quantum mechanics
+        <p class=code id=tag>&lt;/Title&gt;</p>
+        <p class=code id=tag>&lt;Modified field=<p class=code id=cstring>&quot;DTMUTATION&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Timestamp&quot;</p><p class=code id=tag>&gt;</p>2007-01-27 11:25:04.0
+        <p class=code id=tag>&lt;/Modified&gt;</p>
+        <p class=code id=tag>&lt;Text field=<p class=code id=cstring>&quot;STEXT&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>Part of the modern, non classical physics. At the beginning of the 20th century, the quantum mechanics benefited from major contributions by Einstein.
+        <p class=code id=tag>&lt;/Text&gt;</p>
+        <p class=code id=tag>&lt;Created field=<p class=code id=cstring>&quot;DTCREATION&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Timestamp&quot;</p><p class=code id=tag>&gt;</p>2007-01-27 11:25:04.0
+        <p class=code id=tag>&lt;/Created&gt;</p>
+<p class=code id=tag>&lt;/TermEntry&gt;</p>
+<p class=code id=tag>&lt;TermEntry&gt;</p>
+        <p class=code id=tag>&lt;ID field=<p class=code id=cstring>&quot;TERMID&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>3
+        <p class=code id=tag>&lt;/ID&gt;</p>
+        <p class=code id=tag>&lt;Title field=<p class=code id=cstring>&quot;STITLE&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>physics
+        <p class=code id=tag>&lt;/Title&gt;</p>
+        <p class=code id=tag>&lt;Modified field=<p class=code id=cstring>&quot;DTMUTATION&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Timestamp&quot;</p><p class=code id=tag>&gt;</p>2007-09-23 20:25:16.0
+        <p class=code id=tag>&lt;/Modified&gt;</p>
+        <p class=code id=tag>&lt;Text field=<p class=code id=cstring>&quot;STEXT&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>Part of natural <p class=code id=tag>&lt;i&gt;</p>science<p class=code id=tag>&lt;/i&gt;</p>.
+Physics is a <p class=code id=tag>&lt;b&gt;</p>fundamental<p class=code id=tag>&lt;/b&gt;</p> science where <p class=code id=tag>&lt;u&gt;</p>other<p class=code id=tag>&lt;/u&gt;</p> natural <p class=code id=tag>&lt;i&gt;</p>sciences<p class=code id=tag>&lt;/i&gt;</p> can be built on.
+        <p class=code id=tag>&lt;/Text&gt;</p>
+        <p class=code id=tag>&lt;Created field=<p class=code id=cstring>&quot;DTCREATION&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Timestamp&quot;</p><p class=code id=tag>&gt;</p>2007-01-27 11:32:34.0
+        <p class=code id=tag>&lt;/Created&gt;</p>
+<p class=code id=tag>&lt;/TermEntry&gt;</p>
+<p class=code id=tag>&lt;/TermEntries&gt;</p>
+<p class=code id=tag>&lt;TextEntries&gt;</p>
+<p class=code id=tag>&lt;TextEntry&gt;</p>
+        <p class=code id=tag>&lt;Created field=<p class=code id=cstring>&quot;DTCREATION&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Timestamp&quot;</p><p class=code id=tag>&gt;</p>2007-01-27 11:28:54.0
+        <p class=code id=tag>&lt;/Created&gt;</p>
+        <p class=code id=tag>&lt;Type field=<p class=code id=cstring>&quot;NTYPE&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>1
+        <p class=code id=tag>&lt;/Type&gt;</p>
+        <p class=code id=tag>&lt;Year field=<p class=code id=cstring>&quot;SYEAR&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>1905
+        <p class=code id=tag>&lt;/Year&gt;</p>
+        <p class=code id=tag>&lt;Place field=<p class=code id=cstring>&quot;SPLACE&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;/Place&gt;</p>
+        <p class=code id=tag>&lt;Publisher field=<p class=code id=cstring>&quot;SPUBLISHER&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;/Publisher&gt;</p>
+        <p class=code id=tag>&lt;Text field=<p class=code id=cstring>&quot;STEXT&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;/Text&gt;</p>
+        <p class=code id=tag>&lt;Publication field=<p class=code id=cstring>&quot;SPUBLICATION&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>Annalen der Physik
+        <p class=code id=tag>&lt;/Publication&gt;</p>
+        <p class=code id=tag>&lt;Author field=<p class=code id=cstring>&quot;SAUTHOR&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>Einstein, Albert
+        <p class=code id=tag>&lt;/Author&gt;</p>
+        <p class=code id=tag>&lt;Subtitle field=<p class=code id=cstring>&quot;SSUBTITLE&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;/Subtitle&gt;</p>
+        <p class=code id=tag>&lt;CoAuthors field=<p class=code id=cstring>&quot;SCOAUTHORS&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;/CoAuthors&gt;</p>
+        <p class=code id=tag>&lt;Title field=<p class=code id=cstring>&quot;STITLE&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>Zur Elektrodynamik bewegter Körper
+        <p class=code id=tag>&lt;/Title&gt;</p>
+        <p class=code id=tag>&lt;Number field=<p class=code id=cstring>&quot;NNUMBER&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>17
+        <p class=code id=tag>&lt;/Number&gt;</p>
+        <p class=code id=tag>&lt;Modified field=<p class=code id=cstring>&quot;DTMUTATION&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Timestamp&quot;</p><p class=code id=tag>&gt;</p>2007-08-12 21:32:36.0
+        <p class=code id=tag>&lt;/Modified&gt;</p>
+        <p class=code id=tag>&lt;ID field=<p class=code id=cstring>&quot;TEXTID&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>1
+        <p class=code id=tag>&lt;/ID&gt;</p>
+        <p class=code id=tag>&lt;Volume field=<p class=code id=cstring>&quot;NVOLUME&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>0
+        <p class=code id=tag>&lt;/Volume&gt;</p>
+        <p class=code id=tag>&lt;Pages field=<p class=code id=cstring>&quot;SPAGES&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>891-912
+        <p class=code id=tag>&lt;/Pages&gt;</p>
+<p class=code id=tag>&lt;/TextEntry&gt;</p>
+<p class=code id=tag>&lt;/TextEntries&gt;</p>
+<p class=code id=tag>&lt;PersonEntries&gt;</p>
+<p class=code id=tag>&lt;PersonEntry&gt;</p>
+        <p class=code id=tag>&lt;ID field=<p class=code id=cstring>&quot;PERSONID&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>1
+        <p class=code id=tag>&lt;/ID&gt;</p>
+        <p class=code id=tag>&lt;Name field=<p class=code id=cstring>&quot;SNAME&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>Einstein
+        <p class=code id=tag>&lt;/Name&gt;</p>
+        <p class=code id=tag>&lt;To field=<p class=code id=cstring>&quot;STO&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>1955
+        <p class=code id=tag>&lt;/To&gt;</p>
+        <p class=code id=tag>&lt;Modified field=<p class=code id=cstring>&quot;DTMUTATION&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Timestamp&quot;</p><p class=code id=tag>&gt;</p>2007-01-27 11:19:43.0
+        <p class=code id=tag>&lt;/Modified&gt;</p>
+        <p class=code id=tag>&lt;Firstname field=<p class=code id=cstring>&quot;SFIRSTNAME&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>Albert
+        <p class=code id=tag>&lt;/Firstname&gt;</p>
+        <p class=code id=tag>&lt;Text field=<p class=code id=cstring>&quot;STEXT&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>Physical scientist and Nobel prize winner.
+
+        <p class=code id=tag>&lt;/Text&gt;</p>
+        <p class=code id=tag>&lt;From field=<p class=code id=cstring>&quot;SFROM&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>&gt;</p>1879
+        <p class=code id=tag>&lt;/From&gt;</p>
+        <p class=code id=tag>&lt;Created field=<p class=code id=cstring>&quot;DTCREATION&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Timestamp&quot;</p><p class=code id=tag>&gt;</p>2007-01-27 11:19:43.0
+        <p class=code id=tag>&lt;/Created&gt;</p>
+<p class=code id=tag>&lt;/PersonEntry&gt;</p>
+<p class=code id=tag>&lt;/PersonEntries&gt;</p>
+<p class=code id=tag>&lt;RelationEntries&gt;</p>
+<p class=code id=tag>&lt;RelationEntry&gt;</p>
+        <p class=code id=tag>&lt;ID field=<p class=code id=cstring>&quot;RELATIONID&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>1
+        <p class=code id=tag>&lt;/ID&gt;</p>
+        <p class=code id=tag>&lt;Item2 field=<p class=code id=cstring>&quot;NITEM2&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>1
+        <p class=code id=tag>&lt;/Item2&gt;</p>
+        <p class=code id=tag>&lt;Item1 field=<p class=code id=cstring>&quot;NITEM1&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>1
+        <p class=code id=tag>&lt;/Item1&gt;</p>
+        <p class=code id=tag>&lt;Type2 field=<p class=code id=cstring>&quot;NTYPE2&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>3
+        <p class=code id=tag>&lt;/Type2&gt;</p>
+        <p class=code id=tag>&lt;Type1 field=<p class=code id=cstring>&quot;NTYPE1&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>1
+        <p class=code id=tag>&lt;/Type1&gt;</p>
+<p class=code id=tag>&lt;/RelationEntry&gt;</p>
+<p class=code id=tag>&lt;RelationEntry&gt;</p>
+        <p class=code id=tag>&lt;ID field=<p class=code id=cstring>&quot;RELATIONID&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>2
+        <p class=code id=tag>&lt;/ID&gt;</p>
+        <p class=code id=tag>&lt;Item2 field=<p class=code id=cstring>&quot;NITEM2&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>1
+        <p class=code id=tag>&lt;/Item2&gt;</p>
+        <p class=code id=tag>&lt;Item1 field=<p class=code id=cstring>&quot;NITEM1&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>2
+        <p class=code id=tag>&lt;/Item1&gt;</p>
+        <p class=code id=tag>&lt;Type2 field=<p class=code id=cstring>&quot;NTYPE2&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>1
+        <p class=code id=tag>&lt;/Type2&gt;</p>
+        <p class=code id=tag>&lt;Type1 field=<p class=code id=cstring>&quot;NTYPE1&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>1
+        <p class=code id=tag>&lt;/Type1&gt;</p>
+<p class=code id=tag>&lt;/RelationEntry&gt;</p>
+<p class=code id=tag>&lt;RelationEntry&gt;</p>
+        <p class=code id=tag>&lt;ID field=<p class=code id=cstring>&quot;RELATIONID&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>3
+        <p class=code id=tag>&lt;/ID&gt;</p>
+        <p class=code id=tag>&lt;Item2 field=<p class=code id=cstring>&quot;NITEM2&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>1
+        <p class=code id=tag>&lt;/Item2&gt;</p>
+        <p class=code id=tag>&lt;Item1 field=<p class=code id=cstring>&quot;NITEM1&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>2
+        <p class=code id=tag>&lt;/Item1&gt;</p>
+        <p class=code id=tag>&lt;Type2 field=<p class=code id=cstring>&quot;NTYPE2&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>3
+        <p class=code id=tag>&lt;/Type2&gt;</p>
+        <p class=code id=tag>&lt;Type1 field=<p class=code id=cstring>&quot;NTYPE1&quot;</p><p class=code id=tag> type=<p class=code id=cstring>&quot;Number&quot;</p><p class=code id=tag>&gt;</p>1
+        <p class=code id=tag>&lt;/Type1&gt;</p>
+<p class=code id=tag>&lt;/RelationEntry&gt;</p>
+<p class=code id=tag>&lt;/RelationEntries&gt;</p>
+<p class=code id=tag>&lt;/RelationsExport&gt;</p>
+</pre>
+
+<img src="../img/ngrelc.png" />
+<ul>
+  <li><a href="../concepts/db_backup.html">Database export and backup</a>
+</ul>
+
+</body>
+</html>

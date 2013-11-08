@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Relations: preferences</title>
+  <link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css">
+</head>
+<body>
+
+<h1>Preferences</h1>
+
+<p>With the application's preferences you can define and modify
+some of the application's settings according to your needs. Click <span style="font-weight: bold;">Utilities &gt; Preferences...</span>
+to display the preference pages, containing various pages for different
+topics. The <span style="font-weight: bold;">Relations</span>
+preference page is specific to the Relations application whereas the
+<span style="font-weight: bold;">Keys</span>
+preference page is adapted to the needs of this application. Use this
+preference page to <a href="../tasks/modify_keys.html">modify
+the shortcut keys</a>. The other preference pages are provided by
+the Eclipse platform.</p>
+
+<p><img src="../img/preferences_relations.gif" alt="Relations preference page"></p>
+
+<p style="font-style: italic;">The Relations preference page</p>
+
+<p>Using the Relations preference page you can set the <span style="font-style: italic;">Biblio Schema</span> to
+format bibliographical information, i.e. Text items.&nbsp;</p>
+
+<p>The next section concerns the database connection. This form is identical to the
+dialog displayed to <a href="../tasks/data_source.html">connect to a different data source</a>, i.e. you can provide the connection information
+and the content language (used for fulltext indexing) here. The default values are 100 entries in the search result and 20 entries in the last changes view.</p>
+
+<p>
+In the last section, you can set the values that limit the number of items displayed in the <a href="./search_view.html">search result</a>
+view and the <a href="./last_changes_view.html">last changes</a> view respectively.
+</p>
+
+<p><span style="font-weight: bold;">Note:</span>
+It is possible to extend the application by providing additional
+schemes to format bibliographies.
+This can be done by providing a plug-in implementing the <a href="../reference/org_elbe_relations_bibliography.html">org.elbe.relations.bibliography</a>
+extension
+point. In the same way you can provide a plug-in implementing
+the&nbsp;
+<a href="../reference/org_elbe_relations_configuration.html">org.elbe.relations.configuration</a>
+extension point to add another database configurations. Thus, you can
+connect to another external RDBMS.</p>
+
+<p><img src="../img/ngrelt.png" alt="ngrelt.png"></p>
+<ul>
+  <li><a href="../tasks/data_source.html">Creating and connecting a different data source</a></li>
+  <li><a href="../tasks/modify_keys.html">Modifying the shortcut keys</a></li>
+</ul>
+<img src="../img/ngrelr.png" alt="ngrelr.png"><br>
+<ul>
+  <li><a href="org_elbe_relations_bibliography.html">
+    </a><a href="../reference/org_elbe_relations_bibliography.html">Bibliography</a> extension point</li>
+  <li><a href="../reference/org_elbe_relations_configuration.html">Configuration</a> extension point</li>
+</ul>
+<p></p>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT RelationsExport (TermEntries, TextEntries, PersonEntries, RelationEntries) >
+<!ATTLIST RelationsExport date CDATA #REQUIRED >
+<!ELEMENT TermEntries (TermEntry*) >
+<!ELEMENT TextEntries (TextEntry*) >
+<!ELEMENT PersonEntries (PersonEntry*) >
+<!ELEMENT RelationEntries (RelationEntry*) >
+<!ELEMENT TermEntry (ID, Title, Text, Created, Modified) >
+<!ELEMENT TextEntry (ID, Type, Title, Subtitle, Author, CoAuthors, Year, Place, Publisher, Publication, Number, Volume, Pages, Text, Created, Modified) >
+<!ELEMENT PersonEntry (ID, Name, Firstname, From, To, Created, Modified) >
+<!ELEMENT RelationEntry (ID, Type1, Item1, Type2, Item2) >
+<!ELEMENT ID (#PCDATA) >
+<!ATTLIST ID field CDATA #REQUIRED 
+             type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Title (#PCDATA) >
+<!ATTLIST Title field CDATA #REQUIRED 
+                type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Created (#PCDATA) >
+<!ATTLIST Created field CDATA #REQUIRED 
+                  type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Modified (#PCDATA) >
+<!ATTLIST Modified field CDATA #REQUIRED 
+                   type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Type (#PCDATA) >
+<!ATTLIST Type field CDATA #REQUIRED 
+               type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Subtitle (#PCDATA) >
+<!ATTLIST Subtitle field CDATA #REQUIRED 
+                   type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Author (#PCDATA) >
+<!ATTLIST Author field CDATA #REQUIRED 
+                 type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT CoAuthors (#PCDATA) >
+<!ATTLIST CoAuthors field CDATA #REQUIRED 
+                    type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Year (#PCDATA) >
+<!ATTLIST Year field CDATA #REQUIRED 
+               type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Place (#PCDATA) >
+<!ATTLIST Place field CDATA #REQUIRED 
+                type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Publisher (#PCDATA) >
+<!ATTLIST Publisher field CDATA #REQUIRED 
+                    type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Publication (#PCDATA) >
+<!ATTLIST Publication field CDATA #REQUIRED 
+                      type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Number (#PCDATA) >
+<!ATTLIST Number field CDATA #REQUIRED 
+                 type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Volume (#PCDATA) >
+<!ATTLIST Voluem field CDATA #REQUIRED 
+                 type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Pages (#PCDATA) >
+<!ATTLIST Pages field CDATA #REQUIRED 
+                type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Name (#PCDATA) >
+<!ATTLIST Name field CDATA #REQUIRED 
+               type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Firstname (#PCDATA) >
+<!ATTLIST Firstname field CDATA #REQUIRED 
+                    type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT From (#PCDATA) >
+<!ATTLIST From field CDATA #REQUIRED 
+               type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT To (#PCDATA) >
+<!ATTLIST To field CDATA #REQUIRED 
+             type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Type1 (#PCDATA) >
+<!ATTLIST Type1 field CDATA #REQUIRED 
+                type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Item1 (#PCDATA) >
+<!ATTLIST Item1 field CDATA #REQUIRED 
+                type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Type2 (#PCDATA) >
+<!ATTLIST Type2 field CDATA #REQUIRED 
+                type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Item2 (#PCDATA) >
+<!ATTLIST Item2 field CDATA #REQUIRED 
+                type (Number | String | Timestamp) #REQUIRED >
+<!ELEMENT Text ANY >
+<!ATTLIST Text field CDATA #REQUIRED 
+               type (Number | String | Timestamp) #REQUIRED >

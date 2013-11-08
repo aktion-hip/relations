@@ -1,0 +1,5 @@
+org.hip.vif.db.driver=com.mysql.jdbc.Driver/MySQL Connector/J/5.1.18
+org.hip.vif.db.server=localhost
+org.hip.vif.db.schema=mySchema
+org.hip.vif.db.userId=myUser
+org.hip.vif.db.password=myPassword

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Reference" link_to="toc.xml#reference"> 
+	<topic label="Database schema" href="html/reference/db_schema.html" />
+	<topic label="Configuration Plug-ins" href="html/reference/configuration.html" />
+	<topic label="Print-out Plug-ins" href="html/reference/printout.html" />
+	<topic label="DTD of XML export" href="html/reference/xml_export.html" />
+	<topic label="Shortcut keys" href="html/reference/shortcuts.html" />
+	<topic label="Extension points" href="html/reference/extension_points.html">
+		<topic label="org.elbe.relations.bibliography" href="html/reference/org_elbe_relations_bibliography.html"/>	
+		<topic label="org.elbe.relations.browsers" href="html/reference/org_elbe_relations_browsers.html"/>	
+		<topic label="org.elbe.relations.configuration" href="html/reference/org_elbe_relations_configuration.html"/>	
+		<topic label="org.elbe.relations.printOut" href="html/reference/org_elbe_relations_printOut.html"/>	
+	</topic>
+</toc>

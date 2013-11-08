@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Concepts" link_to="toc.xml#concepts">
+	<topic label="Items"  href="html/concepts/items.html" />
+	<topic label="Wizards"  href="html/concepts/wizards.html" />
+	<topic label="Relations browser"  href="html/concepts/relations_browser.html" />
+	<topic label="Relations finder"  href="html/concepts/relations_finder.html" />
+	<topic label="Selection views"  href="html/concepts/selection_views.html" />
+	<topic label="Inspector view"  href="html/concepts/inspector_view.html" />
+	<topic label="Search view"  href="html/concepts/search_view.html" />
+	<topic label="Last changes"  href="html/concepts/last_changes_view.html" />
+	<topic label="Bookmarking items"  href="html/concepts/bookmark_view.html" />
+	<topic label="Central item"  href="html/concepts/central_item.html" />
+	<topic label="Active item"  href="html/concepts/active_item.html" />
+	<topic label="Action buttons"  href="html/concepts/action_buttons.html" />
+	<topic label="Preferences" href="html/concepts/preferences.html" />
+	<topic label="Workspace" href="html/concepts/workspace.html" />
+	<topic label="Export and backup" href="html/concepts/db_backup.html" />
+	<topic label="Drag and Drop" href="html/concepts/dnd.html" />
+</toc>

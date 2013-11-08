@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Relations PrintOut</title>
+<link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css" />
+<link rel="STYLESHEET" href="../css/schema.css" charset="ISO-8859-1" type="text/css" />
+</HEAD>
+<BODY>
+<H1><CENTER>Relations PrintOut</CENTER></H1>
+<p></p>
+<h6 class=CaptionFigColumn id=header>Identifier: </h6>org.elbe.relations.printOut<p></p>
+<h6 class=CaptionFigColumn id=header>Since: </h6>0.9
+<p></p>
+
+<p>
+<h6 class=CaptionFigColumn id=header>Description: </h6>Extension point for plug-ins to print out selected relation items to a document.</p>
+<p><h6 class=CaptionFigColumn id=header>Configuration Markup:</h6></p>
+<p class=code id=dtd>&lt;!ELEMENT <a name="e.extension">extension</a> (<a href="#e.printOut">printOut</a>)&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST extension</p>
+<p class=code id=dtdAttlist>point&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>id&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>name&nbsp;&nbsp;CDATA #IMPLIED&gt;</p>
+<p></p>
+<ul class=ConfigMarkup id=attlistDesc>
+</ul>
+<br><p class=code id=dtd>&lt;!ELEMENT <a name="e.printOut">printOut</a> EMPTY&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST printOut</p>
+<p class=code id=dtdAttlist>id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>printOutName&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>fileType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>fileTypeName&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>class&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED&gt;</p>
+<p></p>
+<ul class=ConfigMarkup id=attlistDesc>
+<li><b>id</b> - a unique name that will be used to identify this print out extension</li>
+<li><b>printOutName</b> - name of the print out.</li>
+<li><b>fileType</b> - file type of print out file, e.g. "*.txt". This file extension will be used in the file dialog to filter the files.</li>
+<li><b>fileTypeName</b> - name of the file type, used to describe the filter extension which the dialog will use. User-friendly short description shown for its corresponding filter.</li>
+<li><b>class</b> - a fully qualified name of the class that implements <code>org.elbe.relations.print.IPrintOut</code>.</li>
+</ul>
+<br><h6 class=CaptionFigColumn id=header>Examples: </h6>The default print out's <code>plugin.xml</code> (see the <code>org.elbe.relations.print.dft</code> plug-in) looks as follows: 
+
+<pre>
+<p class=code id=tag>&lt;plugin&gt;</p>
+   <p class=code id=tag>&lt;extension
+         point=<p class=code id=cstring>&quot;org.elbe.relations.printOut&quot;</p><p class=code id=tag>&gt;</p>
+      <p class=code id=tag>&lt;printOut
+            class=<p class=code id=cstring>&quot;org.elbe.relations.print.dft.PrintOut&quot;</p><p class=code id=tag>
+            fileType=<p class=code id=cstring>&quot;*.txt&quot;</p><p class=code id=tag>
+            fileTypeName=<p class=code id=cstring>&quot;Text file (.txt)&quot;</p><p class=code id=tag>
+            id=<p class=code id=cstring>&quot;org.elbe.relations.print.dft.printOut&quot;</p><p class=code id=tag>
+            printOutName=<p class=code id=cstring>&quot;Simple text file&quot;</p><p class=code id=tag>/&gt;</p>
+   <p class=code id=tag>&lt;/extension&gt;</p>
+<p class=code id=tag>&lt;/plugin&gt;</p>
+</pre>
+<p></p>
+
+<h6 class=CaptionFigColumn id=header>API Information: </h6>Print out plug-ins must implement the <code>org.elbe.relations.print.IPrintOut</code> interface. 
+They may make use of the functionality provided by <code>org.elbe.relations.print.AbstractPrintOut</code> by extending this abstract class.
+<p></p>
+
+<h6 class=CaptionFigColumn id=header>Supplied Implementation: </h6>The Relations application provides the <code>org.elbe.relations.print.dft</code> that prints out to a simple text file as default implementation of a print out plug-in.
+<p></p>
+
+<br>
+<p class=note id=copyright>
+&copy; 2007, RelationWare, Benno Luthiger
+<p></p>
+
+</p>
+</BODY>
+</HTML>

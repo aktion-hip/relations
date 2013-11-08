@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Getting Started" link_to="toc.xml#gettingstarted"> 
+	<topic label="Creating items"  href="html/gettingstarted/creating_items.html" /> 
+	<topic label="Creating relations" href="html/gettingstarted/creating_relations.html" />
+	<topic label="Displaying the item&#39;s relations" href="html/gettingstarted/item_relations.html" />
+	<topic label="Editing items" href="html/gettingstarted/editing_items.html" />
+	<topic label="Managing the item&#39;s context" href="html/gettingstarted/editing_context.html" />
+</toc>

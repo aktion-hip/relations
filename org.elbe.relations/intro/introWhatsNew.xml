@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<introContent>
+  	<extensionContent id="org.elbe.relations.introWhatsNew" name="What's New" style="css/relations.css" path="whatsnew/@">
+		<group style-id="content-group" id="org.elbe.relations-introLink-group">
+			<link label="Relations application" id="relations-noteworthy" style-id="content-link" url="http://org.eclipse.ui.intro/showHelpTopic?id=/org.elbe.relations.help/html/whatsNew/index.html">
+          		<text>Find out about the major new features in this release</text>
+       		</link>
+       	</group>
+  		<group style-id="content-group" id="org.elbe.relations-introLink-addition">
+  			<hr />
+  			<text>To start working with the Relations application, click 'Workbench' or close this welcome page.</text>  			
+  		</group>
+  	</extensionContent>
+</introContent>
