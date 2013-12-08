@@ -18,11 +18,11 @@
  ***************************************************************************/
 package org.elbe.relations.data.bom;
 
-
 /**
  * @author Luthiger
  * @see org.elbe.relations.data.bom.bom.JoinRelatedTermHome
  */
+@SuppressWarnings("serial")
 public class JoinRelatedTerm2Home extends JoinRelatedTermHome {
 	private final static String colName = RelationHome.KEY_ITEM2;
 

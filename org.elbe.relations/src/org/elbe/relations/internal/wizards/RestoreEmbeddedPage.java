@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.elbe.relations.RelationsMessages;
+import org.elbe.relations.internal.utility.FormUtility;
 import org.elbe.relations.internal.utility.ImportDropHelper;
 import org.elbe.relations.internal.utility.ImportDropHelper.IModifyListener;
 import org.elbe.relations.internal.utility.WizardHelper;
@@ -49,7 +50,7 @@ import org.osgi.service.prefs.BackingStoreException;
 @SuppressWarnings("restriction")
 public class RestoreEmbeddedPage extends ExportWizardPage {
 	private final static MessageFormat LABEL = new MessageFormat(
-			RelationsMessages.getString("RestoreEmbeddedPage.msg.input")); //$NON-NLS-1$
+	        RelationsMessages.getString("RestoreEmbeddedPage.msg.input")); //$NON-NLS-1$
 	private static final String[] FILTER_EXTENSIONS = { "*.zip" }; //$NON-NLS-1$
 
 	private Combo backupFileName;
@@ -59,50 +60,45 @@ public class RestoreEmbeddedPage extends ExportWizardPage {
 	private final Logger log;
 
 	protected RestoreEmbeddedPage(final String inPageName,
-			final String inCatalog, final Logger inLog) {
+	        final String inCatalog, final Logger inLog) {
 		super(inPageName);
 		catalog = inCatalog;
 		log = inLog;
 		setTitle(RelationsMessages.getString("RestoreEmbeddedPage.page.title")); //$NON-NLS-1$
 		setInfoMessage(RelationsMessages
-				.getString("RestoreEmbeddedPage.page.msg")); //$NON-NLS-1$
+		        .getString("RestoreEmbeddedPage.page.msg")); //$NON-NLS-1$
 		settings = new DialogSettingHandler(
-				"RestoreEmbedded", "RecentRestoreEmbedded"); //$NON-NLS-1$ //$NON-NLS-2$
+		        "RestoreEmbedded", "RecentRestoreEmbedded"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-	 * .Composite)
-	 */
 	@Override
 	public void createControl(final Composite inParent) {
 		final int lColumns = 3;
 		final Composite lComposite = WizardHelper.createComposite(inParent,
-				lColumns);
+		        lColumns);
 
 		createLabel(lComposite, LABEL.format(new String[] { catalog }),
-				lColumns);
+		        lColumns);
 
 		backupFileName = createLabelCombo(
-				lComposite,
-				RelationsMessages.getString("RestoreEmbeddedPage.lbl.input"), SWT.DROP_DOWN); //$NON-NLS-1$
+		        lComposite,
+		        RelationsMessages.getString("RestoreEmbeddedPage.lbl.input"), SWT.DROP_DOWN); //$NON-NLS-1$
+		FormUtility.addDecorationHint(backupFileName,
+		        RelationsMessages.getString("ImportPage.hint.drop")); //$NON-NLS-1$		
 		createButtonFileDialog(lComposite,
-				RelationsMessages.getString("PrintOutWizardPage.lbl.browse")); //$NON-NLS-1$
+		        RelationsMessages.getString("PrintOutWizardPage.lbl.browse")); //$NON-NLS-1$
 		ImportDropHelper.wrapFileDrop(backupFileName, FILTER_EXTENSIONS,
-				new IModifyListener() {
-					@Override
-					public void modifyText(final String inFileName) {
-						modifiedCheck(inFileName);
-						updateStatus(fileNameStatus);
-					}
-				});
+		        new IModifyListener() {
+			        @Override
+			        public void modifyText(final String inFileName) {
+				        modifiedCheck(inFileName);
+				        updateStatus(fileNameStatus);
+			        }
+		        });
 
 		new Label(lComposite, SWT.NONE);
 		reindexCheck = createCheckbox(lComposite,
-				RelationsMessages.getString("RestoreEmbeddedPage.lbl.check")); //$NON-NLS-1$
+		        RelationsMessages.getString("RestoreEmbeddedPage.lbl.check")); //$NON-NLS-1$
 		new Label(lComposite, SWT.NONE);
 
 		setControl(lComposite);
@@ -110,7 +106,7 @@ public class RestoreEmbeddedPage extends ExportWizardPage {
 	}
 
 	private Button createCheckbox(final Composite inComposite,
-			final String inString) {
+	        final String inString) {
 		final Button outButton = new Button(inComposite, SWT.CHECK);
 		outButton.setText(inString);
 		return outButton;
@@ -127,7 +123,7 @@ public class RestoreEmbeddedPage extends ExportWizardPage {
 	@Override
 	protected void focusGainedCheck(final String inText) {
 		if (fileNameStatus != null
-				&& fileNameStatus.getCode() != STATUS_NO_ARCHIVE) {
+		        && fileNameStatus.getCode() != STATUS_NO_ARCHIVE) {
 			fileNameStatus = Status.OK_STATUS;
 		}
 	}
@@ -144,7 +140,7 @@ public class RestoreEmbeddedPage extends ExportWizardPage {
 
 	@Override
 	protected void checkFileNotExists(final String inFileName,
-			final IStatus inStatusIfNotExists) {
+	        final IStatus inStatusIfNotExists) {
 		if (inFileName.length() == 0) {
 			fileNameStatus = nameEmpty;
 			return;
@@ -179,21 +175,16 @@ public class RestoreEmbeddedPage extends ExportWizardPage {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.wizards.ExportWizardPage#openFileDialog()
-	 */
 	@Override
 	protected void openFileDialog() {
 		fileNameStatus = Status.OK_STATUS;
 		final FileDialog lDialog = new FileDialog(Display.getCurrent()
-				.getActiveShell(), SWT.OPEN);
+		        .getActiveShell(), SWT.OPEN);
 		lDialog.setText(RelationsMessages
-				.getString("RestoreEmbeddedPage.filedlg.msg")); //$NON-NLS-1$
+		        .getString("RestoreEmbeddedPage.filedlg.msg")); //$NON-NLS-1$
 		lDialog.setFilterExtensions(FILTER_EXTENSIONS);
 		lDialog.setFilterNames(new String[] { RelationsMessages
-				.getString("RestoreEmbeddedPage.filedlg.names") }); //$NON-NLS-1$
+		        .getString("RestoreEmbeddedPage.filedlg.names") }); //$NON-NLS-1$
 		final String lFileName = lDialog.open();
 		if (lFileName == null) {
 			fileNameStatus = nameEmpty;

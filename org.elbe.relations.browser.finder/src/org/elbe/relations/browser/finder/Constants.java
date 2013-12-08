@@ -10,6 +10,6 @@ public final class Constants {
 	private Constants() {
 	};
 
-	public static final String BROWSER_POPUP = "org.elbe.relations.finder.browser.popup";
+	public static final String BROWSER_POPUP = "org.elbe.relations.finder.browser.popup"; //$NON-NLS-1$
 
 }

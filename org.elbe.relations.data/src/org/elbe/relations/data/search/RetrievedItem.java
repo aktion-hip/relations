@@ -66,11 +66,6 @@ public abstract class RetrievedItem implements ILightWeightItem {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.bom.ILightWeightItem#getID()
-	 */
 	@Override
 	public long getID() {
 		return id;
@@ -81,21 +76,11 @@ public abstract class RetrievedItem implements ILightWeightItem {
 		return title;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.bom.ILightWeightItem#getItemType()
-	 */
 	@Override
 	public int getItemType() {
 		return type;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.bom.ILightWeightItem#getCreated()
-	 */
 	@Override
 	public String getCreated() throws VException {
 		return null;

@@ -64,10 +64,10 @@ public class LastChangesController {
 	public enum LastChangesType {
 		LAST_CREATED(
 				TermHome.KEY_CREATED,
-				"lastCreated", RelationsMessages.getString("LastChangesView.title.last.created"), new SortOnCreationDate()), //$NON-NLS-1$
+				"lastCreated", RelationsMessages.getString("LastChangesView.title.last.created"), new SortOnCreationDate()), //$NON-NLS-1$ //$NON-NLS-2$
 		LAST_MODIFIED(
 				TermHome.KEY_MODIFIED,
-				"lastModified", RelationsMessages.getString("LastChangesView.title.last.modified"), new SortOnMutationDate()); //$NON-NLS-1$
+				"lastModified", RelationsMessages.getString("LastChangesView.title.last.modified"), new SortOnMutationDate()); //$NON-NLS-1$ //$NON-NLS-2$
 
 		private final String fieldName;
 		private final String value;

@@ -156,7 +156,7 @@ public class FormDBNew extends AbstractDBSettingsForm {
 		final IEclipsePreferences lStore = getPreferences();
 		initDBCombos(lStore.get(RelationsConstants.KEY_DB_PLUGIN_ID,
 				RelationsConstants.DFT_DBCONFIG_PLUGIN_ID), lStore.get(
-				RelationsConstants.KEY_DB_CATALOG, ""));
+				RelationsConstants.KEY_DB_CATALOG, "")); //$NON-NLS-1$
 		dbLanguageCombo.select(getLanguageIndex(lStore.get(
 				RelationsConstants.KEY_LANGUAGE_CONTENT,
 				RelationsConstants.DFT_LANGUAGE), languages));
@@ -232,7 +232,7 @@ public class FormDBNew extends AbstractDBSettingsForm {
 		IDBChange out;
 		if (lSelectedDB.isEmbedded()) {
 			final IDBSettings lTempSettings = new TempSettings(
-					lSelectedDB.getName(), "", lCatalog, "", "",
+					lSelectedDB.getName(), "", lCatalog, "", "", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					getDBController());
 			out = ContextInjectionFactory.make(CreateEmbeddedDB.class, context);
 			out.setTemporarySettings(lTempSettings);

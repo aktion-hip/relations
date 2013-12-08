@@ -30,7 +30,7 @@ import org.elbe.relations.data.bom.ILightWeightItem;
  * @author Luthiger
  */
 public class PersonView extends AbstractSelectionView {
-	private static final String POPUP_ID = "org.elbe.relations.view.persons.popup";
+	private static final String POPUP_ID = "org.elbe.relations.view.persons.popup"; //$NON-NLS-1$
 
 	@Inject
 	public PersonView(final Composite inParent) {

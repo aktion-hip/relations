@@ -19,7 +19,6 @@
 package org.elbe.relations.internal.forms;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -40,7 +39,7 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
 import org.elbe.relations.RelationsMessages;
-import org.elbe.relations.internal.utility.BrowserSupport;
+import org.elbe.relations.internal.utility.BrowserUtil;
 import org.elbe.relations.internal.utility.FormUtility;
 
 /**
@@ -56,21 +55,21 @@ class StyledFieldHelper {
 	private static final Color BLACK = display.getSystemColor(SWT.COLOR_BLACK);
 	private static final Color WHITE = display.getSystemColor(SWT.COLOR_WHITE);
 	private static final Color GRAY = display
-			.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
+	        .getSystemColor(SWT.COLOR_WIDGET_BACKGROUND);
 	private static final Cursor HAND_CURSOR = new Cursor(display,
-			SWT.CURSOR_HAND);
+	        SWT.CURSOR_HAND);
 
 	private static final int CTRL = new Integer(SWT.CTRL);
 
 	private final MouseListener mouseClickListener = new MouseAdapter() {
 		@Override
 		public void mouseDown(final MouseEvent inEvent) {
-			if (!textIsURL())
+			if (!textIsURL()) {
 				return;
+			}
 			if ((inEvent.stateMask & CTRL) != 0) {
 				try {
-					new BrowserSupport().openURL(new URL(getTextWidget()
-							.getText()));
+					BrowserUtil.startBrowser(getTextWidget().getText());
 				}
 				catch (final PartInitException exc) {
 					log.error(exc, exc.getMessage());
@@ -84,8 +83,9 @@ class StyledFieldHelper {
 	private final MouseTrackListener mouseTrackListener = new MouseTrackAdapter() {
 		@Override
 		public void mouseEnter(final MouseEvent inEvent) {
-			if (!textIsURL())
+			if (!textIsURL()) {
 				return;
+			}
 			if ((inEvent.stateMask & CTRL) != 0) {
 				getTextWidget().setStyleRange(getClickRange());
 				getTextWidget().setCursor(HAND_CURSOR);
@@ -95,8 +95,9 @@ class StyledFieldHelper {
 
 		@Override
 		public void mouseExit(final MouseEvent inEvent) {
-			if (!textIsURL())
+			if (!textIsURL()) {
 				return;
+			}
 			if ((inEvent.stateMask & CTRL) != 0) {
 				getTextWidget().setStyleRange(getNormalRange());
 				getTextWidget().setCursor(oldCursor);
@@ -106,8 +107,9 @@ class StyledFieldHelper {
 
 		@Override
 		public void mouseHover(final MouseEvent inEvent) {
-			if (!textIsURL())
+			if (!textIsURL()) {
 				return;
+			}
 			if ((inEvent.stateMask & CTRL) != 0) {
 				getTextWidget().setStyleRange(getClickRange());
 				getTextWidget().setCursor(HAND_CURSOR);
@@ -120,8 +122,9 @@ class StyledFieldHelper {
 	private final MouseMoveListener mouseMoveListener = new MouseMoveListener() {
 		@Override
 		public void mouseMove(final MouseEvent inEvent) {
-			if (!textIsURL())
+			if (!textIsURL()) {
 				return;
+			}
 			if ((inEvent.stateMask & CTRL) != 0) {
 				getTextWidget().setStyleRange(getClickRange());
 				getTextWidget().setCursor(HAND_CURSOR);
@@ -156,7 +159,7 @@ class StyledFieldHelper {
 		journalText = inText;
 		log = inLog;
 		decoration = FormUtility.addDecorationInfo(inText,
-				RelationsMessages.getString("StyledFieldHelper.info")); //$NON-NLS-1$
+		        RelationsMessages.getString("StyledFieldHelper.info")); //$NON-NLS-1$
 		oldCursor = journalText.getCursor();
 	}
 
@@ -186,9 +189,7 @@ class StyledFieldHelper {
 	}
 
 	private boolean textIsURL() {
-		final String lFieldContent = getTextWidget().getText();
-		if (lFieldContent.startsWith("http://") || lFieldContent.startsWith("https://"))return true; //$NON-NLS-1$ //$NON-NLS-2$
-		return false;
+		return BrowserUtil.textIsURL(getTextWidget().getText());
 	}
 
 	void addListeners() {

@@ -46,8 +46,8 @@ public class XMLSerializerSpecial extends XMLSerializer {
 	private static final String PARA_START = "<para>"; //$NON-NLS-1$
 	private static final String PARA_END = "</para>"; //$NON-NLS-1$
 	private static final Pattern AMPERSAND = Pattern
-			.compile("&[\\s\\p{Punct}]??");
-	private static final String AMPERSAND_CODE = "&amp;";
+			.compile("&[\\s\\p{Punct}]??"); //$NON-NLS-1$
+	private static final String AMPERSAND_CODE = "&amp;"; //$NON-NLS-1$
 
 	private static Collection<String> listTagStart;
 	private static Collection<String> listTagEnd;

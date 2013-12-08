@@ -18,13 +18,13 @@
  ***************************************************************************/
 package org.elbe.relations.data.bom;
 
-
 /**
  * Exception to be thrown when the Derby database encounters a SQLException
  * caused by trying to save a value in a field without enough space.
  * 
  * @author Luthiger Created on 14.03.2007
  */
+@SuppressWarnings("serial")
 public class BOMTruncationException extends BOMException {
 
 	/**

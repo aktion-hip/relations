@@ -67,11 +67,11 @@ public class DBSettings implements IDBSettings {
 		dbConnectionConfig = inDBController.getConfiguration(inPreferences.get(
 				RelationsConstants.KEY_DB_PLUGIN_ID,
 				RelationsConstants.DFT_DBCONFIG_PLUGIN_ID));
-		host = inPreferences.get(RelationsConstants.KEY_DB_HOST, "");
+		host = inPreferences.get(RelationsConstants.KEY_DB_HOST, ""); //$NON-NLS-1$
 		catalog = inPreferences.get(RelationsConstants.KEY_DB_CATALOG,
 				RelationsConstants.DFT_DB_EMBEDDED);
-		user = inPreferences.get(RelationsConstants.KEY_DB_USER_NAME, "");
-		password = inPreferences.get(RelationsConstants.KEY_DB_PASSWORD, "");
+		user = inPreferences.get(RelationsConstants.KEY_DB_USER_NAME, ""); //$NON-NLS-1$
+		password = inPreferences.get(RelationsConstants.KEY_DB_PASSWORD, ""); //$NON-NLS-1$
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class DBSettings implements IDBSettings {
 	@Optional
 	void trackHost(
 			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_DB_HOST) final String inHost) {
-		host = inHost == null ? "" : inHost;
+		host = inHost == null ? "" : inHost; //$NON-NLS-1$
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class DBSettings implements IDBSettings {
 	@Optional
 	void trackCatalog(
 			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_DB_CATALOG) final String inCatalog) {
-		catalog = inCatalog == null ? "" : inCatalog;
+		catalog = inCatalog == null ? "" : inCatalog; //$NON-NLS-1$
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class DBSettings implements IDBSettings {
 	@Optional
 	void trackUser(
 			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_DB_USER_NAME) final String inUser) {
-		user = inUser == null ? "" : inUser;
+		user = inUser == null ? "" : inUser; //$NON-NLS-1$
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class DBSettings implements IDBSettings {
 	@Optional
 	void trackPassword(
 			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_DB_PASSWORD) final String inPassword) {
-		password = inPassword == null ? "" : inPassword;
+		password = inPassword == null ? "" : inPassword; //$NON-NLS-1$
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class DBSettings implements IDBSettings {
 	 */
 	public String getDBName() {
 		if (getDBConnectionConfig().isEmbedded()) {
-			return EMBEDDED + ": " + getCatalog();
+			return EMBEDDED + ": " + getCatalog(); //$NON-NLS-1$
 		}
 		return CLIENT_URL_PATTERN.format(new Object[] {
 				getDBConnectionConfig().getSubprotocol(), getHost(),

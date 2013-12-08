@@ -89,8 +89,8 @@ public class DBDeleteAction implements ICommand {
 			dropTables(log);
 
 			// then change to the default embedded database
-			final IDBSettings lTempSettings = new TempSettings("",
-					RelationsConstants.DFT_DB_EMBEDDED, "", "",
+			final IDBSettings lTempSettings = new TempSettings("", //$NON-NLS-1$
+					RelationsConstants.DFT_DB_EMBEDDED, "", "", //$NON-NLS-1$ //$NON-NLS-2$
 					dbSettings.getDBConnectionConfig());
 			final IDBChange lChangeDB = ContextInjectionFactory.make(
 					ChangeDB.class, context);

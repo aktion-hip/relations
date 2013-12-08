@@ -169,14 +169,14 @@ public class IndexerAction extends Action {
 		try {
 			lDialog.run(true, true, lJob);
 			statusLine.showStatusLineMessage(RelationsMessages.getString(
-					"IndexerAction.job.feedback",
+					"IndexerAction.job.feedback", //$NON-NLS-1$
 					new Object[] { lJob.getIndexed() }));
 		}
 		catch (final InvocationTargetException exc) {
 			log.error(exc, exc.getMessage());
 		}
 		catch (final InterruptedException exc) {
-			statusLine.showStatusLineMessage("Indexing cancelled.");
+			statusLine.showStatusLineMessage(RelationsMessages.getString("action.indexer.status.cancelled")); //$NON-NLS-1$
 			log.error(exc, exc.getMessage());
 		} finally {
 			lContext.dispose();

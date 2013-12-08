@@ -128,7 +128,7 @@ public class LastChangesView extends AbstractToolPart {
 
 	@Focus
 	public void setFocus() {
-		update("reload");
+		update("reload"); //$NON-NLS-1$
 
 		final Table lTable = lastChangesView.getTable();
 		lTable.setFocus();
@@ -141,7 +141,7 @@ public class LastChangesView extends AbstractToolPart {
 	void setViewState(
 			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = LastChangesController.LAST_CHANGES_VIEW_TYPE) final String inLastChangeState) {
 		setTitle(lastChangesController.updateType(inLastChangeState));
-		update("reload");
+		update("reload"); //$NON-NLS-1$
 	}
 
 	private void setTitle(final LastChangesType inType) {

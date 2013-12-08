@@ -29,33 +29,24 @@ import org.elbe.relations.services.IBibliographyProvider;
  * 
  * @author Luthiger Created on 29.12.2009
  */
-@SuppressWarnings("restriction")
 public class UnAPIProvider implements IBibliographyProvider {
 	public static final String UNAPI_SERVER = "//link[@rel='unapi-server'][@title='unAPI']"; //$NON-NLS-1$
 	public static final String UNAPI_ENTRY_ID = "//abbr[@class='unapi-id']"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_NAME_SERVER = "href"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_NAME_ENTRY_ID = "title"; //$NON-NLS-1$
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.ds.IBibliographyProvider#evaluate(org.elbe.relations
-	 * .parsing.XPathHelper,
-	 * org.elbe.relations.parsing.WebPageParser.WebDropResult)
-	 */
 	@Override
 	public void evaluate(final XPathHelper inXPathHelper,
-			final WebPageParser.WebDropResult inWebDrop,
-			final IEclipseContext inContext) throws ParserException {
+	        final WebPageParser.WebDropResult inWebDrop,
+	        final IEclipseContext inContext) throws ParserException {
 		try {
 			final String lServerName = inXPathHelper.getAttribute(UNAPI_SERVER,
-					ATTRIBUTE_NAME_SERVER);
+			        ATTRIBUTE_NAME_SERVER);
 			final String lEntryID = inXPathHelper.getAttribute(UNAPI_ENTRY_ID,
-					ATTRIBUTE_NAME_ENTRY_ID);
+			        ATTRIBUTE_NAME_ENTRY_ID);
 			if (lServerName != null && lEntryID != null) {
 				final UnAPIHelper lHelper = new UnAPIHelper(lServerName,
-						lEntryID);
+				        lEntryID);
 				inWebDrop.setNewBiblioAction(lHelper.getAction(inContext));
 			}
 		}

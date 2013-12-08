@@ -117,7 +117,7 @@ public class COSDictionary extends COSBase {
              * pdf file, meaning that the first Size entry represents
              * all of the objects so we don't need to grab the second.
              */
-            if (!lKey.getName().equals("Size") || !keys.contains(COSName.getPDFName("Size"))) {
+            if (!lKey.getName().equals("Size") || !keys.contains(COSName.getPDFName("Size"))) { //$NON-NLS-1$ //$NON-NLS-2$
                 setItem(lKey, lValue);
             }
         }
@@ -347,12 +347,12 @@ public class COSDictionary extends COSBase {
 
     @Override
     public String toString() {
-        String outValue = "COSDictionary{";
+        String outValue = "COSDictionary{"; //$NON-NLS-1$
         for (int i = 0; i<size(); i++) {
             COSName lKey = (COSName)keyList().get(i);
-            outValue = outValue + "(" + lKey + ":" + getDictionaryObject(lKey).toString() + ") ";
+            outValue = outValue + "(" + lKey + ":" + getDictionaryObject(lKey).toString() + ") "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
-        outValue = outValue + "}";
+        outValue = outValue + "}"; //$NON-NLS-1$
         return outValue;
     }
 

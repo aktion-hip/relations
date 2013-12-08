@@ -124,7 +124,7 @@ public class DataService implements IDataService {
 				: new LightWeightTermWithIcon(inTerm);
 		terms.add(lTerm);
 		combined.add(lTerm);
-		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_RELOAD, "reload");
+		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_RELOAD, "reload"); //$NON-NLS-1$
 		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_CREATED,
 				new UniqueID(IItem.TERM, lTerm.getID()));
 	}
@@ -142,7 +142,7 @@ public class DataService implements IDataService {
 				: new LightWeightTextWithIcon(inText);
 		texts.add(lText);
 		combined.add(lText);
-		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_RELOAD, "reload");
+		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_RELOAD, "reload"); //$NON-NLS-1$
 		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_CREATED,
 				new UniqueID(IItem.TEXT, lText.getID()));
 	}
@@ -160,7 +160,7 @@ public class DataService implements IDataService {
 				: new LightWeightPersonWithIcon(inPerson);
 		persons.add(lPerson);
 		combined.add(lPerson);
-		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_RELOAD, "reload");
+		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_RELOAD, "reload"); //$NON-NLS-1$
 		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_CREATED,
 				new UniqueID(IItem.PERSON, lPerson.getID()));
 	}
@@ -220,7 +220,7 @@ public class DataService implements IDataService {
 					combined = Collections.emptyList();
 					log.error(exc, exc.getMessage());
 				}
-				eventBroker.post(inEventTopic, "initialized");
+				eventBroker.post(inEventTopic, "initialized"); //$NON-NLS-1$
 			}
 		});
 	}
@@ -266,7 +266,7 @@ public class DataService implements IDataService {
 			persons.remove(inItem);
 			break;
 		}
-		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_RELOAD, "reload");
+		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_RELOAD, "reload"); //$NON-NLS-1$
 		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_DELETED,
 				new UniqueID(inItem.getItemType(), inItem.getID()));
 	}

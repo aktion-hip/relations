@@ -83,7 +83,7 @@ public class QuitHandlerAddon {
 			final MWindow lWindow = (MWindow) lElement;
 			if (RelationsConstants.RELATIONS_CONTRIBUTOR_URI.equals(lWindow
 					.getContributorURI())) {
-				if (lWindow.equals(inEvent.getProperty("ChangedElement"))
+				if (lWindow.equals(inEvent.getProperty("ChangedElement")) //$NON-NLS-1$
 						&& lWindow.getContext() != null) {
 					lWindow.getContext().runAndTrack(new RunAndTrack() {
 						@Override

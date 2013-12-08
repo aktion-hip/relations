@@ -31,8 +31,9 @@ import org.hip.kernel.exc.VException;
  * 
  * @author Benno Luthiger Created on Sep 3, 2005
  */
+@SuppressWarnings("serial")
 public class TermHome extends AbstractHome implements IItemFactory,
-		ICreatableHome {
+        ICreatableHome {
 	// constants
 	private final static String OBJECT_CLASS_NAME = "org.elbe.relations.data.bom.Term";
 	public final static String KEY_ID = "ID";
@@ -42,40 +43,40 @@ public class TermHome extends AbstractHome implements IItemFactory,
 	public final static String KEY_MODIFIED = "Modified";
 
 	private final static String XML_OBJECT_DEF = "<?xml version='1.0' encoding='ISO-8859-1'?>	"
-			+ "<objectDef objectName='Term' parent='org.hip.kernel.bom.DomainObject' version='1.0'>	"
-			+ "	<keyDefs>	"
-			+ "		<keyDef>	"
-			+ "			<keyItemDef seq='0' keyPropertyName='"
-			+ KEY_ID
-			+ "'/>	"
-			+ "		</keyDef>	"
-			+ "	</keyDefs>	"
-			+ "	<propertyDefs>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_ID
-			+ "' valueType='Long' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblTerm' columnName='TERMID'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_TITLE
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblTerm' columnName='STITLE'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_TEXT
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblTerm' columnName='STEXT'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_CREATED
-			+ "' valueType='Timestamp' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblTerm' columnName='DTCREATION'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_MODIFIED
-			+ "' valueType='Timestamp' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblTerm' columnName='DTMUTATION'/>	"
-			+ "		</propertyDef>	" + "	</propertyDefs>	" + "</objectDef>";
+	        + "<objectDef objectName='Term' parent='org.hip.kernel.bom.DomainObject' version='1.0'>	"
+	        + "	<keyDefs>	"
+	        + "		<keyDef>	"
+	        + "			<keyItemDef seq='0' keyPropertyName='"
+	        + KEY_ID
+	        + "'/>	"
+	        + "		</keyDef>	"
+	        + "	</keyDefs>	"
+	        + "	<propertyDefs>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_ID
+	        + "' valueType='Long' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblTerm' columnName='TERMID'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_TITLE
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblTerm' columnName='STITLE'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_TEXT
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblTerm' columnName='STEXT'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_CREATED
+	        + "' valueType='Timestamp' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblTerm' columnName='DTCREATION'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_MODIFIED
+	        + "' valueType='Timestamp' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblTerm' columnName='DTMUTATION'/>	"
+	        + "		</propertyDef>	" + "	</propertyDefs>	" + "</objectDef>";
 
 	/**
 	 * TermHome constructor.
@@ -115,7 +116,7 @@ public class TermHome extends AbstractHome implements IItemFactory,
 	 * @throws BOMException
 	 */
 	public AbstractTerm newTerm(final String inTitle, final String inText)
-			throws BOMException {
+	        throws BOMException {
 		try {
 			final Timestamp lCreated = new Timestamp(System.currentTimeMillis());
 			final Term outTerm = (Term) create();
@@ -199,11 +200,11 @@ public class TermHome extends AbstractHome implements IItemFactory,
 	@Override
 	public String[] getSQLCreate() {
 		final String lSQL1 = "CREATE TABLE tblTerm (\n"
-				+ "  TermID	BIGINT generated always as identity,\n"
-				+ "  sTitle	VARCHAR(99) not null,\n" + "  sText	CLOB,\n"
-				+ "  dtCreation	TIMESTAMP not null,\n"
-				+ "  dtMutation	TIMESTAMP not null,\n"
-				+ "  PRIMARY KEY (TermID)\n" + ")";
+		        + "  TermID	BIGINT generated always as identity,\n"
+		        + "  sTitle	VARCHAR(99) not null,\n" + "  sText	CLOB,\n"
+		        + "  dtCreation	TIMESTAMP not null,\n"
+		        + "  dtMutation	TIMESTAMP not null,\n"
+		        + "  PRIMARY KEY (TermID)\n" + ")";
 		final String lSQL2 = "CREATE INDEX idxTerm_01 ON tblTerm(sTitle)";
 		return new String[] { lSQL1, lSQL2 };
 	}

@@ -40,9 +40,9 @@ import org.hip.kernel.exc.VException;
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractEditWizard extends Wizard implements
-		IItemEditWizard {
+        IItemEditWizard {
 	protected final static String ERROR_DIALOG = RelationsMessages
-			.getString("AbstractEditWizard.title.error"); //$NON-NLS-1$
+	        .getString("AbstractEditWizard.title.error"); //$NON-NLS-1$
 	private RelationsEditWizardPage pageRelations;
 	private ItemAdapter model;
 
@@ -61,16 +61,9 @@ public abstract class AbstractEditWizard extends Wizard implements
 	public AbstractEditWizard() {
 		super();
 		setWindowTitle(RelationsMessages
-				.getString("AbstractEditWizard.view.title")); //$NON-NLS-1$
+		        .getString("AbstractEditWizard.view.title")); //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.internal.services.IItemEditWizard#setModel(org.elbe
-	 * .relations.models.ItemAdapter)
-	 */
 	@Override
 	public void setModel(final ItemAdapter inModel) {
 		model = inModel;
@@ -86,9 +79,9 @@ public abstract class AbstractEditWizard extends Wizard implements
 	protected void addPages(final ItemAdapter inModel) {
 		try {
 			final CentralAssociationsModel lCenter = browserManager
-					.getCenterModel();
+			        .getCenterModel();
 			pageRelations = new RelationsEditWizardPage(
-					lCenter.getAssociationsModel(inModel), context);
+			        lCenter.getAssociationsModel(inModel), context);
 			addPage(pageRelations);
 		}
 		catch (final VException exc) {
@@ -120,7 +113,9 @@ public abstract class AbstractEditWizard extends Wizard implements
 	@Override
 	public boolean performCancel() {
 		try {
-			pageRelations.undoChanges();
+			if (pageRelations != null) {
+				pageRelations.undoChanges();
+			}
 		}
 		catch (final BOMException exc) {
 			log.error(exc, exc.getMessage());

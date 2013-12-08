@@ -31,6 +31,7 @@ import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.elbe.relations.defaultbrowser.internal.controller.ItemEditPart;
 import org.elbe.relations.defaultbrowser.internal.controller.RelationEditPart;
@@ -45,7 +46,6 @@ import org.elbe.relations.models.ItemAdapter;
  * 
  * @author Benno Luthiger Created on 17.12.2005
  */
-@SuppressWarnings("restriction")
 public class GraphicalViewerCreator {
 	private RelationsRootEditPart rootPart = null;
 
@@ -67,21 +67,22 @@ public class GraphicalViewerCreator {
 		outViewer.getControl().setBackground(ColorConstants.lightGray);
 		rootPart = new RelationsRootEditPart();
 		outViewer.setRootEditPart(rootPart);
-		final KeyHandler lKeyHandler = new GraphicalViewerKeyHandler(outViewer);
+
+		final KeyHandler lKeyHandler = new BrowserKeyHandler(outViewer);
 		lKeyHandler.put(KeyStroke.getPressed(SWT.CONTROL, SWT.NONE),
-				new Action() {
-					@Override
-					public void run() {
-						rootPart.makeMousOverPartClickable(true);
-					}
-				});
+		        new Action() {
+			        @Override
+			        public void run() {
+				        rootPart.makeMousOverPartClickable(true);
+			        }
+		        });
 		lKeyHandler.put(KeyStroke.getReleased(SWT.CONTROL, SWT.CONTROL),
-				new Action() {
-					@Override
-					public void run() {
-						rootPart.makeMousOverPartClickable(false);
-					}
-				});
+		        new Action() {
+			        @Override
+			        public void run() {
+				        rootPart.makeMousOverPartClickable(false);
+			        }
+		        });
 		outViewer.setKeyHandler(lKeyHandler);
 
 		outViewer.setEditPartFactory(getEditPartFactory());
@@ -93,19 +94,36 @@ public class GraphicalViewerCreator {
 		return new EditPartFactory() {
 			@Override
 			public EditPart createEditPart(final EditPart inContext,
-					final Object inModel) {
+			        final Object inModel) {
 				if (inModel instanceof CentralAssociationsModel) {
 					return new RelationsEditPart(
-							(CentralAssociationsModel) inModel);
+					        (CentralAssociationsModel) inModel);
 				} else if (inModel instanceof ItemAdapter) {
 					return ItemEditPart.createItemEditPart(
-							(ItemAdapter) inModel, context);
+					        (ItemAdapter) inModel, context);
 				} else if (inModel instanceof IRelation) {
 					return new RelationEditPart((IRelation) inModel);
 				}
 				return null;
 			}
 		};
+	}
+
+	// ---
+
+	private static class BrowserKeyHandler extends GraphicalViewerKeyHandler {
+		public BrowserKeyHandler(final GraphicalViewer inViewer) {
+			super(inViewer);
+		}
+
+		@Override
+		protected void navigateTo(final EditPart inPart, final KeyEvent inEvent) {
+			if ((inEvent.stateMask & SWT.CONTROL) != 0) {
+				inEvent.stateMask = SWT.None;
+			}
+			super.navigateTo(inPart, inEvent);
+		}
+
 	}
 
 }

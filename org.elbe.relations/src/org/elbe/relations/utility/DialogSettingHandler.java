@@ -35,7 +35,7 @@ import org.osgi.service.prefs.Preferences;
  * @author Luthiger
  */
 public class DialogSettingHandler {
-	private static final String SEP = ";";
+	private static final String SEP = ";"; //$NON-NLS-1$
 
 	private final String dialogSection;
 	private final String dialogTerm;
@@ -69,7 +69,7 @@ public class DialogSettingHandler {
 	 * @return String[] the recent values of the specified widget.
 	 */
 	public String[] getRecentValues() {
-		final String lValues = settings.get(dialogTerm, "");
+		final String lValues = settings.get(dialogTerm, ""); //$NON-NLS-1$
 		return lValues.split(SEP);
 	}
 

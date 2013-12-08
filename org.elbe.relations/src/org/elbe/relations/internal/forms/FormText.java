@@ -77,9 +77,9 @@ public class FormText extends AbstractEditForm {
 	private StyledFieldHelper journalTextHelper;
 
 	private final IStatus authorEmpty = createErrorStatus(RelationsMessages
-			.getString("FormText.missing.author")); //$NON-NLS-1$
+	        .getString("FormText.missing.author")); //$NON-NLS-1$
 	private final IStatus titleEmpty = createErrorStatus(RelationsMessages
-			.getString("FormText.missing.title")); //$NON-NLS-1$
+	        .getString("FormText.missing.title")); //$NON-NLS-1$
 
 	private boolean initialized = false;
 
@@ -99,9 +99,9 @@ public class FormText extends AbstractEditForm {
 	 * @return {@link FormText}
 	 */
 	public static FormText createFormText(final Composite inParent,
-			final boolean inEditMode, final IEclipseContext inContext) {
+	        final boolean inEditMode, final IEclipseContext inContext) {
 		final FormText out = ContextInjectionFactory.make(FormText.class,
-				inContext);
+		        inContext);
 		out.setEditMode(inEditMode);
 		out.initialize(inParent);
 		return out;
@@ -116,7 +116,7 @@ public class FormText extends AbstractEditForm {
 		checkDirtyService.register(typeCombo);
 
 		authorText = new RequiredText(
-				RelationsMessages.getString("FormText.lbl.author"), container, lNumColumns); //$NON-NLS-1$
+		        RelationsMessages.getString("FormText.lbl.author"), container, lNumColumns); //$NON-NLS-1$
 		authorText.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(final FocusEvent inEvent) {
@@ -147,13 +147,13 @@ public class FormText extends AbstractEditForm {
 		checkDirtyService.register(authorText);
 
 		WidgetCreator lCreator = new WidgetCreator(
-				RelationsMessages.getString("FormText.lbl.coauthor"), container, lNumColumns); //$NON-NLS-1$
+		        RelationsMessages.getString("FormText.lbl.coauthor"), container, lNumColumns); //$NON-NLS-1$
 		coauthorLabel = lCreator.getLabel();
 		coauthorText = lCreator.getText();
 		checkDirtyService.register(coauthorText);
 
 		titleText = new RequiredText(
-				RelationsMessages.getString("FormText.lbl.title"), container, lNumColumns); //$NON-NLS-1$
+		        RelationsMessages.getString("FormText.lbl.title"), container, lNumColumns); //$NON-NLS-1$
 		titleText.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(final FocusEvent inEvent) {
@@ -184,28 +184,28 @@ public class FormText extends AbstractEditForm {
 		checkDirtyService.register(titleText);
 
 		lCreator = new WidgetCreator(
-				RelationsMessages.getString("FormText.lbl.subtitle"), container, lNumColumns); //$NON-NLS-1$
+		        RelationsMessages.getString("FormText.lbl.subtitle"), container, lNumColumns); //$NON-NLS-1$
 		subtitleText = lCreator.getText();
 		checkDirtyService.register(subtitleText);
 
 		lCreator = new WidgetCreator(
-				RelationsMessages.getString("FormText.lbl.year"), container, lNumColumns); //$NON-NLS-1$
+		        RelationsMessages.getString("FormText.lbl.year"), container, lNumColumns); //$NON-NLS-1$
 		yearText = lCreator.getText();
 		checkDirtyService.register(yearText);
 
 		final StyledTextCreator lSTCreator = new StyledTextCreator(
-				RelationsMessages.getString("FormText.lbl.journal"), container, lNumColumns); //$NON-NLS-1$
+		        RelationsMessages.getString("FormText.lbl.journal"), container, lNumColumns); //$NON-NLS-1$
 		journalLabel = lSTCreator.getLabel();
 		journalText = lSTCreator.getText();
 		journalTextHelper = new StyledFieldHelper(journalText, log);
 		checkDirtyService.register(journalText);
 
 		lCreator = new WidgetCreator(
-				RelationsMessages.getString("FormText.lbl.pages"), container, 2); //$NON-NLS-1$
+		        RelationsMessages.getString("FormText.lbl.pages"), container, 2); //$NON-NLS-1$
 		pagesText = lCreator.getText();
 		checkDirtyService.register(pagesText);
 		lCreator = new WidgetCreator(
-				RelationsMessages.getString("FormText.lbl.vol"), container, 2); //$NON-NLS-1$
+		        RelationsMessages.getString("FormText.lbl.vol"), container, 2); //$NON-NLS-1$
 		volumeText = lCreator.getText();
 		checkDirtyService.register(volumeText);
 		volumeText.addVerifyListener(new VerifyListener() {
@@ -215,7 +215,7 @@ public class FormText extends AbstractEditForm {
 			}
 		});
 		lCreator = new WidgetCreator(
-				RelationsMessages.getString("FormText.lbl.no"), container, 2); //$NON-NLS-1$
+		        RelationsMessages.getString("FormText.lbl.no"), container, 2); //$NON-NLS-1$
 		numberText = lCreator.getText();
 		checkDirtyService.register(numberText);
 		numberText.addVerifyListener(new VerifyListener() {
@@ -225,11 +225,11 @@ public class FormText extends AbstractEditForm {
 			}
 		});
 		lCreator = new WidgetCreator(
-				RelationsMessages.getString("FormText.lbl.publisher"), container, lNumColumns); //$NON-NLS-1$
+		        RelationsMessages.getString("FormText.lbl.publisher"), container, lNumColumns); //$NON-NLS-1$
 		publisherText = lCreator.getText();
 		checkDirtyService.register(publisherText);
 		lCreator = new WidgetCreator(
-				RelationsMessages.getString("FormText.lbl.location"), container, lNumColumns); //$NON-NLS-1$
+		        RelationsMessages.getString("FormText.lbl.location"), container, lNumColumns); //$NON-NLS-1$
 		locationLabel = lCreator.getLabel();
 		locationText = lCreator.getText();
 		checkDirtyService.register(locationText);
@@ -241,7 +241,7 @@ public class FormText extends AbstractEditForm {
 
 		// we have to align some fields
 		final int lIndent = FieldDecorationRegistry.getDefault()
-				.getMaximumDecorationWidth();
+		        .getMaximumDecorationWidth();
 		((GridData) typeCombo.getLayoutData()).horizontalIndent = lIndent;
 		((GridData) coauthorText.getLayoutData()).horizontalIndent = lIndent;
 		((GridData) subtitleText.getLayoutData()).horizontalIndent = lIndent;
@@ -267,18 +267,18 @@ public class FormText extends AbstractEditForm {
 	}
 
 	private Combo createTypeCombo(final Composite inContainer,
-			final int inNumColumns) {
+	        final int inNumColumns) {
 		final Combo lCombo = new Combo(inContainer, SWT.DROP_DOWN
-				| SWT.READ_ONLY);
+		        | SWT.READ_ONLY);
 		lCombo.setItems(new String[] {
-				RelationsMessages.getString("FormText.entry.book"), RelationsMessages.getString("FormText.entry.article"), RelationsMessages.getString("FormText.entry.contribution"), RelationsMessages.getString("FormText.entry.webpage") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		        RelationsMessages.getString("FormText.entry.book"), RelationsMessages.getString("FormText.entry.article"), RelationsMessages.getString("FormText.entry.contribution"), RelationsMessages.getString("FormText.entry.webpage") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		lCombo.select(0);
 		lCombo.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(final SelectionEvent inEvent) {
 				setInitState();
 				setDisablePattern(((Combo) inEvent.getSource())
-						.getSelectionIndex());
+				        .getSelectionIndex());
 			}
 
 			@Override
@@ -306,11 +306,11 @@ public class FormText extends AbstractEditForm {
 		publisherText.setEnabled(true);
 		locationText.setEnabled(true);
 		coauthorLabel.setText(RelationsMessages
-				.getString("FormText.lbl.coauthor")); //$NON-NLS-1$
+		        .getString("FormText.lbl.coauthor")); //$NON-NLS-1$
 		journalLabel.setText(RelationsMessages
-				.getString("FormText.lbl.journal")); //$NON-NLS-1$
+		        .getString("FormText.lbl.journal")); //$NON-NLS-1$
 		locationLabel.setText(RelationsMessages
-				.getString("FormText.lbl.location")); //$NON-NLS-1$
+		        .getString("FormText.lbl.location")); //$NON-NLS-1$
 	}
 
 	private void setDisablePattern(final int inIndex) {
@@ -333,9 +333,9 @@ public class FormText extends AbstractEditForm {
 			volumeText.setEnabled(false);
 			numberText.setEnabled(false);
 			coauthorLabel.setText(RelationsMessages
-					.getString("FormText.lbl.editors")); //$NON-NLS-1$
+			        .getString("FormText.lbl.editors")); //$NON-NLS-1$
 			journalLabel.setText(RelationsMessages
-					.getString("FormText.lbl.booktitle")); //$NON-NLS-1$
+			        .getString("FormText.lbl.booktitle")); //$NON-NLS-1$
 			journalTextHelper.removeListeners();
 			break;
 		case AbstractText.TYPE_WEBPAGE:
@@ -343,9 +343,9 @@ public class FormText extends AbstractEditForm {
 			numberText.setEnabled(false);
 			publisherText.setEnabled(false);
 			journalLabel.setText(RelationsMessages
-					.getString("FormText.lbl.webpage")); //$NON-NLS-1$
+			        .getString("FormText.lbl.webpage")); //$NON-NLS-1$
 			locationLabel.setText(RelationsMessages
-					.getString("FormText.lbl.accessed")); //$NON-NLS-1$
+			        .getString("FormText.lbl.accessed")); //$NON-NLS-1$
 			journalTextHelper.addListeners();
 			break;
 		default:
@@ -359,21 +359,11 @@ public class FormText extends AbstractEditForm {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.internal.forms.AbstractEditForm#getStatuses()
-	 */
 	@Override
 	protected IStatus[] getStatuses() {
 		return new IStatus[] { authorFieldStatus, titleFieldStatus };
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.internal.forms.AbstractEditForm#getPageComplete()
-	 */
 	@Override
 	public boolean getPageComplete() {
 		return authorText.getText().length() * titleText.getText().length() != 0;
@@ -387,7 +377,7 @@ public class FormText extends AbstractEditForm {
 
 		final String lOld = ((Text) inEvent.widget).getText();
 		final String lNew = lOld.substring(0, inEvent.start) + inEvent.text
-				+ lOld.substring(inEvent.end);
+		        + lOld.substring(inEvent.end);
 		try {
 			Integer.parseInt(lNew);
 			inEvent.doit = true;
@@ -432,12 +422,12 @@ public class FormText extends AbstractEditForm {
 	 * @throws IOException
 	 */
 	public void initialize(final int inType, final String inTitle,
-			final String inText, final String inAuthor,
-			final String inCoAuthor, final String inSubTitle,
-			final String inYear, final String inJournal, final String inPages,
-			final String inVolume, final String inNumber,
-			final String inPublisher, final String inLocation,
-			final String inCreated) throws IOException, SAXException {
+	        final String inText, final String inAuthor,
+	        final String inCoAuthor, final String inSubTitle,
+	        final String inYear, final String inJournal, final String inPages,
+	        final String inVolume, final String inNumber,
+	        final String inPublisher, final String inLocation,
+	        final String inCreated) throws IOException, SAXException {
 		setInitState();
 		typeCombo.select(inType);
 		authorText.setText(inAuthor);
@@ -456,11 +446,6 @@ public class FormText extends AbstractEditForm {
 		initialize();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.internal.forms.AbstractEditForm#initialize()
-	 */
 	@Override
 	public void initialize() {
 		setDisablePattern(typeCombo.getSelectionIndex());

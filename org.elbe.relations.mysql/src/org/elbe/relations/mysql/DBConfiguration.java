@@ -36,7 +36,7 @@ public class DBConfiguration implements IDBConnectionConfig {
 	 */
 	@Override
 	public String getName() {
-		return "com.mysql.jdbc.Driver/MySQL Connector/J/5.1.18";
+		return "com.mysql.jdbc.Driver/MySQL Connector/J/5.1.18"; //$NON-NLS-1$
 	}
 
 	/*
@@ -46,7 +46,7 @@ public class DBConfiguration implements IDBConnectionConfig {
 	 */
 	@Override
 	public String getJDBCDriverClass() {
-		return "com.mysql.jdbc.Driver";
+		return "com.mysql.jdbc.Driver"; //$NON-NLS-1$
 	}
 
 	/*
@@ -56,7 +56,7 @@ public class DBConfiguration implements IDBConnectionConfig {
 	 */
 	@Override
 	public String getSubprotocol() {
-		return "mysql";
+		return "mysql"; //$NON-NLS-1$
 	}
 
 	/*

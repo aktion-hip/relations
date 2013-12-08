@@ -32,6 +32,7 @@ import org.hip.kernel.exc.VException;
  * 
  * @author Benno Luthiger
  */
+@SuppressWarnings("serial")
 public class JoinRelatedPerson extends AbstractPerson implements IRelated {
 
 	private final static String HOME_CLASS_NAME = "org.elbe.relations.data.bom.JoinRelatedPerson1Home"; //$NON-NLS-1$
@@ -68,10 +69,10 @@ public class JoinRelatedPerson extends AbstractPerson implements IRelated {
 	 */
 	@Override
 	public void saveTitleText(final String inTitle, final String inText)
-			throws BOMException {
+	        throws BOMException {
 		try {
 			BOMHelper.getPersonHome().getItem(getID())
-					.saveTitleText(inTitle, inText);
+			        .saveTitleText(inTitle, inText);
 			setModel(inTitle, inText);
 		}
 		catch (final VException exc) {
@@ -84,11 +85,11 @@ public class JoinRelatedPerson extends AbstractPerson implements IRelated {
 	 */
 	@Override
 	public void save(final String inName, final String inFirstName,
-			final String inText, final String inFrom, final String inTo)
-			throws BOMException {
+	        final String inText, final String inFrom, final String inTo)
+	        throws BOMException {
 		try {
 			((Person) BOMHelper.getPersonHome().getItem(getID())).save(inName,
-					inFirstName, inText, inFrom, inTo);
+			        inFirstName, inText, inFrom, inTo);
 			setModel(inName, inFirstName, inText, inFrom, inTo);
 		}
 		catch (final VException exc) {

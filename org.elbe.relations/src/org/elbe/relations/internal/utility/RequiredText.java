@@ -99,7 +99,7 @@ public class RequiredText {
 	}
 
 	public String getText() {
-		return text == null || text.isDisposed() ? "" : text.getText();
+		return text == null || text.isDisposed() ? "" : text.getText(); //$NON-NLS-1$
 	}
 
 	public boolean setFocus() {

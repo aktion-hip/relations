@@ -33,7 +33,6 @@ import org.xml.sax.SAXException;
  * 
  * @author Luthiger Created on 03.01.2010
  */
-@SuppressWarnings("restriction")
 public interface IUnAPIHandler {
 
 	/**
@@ -62,6 +61,6 @@ public interface IUnAPIHandler {
 	 * @throws IOException
 	 */
 	public NewTextAction createAction(URL inUrl, final IEclipseContext inContext)
-			throws ParserConfigurationException, SAXException, IOException;
+	        throws ParserConfigurationException, SAXException, IOException;
 
 }

@@ -141,7 +141,7 @@ public class COSArray extends COSBase {
 
     @Override
     public String toString() {
-        return "COSArray{" + objects + "}";
+        return "COSArray{" + objects + "}"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
 }

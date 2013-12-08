@@ -18,11 +18,7 @@
  ***************************************************************************/
 package org.elbe.relations.internal.wizards;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
-import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.elbe.relations.RelationsImages;
@@ -41,18 +37,13 @@ public class TermNewWizard extends AbstractNewWizard {
 
 	private TermNewWizardPage page;
 
-	@Inject
-	private IEclipseContext context;
-
-	@Inject
-	private Logger log;
-
 	@Override
 	public void addPages() {
-		page = ContextInjectionFactory.make(TermNewWizardPage.class, context);
+		page = ContextInjectionFactory.make(TermNewWizardPage.class,
+		        getEclipseContext());
 		addPage(page);
 		addPages(
-				RelationsMessages.getString("TermNewWizard.page.title"), RelationsMessages.getString("TermNewWizard.page.msg")); //$NON-NLS-1$ //$NON-NLS-2$
+		        RelationsMessages.getString("TermNewWizard.page.title"), RelationsMessages.getString("TermNewWizard.page.msg")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
@@ -63,11 +54,11 @@ public class TermNewWizard extends AbstractNewWizard {
 		}
 		catch (final BOMTruncationException exc) {
 			MessageDialog.openError(Display.getCurrent().getActiveShell(),
-					ERROR_DIALOG, exc.getMessage());
+			        ERROR_DIALOG, exc.getMessage());
 			return false;
 		}
 		catch (final BOMException exc) {
-			log.error(exc, exc.getMessage());
+			log().error(exc, exc.getMessage());
 			return false;
 		}
 		return true;

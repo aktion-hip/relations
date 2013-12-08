@@ -102,7 +102,7 @@ import org.elbe.relations.internal.utility.CheckDirtyServiceNoop;
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractEditForm {
-	private static final String MUI_ID_STYLING_TOOLBAR = "relations.toolbar:text.styling";
+	private static final String MUI_ID_STYLING_TOOLBAR = "relations.toolbar:text.styling"; //$NON-NLS-1$
 
 	private final static int DEFAULT_WIDTH = 100;
 	private final static int DEFAULT_HEIGHT = 80;
@@ -560,7 +560,7 @@ public abstract class AbstractEditForm {
 			if (sequence == null) {
 				widgetToolBar.setToolTipText(tooltip);
 			} else {
-				widgetToolBar.setToolTipText(String.format("%s (%s)", tooltip,
+				widgetToolBar.setToolTipText(String.format("%s (%s)", tooltip, //$NON-NLS-1$
 						sequence.format()));
 			}
 			widgetToolBar.setEnabled(false);
@@ -625,11 +625,11 @@ public abstract class AbstractEditForm {
 			if (inEvent.widget instanceof ToolItem) {
 				// click triggered on tool bar item
 				lParameters.put(RelationsConstants.PN_COMMAND_STYLE_SELECTION,
-						widgetToolBar.getSelection() ? "true" : "false");
+						widgetToolBar.getSelection() ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
 				// click triggered on popup menu item
 				lParameters.put(RelationsConstants.PN_COMMAND_STYLE_SELECTION,
-						widgetToolBar.getSelection() ? "false" : "true");
+						widgetToolBar.getSelection() ? "false" : "true"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			handlerService.executeHandler(ParameterizedCommand.generateCommand(
 					command.getCommand(), lParameters));
@@ -659,7 +659,7 @@ public abstract class AbstractEditForm {
 				widgetToolBar.setEnabled(inEnable.booleanValue());
 				if (inEnable) {
 					context.set(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE,
-							"active");
+							"active"); //$NON-NLS-1$
 				} else {
 					context.remove(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE);
 				}
@@ -819,7 +819,7 @@ public abstract class AbstractEditForm {
 					final Map<String, String> lParameters = new HashMap<String, String>();
 					lParameters.put(
 							RelationsConstants.PN_COMMAND_STYLE_SELECTION,
-							lToolItem.getSelection() ? "false" : "true");
+							lToolItem.getSelection() ? "false" : "true"); //$NON-NLS-1$ //$NON-NLS-2$
 					handlerService.executeHandler(ParameterizedCommand
 							.generateCommand(lToolItem.getCommand(),
 									lParameters));

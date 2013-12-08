@@ -46,14 +46,16 @@ import org.elbe.relations.services.IBrowserManager;
 import org.hip.kernel.exc.VException;
 
 /**
- * Abstract wizard class to create new items.
+ * Abstract wizard class to create new items.<br />
+ * Note: this is an Eclipse 3 wizard. To make it e4, let the values for the
+ * annotated field be injected (instead of using the method init()).
  * 
- * @author Luthiger Created on 11.10.2006
+ * @author Luthiger
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractNewWizard extends Wizard implements INewWizard {
 	protected final static String ERROR_DIALOG = RelationsMessages
-			.getString("AbstractNewWizard.title.error"); //$NON-NLS-1$
+	        .getString("AbstractNewWizard.title.error"); //$NON-NLS-1$
 
 	private RelationsNewWizardPage pageRelations;
 	private UnsavedAssociationsModel model = null;
@@ -75,6 +77,31 @@ public abstract class AbstractNewWizard extends Wizard implements INewWizard {
 	}
 
 	/**
+	 * We use the workbench selection to suggest an initial association.
+	 * 
+	 * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
+	 */
+	@Override
+	public void init(final IWorkbench inWorkbench,
+	        final IStructuredSelection inSelection) {
+		log = (Logger) inWorkbench.getAdapter(Logger.class);
+		context = (IEclipseContext) inWorkbench
+		        .getAdapter(IEclipseContext.class);
+		browserManager = (IBrowserManager) inWorkbench
+		        .getAdapter(IBrowserManager.class);
+
+		init(inSelection);
+	}
+
+	protected Logger log() {
+		return log;
+	}
+
+	protected IEclipseContext getEclipseContext() {
+		return context;
+	}
+
+	/**
 	 * Adds the <code>RelationsNewWizardPage</code> to this wizard.
 	 * 
 	 * @param inTitle
@@ -84,14 +111,14 @@ public abstract class AbstractNewWizard extends Wizard implements INewWizard {
 	 */
 	protected void addPages(final String inTitle, final String inDescription) {
 		pageRelations = ContextInjectionFactory.make(
-				RelationsNewWizardPage.class, context);
+		        RelationsNewWizardPage.class, context);
 		pageRelations.setTitle(inTitle);
 		pageRelations.setDescription(inDescription);
 		addPage(pageRelations);
 	}
 
 	protected void prepareFinish(final AbstractRelationsWizardPage inPage,
-			final Image inImage) {
+	        final Image inImage) {
 		inPage.setRelationsSaveHelper(new IRelationsSaveHelper() {
 			@Override
 			public void saveWith(final IItem inItem) throws BOMException {
@@ -113,7 +140,7 @@ public abstract class AbstractNewWizard extends Wizard implements INewWizard {
 			if ((inSelection != null) && !inSelection.isEmpty()) {
 				if (inSelection.getFirstElement() instanceof IBrowserItem) {
 					lSelected = (ItemAdapter) ((IBrowserItem) inSelection
-							.getFirstElement()).getModel();
+					        .getFirstElement()).getModel();
 				}
 			}
 			if (lSelected == null) {
@@ -121,10 +148,10 @@ public abstract class AbstractNewWizard extends Wizard implements INewWizard {
 			}
 			if (lSelected == null) {
 				model = UnsavedAssociationsModel.createModel(createDummy(),
-						context, RelationsImages.TEXT.getImage());
+				        context, RelationsImages.TEXT.getImage());
 			} else {
 				model = UnsavedAssociationsModel.createModel(createDummy(),
-						context, lSelected);
+				        context, lSelected);
 			}
 		}
 		catch (final VException exc) {
@@ -134,18 +161,7 @@ public abstract class AbstractNewWizard extends Wizard implements INewWizard {
 			log.error(exc, exc.getMessage());
 		}
 		setWindowTitle(RelationsMessages
-				.getString("AbstractNewWizard.view.title")); //$NON-NLS-1$
-	}
-
-	/**
-	 * We use the workbench selection to suggest an inital association.
-	 * 
-	 * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
-	 */
-	@Override
-	public void init(final IWorkbench inWorkbench,
-			final IStructuredSelection inSelection) {
-		init(inSelection);
+		        .getString("AbstractNewWizard.view.title")); //$NON-NLS-1$
 	}
 
 	private IItem createDummy() {

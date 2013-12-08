@@ -18,6 +18,9 @@
  ***************************************************************************/
 package org.elbe.relations.data.utility;
 
+import org.elbe.relations.data.bom.IItem;
+import org.hip.kernel.exc.VException;
+
 /**
  * Utility class for an item's unique ID that consists of item type and item ID.
  * 
@@ -91,6 +94,35 @@ public class UniqueID {
 	 */
 	public static String getStringOf(final int inItemType, final long inID) {
 		return String.format(TEMPLATE, inItemType, inID);
+	}
+	
+	/**
+	 * Factory method: creates a <code>UniqueID</code> from the specified <code>IItem</code>.
+	 * 
+	 * @param inItem {@link IItem}
+	 * @return {@link UniqueID} or an empty String in case of an error
+	 */
+	public static UniqueID createUniqueID(IItem inItem) {
+		try {
+			return new UniqueID(inItem.getItemType(), inItem.getID());
+		} catch (VException exc) {
+			// intentionally left empty
+		}
+		return new NullUniqueID();
+	}
+	
+//	--- private classes ---
+	
+	private static class NullUniqueID extends UniqueID {
+
+		public NullUniqueID() {
+			super(0, 0);
+		}
+		
+		@Override
+		public String toString() {
+			return ""; //$NON-NLS-1$
+		}
 	}
 
 }

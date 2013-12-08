@@ -28,11 +28,11 @@ import org.eclipse.e4.ui.model.application.MApplication;
  * @author Luthiger
  */
 public class BrowserPopupStateController {
-	private static final String VARIABLE = "browser.popup.visibility";
+	private static final String VARIABLE = "browser.popup.visibility"; //$NON-NLS-1$
 
 	public enum State {
-		DISABLED("none"), CONNECTION("connection"), ITEM_CENTER("item_center"), ITEM_PERIPHERY(
-				"item_periphery");
+		DISABLED("none"), CONNECTION("connection"), ITEM_CENTER("item_center"), ITEM_PERIPHERY( //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		        "item_periphery"); //$NON-NLS-1$
 
 		private String value;
 
@@ -55,7 +55,7 @@ public class BrowserPopupStateController {
 	 *            {@link State}
 	 */
 	public static void setState(final State inState,
-			final MApplication inApplication) {
+	        final MApplication inApplication) {
 		inApplication.getContext().set(VARIABLE, inState.getValue());
 	}
 

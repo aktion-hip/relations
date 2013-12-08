@@ -28,8 +28,8 @@ import javax.inject.Singleton;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.core.di.extensions.EventTopic;
 import org.eclipse.e4.core.services.log.Logger;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.data.bom.IItem;
@@ -52,7 +52,7 @@ public class BookmarksController {
 	private volatile WritableList bookmarksList;
 	private BookmarksSettingHelper settings;
 	private final Collection<RetrievedItemWithIcon> pending = new ArrayList<RetrievedItemWithIcon>();
-	private String oldDBName = "";
+	private String oldDBName = ""; //$NON-NLS-1$
 
 	@Inject
 	private IDataService dataService;
@@ -80,8 +80,8 @@ public class BookmarksController {
 	private WritableList getBookmarkList() {
 		if (bookmarksList == null) {
 			bookmarksList = new WritableList(
-					new ArrayList<RetrievedItemWithIcon>(),
-					RetrievedItemWithIcon.class);
+			        new ArrayList<RetrievedItemWithIcon>(),
+			        RetrievedItemWithIcon.class);
 		}
 		return bookmarksList;
 	}
@@ -104,7 +104,7 @@ public class BookmarksController {
 				final UniqueID lID = new UniqueID(lBookmark);
 				final IItem lItem = dataService.retrieveItem(lID);
 				final RetrievedItemWithIcon lRetrieved = new RetrievedItemWithIcon(
-						lID, lItem.getTitle());
+				        lID, lItem.getTitle());
 				lBookmarks.add(lRetrieved);
 				pending.remove(lRetrieved);
 			}
@@ -125,34 +125,34 @@ public class BookmarksController {
 		final StringBuilder lPersist = new StringBuilder();
 		boolean isFirst = true;
 		for (final Iterator<?> lItems = getBookmarkList().iterator(); lItems
-				.hasNext();) {
+		        .hasNext();) {
 			final RetrievedItem lItem = (RetrievedItem) lItems.next();
 			if (!isFirst) {
 				lPersist.append(BookmarksSettingHelper.SEP);
 			}
 			isFirst = false;
 			lPersist.append(UniqueID.getStringOf(lItem.getItemType(),
-					lItem.getID()));
+			        lItem.getID()));
 		}
 		if (settings != null) {
 			settings.storeBookmarks(oldDBName.isEmpty() ? getDBName()
-					: oldDBName, new String(lPersist));
+			        : oldDBName, new String(lPersist));
 		}
 	}
 
 	@Inject
 	@Optional
 	void removeItem(
-			@EventTopic(RelationsConstants.TOPIC_DB_CHANGED_DELETED) final UniqueID inDeleted) {
+	        @UIEventTopic(RelationsConstants.TOPIC_DB_CHANGED_DELETED) final UniqueID inDeleted) {
 		if (inDeleted != null) {
-			getBookmarkList().remove(new RetrievedItemWithIcon(inDeleted, ""));
+			getBookmarkList().remove(new RetrievedItemWithIcon(inDeleted, "")); //$NON-NLS-1$
 		}
 	}
 
 	@Inject
 	@Optional
 	void reinitialize(
-			@EventTopic(RelationsConstants.TOPIC_DB_CHANGED_INITIALZED) final String inEvent) {
+	        @UIEventTopic(RelationsConstants.TOPIC_DB_CHANGED_INITIALZED) final String inEvent) {
 		storeBookmarks();
 		if (settings != null) {
 			retrieveBookmarks(settings);
@@ -193,8 +193,8 @@ public class BookmarksController {
 	}
 
 	private String getDBName() {
-		return String.format("%s/%s", dbSettings.getHost(),
-				dbSettings.getCatalog());
+		return String.format("%s/%s", dbSettings.getHost(), //$NON-NLS-1$
+		        dbSettings.getCatalog());
 	}
 
 }

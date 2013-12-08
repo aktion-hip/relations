@@ -3,11 +3,12 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.elbe.relations.mysql
 Bundle-Version: 2.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7,
+ JavaSE-1.6
 Import-Package: org.eclipse.e4.core.contexts,
  org.eclipse.e4.core.di,
- org.elbe.relations.data.db,
- org.elbe.relations.services
+ org.elbe.relations.data.db;version="[1.0.0,2.0.0)",
+ org.elbe.relations.services;version="[2.0.0,3.0.0)"
 Service-Component: OSGI-INF/dbConfiguration.xml
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-ActivationPolicy: lazy

@@ -47,7 +47,7 @@ public class FlateFilter implements Filter {
     public void decode(InputStream compressedData, OutputStream result, COSDictionary options, int filterIndex )
     throws IOException
     {
-        COSBase baseObj = options.getDictionaryObject(new String[] {"DecodeParms","DP"});
+        COSBase baseObj = options.getDictionaryObject(new String[] {"DecodeParms","DP"}); //$NON-NLS-1$ //$NON-NLS-2$
         COSDictionary dict = null;
         if( baseObj instanceof COSDictionary )
         {
@@ -67,7 +67,7 @@ public class FlateFilter implements Filter {
         }
         else
         {
-            throw new IOException( "Error: Expected COSArray or COSDictionary and not "
+            throw new IOException( "Error: Expected COSArray or COSDictionary and not " //$NON-NLS-1$
                     + baseObj.getClass().getName() );
         }
 
@@ -81,12 +81,12 @@ public class FlateFilter implements Filter {
         ByteArrayOutputStream baos = null;
         if (dict!=null)
         {
-            predictor = dict.getInt("Predictor");
+            predictor = dict.getInt("Predictor"); //$NON-NLS-1$
             if(predictor > 1)
             {
-                colors = dict.getInt("Colors");
-                bitsPerPixel = options.getInt("BitsPerComponent");
-                columns = dict.getInt("Columns");
+                colors = dict.getInt("Colors"); //$NON-NLS-1$
+                bitsPerPixel = options.getInt("BitsPerComponent"); //$NON-NLS-1$
+                columns = dict.getInt("Columns"); //$NON-NLS-1$
             }
         }
 
@@ -251,7 +251,7 @@ public class FlateFilter implements Filter {
                         /**
                          * @todo decode tiff
                          */
-                        throw new IOException("TIFF-Predictor not supported");
+                        throw new IOException("TIFF-Predictor not supported"); //$NON-NLS-1$
                     case 11:// PRED SUB
                         for (int p = bpp; p < rowlength; p++)
                         {

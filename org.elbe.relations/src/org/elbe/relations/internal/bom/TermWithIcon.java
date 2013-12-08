@@ -59,7 +59,7 @@ public class TermWithIcon extends Term implements IItemModel {
 	 * @throws VException
 	 */
 	public TermWithIcon(final AbstractTerm inTerm,
-			final IEclipseContext inContext) throws VException {
+	        final IEclipseContext inContext) throws VException {
 		context = inContext;
 		set(TermHome.KEY_ID, inTerm.get(TermHome.KEY_ID));
 		set(TermHome.KEY_TITLE, inTerm.get(TermHome.KEY_TITLE));
@@ -69,79 +69,38 @@ public class TermWithIcon extends Term implements IItemModel {
 		reinitialize();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.models.IItemModel#addSource(org.elbe.relations.models
-	 * .IRelation)
-	 */
 	@Override
 	public void addSource(final IRelation inRelation) {
-		// TODO Auto-generated method stub
-
+		// nothing to do
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.models.IItemModel#addTarget(org.elbe.relations.models
-	 * .IRelation)
-	 */
 	@Override
 	public void addTarget(final IRelation inRelation) {
-		// TODO Auto-generated method stub
-
+		// nothing to do
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getSources()
-	 */
 	@Override
 	public List<IRelation> getSources() {
-		// TODO Auto-generated method stub
+		// nothing to do
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getTargets()
-	 */
 	@Override
 	public List<IRelation> getTargets() {
-		// TODO Auto-generated method stub
+		// nothing to do
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getImage()
-	 */
 	@Override
 	public Image getImage() {
 		return RelationsImages.TERM.getImage();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getItemEditWizard()
-	 */
 	@Override
 	public Class<? extends IItemEditWizard> getItemEditWizard() {
 		return TermEditWizard.class;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getItemDeleteAction()
-	 */
 	@Override
 	public IAction getItemDeleteAction(final Logger inLog) {
 		return new IAction() {

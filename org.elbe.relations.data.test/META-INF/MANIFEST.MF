@@ -4,10 +4,11 @@ Bundle-Name: The unit test bundle for the Relations data model bundle.
 Bundle-SymbolicName: org.elbe.relations.data.test
 Bundle-Version: 1.0.0.qualifier
 Fragment-Host: org.elbe.relations.data
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7,
+ JavaSE-1.6
 Bundle-Vendor: RelationWare
 Import-Package: com.mysql.jdbc,
  com.mysql.jdbc.jdbc2.optional,
  org.apache.derby.jdbc,
- org.hip.kernel.dbaccess,
- org.osgi.service.jdbc
+ org.hip.kernel.dbaccess;version="[1.0.0,2.0.0)",
+ org.osgi.service.jdbc;version="[1.0.0,2.0.0)"

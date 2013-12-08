@@ -34,18 +34,21 @@ import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.internal.controls.RelationsStatusLineManager;
 import org.elbe.relations.internal.data.DBSettings;
 import org.elbe.relations.internal.utility.BibtexExporter;
+import org.elbe.relations.internal.utility.WizardHelper;
 
 /**
- * Wizard to export the content of all text items to a file in BibTEX format.
+ * Wizard to export the content of all text items to a file in BibTEX format.<br />
+ * Note: this is an Eclipse 3 wizard. To make it e4, let the values for the
+ * annotated field be injected (instead of using the method init()).
  * 
- * @author Luthiger Created on 25.04.2007
+ * @author Luthiger
  */
 @SuppressWarnings("restriction")
 public class ExportBibtex extends Wizard implements IExportWizard {
 	private final static MessageFormat SUCCESS_MSG = new MessageFormat(
-			RelationsMessages.getString("ExportBibtex.feedback.success")); //$NON-NLS-1$
+	        RelationsMessages.getString("ExportBibtex.feedback.success")); //$NON-NLS-1$
 	private final static MessageFormat PROBLEMS_MSG = new MessageFormat(
-			RelationsMessages.getString("ExportBibtex.feedback.problems")); //$NON-NLS-1$
+	        RelationsMessages.getString("ExportBibtex.feedback.problems")); //$NON-NLS-1$
 
 	@Inject
 	private IEclipseContext context;
@@ -61,62 +64,48 @@ public class ExportBibtex extends Wizard implements IExportWizard {
 
 	private ExportBibtexPage page;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-	 * org.eclipse.jface.viewers.IStructuredSelection)
-	 */
 	@Override
 	public void init(final IWorkbench inWorkbench,
-			final IStructuredSelection inSelection) {
+	        final IStructuredSelection inSelection) {
+		context = (IEclipseContext) inWorkbench
+		        .getAdapter(IEclipseContext.class);
+		log = (Logger) inWorkbench.getAdapter(Logger.class);
+		dbSettings = (DBSettings) inWorkbench.getAdapter(DBSettings.class);
+		statusLine = WizardHelper.getFromWorkbench(
+		        RelationsStatusLineManager.class, inWorkbench);
+
 		setWindowTitle(RelationsMessages.getString("ExportBibtex.window.title")); //$NON-NLS-1$
 		setNeedsProgressMonitor(true);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.wizard.Wizard#addPages()
-	 */
 	@Override
 	public void addPages() {
 		page = new ExportBibtexPage("ExportBibtexPage"); //$NON-NLS-1$
 		addPage(page);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
-	 */
 	@Override
 	public boolean performFinish() {
 		try {
 			page.saveToHistory();
 
 			final BibtexExporter lExporter = ContextInjectionFactory.make(
-					BibtexExporter.class, context);
+			        BibtexExporter.class, context);
 			lExporter.setFileName(page.getFileName());
 			lExporter.export();
 			statusLine.showStatusLineMessage(SUCCESS_MSG
-					.format(new String[] { dbSettings.getCatalog() }));
+			        .format(new String[] { dbSettings.getCatalog() }));
 		}
 		catch (final Exception exc) {
 			MessageDialog
-					.openError(
-							getShell(),
-							RelationsMessages.getString("ExportBibtex.error"), PROBLEMS_MSG.format(new String[] { dbSettings.getCatalog() })); //$NON-NLS-1$
+			        .openError(
+			                getShell(),
+			                RelationsMessages.getString("ExportBibtex.error"), PROBLEMS_MSG.format(new String[] { dbSettings.getCatalog() })); //$NON-NLS-1$
 			log.error(exc, exc.getMessage());
 		}
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.wizard.Wizard#dispose()
-	 */
 	@Override
 	public void dispose() {
 		page.dispose();

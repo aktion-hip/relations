@@ -34,7 +34,7 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
  * @author Luthiger
  */
 public class BookmarksSettingHelper {
-	public static final String SEP = ",";
+	public static final String SEP = ","; //$NON-NLS-1$
 
 	private final MPart bookmarkPart;
 

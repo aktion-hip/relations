@@ -69,7 +69,7 @@ public class ASCII85OutputStream extends FilterOutputStream
     {
         if(term<118 || term>126 || term=='z')
         {
-            throw new IllegalArgumentException("Terminator must be 118-126 excluding z");
+            throw new IllegalArgumentException("Terminator must be 118-126 excluding z"); //$NON-NLS-1$
         }
         terminator=term;
     }

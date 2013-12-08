@@ -69,7 +69,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 	 *            {@link IEclipseContext}
 	 */
 	public ItemAdapter(final IItem inItem, final Image inImage,
-			final IEclipseContext inContext) {
+	        final IEclipseContext inContext) {
 		item = new ItemAdapterDelegate(inItem, inImage, inContext);
 		hasDelegate = true;
 		initialize(inContext);
@@ -132,35 +132,16 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 		return getItem().getItemType();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.bom.IItem#getTitle()
-	 */
 	@Override
 	public String getTitle() throws VException {
 		return getItem().getTitle();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.models.IItemModel#addSource(org.elbe.relations.bom
-	 * .IRelation)
-	 */
 	@Override
 	public void addSource(final IRelation inRelation) {
 		sources.add(inRelation);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.models.IItemModel#addTarget(org.elbe.relations.bom
-	 * .IRelation)
-	 */
 	@Override
 	public void addTarget(final IRelation inRelation) {
 		if (inRelation != null) {
@@ -168,21 +149,11 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getSources()
-	 */
 	@Override
 	public List<IRelation> getSources() {
 		return sources;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getTargets()
-	 */
 	@Override
 	public List<IRelation> getTargets() {
 		return targets;
@@ -205,7 +176,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 		lCollator.setStrength(Collator.SECONDARY);
 		try {
 			return lCollator.compare(getTitle(),
-					((ItemAdapter) inObject).getTitle());
+			        ((ItemAdapter) inObject).getTitle());
 		}
 		catch (final VException exc) {
 			log.error(exc, exc.getMessage());
@@ -221,17 +192,10 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 		catch (final Exception exc) {
 			log.error(exc, exc.getMessage());
 			return getClass().getName()
-					+ RelationsMessages.getString("ItemAdapter.error"); //$NON-NLS-1$
+			        + RelationsMessages.getString("ItemAdapter.error"); //$NON-NLS-1$
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.bom.IItem#visit(org.elbe.relations.utility.IItemVisitor
-	 * )
-	 */
 	@Override
 	public void visit(final IItemVisitor inVisitor) throws VException {
 		item.visit(inVisitor);
@@ -303,7 +267,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 	 */
 	@Override
 	public void saveTitleText(final String inTitle, final String inText)
-			throws BOMException {
+	        throws BOMException {
 		getItem().saveTitleText(inTitle, inText);
 	}
 
@@ -315,29 +279,17 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 		return getItem().getCreated();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.bom.IItem#accept(org.hip.kernel.bom.DomainObjectVisitor
-	 * )
-	 */
 	@Override
 	public void accept(final DomainObjectVisitor inVisitor) {
 		getItem().accept(inVisitor);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int lPrime = 31;
 		int outHash = 1;
 		outHash = lPrime * outHash
-				+ ((getItem() == null) ? 0 : getItem().hashCode());
+		        + ((getItem() == null) ? 0 : getItem().hashCode());
 		return outHash;
 	}
 
@@ -372,7 +324,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 		private final IEclipseContext context;
 
 		ItemAdapterDelegate(final IItem inItem, final Image inImage,
-				final IEclipseContext inContext) {
+		        final IEclipseContext inContext) {
 			item = inItem;
 			image = inImage;
 			context = inContext;
@@ -406,7 +358,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 		public void visit(final IItemVisitor inVisitor) throws VException {
 			if (getItemType() == IItem.TEXT) {
 				final TextHelper lItem = new TextHelper((AbstractText) item,
-						context);
+				        context);
 				lItem.visit(inVisitor);
 			} else {
 				item.visit(inVisitor);
@@ -415,44 +367,40 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 
 		@Override
 		public ILightWeightItem getLightWeight() throws BOMException {
-			// TODO Auto-generated method stub
+			// nothing to do
 			return null;
 		}
 
 		@Override
 		public void saveTitleText(final String inTitle, final String inText)
-				throws BOMException {
-			// TODO Auto-generated method stub
-
+		        throws BOMException {
+			// nothing to do
 		}
 
 		@Override
 		public void accept(final DomainObjectVisitor inVisitor) {
-			// TODO Auto-generated method stub
-
+			// nothing to do
 		}
 
 		@Override
 		public void addSource(final IRelation inRelation) {
-			// TODO Auto-generated method stub
-
+			// nothing to do
 		}
 
 		@Override
 		public void addTarget(final IRelation inRelation) {
-			// TODO Auto-generated method stub
-
+			// nothing to do
 		}
 
 		@Override
 		public List<IRelation> getSources() {
-			// TODO Auto-generated method stub
+			// nothing to do
 			return null;
 		}
 
 		@Override
 		public List<IRelation> getTargets() {
-			// TODO Auto-generated method stub
+			// nothing to do
 			return null;
 		}
 
@@ -464,7 +412,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 		@Override
 		public Class<? extends IItemEditWizard> getItemEditWizard() {
 			return ItemModelHelper.getItem(item.getItemType())
-					.getItemEditWizard();
+			        .getItemEditWizard();
 		}
 
 		@Override
@@ -505,7 +453,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 	@SuppressWarnings("serial")
 	private static class TextHelper extends TextWithIcon {
 		public TextHelper(final AbstractText inText,
-				final IEclipseContext inContext) throws VException {
+		        final IEclipseContext inContext) throws VException {
 			super(inText, inContext);
 		}
 	}

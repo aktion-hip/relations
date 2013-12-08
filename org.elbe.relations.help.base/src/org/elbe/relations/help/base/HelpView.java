@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.e4.core.services.log.Logger;
-import org.eclipse.e4.ui.model.application.ui.basic.MTrimmedWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.BrowserFunction;
@@ -50,21 +49,18 @@ public class HelpView {
 	private final Map<String, HelpManager> helpManagers = new HashMap<String, HelpManager>();
 
 	@Inject
-	private MTrimmedWindow window;
-
-	@Inject
 	private Logger log;
 
 	@Inject
 	public HelpView(final Composite inParent,
-			final IExtensionRegistry inRegistry) {
+	        final IExtensionRegistry inRegistry) {
 
 		final IConfigurationElement[] lHelps = inRegistry
-				.getConfigurationElementsFor(Constants.HELP_PLUGIN_ID);
+		        .getConfigurationElementsFor(Constants.HELP_PLUGIN_ID);
 		for (final IConfigurationElement lHelp : lHelps) {
 			if (HelpManager.TOC_MARKER.equals(lHelp.getName())) {
 				final HelpManager lManager = getHelpManager(lHelp
-						.getNamespaceIdentifier());
+				        .getNamespaceIdentifier());
 				lManager.process(lHelp);
 			}
 		}
@@ -82,10 +78,10 @@ public class HelpView {
 				@Override
 				public void completed(final ProgressEvent inEvent) {
 					final String lUrl = (String) lBrowser
-							.evaluate("return parent.ContentFrame.location.href;");
+					        .evaluate("return parent.ContentFrame.location.href;");
 					if (lUrl != null) {
 						lBrowser.execute(getBreadcrumb(getBreadcrumbItems(lUrl,
-								helpManagers)));
+						        helpManagers)));
 					}
 				}
 
@@ -101,14 +97,14 @@ public class HelpView {
 	}
 
 	private String getBreadcrumbItems(final String inUrl,
-			final Map<String, HelpManager> inHelpManagers) {
+	        final Map<String, HelpManager> inHelpManagers) {
 
 		HelpManager lManager = null;
 		String lNamespace = "";
 		for (final Entry<String, HelpManager> lEntry : inHelpManagers
-				.entrySet()) {
+		        .entrySet()) {
 			final String lNamespacePart = Constants.PATH_DELIM
-					+ lEntry.getKey() + Constants.PATH_DELIM;
+			        + lEntry.getKey() + Constants.PATH_DELIM;
 			if (inUrl.contains(lNamespacePart)) {
 				lManager = lEntry.getValue();
 				lNamespace = lEntry.getKey();
@@ -116,18 +112,18 @@ public class HelpView {
 			}
 		}
 		return lManager == null ? "" : lManager.getBreadcrumbs(lNamespace,
-				inUrl);
+		        inUrl);
 	}
 
 	private String getBreadcrumb(final String inBreadcrumbItems) {
 		final StringBuilder out = new StringBuilder(
-				"var frame = parent.ContentFrame.document;");
+		        "var frame = parent.ContentFrame.document;");
 		out.append("var frame = parent.ContentFrame.document;");
 		out.append("var body = frame.getElementsByTagName('body')[0];");
 		out.append("var breadcrumb = frame.createElement('div');");
 		out.append("breadcrumb.setAttribute('class', 'help_breadcrumbs');");
 		out.append("breadcrumb.innerHTML = '").append(inBreadcrumbItems)
-				.append("';");
+		        .append("';");
 		out.append("body.insertBefore(breadcrumb, body.firstChild);");
 		return new String(out);
 	}
@@ -156,7 +152,7 @@ public class HelpView {
 		private final Collection<HelpManager> helpTocs;
 
 		public HelpNavigationJS(final Browser inBrowser, final String inName,
-				final Collection<HelpManager> inHelpTocs) {
+		        final Collection<HelpManager> inHelpTocs) {
 			super(inBrowser, inName);
 			helpTocs = inHelpTocs;
 		}
@@ -167,7 +163,7 @@ public class HelpView {
 			try {
 				for (final HelpManager lHelp : helpTocs) {
 					out.append(Constants.LI_START).append(lHelp.renderToc())
-							.append(Constants.LI_END);
+					        .append(Constants.LI_END);
 				}
 			}
 			catch (final IOException exc) {

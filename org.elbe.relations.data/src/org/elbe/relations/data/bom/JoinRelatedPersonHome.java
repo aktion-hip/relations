@@ -26,62 +26,63 @@ import org.hip.kernel.bom.impl.JoinedDomainObjectHomeImpl;
  * 
  * @author Luthiger
  */
+@SuppressWarnings("serial")
 abstract public class JoinRelatedPersonHome extends JoinedDomainObjectHomeImpl {
 	public final static String CONNECTION_ID = "ConnectionID";
 	private final static String OBJECT_CLASS_NAME = "org.elbe.relations.data.internal.bom.JoinRelatedPerson";
 	protected final static String XML_OBJECT_DEF1 = "<?xml version='1.0' encoding='ISO-8859-1'?>	"
-			+ "<joinedObjectDef objectName='JoinRelatedPerson' parent='org.hip.kernel.bom.ReadOnlyDomainObject' version='1.0'>	"
-			+ "	<columnDefs>	" + "		<columnDef columnName='"
-			+ PersonHome.KEY_ID
-			+ "' domainObject='org.elbe.relations.data.bom.Person'/>	"
-			+ "		<columnDef columnName='"
-			+ PersonHome.KEY_NAME
-			+ "' domainObject='org.elbe.relations.data.bom.Person'/>	"
-			+ "		<columnDef columnName='"
-			+ PersonHome.KEY_FIRSTNAME
-			+ "' domainObject='org.elbe.relations.data.bom.Person'/>	"
-			+ "		<columnDef columnName='"
-			+ PersonHome.KEY_TEXT
-			+ "' domainObject='org.elbe.relations.data.bom.Person'/>	"
-			+ "		<columnDef columnName='"
-			+ PersonHome.KEY_FROM
-			+ "' domainObject='org.elbe.relations.data.bom.Person'/>	"
-			+ "		<columnDef columnName='"
-			+ PersonHome.KEY_TO
-			+ "' domainObject='org.elbe.relations.data.bom.Person'/>	"
-			+ "		<columnDef columnName='"
-			+ PersonHome.KEY_CREATED
-			+ "' domainObject='org.elbe.relations.data.bom.Person'/>	"
-			+ "		<columnDef columnName='"
-			+ PersonHome.KEY_MODIFIED
-			+ "' domainObject='org.elbe.relations.data.bom.Person'/>	"
-			+ "		<columnDef columnName='"
-			+ RelationHome.KEY_ID
-			+ "' alias='"
-			+ CONNECTION_ID
-			+ "' domainObject='org.elbe.relations.data.internal.bom.Relation'/>	"
-			+ "		<columnDef columnName='"
-			+ RelationHome.KEY_ITEM1
-			+ "' domainObject='org.elbe.relations.data.internal.bom.Relation'/>	"
-			+ "		<columnDef columnName='"
-			+ RelationHome.KEY_TYPE1
-			+ "' domainObject='org.elbe.relations.data.internal.bom.Relation'/>	"
-			+ "		<columnDef columnName='"
-			+ RelationHome.KEY_ITEM2
-			+ "' domainObject='org.elbe.relations.data.internal.bom.Relation'/>	"
-			+ "		<columnDef columnName='"
-			+ RelationHome.KEY_TYPE2
-			+ "' domainObject='org.elbe.relations.data.internal.bom.Relation'/>	"
-			+ "	</columnDefs>	"
-			+ "	<joinDef joinType='EQUI_JOIN'>	"
-			+ "		<objectDesc objectClassName='org.elbe.relations.data.internal.bom.Relation'/>	"
-			+ "		<objectDesc objectClassName='org.elbe.relations.data.bom.Person'/>	"
-			+ "		<joinCondition>	" + "			<columnDef columnName='";
+	        + "<joinedObjectDef objectName='JoinRelatedPerson' parent='org.hip.kernel.bom.ReadOnlyDomainObject' version='1.0'>	"
+	        + "	<columnDefs>	" + "		<columnDef columnName='"
+	        + PersonHome.KEY_ID
+	        + "' domainObject='org.elbe.relations.data.bom.Person'/>	"
+	        + "		<columnDef columnName='"
+	        + PersonHome.KEY_NAME
+	        + "' domainObject='org.elbe.relations.data.bom.Person'/>	"
+	        + "		<columnDef columnName='"
+	        + PersonHome.KEY_FIRSTNAME
+	        + "' domainObject='org.elbe.relations.data.bom.Person'/>	"
+	        + "		<columnDef columnName='"
+	        + PersonHome.KEY_TEXT
+	        + "' domainObject='org.elbe.relations.data.bom.Person'/>	"
+	        + "		<columnDef columnName='"
+	        + PersonHome.KEY_FROM
+	        + "' domainObject='org.elbe.relations.data.bom.Person'/>	"
+	        + "		<columnDef columnName='"
+	        + PersonHome.KEY_TO
+	        + "' domainObject='org.elbe.relations.data.bom.Person'/>	"
+	        + "		<columnDef columnName='"
+	        + PersonHome.KEY_CREATED
+	        + "' domainObject='org.elbe.relations.data.bom.Person'/>	"
+	        + "		<columnDef columnName='"
+	        + PersonHome.KEY_MODIFIED
+	        + "' domainObject='org.elbe.relations.data.bom.Person'/>	"
+	        + "		<columnDef columnName='"
+	        + RelationHome.KEY_ID
+	        + "' alias='"
+	        + CONNECTION_ID
+	        + "' domainObject='org.elbe.relations.data.internal.bom.Relation'/>	"
+	        + "		<columnDef columnName='"
+	        + RelationHome.KEY_ITEM1
+	        + "' domainObject='org.elbe.relations.data.internal.bom.Relation'/>	"
+	        + "		<columnDef columnName='"
+	        + RelationHome.KEY_TYPE1
+	        + "' domainObject='org.elbe.relations.data.internal.bom.Relation'/>	"
+	        + "		<columnDef columnName='"
+	        + RelationHome.KEY_ITEM2
+	        + "' domainObject='org.elbe.relations.data.internal.bom.Relation'/>	"
+	        + "		<columnDef columnName='"
+	        + RelationHome.KEY_TYPE2
+	        + "' domainObject='org.elbe.relations.data.internal.bom.Relation'/>	"
+	        + "	</columnDefs>	"
+	        + "	<joinDef joinType='EQUI_JOIN'>	"
+	        + "		<objectDesc objectClassName='org.elbe.relations.data.internal.bom.Relation'/>	"
+	        + "		<objectDesc objectClassName='org.elbe.relations.data.bom.Person'/>	"
+	        + "		<joinCondition>	" + "			<columnDef columnName='";
 	protected final static String XML_OBJECT_DEF2 = "' domainObject='org.elbe.relations.data.internal.bom.Relation'/>	"
-			+ "			<columnDef columnName='"
-			+ PersonHome.KEY_ID
-			+ "' domainObject='org.elbe.relations.data.bom.Person'/>	"
-			+ "		</joinCondition>	" + "	</joinDef>	" + "</joinedObjectDef>";
+	        + "			<columnDef columnName='"
+	        + PersonHome.KEY_ID
+	        + "' domainObject='org.elbe.relations.data.bom.Person'/>	"
+	        + "		</joinCondition>	" + "	</joinDef>	" + "</joinedObjectDef>";
 
 	/**
 	 * JoinRelatedPersonHome constructor.

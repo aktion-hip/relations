@@ -59,7 +59,7 @@ public class PersonWithIcon extends Person implements IItemModel {
 	 * @throws VException
 	 */
 	public PersonWithIcon(final AbstractPerson inPerson,
-			final IEclipseContext inContext) throws VException {
+	        final IEclipseContext inContext) throws VException {
 		context = inContext;
 		set(PersonHome.KEY_ID, inPerson.get(PersonHome.KEY_ID));
 		set(PersonHome.KEY_TEXT, inPerson.get(PersonHome.KEY_TEXT));
@@ -71,79 +71,38 @@ public class PersonWithIcon extends Person implements IItemModel {
 		reinitialize();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.models.IItemModel#addSource(org.elbe.relations.models
-	 * .IRelation)
-	 */
 	@Override
 	public void addSource(final IRelation inRelation) {
-		// TODO Auto-generated method stub
-
+		// nothing to do
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.models.IItemModel#addTarget(org.elbe.relations.models
-	 * .IRelation)
-	 */
 	@Override
 	public void addTarget(final IRelation inRelation) {
-		// TODO Auto-generated method stub
-
+		// nothing to do
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getSources()
-	 */
 	@Override
 	public List<IRelation> getSources() {
-		// TODO Auto-generated method stub
+		// nothing to do
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getTargets()
-	 */
 	@Override
 	public List<IRelation> getTargets() {
-		// TODO Auto-generated method stub
+		// nothing to do
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getImage()
-	 */
 	@Override
 	public Image getImage() {
 		return RelationsImages.PERSON.getImage();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getItemEditWizard()
-	 */
 	@Override
 	public Class<? extends IItemEditWizard> getItemEditWizard() {
 		return PersonEditWizard.class;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getItemDeleteAction()
-	 */
 	@Override
 	public IAction getItemDeleteAction(final Logger inLog) {
 		return new IAction() {

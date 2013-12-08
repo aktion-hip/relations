@@ -34,6 +34,7 @@ import org.hip.kernel.sys.VSys;
  * @author Benno Luthiger Created on Sep 23, 2004
  * @see LightWeightTerm
  */
+@SuppressWarnings("serial")
 public class CollectableTermHome extends TermHome {
 
 	/**
@@ -63,7 +64,7 @@ public class CollectableTermHome extends TermHome {
 	 */
 	@Override
 	public QueryResult select(final QueryStatement inStatement)
-			throws SQLException {
+	        throws SQLException {
 		if (VSys.assertNotNull(this, "select(QueryStatement)", inStatement) == Assert.FAILURE) //$NON-NLS-1$
 			return new AlternativeQueryResult(null, null, null);
 

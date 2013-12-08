@@ -31,6 +31,7 @@ import org.hip.kernel.exc.VException;
  * 
  * @author Benno Luthiger
  */
+@SuppressWarnings("serial")
 public class JoinRelatedTerm extends AbstractTerm implements IRelated {
 
 	private final static String HOME_CLASS_NAME = "org.elbe.relations.data.bom.JoinRelatedTerm1Home"; //$NON-NLS-1$
@@ -65,10 +66,10 @@ public class JoinRelatedTerm extends AbstractTerm implements IRelated {
 	 */
 	@Override
 	public void save(final String inTitle, final String inText)
-			throws BOMException {
+	        throws BOMException {
 		try {
 			((Term) BOMHelper.getTermHome().getItem(getID())).save(inTitle,
-					inText);
+			        inText);
 			setModel(inTitle, inText);
 		}
 		catch (final VException exc) {

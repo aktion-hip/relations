@@ -32,6 +32,7 @@ import org.hip.kernel.exc.VException;
  * 
  * @author Benno Luthiger
  */
+@SuppressWarnings("serial")
 public class JoinRelatedText extends AbstractText implements IRelated {
 
 	private final static String HOME_CLASS_NAME = "org.elbe.relations.data.bom.JoinRelatedText1Home"; //$NON-NLS-1$
@@ -68,10 +69,10 @@ public class JoinRelatedText extends AbstractText implements IRelated {
 	 */
 	@Override
 	public void saveTitleText(final String inTitle, final String inText)
-			throws BOMException {
+	        throws BOMException {
 		try {
 			BOMHelper.getTextHome().getItem(getID())
-					.saveTitleText(inTitle, inText);
+			        .saveTitleText(inTitle, inText);
 			setModel(inTitle, inText);
 		}
 		catch (final VException exc) {
@@ -84,20 +85,20 @@ public class JoinRelatedText extends AbstractText implements IRelated {
 	 */
 	@Override
 	public void save(final String inTitle, final String inText,
-			final Integer inType, final String inAuthor,
-			final String inCoAuthor, final String inSubTitle,
-			final String inPublisher, final String inYear,
-			final String inJournal, final String inPages,
-			final Integer inArticleVolume, final Integer inArticleNumber,
-			final String inLocation) throws BOMException {
+	        final Integer inType, final String inAuthor,
+	        final String inCoAuthor, final String inSubTitle,
+	        final String inPublisher, final String inYear,
+	        final String inJournal, final String inPages,
+	        final Integer inArticleVolume, final Integer inArticleNumber,
+	        final String inLocation) throws BOMException {
 		try {
 			((Text) BOMHelper.getTextHome().getItem(getID())).save(inTitle,
-					inText, inType, inAuthor, inCoAuthor, inSubTitle,
-					inPublisher, inYear, inJournal, inPages, inArticleVolume,
-					inArticleNumber, inLocation);
+			        inText, inType, inAuthor, inCoAuthor, inSubTitle,
+			        inPublisher, inYear, inJournal, inPages, inArticleVolume,
+			        inArticleNumber, inLocation);
 			setModel(inTitle, inText, inType, inAuthor, inCoAuthor, inSubTitle,
-					inPublisher, inYear, inJournal, inPages, inArticleVolume,
-					inArticleNumber, inLocation);
+			        inPublisher, inYear, inJournal, inPages, inArticleVolume,
+			        inArticleNumber, inLocation);
 		}
 		catch (final VException exc) {
 			new BOMException(exc.getMessage());

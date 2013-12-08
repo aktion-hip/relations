@@ -32,6 +32,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Luthiger Created on 01.09.2006
  */
+@SuppressWarnings("serial")
 public abstract class AbstractText extends AbstractItem implements IItem {
 	// Constants for text type items.
 	public static final int TYPE_BOOK = 0;
@@ -40,7 +41,7 @@ public abstract class AbstractText extends AbstractItem implements IItem {
 	public static final int TYPE_WEBPAGE = 3;
 
 	private final static String TEXT_ADD_TMPL = System
-			.getProperty("line.separator") + "[%s...]"; //$NON-NLS-1$ //$NON-NLS-2$
+	        .getProperty("line.separator") + "[%s...]"; //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * AbstractText constructor.
@@ -66,7 +67,7 @@ public abstract class AbstractText extends AbstractItem implements IItem {
 			try {
 				final String lBare = getStyleParser().getUntaggedText(lText);
 				lText = String.format(TEXT_ADD_TMPL,
-						lBare.substring(0, Math.min(lText.length(), 10)));
+				        lBare.substring(0, Math.min(lText.length(), 10)));
 			}
 			catch (final Exception exc) {
 				throw new VException(exc.getMessage());
@@ -86,7 +87,7 @@ public abstract class AbstractText extends AbstractItem implements IItem {
 		return new IStyleParser() {
 			@Override
 			public String getUntaggedText(final String inTagged)
-					throws IOException, SAXException {
+			        throws IOException, SAXException {
 				return inTagged;
 			}
 		};
@@ -102,7 +103,7 @@ public abstract class AbstractText extends AbstractItem implements IItem {
 		return new IBibliography() {
 			@Override
 			public String render(final AbstractText inText) throws VException {
-				return "";
+				return ""; //$NON-NLS-1$
 			}
 		};
 	}
@@ -130,21 +131,21 @@ public abstract class AbstractText extends AbstractItem implements IItem {
 	public ILightWeightItem getLightWeight() throws BOMException {
 		try {
 			return new LightWeightText(
-					((Long) get(TextHome.KEY_ID)).longValue(), get(
-							TextHome.KEY_TITLE).toString(),
-					getChecked(TextHome.KEY_TEXT), get(TextHome.KEY_AUTHOR)
-							.toString(), getChecked(TextHome.KEY_COAUTHORS),
-					getChecked(TextHome.KEY_SUBTITLE),
-					getChecked(TextHome.KEY_YEAR),
-					getChecked(TextHome.KEY_PUBLICATION),
-					getChecked(TextHome.KEY_PAGES),
-					Integer.parseInt(getChecked(TextHome.KEY_VOLUME)),
-					Integer.parseInt(getChecked(TextHome.KEY_NUMBER)),
-					getChecked(TextHome.KEY_PUBLISHER),
-					getChecked(TextHome.KEY_PLACE),
-					Integer.parseInt(getChecked(TextHome.KEY_TYPE)),
-					(Timestamp) get(TextHome.KEY_CREATED),
-					(Timestamp) get(TextHome.KEY_MODIFIED));
+			        ((Long) get(TextHome.KEY_ID)).longValue(), get(
+			                TextHome.KEY_TITLE).toString(),
+			        getChecked(TextHome.KEY_TEXT), get(TextHome.KEY_AUTHOR)
+			                .toString(), getChecked(TextHome.KEY_COAUTHORS),
+			        getChecked(TextHome.KEY_SUBTITLE),
+			        getChecked(TextHome.KEY_YEAR),
+			        getChecked(TextHome.KEY_PUBLICATION),
+			        getChecked(TextHome.KEY_PAGES),
+			        Integer.parseInt(getChecked(TextHome.KEY_VOLUME)),
+			        Integer.parseInt(getChecked(TextHome.KEY_NUMBER)),
+			        getChecked(TextHome.KEY_PUBLISHER),
+			        getChecked(TextHome.KEY_PLACE),
+			        Integer.parseInt(getChecked(TextHome.KEY_TYPE)),
+			        (Timestamp) get(TextHome.KEY_CREATED),
+			        (Timestamp) get(TextHome.KEY_MODIFIED));
 		}
 		catch (final Exception exc) {
 			throw new BOMException(exc.getMessage());
@@ -162,7 +163,7 @@ public abstract class AbstractText extends AbstractItem implements IItem {
 	@Override
 	protected Timestamp[] getCreatedModified() throws VException {
 		return new Timestamp[] { (Timestamp) get(TextHome.KEY_CREATED),
-				(Timestamp) get(TextHome.KEY_MODIFIED) };
+		        (Timestamp) get(TextHome.KEY_MODIFIED) };
 	}
 
 	/**
@@ -170,7 +171,7 @@ public abstract class AbstractText extends AbstractItem implements IItem {
 	 */
 	@Override
 	public void saveTitleText(final String inTitle, final String inText)
-			throws BOMException {
+	        throws BOMException {
 		try {
 			setModel(inTitle, inText);
 			update(true);
@@ -184,7 +185,7 @@ public abstract class AbstractText extends AbstractItem implements IItem {
 	}
 
 	protected void setModel(final String inTitle, final String inText)
-			throws VException {
+	        throws VException {
 		set(TextHome.KEY_TITLE, inTitle);
 		set(TextHome.KEY_TEXT, inText);
 		set(TextHome.KEY_MODIFIED, new Timestamp(System.currentTimeMillis()));
@@ -222,16 +223,16 @@ public abstract class AbstractText extends AbstractItem implements IItem {
 	 * @throws BOMException
 	 */
 	public void save(final String inTitle, final String inText,
-			final Integer inType, final String inAuthor,
-			final String inCoAuthor, final String inSubTitle,
-			final String inPublisher, final String inYear,
-			final String inJournal, final String inPages,
-			final Integer inArticleVolume, final Integer inArticleNumber,
-			final String inLocation) throws BOMException {
+	        final Integer inType, final String inAuthor,
+	        final String inCoAuthor, final String inSubTitle,
+	        final String inPublisher, final String inYear,
+	        final String inJournal, final String inPages,
+	        final Integer inArticleVolume, final Integer inArticleNumber,
+	        final String inLocation) throws BOMException {
 		try {
 			setModel(inTitle, inText, inType, inAuthor, inCoAuthor, inSubTitle,
-					inPublisher, inYear, inJournal, inPages, inArticleVolume,
-					inArticleNumber, inLocation);
+			        inPublisher, inYear, inJournal, inPages, inArticleVolume,
+			        inArticleNumber, inLocation);
 			update(true);
 			refreshItemInIndex();
 		}
@@ -250,12 +251,12 @@ public abstract class AbstractText extends AbstractItem implements IItem {
 	}
 
 	protected void setModel(final String inTitle, final String inText,
-			final Integer inType, final String inAuthor,
-			final String inCoAuthor, final String inSubTitle,
-			final String inPublisher, final String inYear,
-			final String inJournal, final String inPages,
-			final Integer inArticleVolume, final Integer inArticleNumber,
-			final String inLocation) throws VException {
+	        final Integer inType, final String inAuthor,
+	        final String inCoAuthor, final String inSubTitle,
+	        final String inPublisher, final String inYear,
+	        final String inJournal, final String inPages,
+	        final Integer inArticleVolume, final Integer inArticleNumber,
+	        final String inLocation) throws VException {
 		set(TextHome.KEY_TITLE, inTitle);
 		set(TextHome.KEY_TEXT, inText);
 		set(TextHome.KEY_TYPE, inType);

@@ -42,7 +42,7 @@ public class COSInteger extends COSNumber {
     		value = Long.parseLong(inValue);
     	}
     	catch( NumberFormatException e ) {
-    		throw new IOException( "Error: value is not an integer type actual='" + inValue + "'" );
+    		throw new IOException( "Error: value is not an integer type actual='" + inValue + "'" ); //$NON-NLS-1$ //$NON-NLS-2$
     	}
 	}
 
@@ -68,7 +68,7 @@ public class COSInteger extends COSNumber {
 
 	@Override
 	public String toString() {
-		return "COSInt{" + value + "}";
+		return "COSInt{" + value + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

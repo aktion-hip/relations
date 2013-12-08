@@ -161,7 +161,7 @@ public class SearchView extends AbstractToolPart {
 				if (lSelection != null && !lSelection.isEmpty()) {
 					input.setText(lSelection);
 				} else {
-					input.setText("");
+					input.setText(""); //$NON-NLS-1$
 				}
 			}
 

@@ -118,7 +118,7 @@ public class COSStream extends COSDictionary {
             }
         }
         else {
-            throw new IOException( "Error: Unknown filter type:" + lFilters);
+            throw new IOException( "Error: Unknown filter type:" + lFilters); //$NON-NLS-1$
         }
 	}
 

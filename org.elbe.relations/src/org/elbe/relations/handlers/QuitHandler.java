@@ -28,6 +28,7 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.e4.ui.workbench.IWorkbench;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.elbe.relations.RelationsMessages;
 
 /**
  * Handler that is called when the user clicks the
@@ -42,8 +43,8 @@ public class QuitHandler {
 			final IEclipseContext inContext,
 			@Named(IServiceConstants.ACTIVE_SHELL) final Shell inShell)
 			throws InvocationTargetException, InterruptedException {
-		if (MessageDialog.openConfirm(inShell, "Confirmation",
-				"Do you want to exit?")) {
+		if (MessageDialog.openConfirm(inShell, RelationsMessages.getString("handler.quit.title"), //$NON-NLS-1$
+				RelationsMessages.getString("handler.quit.msg"))) { //$NON-NLS-1$
 			inWorkbench.close();
 		}
 	}

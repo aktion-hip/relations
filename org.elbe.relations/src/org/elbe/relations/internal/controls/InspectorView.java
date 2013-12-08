@@ -19,7 +19,6 @@
 package org.elbe.relations.internal.controls;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -34,8 +33,8 @@ import org.eclipse.e4.ui.di.Persist;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.MDirtyable;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
-import org.eclipse.e4.ui.workbench.modeling.ISaveHandler;
 import org.eclipse.e4.ui.workbench.swt.modeling.EMenuService;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -58,6 +57,7 @@ import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.data.bom.BOMException;
 import org.elbe.relations.data.bom.IItem;
+import org.elbe.relations.internal.services.ISelectedTextProvider;
 import org.elbe.relations.internal.style.StyledTextComponent;
 import org.elbe.relations.internal.utility.CheckDirtyService;
 import org.elbe.relations.internal.utility.FormUtility;
@@ -76,14 +76,14 @@ import org.xml.sax.SAXException;
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
-public class InspectorView {
-	public static final String PREF_SWITCH_VALUE = "relations.inspector.view.menu.switch";
-	private static final String SWITCH_VALUE_BIBLIO = "bibliography"; // "content"
+public class InspectorView implements ISelectedTextProvider {
+	public static final String PREF_SWITCH_VALUE = "relations.inspector.view.menu.switch"; //$NON-NLS-1$
+	private static final String SWITCH_VALUE_BIBLIO = "bibliography"; // "content" //$NON-NLS-1$
 
 	private enum DisplayType {
 		NORMAL(new DisplayNormal()), DISABLED(new DisplayNone()), PERSON(
-				new DisplayPerson()), TEXT_BIBLIO(new DisplayTextBiblio()), TEXT_CONTENT(
-				new DisplayTextContent());
+		        new DisplayPerson()), TEXT_BIBLIO(new DisplayTextBiblio()), TEXT_CONTENT(
+		        new DisplayTextContent());
 
 		private IDisplay display;
 
@@ -92,8 +92,8 @@ public class InspectorView {
 		}
 
 		void refresh(final Text inText, final StyledTextComponent inStyled,
-				final InspectorViewVisitor inVisitor) throws IOException,
-				SAXException {
+		        final InspectorViewVisitor inVisitor) throws IOException,
+		        SAXException {
 			display.refresh(inText, inStyled, inVisitor);
 		}
 	}
@@ -106,17 +106,16 @@ public class InspectorView {
 	private boolean initialized = false;
 	private ItemAdapter item;
 	private boolean isSending = false;
+	private boolean isSaving = false;
 	private DisplayType displayType = DisplayType.DISABLED;
 	private String switchValue;
+	private final IEclipseContext context;
 
 	@Inject
 	private MDirtyable dirty;
 
 	@Inject
 	private Logger log;
-
-	// @Inject
-	private final IEclipseContext context;
 
 	@Inject
 	private IEventBroker eventBroker;
@@ -125,39 +124,13 @@ public class InspectorView {
 	private ESelectionService selectionService;
 
 	@Inject
+	EPartService partService;
+
+	@Inject
 	public InspectorView(final Composite inParent,
-			final IEclipseContext inContext) {
+	        final IEclipseContext inContext) {
 		context = inContext;
 		initialize(inParent);
-
-		// TODO
-		inContext.getParent().set(ISaveHandler.class, new ISaveHandler() {
-
-			@Override
-			public Save[] promptToSave(final Collection<MPart> inDirtyParts) {
-				// TODO Auto-generated method stub
-				return new Save[] { Save.NO };
-			}
-
-			@Override
-			public Save promptToSave(final MPart inDirtyPart) {
-				System.out.println(inDirtyPart);
-				return Save.NO;
-			}
-
-			@Override
-			public boolean save(MPart dirtyPart, boolean confirm) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-			@Override
-			public boolean saveParts(Collection<MPart> dirtyParts,
-					boolean confirm) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-		});
 	}
 
 	private void initialize(final Composite inParent) {
@@ -169,10 +142,10 @@ public class InspectorView {
 
 		errorDeco = new ControlDecoration(title, SWT.LEFT | SWT.TOP);
 		final int lIndent = FieldDecorationRegistry.getDefault()
-				.getMaximumDecorationWidth();
+		        .getMaximumDecorationWidth();
 		errorDeco.setImage(FormUtility.IMG_ERROR);
 		errorDeco.setDescriptionText(RelationsMessages
-				.getString("InspectorView.deco.empty")); //$NON-NLS-1$
+		        .getString("InspectorView.deco.empty")); //$NON-NLS-1$
 		errorDeco.hide();
 
 		final GridData lGrid = new GridData(GridData.FILL_HORIZONTAL);
@@ -195,13 +168,13 @@ public class InspectorView {
 		});
 		title.addFocusListener(new FocusListener() {
 			@Override
-			public void focusLost(final FocusEvent inEvent) {
-				sendSelectionChecked(inEvent);
+			public void focusGained(final FocusEvent inEvent) {
+				handleFocusGained();
 			}
 
 			@Override
-			public void focusGained(final FocusEvent inEvent) {
-				// nothing to do
+			public void focusLost(final FocusEvent inEvent) {
+				handleFocusLost(inEvent);
 			}
 		});
 
@@ -211,18 +184,12 @@ public class InspectorView {
 		styledText.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(final FocusEvent inEvent) {
-				context.set(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE,
-						"active");
-				eventBroker.post(RelationsConstants.TOPIC_STYLE_ITEMS_FORM,
-						Boolean.TRUE);
+				handleFocusGained();
 			}
 
 			@Override
 			public void focusLost(final FocusEvent inEvent) {
-				sendSelectionChecked(inEvent);
-				context.remove(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE);
-				eventBroker.post(RelationsConstants.TOPIC_STYLE_ITEMS_FORM,
-						Boolean.FALSE);
+				handleFocusLost(inEvent);
 			}
 		});
 		checkDirtyService.register(styledText);
@@ -238,9 +205,38 @@ public class InspectorView {
 		styledText.setDisabled();
 	}
 
+	private void handleFocusGained() {
+		context.set(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE, "active"); //$NON-NLS-1$
+		eventBroker.post(RelationsConstants.TOPIC_STYLE_ITEMS_FORM,
+		        Boolean.TRUE);
+	}
+
+	private void handleFocusLost(final FocusEvent inEvent) {
+		sendSelectionChecked(inEvent);
+		context.remove(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE);
+		eventBroker.post(RelationsConstants.TOPIC_STYLE_ITEMS_FORM,
+		        Boolean.FALSE);
+		// if the focus moved outside of the part, we ask for saving pending
+		// changes
+		if (checkDirtyService.isDirty()) {
+			if (partService.getActivePart() != partService
+			        .findPart(RelationsConstants.PART_INSPECTOR)) {
+				isSaving = true;
+				if (MessageDialog
+				        .openQuestion(
+				                Display.getCurrent().getActiveShell(),
+				                RelationsMessages
+				                        .getString("InspectorView.dialog.title"), RelationsMessages.getString("InspectorView.dialog.msg"))) { //$NON-NLS-1$ //$NON-NLS-2$
+					saveChanges();
+				}
+				isSaving = false;
+			}
+		}
+	}
+
 	private void sendSelectionChecked(final FocusEvent inEvent) {
 		final Widget lWidget = inEvent.widget;
-		String lSelection = "";
+		String lSelection = ""; //$NON-NLS-1$
 		if (lWidget instanceof Text) {
 			lSelection = ((Text) lWidget).getSelectionText();
 		} else if (lWidget instanceof StyledText) {
@@ -251,12 +247,35 @@ public class InspectorView {
 		}
 	}
 
+	@Override
+	public String getSelection() {
+		String outSelection = ""; //$NON-NLS-1$
+		if (title.isFocusControl()) {
+			outSelection = title.getSelectionText();
+		}
+		if (outSelection.isEmpty()) {
+			outSelection = styledText.getSelectionText();
+		}
+		return outSelection;
+	}
+
 	@PostConstruct
-	void afterInit(final EMenuService inService) {
+	void afterInit(
+	        final EMenuService inService,
+	        final EPartService inPartService,
+	        @Preference(value = RelationsConstants.ACTIVE_BROWSER_ID) @Optional final String inBrowserId) {
 		inService
-				.registerContextMenu(title, RelationsConstants.POPUP_INSPECTOR);
+		        .registerContextMenu(title, RelationsConstants.POPUP_INSPECTOR);
 		inService.registerContextMenu(styledText.getControl(),
-				RelationsConstants.POPUP_INSPECTOR);
+		        RelationsConstants.POPUP_INSPECTOR);
+
+		// work around to have the application's focus on the browser stack
+		if (inBrowserId != null) {
+			final MPart lBrowser = inPartService.findPart(inBrowserId);
+			if (lBrowser != null) {
+				inPartService.activate(lBrowser, true);
+			}
+		}
 	}
 
 	@Focus
@@ -274,8 +293,10 @@ public class InspectorView {
 	@Inject
 	@Optional
 	public void setSelected(
-			@UIEventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED) final SelectedItemChangeEvent inEvent) {
-		setSelected(inEvent.getItem());
+	        @UIEventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED) final SelectedItemChangeEvent inEvent) {
+		if (!isSaving) {
+			setSelected(inEvent.getItem());
+		}
 	}
 
 	private void setSelected(final ItemAdapter inItem) {
@@ -305,16 +326,7 @@ public class InspectorView {
 	}
 
 	private void refreshDisplay(final ItemAdapter inModel) throws VException,
-			IOException, SAXException {
-		if (checkDirtyService.isDirty()) {
-			if (MessageDialog
-					.openQuestion(
-							Display.getCurrent().getActiveShell(),
-							RelationsMessages
-									.getString("InspectorView.dialog.title"), RelationsMessages.getString("InspectorView.dialog.msg"))) { //$NON-NLS-1$ //$NON-NLS-2$
-				saveChanges();
-			}
-		}
+	        IOException, SAXException {
 		item = inModel;
 		if (item == null) {
 			return;
@@ -331,9 +343,9 @@ public class InspectorView {
 		if (inModel.getItemType() == IItem.PERSON) {
 			out = DisplayType.PERSON;
 		} else if (inModel.getItemType() == IItem.TEXT) {
-			context.set(RelationsConstants.FLAG_INSPECTOR_TEXT_ACTIVE, "active");
+			context.set(RelationsConstants.FLAG_INSPECTOR_TEXT_ACTIVE, "active"); //$NON-NLS-1$
 			out = SWITCH_VALUE_BIBLIO.equals(switchValue) ? DisplayType.TEXT_BIBLIO
-					: DisplayType.TEXT_CONTENT;
+			        : DisplayType.TEXT_CONTENT;
 		}
 		return out;
 	}
@@ -341,7 +353,7 @@ public class InspectorView {
 	@Inject
 	@Optional
 	public void setSelected(
-			@UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SEND_CENTER_MODEL) final CentralAssociationsModel inModel) {
+	        @UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SEND_CENTER_MODEL) final CentralAssociationsModel inModel) {
 		setSelected(inModel == null ? null : inModel.getCenter());
 	}
 
@@ -355,7 +367,7 @@ public class InspectorView {
 	@Inject
 	@Optional
 	void updateEditChanges(
-			@UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_CONTENT) final ItemAdapter inItem) {
+	        @UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_CONTENT) final ItemAdapter inItem) {
 		if (isSending) {
 			return;
 		}
@@ -395,13 +407,13 @@ public class InspectorView {
 
 	@Inject
 	void trackViewMenuSwitch(
-			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = PREF_SWITCH_VALUE) final String inSwitchValue) {
+	        @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = PREF_SWITCH_VALUE) final String inSwitchValue) {
 		if (inSwitchValue == null) {
 			return;
 		}
 		switchValue = inSwitchValue;
 		displayType = SWITCH_VALUE_BIBLIO.equals(switchValue) ? DisplayType.TEXT_BIBLIO
-				: DisplayType.TEXT_CONTENT;
+		        : DisplayType.TEXT_CONTENT;
 		if (initialized && !title.isDisposed() && !styledText.isDisposed()) {
 			try {
 				refreshDisplay(item);
@@ -420,7 +432,7 @@ public class InspectorView {
 
 	@Inject
 	void trackFontSize(
-			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_TEXT_FONT_SIZE) final Integer inFontSize) {
+	        @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_TEXT_FONT_SIZE) final Integer inFontSize) {
 		if (!title.isDisposed()) {
 			final Font lFont = title.getFont();
 			final FontData lData = lFont.getFontData()[0];
@@ -435,9 +447,9 @@ public class InspectorView {
 		try {
 			item.saveTitleText(getTitleText(), getContentText());
 			isSending = true;
-			eventBroker.send(
-					RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_CONTENT,
-					item);
+			eventBroker.post(
+			        RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_CONTENT,
+			        item);
 			isSending = false;
 
 			clearDirty();
@@ -478,16 +490,16 @@ public class InspectorView {
 
 	private static interface IDisplay {
 		void refresh(final Text inText, final StyledTextComponent inStyled,
-				InspectorViewVisitor inVisitor) throws IOException,
-				SAXException;
+		        InspectorViewVisitor inVisitor) throws IOException,
+		        SAXException;
 	}
 
 	private static class DisplayNormal implements IDisplay {
 		@Override
 		public void refresh(final Text inText,
-				final StyledTextComponent inStyled,
-				final InspectorViewVisitor inVisitor) throws IOException,
-				SAXException {
+		        final StyledTextComponent inStyled,
+		        final InspectorViewVisitor inVisitor) throws IOException,
+		        SAXException {
 			inText.setText(inVisitor.getTitle());
 			inText.setEditable(true);
 			inStyled.setTaggedText(inVisitor.getText());
@@ -498,9 +510,9 @@ public class InspectorView {
 	private static class DisplayNone implements IDisplay {
 		@Override
 		public void refresh(final Text inText,
-				final StyledTextComponent inStyled,
-				final InspectorViewVisitor inVisitor) throws IOException,
-				SAXException {
+		        final StyledTextComponent inStyled,
+		        final InspectorViewVisitor inVisitor) throws IOException,
+		        SAXException {
 			inText.setText(""); //$NON-NLS-1$
 			inText.setEditable(false);
 			inStyled.setText(""); //$NON-NLS-1$
@@ -511,9 +523,9 @@ public class InspectorView {
 	private static class DisplayPerson implements IDisplay {
 		@Override
 		public void refresh(final Text inText,
-				final StyledTextComponent inStyled,
-				final InspectorViewVisitor inVisitor) throws IOException,
-				SAXException {
+		        final StyledTextComponent inStyled,
+		        final InspectorViewVisitor inVisitor) throws IOException,
+		        SAXException {
 			inText.setText(inVisitor.getTitle());
 			inText.setEditable(false);
 			inStyled.setTaggedText(inVisitor.getText());
@@ -524,9 +536,9 @@ public class InspectorView {
 	private static class DisplayTextBiblio implements IDisplay {
 		@Override
 		public void refresh(final Text inText,
-				final StyledTextComponent inStyled,
-				final InspectorViewVisitor inVisitor) throws IOException,
-				SAXException {
+		        final StyledTextComponent inStyled,
+		        final InspectorViewVisitor inVisitor) throws IOException,
+		        SAXException {
 			inText.setText(inVisitor.getTitle());
 			inText.setEditable(true);
 			inStyled.setTaggedText(inVisitor.getText());
@@ -537,9 +549,9 @@ public class InspectorView {
 	private static class DisplayTextContent implements IDisplay {
 		@Override
 		public void refresh(final Text inText,
-				final StyledTextComponent inStyled,
-				final InspectorViewVisitor inVisitor) throws IOException,
-				SAXException {
+		        final StyledTextComponent inStyled,
+		        final InspectorViewVisitor inVisitor) throws IOException,
+		        SAXException {
 			inText.setText(inVisitor.getTitle());
 			inText.setEditable(true);
 			inStyled.setTaggedText(inVisitor.getRealText());

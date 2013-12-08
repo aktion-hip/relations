@@ -21,7 +21,7 @@ package org.elbe.relations.defaultbrowser.internal.controller;
 import java.util.List;
 import java.util.Vector;
 
-import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 
 /**
  * Calculates the position of the items on circular rings.
@@ -50,7 +50,7 @@ public class ItemPositionCalculator {
 	 *            long Number of remaining items to place on circle
 	 */
 	public ItemPositionCalculator(final long inWidth, final long inHeight,
-			final long inRadius, final long inRemaining) {
+	        final long inRadius, final long inRemaining) {
 		super();
 		width = inWidth;
 		height = inHeight;
@@ -74,7 +74,7 @@ public class ItemPositionCalculator {
 	private void init(final long inRadius, final long inRemaining) {
 		offset = Math.asin(width / (2.0 * inRadius));
 		delta = Math.acos(Math.cos(offset) - (height * 1.0 / inRadius))
-				- offset;
+		        - offset;
 		count = (long) (((2 * Math.PI) - (4 * offset)) / delta);
 		count = (count % 2 != 0 ? count + 1 : count);
 		offset = (2 * Math.PI - (count - 2) * delta) / 4;
@@ -84,7 +84,7 @@ public class ItemPositionCalculator {
 			// if there remain less items than can be placed on the circle
 			// we place all remaining items well distributed on the circle
 			offset = (inRemaining < 3 ? Math.PI / 2
-					: (2 * Math.PI - (inRemaining - 2) * delta) / 4);
+			        : (2 * Math.PI - (inRemaining - 2) * delta) / 4);
 			count = inRemaining;
 			hasMore = false;
 		}
@@ -140,22 +140,22 @@ public class ItemPositionCalculator {
 	/**
 	 * Returns a list of positions.
 	 * 
-	 * @return List<Point> of Point
+	 * @return List<PrecisionPoint> of Point
 	 */
-	public List<Point> getPositions() {
-		final List<Point> outPostitions = new Vector<Point>();
+	public List<PrecisionPoint> getPositions() {
+		final List<PrecisionPoint> outPositions = new Vector<PrecisionPoint>();
 		for (int i = 0; i < count; i++) {
 			if (i < getHalfOfCount()) {
 				final double lAngle = offset + i * delta;
-				outPostitions.add(new Point(radius * Math.sin(lAngle), -1
-						* radius * Math.cos(lAngle)));
+				outPositions.add(new PrecisionPoint(radius * Math.sin(lAngle),
+				        -1 * radius * Math.cos(lAngle)));
 			} else {
 				final double lAngle = Math.PI + offset + (i - getHalfOfCount())
-						* delta;
-				outPostitions.add(new Point(radius * Math.sin(lAngle), -1
-						* radius * Math.cos(lAngle)));
+				        * delta;
+				outPositions.add(new PrecisionPoint(radius * Math.sin(lAngle),
+				        -1 * radius * Math.cos(lAngle)));
 			}
 		}
-		return outPostitions;
+		return outPositions;
 	}
 }

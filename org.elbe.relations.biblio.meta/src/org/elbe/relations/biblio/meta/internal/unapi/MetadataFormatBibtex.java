@@ -35,7 +35,6 @@ import org.xml.sax.SAXException;
  * 
  * @author Luthiger Created on 03.01.2010
  */
-@SuppressWarnings("restriction")
 public class MetadataFormatBibtex implements IUnAPIHandler {
 	private static final String METADATA_FORMAT_ID = "bibtex"; //$NON-NLS-1$
 
@@ -48,12 +47,12 @@ public class MetadataFormatBibtex implements IUnAPIHandler {
 	private static final String[] FIELD_BRACKET_ENDS = { "\"", "}" }; //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String[] FIELD_WHITE_SPACES = { "\r", "\n" }; //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String[] BOOK_TYPES = {
-			"book", "booklet", "manual", "mastersthesis", "phdthesis", "proceedings", "techreport", "unpublished" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+	        "book", "booklet", "manual", "mastersthesis", "phdthesis", "proceedings", "techreport", "unpublished" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 	private static final String[] ARTICLE_TYPES = { "article" }; //$NON-NLS-1$
 	private static final String CONTRIBUTION_TYPE_INBOOK = "inbook"; //$NON-NLS-1$
 	private static final String[] CONTRIBUTION_TYPES = {
-			CONTRIBUTION_TYPE_INBOOK,
-			"incollection", "conference", "inproceedings" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	        CONTRIBUTION_TYPE_INBOOK,
+	        "incollection", "conference", "inproceedings" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	private static final String[] WEB_TYPES = { "misc" }; //$NON-NLS-1$
 
 	private static final String AUTHOR_NA = "-"; //$NON-NLS-1$
@@ -86,8 +85,8 @@ public class MetadataFormatBibtex implements IUnAPIHandler {
 	 */
 	@Override
 	public NewTextAction createAction(final URL inUrl,
-			final IEclipseContext inContext)
-			throws ParserConfigurationException, SAXException, IOException {
+	        final IEclipseContext inContext)
+	        throws ParserConfigurationException, SAXException, IOException {
 		InputStream lStream = null;
 		try {
 			// first parse the stream
@@ -105,9 +104,10 @@ public class MetadataFormatBibtex implements IUnAPIHandler {
 			}
 			// then process the information
 			final AbstractCreator lCreator = actionFactory(referenceType,
-					inContext);
+			        inContext);
 			return lCreator.create();
-		} finally {
+		}
+		finally {
 			if (lStream != null) {
 				lStream.close();
 			}
@@ -115,19 +115,19 @@ public class MetadataFormatBibtex implements IUnAPIHandler {
 	}
 
 	private AbstractCreator actionFactory(final String inReferenceType,
-			final IEclipseContext inContext) {
+	        final IEclipseContext inContext) {
 		final String[] lAuthorAndCo = getAuthorAndCo(fields.get("author")); //$NON-NLS-1$
 
 		for (final String lType : BOOK_TYPES) {
 			if (lType.equals(inReferenceType)) {
 				return new BookCreator(inContext, lAuthorAndCo[0],
-						lAuthorAndCo[1]);
+				        lAuthorAndCo[1]);
 			}
 		}
 		for (final String lType : ARTICLE_TYPES) {
 			if (lType.equals(inReferenceType)) {
 				return new ArticleCreator(inContext, lAuthorAndCo[0],
-						lAuthorAndCo[1]);
+				        lAuthorAndCo[1]);
 			}
 		}
 		for (final String lType : CONTRIBUTION_TYPES) {
@@ -138,23 +138,23 @@ public class MetadataFormatBibtex implements IUnAPIHandler {
 		for (final String lType : WEB_TYPES) {
 			if (lType.equals(inReferenceType)) {
 				return new WebPageCreator(inContext, lAuthorAndCo[0],
-						lAuthorAndCo[1]);
+				        lAuthorAndCo[1]);
 			}
 		}
 		return new BookCreator(inContext, lAuthorAndCo[0], lAuthorAndCo[1]);
 	}
 
 	private AbstractCreator createContributionType(
-			final IEclipseContext inContext, final String inReferenceType) {
+	        final IEclipseContext inContext, final String inReferenceType) {
 		if (CONTRIBUTION_TYPE_INBOOK.equals(inReferenceType)) {
 			return new ContributionCreator(
-					inContext,
-					getFieldChecked("chapter"), getFieldChecked("author"), getFieldChecked("title"), getFieldChecked("editor")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			        inContext,
+			        getFieldChecked("chapter"), getFieldChecked("author"), getFieldChecked("title"), getFieldChecked("editor")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		}
 		// "incollection", "conference", "inproceedings"
 		return new ContributionCreator(
-				inContext,
-				getFieldChecked("title"), getFieldChecked("author"), getFieldChecked("booktitle"), getFieldChecked("editor")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		        inContext,
+		        getFieldChecked("title"), getFieldChecked("author"), getFieldChecked("booktitle"), getFieldChecked("editor")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 
 	private String getFieldChecked(final String inFieldName) {
@@ -262,7 +262,7 @@ public class MetadataFormatBibtex implements IUnAPIHandler {
 			for (final String lWhiteSpace : FIELD_WHITE_SPACES) {
 				if (lWhiteSpace.equals(inCharacter)) {
 					content = new StringBuilder(new String(content).trim())
-							.append(" "); //$NON-NLS-1$
+					        .append(" "); //$NON-NLS-1$
 					return false;
 				}
 			}
@@ -272,7 +272,7 @@ public class MetadataFormatBibtex implements IUnAPIHandler {
 				}
 			}
 			if (actualField.endBracketChar.equals(inCharacter)
-					&& actualField.inBrackets) {
+			        && actualField.inBrackets) {
 				actualField.inBrackets = false;
 				return false;
 			}
@@ -330,7 +330,7 @@ public class MetadataFormatBibtex implements IUnAPIHandler {
 			if (lAdditional != null) {
 				try {
 					lActionBuilder.volume(Integer
-							.parseInt(lAdditional.fieldContent));
+					        .parseInt(lAdditional.fieldContent));
 				}
 				catch (final NumberFormatException exc) {
 				}
@@ -339,7 +339,7 @@ public class MetadataFormatBibtex implements IUnAPIHandler {
 			if (lAdditional != null) {
 				try {
 					lActionBuilder.number(Integer
-							.parseInt(lAdditional.fieldContent));
+					        .parseInt(lAdditional.fieldContent));
 				}
 				catch (final NumberFormatException exc) {
 				}
@@ -365,7 +365,7 @@ public class MetadataFormatBibtex implements IUnAPIHandler {
 		}
 
 		protected void setCoAuthors(final NewTextAction.Builder inBuilder,
-				final String inCoAuthors) {
+		        final String inCoAuthors) {
 			if (inCoAuthors != null) {
 				inBuilder.coAuthor(inCoAuthors);
 			}
@@ -430,10 +430,10 @@ public class MetadataFormatBibtex implements IUnAPIHandler {
 		private final NewTextAction.Builder actionBuilder;
 
 		public BookCreator(final IEclipseContext inContext,
-				final String inAuthor, final String inCoAuthors) {
+		        final String inAuthor, final String inCoAuthors) {
 			super(inContext);
 			actionBuilder = new NewTextAction.Builder(
-					fields.get("title").fieldContent, checkAuthor(inAuthor)); //$NON-NLS-1$
+			        fields.get("title").fieldContent, checkAuthor(inAuthor)); //$NON-NLS-1$
 			setCoAuthors(actionBuilder, inCoAuthors);
 		}
 
@@ -461,10 +461,10 @@ public class MetadataFormatBibtex implements IUnAPIHandler {
 		private final NewTextAction.Builder actionBuilder;
 
 		public ArticleCreator(final IEclipseContext inContext,
-				final String inAuthor, final String inCoAuthors) {
+		        final String inAuthor, final String inCoAuthors) {
 			super(inContext);
 			actionBuilder = new NewTextAction.Builder(
-					fields.get("title").fieldContent, inAuthor); //$NON-NLS-1$
+			        fields.get("title").fieldContent, inAuthor); //$NON-NLS-1$
 			setCoAuthors(actionBuilder, inCoAuthors);
 		}
 
@@ -483,8 +483,8 @@ public class MetadataFormatBibtex implements IUnAPIHandler {
 		private final NewTextAction.Builder actionBuilder;
 
 		public ContributionCreator(final IEclipseContext inContext,
-				final String inTitle, final String inAuthors,
-				final String inPublication, final String inEditor) {
+		        final String inTitle, final String inAuthors,
+		        final String inPublication, final String inEditor) {
 			super(inContext);
 			actionBuilder = new NewTextAction.Builder(inTitle, inAuthors);
 
@@ -511,10 +511,10 @@ public class MetadataFormatBibtex implements IUnAPIHandler {
 		private final NewTextAction.Builder actionBuilder;
 
 		public WebPageCreator(final IEclipseContext inContext,
-				final String inAuthor, final String inCoAuthors) {
+		        final String inAuthor, final String inCoAuthors) {
 			super(inContext);
 			actionBuilder = new NewTextAction.Builder(
-					fields.get("title").fieldContent, inAuthor); //$NON-NLS-1$
+			        fields.get("title").fieldContent, inAuthor); //$NON-NLS-1$
 			setCoAuthors(actionBuilder, inCoAuthors);
 		}
 

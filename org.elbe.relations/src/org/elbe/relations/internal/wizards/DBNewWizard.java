@@ -23,8 +23,6 @@ import javax.inject.Named;
 
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.core.services.log.Logger;
-import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -39,11 +37,12 @@ import org.elbe.relations.internal.utility.DBPreconditionException;
 import org.elbe.relations.internal.wizards.interfaces.INewWizard;
 
 /**
- * Wizard to create a new embedded database.
+ * Wizard to create a new embedded database.<br />
+ * Note: this is an Eclipse 3 wizard. To make it e4, let the values for the
+ * annotated field be injected (instead of using the method init()).
  * 
- * @author Luthiger Created on 05.11.2006
+ * @author Luthiger
  */
-@SuppressWarnings("restriction")
 public class DBNewWizard extends Wizard implements INewWizard {
 	private DBNewWizardPage page;
 
@@ -51,15 +50,16 @@ public class DBNewWizard extends Wizard implements INewWizard {
 	private IEclipseContext context;
 
 	@Inject
-	private UISynchronize jobManager;
-
-	@Inject
 	@Named(IServiceConstants.ACTIVE_SHELL)
 	private Shell shell;
 
 	@Override
 	public void init(final IWorkbench inWorkbench,
-			final IStructuredSelection inSelection) {
+	        final IStructuredSelection inSelection) {
+		context = (IEclipseContext) inWorkbench
+		        .getAdapter(IEclipseContext.class);
+		shell = inWorkbench.getDisplay().getActiveShell();
+
 		this.init(inSelection);
 	}
 
@@ -89,10 +89,10 @@ public class DBNewWizard extends Wizard implements INewWizard {
 		}
 		catch (final DBPreconditionException exc) {
 			MessageDialog
-					.openError(
-							new Shell(Display.getCurrent()),
-							RelationsMessages
-									.getString("FormDBConnection.error.title"), exc.getMessage()); //$NON-NLS-1$
+			        .openError(
+			                new Shell(Display.getCurrent()),
+			                RelationsMessages
+			                        .getString("FormDBConnection.error.title"), exc.getMessage()); //$NON-NLS-1$
 		}
 		return false;
 	}

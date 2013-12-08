@@ -350,8 +350,8 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 
 	private String stripNonValidXML(final String inTagged) {
 		final StringBuilder out = new StringBuilder();
-		if (inTagged == null || ("".equals(inTagged)))
-			return "";
+		if (inTagged == null || ("".equals(inTagged))) //$NON-NLS-1$
+			return ""; //$NON-NLS-1$
 
 		char lCurrent;
 		for (int i = 0; i < inTagged.length(); i++) {
@@ -416,11 +416,11 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 	}
 
 	private String escapeBackSlashes(final String inText) {
-		return inText.replace("\\", "\\\\");
+		return inText.replace("\\", "\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private String unescapeBackSlashes(final String inText) {
-		return inText.replace("\\\\", "\\");
+		return inText.replace("\\\\", "\\"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

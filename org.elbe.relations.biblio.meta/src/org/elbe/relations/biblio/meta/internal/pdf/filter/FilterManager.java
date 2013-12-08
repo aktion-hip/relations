@@ -89,7 +89,7 @@ public class FilterManager {
 	public Filter getFilter(COSName inFilterName) throws IOException {
         Filter outFilter = (Filter)filters.get(inFilterName);
         if (outFilter == null) {
-            throw new IOException( "Unknown stream filter:" + inFilterName);
+            throw new IOException( "Unknown stream filter:" + inFilterName); //$NON-NLS-1$
         }
         return outFilter;
 	}

@@ -34,8 +34,9 @@ import org.hip.kernel.exc.VException;
  * 
  * @author Benno Luthiger Created on Sep 3, 2004
  */
+@SuppressWarnings("serial")
 public class RelationHome extends DomainObjectHomeImpl implements
-		ICreatableHome {
+        ICreatableHome {
 	// constants
 	public final static String KEY_ID = "ID";
 	public final static String KEY_TYPE1 = "Type1";
@@ -45,40 +46,40 @@ public class RelationHome extends DomainObjectHomeImpl implements
 	private final static String OBJECT_CLASS_NAME = "org.elbe.relations.data.internal.bom.Relation";
 
 	private final static String XML_OBJECT_DEF = "<?xml version='1.0' encoding='ISO-8859-1'?>	"
-			+ "<objectDef objectName='Relation' parent='org.hip.kernel.bom.DomainObject' version='1.0'>	"
-			+ "	<keyDefs>	"
-			+ "		<keyDef>	"
-			+ "			<keyItemDef seq='0' keyPropertyName='"
-			+ KEY_ID
-			+ "'/>	"
-			+ "		</keyDef>	"
-			+ "	</keyDefs>	"
-			+ "	<propertyDefs>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_ID
-			+ "' valueType='Long' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblRelation' columnName='RELATIONID'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_TYPE1
-			+ "' valueType='Integer' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblRelation' columnName='NTYPE1'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_ITEM1
-			+ "' valueType='Long' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblRelation' columnName='NITEM1'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_TYPE2
-			+ "' valueType='Integer' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblRelation' columnName='NTYPE2'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_ITEM2
-			+ "' valueType='Long' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblRelation' columnName='NITEM2'/>	"
-			+ "		</propertyDef>	" + "	</propertyDefs>	" + "</objectDef>";
+	        + "<objectDef objectName='Relation' parent='org.hip.kernel.bom.DomainObject' version='1.0'>	"
+	        + "	<keyDefs>	"
+	        + "		<keyDef>	"
+	        + "			<keyItemDef seq='0' keyPropertyName='"
+	        + KEY_ID
+	        + "'/>	"
+	        + "		</keyDef>	"
+	        + "	</keyDefs>	"
+	        + "	<propertyDefs>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_ID
+	        + "' valueType='Long' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblRelation' columnName='RELATIONID'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_TYPE1
+	        + "' valueType='Integer' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblRelation' columnName='NTYPE1'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_ITEM1
+	        + "' valueType='Long' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblRelation' columnName='NITEM1'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_TYPE2
+	        + "' valueType='Integer' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblRelation' columnName='NTYPE2'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_ITEM2
+	        + "' valueType='Long' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblRelation' columnName='NITEM2'/>	"
+	        + "		</propertyDef>	" + "	</propertyDefs>	" + "</objectDef>";
 
 	/**
 	 * RelationHome constructor.
@@ -118,7 +119,7 @@ public class RelationHome extends DomainObjectHomeImpl implements
 	 * @throws BOMException
 	 */
 	public Relation newRelation(final IItem inItem1, final IItem inItem2)
-			throws BOMException {
+	        throws BOMException {
 		try {
 			final DomainObject outRelation = create();
 			outRelation.set(KEY_TYPE1, new Integer(inItem1.getItemType()));
@@ -171,7 +172,7 @@ public class RelationHome extends DomainObjectHomeImpl implements
 	 * @throws BOMException
 	 */
 	public void deleteRelation(final int inType1, final long inID1,
-			final int inType2, final long inID2) throws BOMException {
+	        final int inType2, final long inID2) throws BOMException {
 		try {
 			delete(createKey(inType1, inID1, inType2, inID2), true);
 		}
@@ -245,10 +246,10 @@ public class RelationHome extends DomainObjectHomeImpl implements
 	 * @throws BOMException
 	 */
 	public Relation getRelation(final int inType1, final long inID1,
-			final int inType2, final long inID2) throws BOMException {
+	        final int inType2, final long inID2) throws BOMException {
 		try {
 			return (Relation) findByKey(createKey(inType1, inID1, inType2,
-					inID2));
+			        inID2));
 		}
 		catch (final VException exc) {
 			throw new BOMException(exc.getMessage());
@@ -256,7 +257,7 @@ public class RelationHome extends DomainObjectHomeImpl implements
 	}
 
 	private KeyObject createKey(final int inType1, final long inID1,
-			final int inType2, final long inID2) throws VException {
+	        final int inType2, final long inID2) throws VException {
 		final KeyObject outKey = new KeyObjectImpl();
 		outKey.setValue(KEY_TYPE1, new Integer(inType1));
 		outKey.setValue(KEY_ITEM1, new Long(inID1));
@@ -306,12 +307,12 @@ public class RelationHome extends DomainObjectHomeImpl implements
 	@Override
 	public String[] getSQLCreate() {
 		final String lSQL1 = "CREATE TABLE tblRelation (\n"
-				+ "  RelationID	BIGINT generated always as identity,\n"
-				+ "  nType1	SMALLINT not null,\n"
-				+ "  nItem1	BIGINT not null,\n"
-				+ "  nType2	SMALLINT not null,\n"
-				+ "  nItem2	BIGINT not null,\n"
-				+ "  PRIMARY KEY (RelationID)\n" + ")";
+		        + "  RelationID	BIGINT generated always as identity,\n"
+		        + "  nType1	SMALLINT not null,\n"
+		        + "  nItem1	BIGINT not null,\n"
+		        + "  nType2	SMALLINT not null,\n"
+		        + "  nItem2	BIGINT not null,\n"
+		        + "  PRIMARY KEY (RelationID)\n" + ")";
 		final String lSQL2 = "CREATE INDEX idxRelation_01 ON tblRelation(nType1, nItem1)";
 		final String lSQL3 = "CREATE INDEX idxRelation_02 ON tblRelation(nType2, nItem2)";
 		return new String[] { lSQL1, lSQL2, lSQL3 };

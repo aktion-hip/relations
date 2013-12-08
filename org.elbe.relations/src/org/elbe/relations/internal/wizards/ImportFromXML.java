@@ -56,13 +56,16 @@ import org.elbe.relations.internal.controls.RelationsStatusLineManager;
 import org.elbe.relations.internal.data.DBSettings;
 import org.elbe.relations.internal.utility.AbstractRunnableWithProgress;
 import org.elbe.relations.internal.utility.DBPreconditionException;
+import org.elbe.relations.internal.utility.WizardHelper;
 import org.hip.kernel.bom.KeyObject;
 import org.hip.kernel.bom.impl.KeyObjectImpl;
 import org.hip.kernel.bom.impl.UpdateStatement;
 import org.hip.kernel.exc.VException;
 
 /**
- * Wizard to import the database content from a (zipped) XML file.
+ * Wizard to import the database content from a (zipped) XML file.<br />
+ * Note: this is an Eclipse 3 wizard. To make it e4, let the values for the
+ * annotated field be injected (instead of using the method init()).
  * 
  * @author Luthiger Created on 13.10.2008
  */
@@ -92,17 +95,21 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 	@Inject
 	private RelationsStatusLineManager statusLine;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-	 * org.eclipse.jface.viewers.IStructuredSelection)
-	 */
 	@Override
 	public void init(final IWorkbench inWorkbench,
-			final IStructuredSelection inSelection) {
+	        final IStructuredSelection inSelection) {
+		context = (IEclipseContext) inWorkbench
+		        .getAdapter(IEclipseContext.class);
+		log = (Logger) inWorkbench.getAdapter(Logger.class);
+		shell = inWorkbench.getDisplay().getActiveShell();
+		sync = (UISynchronize) inWorkbench.getAdapter(UISynchronize.class);
+		dataService = (IDataService) inWorkbench.getAdapter(IDataService.class);
+		dbSettings = (DBSettings) inWorkbench.getAdapter(DBSettings.class);
+		statusLine = WizardHelper.getFromWorkbench(
+		        RelationsStatusLineManager.class, inWorkbench);
+
 		setWindowTitle(RelationsMessages
-				.getString("ImportFromXML.window.title")); //$NON-NLS-1$
+		        .getString("ImportFromXML.window.title")); //$NON-NLS-1$
 	}
 
 	@Override
@@ -111,18 +118,13 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 		addPage(page);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
-	 */
 	@Override
 	public boolean performFinish() {
 		page.saveToHistory();
 		final String lImportFile = page.getFileName();
 		statusLine
-				.showStatusLineMessage(String.format(
-						RelationsMessages.getString("ImportFromXML.msg.status"), lImportFile)); //$NON-NLS-1$
+		        .showStatusLineMessage(String.format(
+		                RelationsMessages.getString("ImportFromXML.msg.status"), lImportFile)); //$NON-NLS-1$
 		final IDBChange lCreateDB = page.getResultObject();
 		getShell().setVisible(false);
 
@@ -131,11 +133,11 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 			if (createAndFill(lCreateDB, lImportFile)) {
 				// load the data
 				dataService
-						.loadData(RelationsConstants.TOPIC_DB_CHANGED_RELOAD);
+				        .loadData(RelationsConstants.TOPIC_DB_CHANGED_RELOAD);
 
 				// index data
 				final IndexerAction lAction = ContextInjectionFactory.make(
-						IndexerAction.class, context);
+				        IndexerAction.class, context);
 				lAction.setSilent(true);
 				lAction.run();
 			} else {
@@ -145,10 +147,10 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 		}
 		catch (final DBPreconditionException exc) {
 			MessageDialog
-					.openError(
-							new Shell(Display.getCurrent()),
-							RelationsMessages
-									.getString("FormDBConnection.error.title"), exc.getMessage()); //$NON-NLS-1$
+			        .openError(
+			                new Shell(Display.getCurrent()),
+			                RelationsMessages
+			                        .getString("FormDBConnection.error.title"), exc.getMessage()); //$NON-NLS-1$
 			getShell().setVisible(true);
 			return false;
 		}
@@ -156,7 +158,7 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 	}
 
 	private boolean createAndFill(final IDBChange inCreateDB,
-			final String inImportFile) {
+	        final String inImportFile) {
 		final XMLImport lImport = inImportFile.endsWith(".zip") ? new ZippedXMLImport(inImportFile) : new XMLImport(inImportFile); //$NON-NLS-1$
 		final int lWorkItemsCount = 6;
 
@@ -164,15 +166,15 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 		IRunnableWithProgress lJob = new AbstractRunnableWithProgress() {
 			@Override
 			protected final Runnable getRunnableInitialize(
-					final IProgressMonitor inMonitor) {
+			        final IProgressMonitor inMonitor) {
 				return new Runnable() {
 					@Override
 					public void run() {
 						inMonitor
-								.beginTask(
-										String.format(
-												RelationsMessages
-														.getString("ImportFromXML.job.import.start"), inImportFile), lWorkItemsCount); //$NON-NLS-1$
+						        .beginTask(
+						                String.format(
+						                        RelationsMessages
+						                                .getString("ImportFromXML.job.import.start"), inImportFile), lWorkItemsCount); //$NON-NLS-1$
 					}
 				};
 			}
@@ -183,7 +185,7 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 			 */
 			@Override
 			protected final int process(final IProgressMonitor inMonitor)
-					throws InvocationTargetException, InterruptedException {
+			        throws InvocationTargetException, InterruptedException {
 				int outNumberOfImported = 0;
 				sync.syncExec(new Runnable() {
 					@Override
@@ -198,8 +200,8 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 
 				try {
 					outNumberOfImported = lImport.processFile(inMonitor,
-							dbSettings.getDBConnectionConfig()
-									.canSetIdentityField());
+					        dbSettings.getDBConnectionConfig()
+					                .canSetIdentityField());
 					monitorWorked(inMonitor);
 				}
 				catch (final InterruptedException exc) {
@@ -213,20 +215,20 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 
 			@Override
 			protected final Runnable getRunnableFeedback(
-					final int inNumberOfProcessed) {
+			        final int inNumberOfProcessed) {
 				final String lFeedback = String
-						.format(RelationsMessages
-								.getString("ImportFromXML.job.import.feedback"), inNumberOfProcessed); //$NON-NLS-1$
+				        .format(RelationsMessages
+				                .getString("ImportFromXML.job.import.feedback"), inNumberOfProcessed); //$NON-NLS-1$
 				return new Runnable() {
 					@Override
 					public void run() {
 						if (dbSettings.getDBConnectionConfig()
-								.canSetIdentityField()) {
+						        .canSetIdentityField()) {
 							MessageDialog
-									.openInformation(
-											shell,
-											RelationsMessages
-													.getString("ImportFromXML.job.import.success"), lFeedback); //$NON-NLS-1$
+							        .openInformation(
+							                shell,
+							                RelationsMessages
+							                        .getString("ImportFromXML.job.import.success"), lFeedback); //$NON-NLS-1$
 						} else {
 							statusLine.showStatusLineMessage(lFeedback);
 						}
@@ -236,7 +238,7 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 		};
 
 		final ProgressMonitorDialog lImportDialog = new ProgressMonitorJobsDialog(
-				shell);
+		        shell);
 		lImportDialog.open();
 		try {
 			lImportDialog.run(true, true, lJob);
@@ -247,59 +249,60 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 			return false;
 		}
 		catch (final InterruptedException exc) {
-			log.debug("Import of data interrupted by user.");
+			log.debug("Import of data interrupted by user."); //$NON-NLS-1$
 			restorePrevious(inCreateDB);
 			return false;
-		} finally {
+		}
+		finally {
 			lImportDialog.close();
 		}
 
 		if (!dbSettings.getDBConnectionConfig().canSetIdentityField()) {
 			// run relation rebind with progress monitor
 			final Collection<RelationReplaceHelper> lRelationsToRebind = lImport
-					.getRelationsToRebind();
+			        .getRelationsToRebind();
 
 			lJob = new AbstractRunnableWithProgress() {
 				@Override
 				protected Runnable getRunnableInitialize(
-						final IProgressMonitor inMonitor) {
+				        final IProgressMonitor inMonitor) {
 					return new Runnable() {
 						@Override
 						public void run() {
 							inMonitor
-									.beginTask(
-											RelationsMessages
-													.getString("ImportFromXML.job.rebind.start"), lRelationsToRebind.size()); //$NON-NLS-1$
+							        .beginTask(
+							                RelationsMessages
+							                        .getString("ImportFromXML.job.rebind.start"), lRelationsToRebind.size()); //$NON-NLS-1$
 						}
 					};
 				}
 
 				@Override
 				protected int process(final IProgressMonitor inMonitor)
-						throws InvocationTargetException, InterruptedException {
+				        throws InvocationTargetException, InterruptedException {
 					return processRebind(lRelationsToRebind, inMonitor);
 				}
 
 				@Override
 				protected Runnable getRunnableFeedback(
-						final int inNumberOfProcessed) {
+				        final int inNumberOfProcessed) {
 					final String lFeedback = String
-							.format(RelationsMessages
-									.getString("ImportFromXML.job.rebind.feedback"), inNumberOfProcessed); //$NON-NLS-1$
+					        .format(RelationsMessages
+					                .getString("ImportFromXML.job.rebind.feedback"), inNumberOfProcessed); //$NON-NLS-1$
 					return new Runnable() {
 						@Override
 						public void run() {
 							MessageDialog
-									.openInformation(
-											shell,
-											RelationsMessages
-													.getString("ImportFromXML.job.rebind.success"), lFeedback); //$NON-NLS-1$
+							        .openInformation(
+							                shell,
+							                RelationsMessages
+							                        .getString("ImportFromXML.job.rebind.success"), lFeedback); //$NON-NLS-1$
 						}
 					};
 				}
 			};
 			final ProgressMonitorDialog lRebindDialog = new ProgressMonitorJobsDialog(
-					shell);
+			        shell);
 			lRebindDialog.open();
 			try {
 				lRebindDialog.run(true, true, lJob);
@@ -310,7 +313,8 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 			}
 			catch (final InterruptedException exc) {
 				return false;
-			} finally {
+			}
+			finally {
 				lRebindDialog.close();
 			}
 		}
@@ -324,9 +328,9 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 	}
 
 	private int processRebind(
-			final Collection<RelationReplaceHelper> inRelationsToRebind,
-			final IProgressMonitor inMonitor) throws InvocationTargetException,
-			InterruptedException {
+	        final Collection<RelationReplaceHelper> inRelationsToRebind,
+	        final IProgressMonitor inMonitor) throws InvocationTargetException,
+	        InterruptedException {
 		int outNumberOfEntries = 0;
 		final int CHUNK_LEN = 20;
 		final RelationHome lHome = BOMHelper.getRelationHome();
@@ -376,27 +380,27 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 	}
 
 	private void createUpdates(final RelationHome inHome,
-			final RelationReplaceHelper inRelationToRebind,
-			final Collection<String> inUpdates) throws VException {
+	        final RelationReplaceHelper inRelationToRebind,
+	        final Collection<String> inUpdates) throws VException {
 		// item1
 		KeyObject lChange = new KeyObjectImpl();
 		lChange.setValue(RelationHome.KEY_ITEM1, new Long(
-				inRelationToRebind.newID.itemID));
+		        inRelationToRebind.newID.itemID));
 		KeyObject lWhere = new KeyObjectImpl();
 		lWhere.setValue(RelationHome.KEY_TYPE1, new Integer(
-				inRelationToRebind.oldID.itemType));
+		        inRelationToRebind.oldID.itemType));
 		lWhere.setValue(RelationHome.KEY_ITEM1, new Long(
-				inRelationToRebind.oldID.itemID));
+		        inRelationToRebind.oldID.itemID));
 		inUpdates.add(inHome.createUpdateString(lChange, lWhere));
 		// item2
 		lChange = new KeyObjectImpl();
 		lChange.setValue(RelationHome.KEY_ITEM2, new Long(
-				inRelationToRebind.newID.itemID));
+		        inRelationToRebind.newID.itemID));
 		lWhere = new KeyObjectImpl();
 		lWhere.setValue(RelationHome.KEY_TYPE2, new Integer(
-				inRelationToRebind.oldID.itemType));
+		        inRelationToRebind.oldID.itemType));
 		lWhere.setValue(RelationHome.KEY_ITEM2, new Long(
-				inRelationToRebind.oldID.itemID));
+		        inRelationToRebind.oldID.itemID));
 		inUpdates.add(inHome.createUpdateString(lChange, lWhere));
 	}
 

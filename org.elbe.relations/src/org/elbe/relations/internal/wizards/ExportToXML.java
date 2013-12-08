@@ -43,17 +43,20 @@ import org.elbe.relations.internal.backup.ZippedXMLExport;
 import org.elbe.relations.internal.controls.RelationsStatusLineManager;
 import org.elbe.relations.internal.data.DBSettings;
 import org.elbe.relations.internal.preferences.LanguageService;
+import org.elbe.relations.internal.utility.WizardHelper;
 import org.hip.kernel.exc.VException;
 
 /**
- * Wizard to export/backup the actual database.
+ * Wizard to export/backup the actual database.<br />
+ * Note: this is an Eclipse 3 wizard. To make it e4, let the values for the
+ * annotated field be injected (instead of using the method init()).
  * 
- * @author Luthiger Created on 03.10.2008
+ * @author Luthiger
  */
 @SuppressWarnings("restriction")
 public class ExportToXML extends Wizard implements IExportWizard {
 	private final static String STATUS_MSG = RelationsMessages
-			.getString("ExportToXML.msg.status"); //$NON-NLS-1$
+	        .getString("ExportToXML.msg.status"); //$NON-NLS-1$
 
 	@Inject
 	private Logger log;
@@ -76,15 +79,18 @@ public class ExportToXML extends Wizard implements IExportWizard {
 
 	private ExportToXMLPage page;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-	 * org.eclipse.jface.viewers.IStructuredSelection)
-	 */
 	@Override
 	public void init(final IWorkbench inWorkbench,
-			final IStructuredSelection inSelection) {
+	        final IStructuredSelection inSelection) {
+		log = (Logger) inWorkbench.getAdapter(Logger.class);
+		dbSettings = (DBSettings) inWorkbench.getAdapter(DBSettings.class);
+		dataService = (IDataService) inWorkbench.getAdapter(IDataService.class);
+		statusLine = WizardHelper.getFromWorkbench(
+		        RelationsStatusLineManager.class, inWorkbench);
+		languageService = (LanguageService) inWorkbench
+		        .getAdapter(LanguageService.class);
+		shell = inWorkbench.getDisplay().getActiveShell();
+
 		setWindowTitle(RelationsMessages.getString("ExportToXML.window.title")); //$NON-NLS-1$
 	}
 
@@ -94,23 +100,18 @@ public class ExportToXML extends Wizard implements IExportWizard {
 		addPage(page);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
-	 */
 	@Override
 	public boolean performFinish() {
 		final String lCatalog = dbSettings.getCatalog();
 		final String lBackupFile = page.getFileName();
 		statusLine.showStatusLineMessage(String.format(STATUS_MSG, lCatalog,
-				lBackupFile));
+		        lBackupFile));
 
 		final ProgressMonitorDialog lDialog = new ProgressMonitorJobsDialog(
-				shell);
+		        shell);
 		lDialog.open();
 
-		final ExporterJob lJob = new ExporterJob(page.getFileName()); //$NON-NLS-1$
+		final ExporterJob lJob = new ExporterJob(page.getFileName());
 		try {
 			lDialog.run(true, true, lJob);
 		}
@@ -119,7 +120,8 @@ public class ExportToXML extends Wizard implements IExportWizard {
 		}
 		catch (final InterruptedException exc) {
 			log.error(exc, exc.getMessage());
-		} finally {
+		}
+		finally {
 			lDialog.close();
 		}
 		return true;
@@ -144,9 +146,9 @@ public class ExportToXML extends Wizard implements IExportWizard {
 		@Override
 		public void run(final IProgressMonitor inMonitor) {
 			inMonitor
-					.beginTask(
-							RelationsMessages
-									.getString("ExportToXML.msg.job.start"), dataService.getNumberOfItems()); //$NON-NLS-1$
+			        .beginTask(
+			                RelationsMessages
+			                        .getString("ExportToXML.msg.job.start"), dataService.getNumberOfItems()); //$NON-NLS-1$
 
 			XMLExport lExport = null;
 			try {
@@ -161,7 +163,8 @@ public class ExportToXML extends Wizard implements IExportWizard {
 			}
 			catch (final SQLException exc) {
 				log.error(exc, exc.getMessage());
-			} finally {
+			}
+			finally {
 				if (lExport != null) {
 					try {
 						lExport.close();

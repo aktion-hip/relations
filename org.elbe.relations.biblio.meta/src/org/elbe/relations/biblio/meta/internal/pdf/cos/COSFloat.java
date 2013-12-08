@@ -37,7 +37,7 @@ public class COSFloat extends COSNumber {
             value = Float.parseFloat( inValue );
         }
         catch( NumberFormatException exc) {
-            throw new IOException( "Error expected floating point number actual='" +inValue + "'" );
+            throw new IOException( "Error expected floating point number actual='" +inValue + "'" ); //$NON-NLS-1$ //$NON-NLS-2$
         }
 	}
 
@@ -59,7 +59,7 @@ public class COSFloat extends COSNumber {
 
 	@Override
 	public String toString() {
-		return "COSFloat{" + value + "}";
+		return "COSFloat{" + value + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

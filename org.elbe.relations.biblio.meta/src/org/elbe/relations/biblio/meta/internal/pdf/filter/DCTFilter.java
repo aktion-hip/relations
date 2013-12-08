@@ -37,7 +37,7 @@ public class DCTFilter implements Filter
     public void decode( InputStream compressedData, OutputStream result, COSDictionary options, int filterIndex )
         throws IOException
     {
-        System.err.println( "Warning: DCTFilter.decode is not implemented yet, skipping this stream." );
+        System.err.println( "Warning: DCTFilter.decode is not implemented yet, skipping this stream." ); //$NON-NLS-1$
     }
 
      /**
@@ -46,6 +46,6 @@ public class DCTFilter implements Filter
     public void encode( InputStream rawData, OutputStream result, COSDictionary options, int filterIndex )
         throws IOException
     {
-        System.err.println( "Warning: DCTFilter.encode is not implemented yet, skipping this stream." );
+        System.err.println( "Warning: DCTFilter.encode is not implemented yet, skipping this stream." ); //$NON-NLS-1$
     }
 }

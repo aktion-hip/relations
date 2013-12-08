@@ -114,9 +114,9 @@ public class RelationsSearcher extends AbstractSearching {
 		final File lIndexDir = getIndexDir();
 		if (lIndexDir.list().length == 0) {
 			if (MessageDialog.openQuestion(shell, RelationsMessages
-					.getString("RelationsSearcher.warning.title"),
+					.getString("RelationsSearcher.warning.title"), //$NON-NLS-1$
 					RelationsMessages
-							.getString("RelationsSearcher.warning.message"))) {
+							.getString("RelationsSearcher.warning.message"))) { //$NON-NLS-1$
 				handlerService.activateHandler(ICommandIds.CMD_SEARCH,
 						new ReindexHandler());
 				handlerService.executeHandler(commandService.createCommand(

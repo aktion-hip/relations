@@ -46,7 +46,7 @@ public class DBConfiguration implements IDBConnectionConfig {
 	 */
 	@Override
 	public String getJDBCDriverClass() {
-		return "org.apache.derby.jdbc.EmbeddedDriver";
+		return "org.apache.derby.jdbc.EmbeddedDriver"; //$NON-NLS-1$
 	}
 
 	/*
@@ -56,7 +56,7 @@ public class DBConfiguration implements IDBConnectionConfig {
 	 */
 	@Override
 	public String getSubprotocol() {
-		return "derby";
+		return "derby"; //$NON-NLS-1$
 	}
 
 	/*

@@ -31,8 +31,9 @@ import org.hip.kernel.exc.VException;
  * 
  * @author Benno Luthiger Created on Sep 4, 2005
  */
+@SuppressWarnings("serial")
 public class TextHome extends AbstractHome implements IItemFactory,
-		ICreatableHome {
+        ICreatableHome {
 	// constants
 	private final static String OBJECT_CLASS_NAME = "org.elbe.relations.data.bom.Text";
 	public final static String KEY_ID = "ID";
@@ -53,95 +54,95 @@ public class TextHome extends AbstractHome implements IItemFactory,
 	public final static String KEY_MODIFIED = "Modified";
 
 	private final static String XML_OBJECT_DEF = "<?xml version='1.0' encoding='ISO-8859-1'?>	"
-			+ "<objectDef objectName='Text' parent='org.hip.kernel.bom.DomainObject' version='1.0'>	"
-			+ "	<keyDefs>	"
-			+ "		<keyDef>	"
-			+ "			<keyItemDef seq='0' keyPropertyName='"
-			+ KEY_ID
-			+ "'/>	"
-			+ "		</keyDef>	"
-			+ "	</keyDefs>	"
-			+ "	<propertyDefs>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_ID
-			+ "' valueType='Long' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblText' columnName='TEXTID'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_TITLE
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblText' columnName='STITLE'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_TEXT
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblText' columnName='STEXT'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_AUTHOR
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblText' columnName='SAUTHOR'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_COAUTHORS
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblText' columnName='SCOAUTHORS'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_SUBTITLE
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblText' columnName='SSUBTITLE'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_YEAR
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblText' columnName='SYEAR'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_PUBLICATION
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblText' columnName='SPUBLICATION'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_PAGES
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblText' columnName='SPAGES'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_VOLUME
-			+ "' valueType='Number' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblText' columnName='NVOLUME'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_NUMBER
-			+ "' valueType='Number' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblText' columnName='NNUMBER'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_PUBLISHER
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblText' columnName='SPUBLISHER'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_PLACE
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblText' columnName='SPLACE'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_TYPE
-			+ "' valueType='Number' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblText' columnName='NTYPE'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_CREATED
-			+ "' valueType='Timestamp' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblText' columnName='DTCREATION'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_MODIFIED
-			+ "' valueType='Timestamp' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblText' columnName='DTMUTATION'/>	"
-			+ "		</propertyDef>	" + "	</propertyDefs>	" + "</objectDef>";
+	        + "<objectDef objectName='Text' parent='org.hip.kernel.bom.DomainObject' version='1.0'>	"
+	        + "	<keyDefs>	"
+	        + "		<keyDef>	"
+	        + "			<keyItemDef seq='0' keyPropertyName='"
+	        + KEY_ID
+	        + "'/>	"
+	        + "		</keyDef>	"
+	        + "	</keyDefs>	"
+	        + "	<propertyDefs>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_ID
+	        + "' valueType='Long' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblText' columnName='TEXTID'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_TITLE
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblText' columnName='STITLE'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_TEXT
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblText' columnName='STEXT'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_AUTHOR
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblText' columnName='SAUTHOR'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_COAUTHORS
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblText' columnName='SCOAUTHORS'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_SUBTITLE
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblText' columnName='SSUBTITLE'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_YEAR
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblText' columnName='SYEAR'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_PUBLICATION
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblText' columnName='SPUBLICATION'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_PAGES
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblText' columnName='SPAGES'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_VOLUME
+	        + "' valueType='Number' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblText' columnName='NVOLUME'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_NUMBER
+	        + "' valueType='Number' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblText' columnName='NNUMBER'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_PUBLISHER
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblText' columnName='SPUBLISHER'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_PLACE
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblText' columnName='SPLACE'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_TYPE
+	        + "' valueType='Number' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblText' columnName='NTYPE'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_CREATED
+	        + "' valueType='Timestamp' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblText' columnName='DTCREATION'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_MODIFIED
+	        + "' valueType='Timestamp' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblText' columnName='DTMUTATION'/>	"
+	        + "		</propertyDef>	" + "	</propertyDefs>	" + "</objectDef>";
 
 	/**
 	 * TextHome constructor.
@@ -203,12 +204,12 @@ public class TextHome extends AbstractHome implements IItemFactory,
 	 * @throws BOMException
 	 */
 	public AbstractText newText(final String inTitle, final String inText,
-			final String inAuthor, final String inCoAuthor,
-			final String inSubTitle, final String inYear,
-			final String inPublication, final String inPages,
-			final Integer inVolume, final Integer inNumber,
-			final String inPublisher, final String inPlace, final Integer inType)
-			throws BOMException {
+	        final String inAuthor, final String inCoAuthor,
+	        final String inSubTitle, final String inYear,
+	        final String inPublication, final String inPages,
+	        final Integer inVolume, final Integer inNumber,
+	        final String inPublisher, final String inPlace, final Integer inType)
+	        throws BOMException {
 		try {
 			final Timestamp lCreated = new Timestamp(System.currentTimeMillis());
 			final Text outText = (Text) create();
@@ -314,16 +315,16 @@ public class TextHome extends AbstractHome implements IItemFactory,
 	@Override
 	public String[] getSQLCreate() {
 		final String lSQL1 = "CREATE TABLE tblText (\n"
-				+ "  TextID	BIGINT generated always as identity,\n"
-				+ "  sTitle	VARCHAR(150) not null,\n" + "  sText	CLOB,\n"
-				+ "  sAuthor	VARCHAR(100),\n" + "  sCoAuthors	VARCHAR(150),\n"
-				+ "  sSubtitle	VARCHAR(200),\n" + "  sYear	VARCHAR(15),\n"
-				+ "  sPublication	VARCHAR(100),\n" + "  sPages	VARCHAR(20),\n"
-				+ "  nVolume	INT,\n" + "  nNumber	INT,\n"
-				+ "  sPublisher	VARCHAR(99),\n" + "  sPlace	VARCHAR(99),\n"
-				+ "  nType	INT,\n" + "  dtCreation	TIMESTAMP not null,\n"
-				+ "  dtMutation	TIMESTAMP not null,\n"
-				+ "  PRIMARY KEY (TextID)\n" + ")";
+		        + "  TextID	BIGINT generated always as identity,\n"
+		        + "  sTitle	VARCHAR(150) not null,\n" + "  sText	CLOB,\n"
+		        + "  sAuthor	VARCHAR(100),\n" + "  sCoAuthors	VARCHAR(150),\n"
+		        + "  sSubtitle	VARCHAR(200),\n" + "  sYear	VARCHAR(15),\n"
+		        + "  sPublication	VARCHAR(100),\n" + "  sPages	VARCHAR(20),\n"
+		        + "  nVolume	INT,\n" + "  nNumber	INT,\n"
+		        + "  sPublisher	VARCHAR(99),\n" + "  sPlace	VARCHAR(99),\n"
+		        + "  nType	INT,\n" + "  dtCreation	TIMESTAMP not null,\n"
+		        + "  dtMutation	TIMESTAMP not null,\n"
+		        + "  PRIMARY KEY (TextID)\n" + ")";
 		final String lSQL2 = "CREATE INDEX idxText_01 ON tblText(sTitle)";
 		final String lSQL3 = "CREATE INDEX idxText_02 ON tblText(sAuthor, sCoAuthors)";
 		return new String[] { lSQL1, lSQL2, lSQL3 };

@@ -58,7 +58,7 @@ public abstract class AbstractItem extends DomainObjectImpl implements IItem {
 	 */
 	@Override
 	public String getCreated() throws VException {
-		return Messages.getString("Item.created.modified", getLocale(),
+		return Messages.getString("Item.created.modified", getLocale(), //$NON-NLS-1$
 				getCreatedModified());
 	}
 
@@ -126,7 +126,7 @@ public abstract class AbstractItem extends DomainObjectImpl implements IItem {
 	@Override
 	public String toString() {
 		try {
-			return String.format("Item '%s'", getTitle());
+			return String.format("Item '%s'", getTitle()); //$NON-NLS-1$
 		}
 		catch (final Exception exc) {
 			return super.toString();

@@ -27,7 +27,7 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
  * @author Luthiger
  */
 public class DialogSettingHelper {
-	public static final String SEP = "|";
+	public static final String SEP = "|"; //$NON-NLS-1$
 
 	private final MPart part;
 	private final String key;
@@ -51,7 +51,7 @@ public class DialogSettingHelper {
 	public String[] getRecentValues() {
 		final String lPersisted = part.getPersistedState().get(key);
 		return (lPersisted == null || lPersisted.isEmpty()) ? new String[0]
-				: lPersisted.split("\\" + SEP);
+				: lPersisted.split("\\" + SEP); //$NON-NLS-1$
 	}
 
 	/**

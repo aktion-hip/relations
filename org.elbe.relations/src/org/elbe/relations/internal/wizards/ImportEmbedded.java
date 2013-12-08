@@ -38,7 +38,7 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.RelationsMessages;
-import org.elbe.relations.internal.RelationsApplication;
+import org.elbe.relations.app.RelationsApplication;
 import org.elbe.relations.internal.actions.ChangeDB;
 import org.elbe.relations.internal.actions.IDBChange;
 import org.elbe.relations.internal.actions.IndexerAction;
@@ -47,20 +47,23 @@ import org.elbe.relations.internal.data.DBSettings;
 import org.elbe.relations.internal.data.IDBSettings;
 import org.elbe.relations.internal.data.TempSettings;
 import org.elbe.relations.internal.utility.EmbeddedCatalogHelper;
+import org.elbe.relations.internal.utility.WizardHelper;
 import org.elbe.relations.internal.utility.ZipImport;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**
- * Wizard to import a Relations database stored to a Zip file.
+ * Wizard to import a Relations database stored to a Zip file.<br />
+ * Note: this is an Eclipse 3 wizard. To make it e4, let the values for the
+ * annotated field be injected (instead of using the method init()).
  * 
  * @author Luthiger Created on 15.10.2007
  */
 @SuppressWarnings("restriction")
 public class ImportEmbedded extends Wizard implements IImportWizard {
 	private final static String SUCCESS_MSG = RelationsMessages
-			.getString("ImportEmbedded.message.success"); //$NON-NLS-1$
+	        .getString("ImportEmbedded.message.success"); //$NON-NLS-1$
 	private final static String PROBLEMS_MSG = RelationsMessages
-			.getString("ImportEmbedded.message.problems"); //$NON-NLS-1$
+	        .getString("ImportEmbedded.message.problems"); //$NON-NLS-1$
 
 	@Inject
 	private Logger log;
@@ -82,17 +85,22 @@ public class ImportEmbedded extends Wizard implements IImportWizard {
 
 	private ImportEmbeddedPage page;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-	 * org.eclipse.jface.viewers.IStructuredSelection)
-	 */
 	@Override
 	public void init(final IWorkbench inWorkbench,
-			final IStructuredSelection inSelection) {
+	        final IStructuredSelection inSelection) {
+		log = (Logger) inWorkbench.getAdapter(Logger.class);
+		statusLine = WizardHelper.getFromWorkbench(
+		        RelationsStatusLineManager.class, inWorkbench);
+		workbench = (org.eclipse.e4.ui.workbench.IWorkbench) inWorkbench
+		        .getAdapter(org.eclipse.e4.ui.workbench.IWorkbench.class);
+		appContext = (IApplicationContext) inWorkbench
+		        .getAdapter(IApplicationContext.class);
+		context = (IEclipseContext) inWorkbench
+		        .getAdapter(IEclipseContext.class);
+		dbSettings = (DBSettings) inWorkbench.getAdapter(DBSettings.class);
+
 		setWindowTitle(RelationsMessages
-				.getString("ImportEmbedded.window.title")); //$NON-NLS-1$
+		        .getString("ImportEmbedded.window.title")); //$NON-NLS-1$
 	}
 
 	@Override
@@ -101,41 +109,36 @@ public class ImportEmbedded extends Wizard implements IImportWizard {
 		addPage(page);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
-	 */
 	@Override
 	public boolean performFinish() {
 		final String lArchiveName = page.getArchiveName();
 		final String lDBName = page.getDBName();
 
 		final ZipImport lImport = new ZipImport(
-				EmbeddedCatalogHelper.getDBStorePath(), lArchiveName, lDBName,
-				log);
+		        EmbeddedCatalogHelper.getDBStorePath(), lArchiveName, lDBName,
+		        log);
 
 		page.saveToHistory();
 
 		try {
 			lImport.restore();
 			statusLine.showStatusLineMessage(String.format(SUCCESS_MSG,
-					lArchiveName, lDBName));
+			        lArchiveName, lDBName));
 
 			if (EmbeddedCatalogHelper.deleteMarker(lDBName)) {
 				// we have to restart
 				restartApp(lDBName, page.getReindex());
 			} else {
 				// we can open the imported data straightforward
-				final IDBSettings lTempSettings = new TempSettings("", lDBName,
-						"", "", dbSettings.getDBConnectionConfig());
+				final IDBSettings lTempSettings = new TempSettings("", lDBName, //$NON-NLS-1$
+				        "", "", dbSettings.getDBConnectionConfig()); //$NON-NLS-1$ //$NON-NLS-2$
 				final IDBChange lChangeDB = ContextInjectionFactory.make(
-						ChangeDB.class, context);
+				        ChangeDB.class, context);
 				lChangeDB.setTemporarySettings(lTempSettings);
 				lChangeDB.execute();
 				if (page.getReindex()) {
 					final IndexerAction lAction = ContextInjectionFactory.make(
-							IndexerAction.class, context);
+					        IndexerAction.class, context);
 					lAction.setSilent(true);
 					lAction.run();
 				}
@@ -144,10 +147,10 @@ public class ImportEmbedded extends Wizard implements IImportWizard {
 		}
 		catch (final Exception exc) {
 			MessageDialog
-					.openError(
-							getShell(),
-							RelationsMessages
-									.getString("RestoreEmbedded.error"), String.format(PROBLEMS_MSG, lArchiveName)); //$NON-NLS-1$
+			        .openError(
+			                getShell(),
+			                RelationsMessages
+			                        .getString("RestoreEmbedded.error"), String.format(PROBLEMS_MSG, lArchiveName)); //$NON-NLS-1$
 			log.error(exc, exc.getMessage());
 		}
 
@@ -155,29 +158,29 @@ public class ImportEmbedded extends Wizard implements IImportWizard {
 	}
 
 	private void restartApp(final String inDBName, final boolean inReindex)
-			throws IOException {
+	        throws IOException {
 		if (inReindex) {
 			final File lParent = new File(
-					EmbeddedCatalogHelper.getDBStorePath(), inDBName);
+			        EmbeddedCatalogHelper.getDBStorePath(), inDBName);
 			final File lMarker = new File(lParent,
-					EmbeddedCatalogHelper.REINDEX_MARKER);
+			        EmbeddedCatalogHelper.REINDEX_MARKER);
 			lMarker.createNewFile();
 		}
 
 		final Shell lShell = getShell();
 		lShell.setVisible(false);
 		if (MessageDialog
-				.openConfirm(
-						lShell,
-						RelationsMessages
-								.getString("RestoreEmbedded.restart.title"), RelationsMessages.getString("RestoreEmbedded.restart.msg"))) { //$NON-NLS-1$ //$NON-NLS-2$
+		        .openConfirm(
+		                lShell,
+		                RelationsMessages
+		                        .getString("RestoreEmbedded.restart.title"), RelationsMessages.getString("RestoreEmbedded.restart.msg"))) { //$NON-NLS-1$ //$NON-NLS-2$
 			lShell.getDisplay().asyncExec(new Runnable() {
 				@SuppressWarnings("unchecked")
 				@Override
 				public void run() {
 					appContext.getArguments().put(
-							RelationsApplication.EXIT_KEY,
-							IApplication.EXIT_RESTART);
+					        RelationsApplication.EXIT_KEY,
+					        IApplication.EXIT_RESTART);
 					workbench.close();
 				}
 			});
@@ -185,11 +188,11 @@ public class ImportEmbedded extends Wizard implements IImportWizard {
 	}
 
 	private void saveCatalog(final String inDBName)
-			throws BackingStoreException {
+	        throws BackingStoreException {
 		final IEclipsePreferences lNode = DefaultScope.INSTANCE
-				.getNode(RelationsConstants.PREFERENCE_NODE);
+		        .getNode(RelationsConstants.PREFERENCE_NODE);
 		lNode.put(RelationsConstants.KEY_DB_PLUGIN_ID,
-				RelationsConstants.DFT_DBCONFIG_PLUGIN_ID);
+		        RelationsConstants.DFT_DBCONFIG_PLUGIN_ID);
 		lNode.put(RelationsConstants.KEY_DB_EMBEDDED_CATALOG, inDBName);
 	}
 

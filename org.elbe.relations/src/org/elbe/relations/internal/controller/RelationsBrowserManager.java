@@ -29,7 +29,6 @@ import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.EventTopic;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.core.services.log.Logger;
-import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.data.bom.BOMException;
@@ -63,8 +62,6 @@ import org.hip.kernel.exc.VException;
  */
 @SuppressWarnings("restriction")
 public class RelationsBrowserManager implements IBrowserManager {
-	private static final String CENTER_ITEM_ID = "centerItemID"; //$NON-NLS-1$
-
 	private CentralAssociationsModel model;
 	private ItemAdapter selected;
 	private IRelation selectedRelation;
@@ -94,7 +91,6 @@ public class RelationsBrowserManager implements IBrowserManager {
 		final UniqueID lID = inModel.getUniqueID();
 		if (historyBack.empty() || !lID.equals(historyBack.peek())) {
 			historyBack.push(lID);
-			setHistoryBodyEnablement();
 		}
 	}
 
@@ -106,11 +102,6 @@ public class RelationsBrowserManager implements IBrowserManager {
 			application = context.get(MApplication.class);
 		}
 		return application;
-	}
-
-	private void setHistoryBodyEnablement() {
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -139,9 +130,6 @@ public class RelationsBrowserManager implements IBrowserManager {
 	 * @param inModel
 	 *            {@link CentralAssociationsModel}
 	 */
-	// @Inject
-	// @Optional
-	// @UIEventTopic(RelationsConstants.TOPIC_BROWSER_MANAGER_SEND_CENTER_MODEL)
 	@Override
 	public void setModel(final CentralAssociationsModel inModel) {
 		if (model != null) {
@@ -154,7 +142,7 @@ public class RelationsBrowserManager implements IBrowserManager {
 	@Inject
 	@Optional
 	public void dbInitialized(
-			@EventTopic(RelationsConstants.TOPIC_DB_CHANGED_INITIALZED) final String inMsg) {
+	        @EventTopic(RelationsConstants.TOPIC_DB_CHANGED_INITIALZED) final String inMsg) {
 		model = null;
 		selected = null;
 		handleDBChanged();
@@ -163,7 +151,7 @@ public class RelationsBrowserManager implements IBrowserManager {
 	@Inject
 	@Optional
 	public void dbChanged(
-			@EventTopic(RelationsConstants.TOPIC_DB_CHANGED_CREATED) final UniqueID inUniqueID) {
+	        @EventTopic(RelationsConstants.TOPIC_DB_CHANGED_CREATED) final UniqueID inUniqueID) {
 		if (inUniqueID == null) {
 			model = null;
 			selected = null;
@@ -173,11 +161,10 @@ public class RelationsBrowserManager implements IBrowserManager {
 
 	private void handleDBChanged() {
 		eventBroker.post(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_CLEAR,
-				"clear");
+		        "clear"); //$NON-NLS-1$
 		handleDBChange();
 		historyBack.clear();
 		historyNext.clear();
-		setHistoryBodyEnablement();
 	}
 
 	private void handleDBChange() {
@@ -187,18 +174,17 @@ public class RelationsBrowserManager implements IBrowserManager {
 			selected = model.getCenter();
 		}
 		eventBroker
-				.post(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SEND_CENTER_MODEL,
-						model);
+		        .post(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SEND_CENTER_MODEL,
+		                model);
 	}
 
-	//@UIEventTopic
 	@Inject
 	@Optional
 	public void itemChanged(
-			@EventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_MODEL) final IItemModel inItem) {
+	        @EventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_MODEL) final IItemModel inItem) {
 		try {
 			setModel(CentralAssociationsModel.createCentralAssociationsModel(
-					inItem, context));
+			        inItem, context));
 		}
 		catch (final VException exc) {
 			log.error(exc, exc.getMessage());
@@ -207,14 +193,6 @@ public class RelationsBrowserManager implements IBrowserManager {
 			log.error(exc, exc.getMessage());
 		}
 	}
-
-	// @Inject
-	// @Optional
-	// public void titleChanged(
-	// @UIEventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_TITLE)
-	// final String inTitle) {
-	// syncBrowsersForContent(inTitle);
-	// }
 
 	/**
 	 * Notifies the manager that the selection changed to the specified item.
@@ -225,7 +203,7 @@ public class RelationsBrowserManager implements IBrowserManager {
 	@Inject
 	@Optional
 	public void setSelected(
-			@EventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED) final SelectedItemChangeEvent inEvent) {
+	        @EventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED) final SelectedItemChangeEvent inEvent) {
 		selected = inEvent.getItem();
 		selectedRelation = null;
 		checkSelected();
@@ -242,7 +220,7 @@ public class RelationsBrowserManager implements IBrowserManager {
 	@Inject
 	@Optional
 	public void setSelected(
-			@EventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED) final IRelation inSelectedRelation) {
+	        @EventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED) final IRelation inSelectedRelation) {
 		selectedRelation = inSelectedRelation;
 	}
 
@@ -256,10 +234,10 @@ public class RelationsBrowserManager implements IBrowserManager {
 
 		if (model.getCenter().equals(selected)) {
 			BrowserPopupStateController.setState(State.ITEM_CENTER,
-					getApplication());
+			        getApplication());
 		} else {
 			BrowserPopupStateController.setState(State.ITEM_PERIPHERY,
-					getApplication());
+			        getApplication());
 		}
 	}
 
@@ -272,14 +250,8 @@ public class RelationsBrowserManager implements IBrowserManager {
 	 */
 	private void syncBrowsersForSelected(final SelectedItemChangeEvent inEvent) {
 		eventBroker.post(
-				RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_SELECTED,
-				inEvent);
-	}
-
-	private void syncBrowsersForContent(final String inTitle) {
-		eventBroker.post(
-				RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_CONTENT,
-				inTitle);
+		        RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_SELECTED,
+		        inEvent);
 	}
 
 	/**
@@ -312,7 +284,7 @@ public class RelationsBrowserManager implements IBrowserManager {
 		// deletion of related model?
 		else {
 			for (final ItemAdapter lRelated : getCenterModel()
-					.getRelatedItems()) {
+			        .getRelatedItems()) {
 				if (lRelated.getUniqueID().equals(lID)) {
 					setModel(reloadCenter());
 				}
@@ -329,7 +301,7 @@ public class RelationsBrowserManager implements IBrowserManager {
 	private CentralAssociationsModel reloadCenter() {
 		try {
 			return CentralAssociationsModel.createCentralAssociationsModel(
-					model.getCenter(), context);
+			        model.getCenter(), context);
 		}
 		catch (final VException exc) {
 			log.error(exc, exc.getMessage());
@@ -348,13 +320,14 @@ public class RelationsBrowserManager implements IBrowserManager {
 	 */
 	public void saveState(final IEclipsePreferences inPreferences) {
 		if (model == null) {
-			inPreferences.put(CENTER_ITEM_ID, "");
+			inPreferences.put(RelationsConstants.CENTER_ITEM_ID, ""); //$NON-NLS-1$
 			return;
 		}
 
 		final UniqueID lID = model.getCenter().getUniqueID();
 		if (lID != null) {
-			inPreferences.put(CENTER_ITEM_ID, lID.toString());
+			inPreferences
+			        .put(RelationsConstants.CENTER_ITEM_ID, lID.toString());
 		}
 	}
 
@@ -365,12 +338,13 @@ public class RelationsBrowserManager implements IBrowserManager {
 	 *            {@link IEclipsePreferences}
 	 */
 	public void restoreState(final IEclipsePreferences inPreferences) {
-		final String lID = inPreferences.get(CENTER_ITEM_ID, "");
+		final String lID = inPreferences.get(RelationsConstants.CENTER_ITEM_ID,
+		        ""); //$NON-NLS-1$
 		if (!lID.isEmpty()) {
 			try {
 				setModel(CentralAssociationsModel
-						.createCentralAssociationsModel(
-								data.retrieveItem(new UniqueID(lID)), context));
+				        .createCentralAssociationsModel(
+				                data.retrieveItem(new UniqueID(lID)), context));
 			}
 			catch (final VException exc) {
 				log.error(exc, exc.getMessage());
@@ -384,21 +358,11 @@ public class RelationsBrowserManager implements IBrowserManager {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IBrowserManager#hasPrevious()
-	 */
 	@Override
 	public boolean hasPrevious() {
 		return !historyBack.isEmpty();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IBrowserManager#moveBack()
-	 */
 	@Override
 	public void moveBack() {
 		historyNext.push(model.getCenter().getUniqueID());
@@ -406,21 +370,11 @@ public class RelationsBrowserManager implements IBrowserManager {
 		historyBack.pop();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IBrowserManager#hasNext()
-	 */
 	@Override
 	public boolean hasNext() {
 		return !historyNext.isEmpty();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IBrowserManager#moveForward()
-	 */
 	@Override
 	public void moveForward() {
 		moveHistory(historyNext.pop());
@@ -429,7 +383,7 @@ public class RelationsBrowserManager implements IBrowserManager {
 	private void moveHistory(final UniqueID inUniqueID) {
 		try {
 			setModel(CentralAssociationsModel.createCentralAssociationsModel(
-					data.retrieveItem(inUniqueID), context));
+			        data.retrieveItem(inUniqueID), context));
 		}
 		catch (final VException exc) {
 			log.error(exc, exc.getMessage());

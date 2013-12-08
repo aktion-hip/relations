@@ -73,7 +73,7 @@ public class ASCIIHexFilter implements Filter {
 
             if(REVERSE_HEX[firstByte] == -1)
             {
-                System.out.println("Invalid Hex Code; int: " + firstByte + " char: " + (char) firstByte);
+                System.out.println("Invalid Hex Code; int: " + firstByte + " char: " + (char) firstByte); //$NON-NLS-1$ //$NON-NLS-2$
             }
             value = REVERSE_HEX[firstByte] * 16;
             secondByte = compressedData.read();
@@ -88,7 +88,7 @@ public class ASCIIHexFilter implements Filter {
             {
                 if(REVERSE_HEX[secondByte] == -1)
                 {
-                    System.out.println("Invalid Hex Code; int: " + secondByte + " char: " + (char) secondByte);
+                    System.out.println("Invalid Hex Code; int: " + secondByte + " char: " + (char) secondByte); //$NON-NLS-1$ //$NON-NLS-2$
                 }
                 value += REVERSE_HEX[secondByte];
             }

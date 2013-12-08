@@ -34,7 +34,6 @@ import org.xml.sax.SAXException;
  * 
  * @author Luthiger Created on 29.12.2009
  */
-@SuppressWarnings("restriction")
 public class UnAPIHelper {
 	private static final String TMPL_FORMATS = "%s?id=%s"; //$NON-NLS-1$
 	private static final String TMPL_GET_ENTRY = "%s?id=%s&format=%s"; //$NON-NLS-1$
@@ -44,8 +43,8 @@ public class UnAPIHelper {
 	 * mods, oai_dc, bibtex
 	 */
 	private static final IUnAPIHandler[] handledFormats = new IUnAPIHandler[] {
-			new MetadataFormatMods(), new MetadataFormatDC(),
-			new MetadataFormatBibtex() };
+	        new MetadataFormatMods(), new MetadataFormatDC(),
+	        new MetadataFormatBibtex() };
 
 	private final String serverURL;
 	private final String entryID;
@@ -77,19 +76,19 @@ public class UnAPIHelper {
 	 * @throws IOException
 	 */
 	public NewTextAction getAction(final IEclipseContext inContext)
-			throws MalformedURLException, ParserConfigurationException,
-			SAXException, IOException {
+	        throws MalformedURLException, ParserConfigurationException,
+	        SAXException, IOException {
 		// first we get the formats
 		String lUrl = String.format(TMPL_FORMATS, serverURL, entryID);
 		final Collection<String> lFormats = XMLFormatsParser.getInstance()
-				.parse(new URL(lUrl));
+		        .parse(new URL(lUrl));
 		for (final String lFormat : lFormats) {
 			for (final IUnAPIHandler lFormatHandler : handledFormats) {
 				if (lFormatHandler.canHandle(lFormat)) {
 					lUrl = String.format(TMPL_GET_ENTRY, serverURL, entryID,
-							lFormat);
+					        lFormat);
 					return lFormatHandler
-							.createAction(new URL(lUrl), inContext);
+					        .createAction(new URL(lUrl), inContext);
 				}
 			}
 		}

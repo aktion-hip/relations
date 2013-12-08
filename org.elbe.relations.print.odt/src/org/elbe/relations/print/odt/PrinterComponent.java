@@ -35,7 +35,7 @@ public class PrinterComponent implements IPrintService {
 	 */
 	@Override
 	public String getName() {
-		return "OpenOffice.org document";
+		return "OpenOffice.org document"; //$NON-NLS-1$
 	}
 
 	/*
@@ -45,7 +45,7 @@ public class PrinterComponent implements IPrintService {
 	 */
 	@Override
 	public String getFileType() {
-		return "*.odt";
+		return "*.odt"; //$NON-NLS-1$
 	}
 
 	/*
@@ -55,7 +55,7 @@ public class PrinterComponent implements IPrintService {
 	 */
 	@Override
 	public String getFileTypeName() {
-		return "OpenDocument Text (.odt)";
+		return "OpenDocument Text (.odt)"; //$NON-NLS-1$
 	}
 
 	/*

@@ -30,6 +30,7 @@ import org.hip.kernel.exc.VException;
  * 
  * @author Benno Luthiger Created on Sep 3, 2005
  */
+@SuppressWarnings("serial")
 public class Person extends AbstractPerson implements IIndexable {
 	public final static String HOME_CLASS_NAME = "org.elbe.relations.data.bom.PersonHome"; //$NON-NLS-1$
 	public final static String COLL_HOME_CLASS_NAME = "org.elbe.relations.data.bom.CollectablePersonHome"; //$NON-NLS-1$
@@ -64,12 +65,12 @@ public class Person extends AbstractPerson implements IIndexable {
 
 		final FullTextHelper lFullText = new FullTextHelper();
 		lDocument.addField(getFieldUniqueID(UniqueID.getStringOf(IItem.PERSON,
-				getID())));
+		        getID())));
 		lDocument.addField(getFieldItemType(String.valueOf(IItem.PERSON)));
 		lDocument.addField(getFieldItemID(get(PersonHome.KEY_ID).toString()));
 		lDocument.addField(getFieldTitle(lFullText
-				.add(getChecked(PersonHome.KEY_FIRSTNAME) + " "
-						+ get(PersonHome.KEY_NAME).toString())));
+		        .add(getChecked(PersonHome.KEY_FIRSTNAME) + " " //$NON-NLS-1$
+		                + get(PersonHome.KEY_NAME).toString())));
 		addCreatedModified(lDocument);
 
 		lFullText.add(getChecked(PersonHome.KEY_TEXT));

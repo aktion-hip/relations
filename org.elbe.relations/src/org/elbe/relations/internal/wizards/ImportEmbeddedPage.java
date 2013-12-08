@@ -78,21 +78,21 @@ public class ImportEmbeddedPage extends ExportWizardPage {
 		log = inLog;
 		setTitle(RelationsMessages.getString("ImportEmbeddedPage.wizard.title")); //$NON-NLS-1$
 		message = RelationsMessages
-				.getString("ImportEmbeddedPage.wizard.message"); //$NON-NLS-1$
+		        .getString("ImportEmbeddedPage.wizard.message"); //$NON-NLS-1$
 		settings = new DialogSettingHandler(
-				"ImportEmbedded", "RecentImportEmbedded"); //$NON-NLS-1$ //$NON-NLS-2$
+		        "ImportEmbedded", "RecentImportEmbedded"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override
 	protected void openFileDialog() {
 		importNameStatus = Status.OK_STATUS;
 		final FileDialog lDialog = new FileDialog(Display.getCurrent()
-				.getActiveShell(), SWT.OPEN);
+		        .getActiveShell(), SWT.OPEN);
 		lDialog.setText(RelationsMessages
-				.getString("ImportEmbeddedPage.dlg.message")); //$NON-NLS-1$
+		        .getString("ImportEmbeddedPage.dlg.message")); //$NON-NLS-1$
 		lDialog.setFilterExtensions(FILTER_EXTENSIONS);
 		lDialog.setFilterNames(new String[] { RelationsMessages
-				.getString("ImportEmbeddedPage.file.filter") }); //$NON-NLS-1$
+		        .getString("ImportEmbeddedPage.file.filter") }); //$NON-NLS-1$
 		final String lFileName = lDialog.open();
 		if (lFileName == null) {
 			importNameStatus = nameEmpty;
@@ -108,30 +108,32 @@ public class ImportEmbeddedPage extends ExportWizardPage {
 	public void createControl(final Composite inParent) {
 		final int lColumns = 3;
 		final Composite lComposite = WizardHelper.createComposite(inParent,
-				lColumns);
+		        lColumns);
 
 		newDatabaseName = createLabelText(lComposite,
-				RelationsMessages
-						.getString("ImportEmbeddedPage.label.database")); //$NON-NLS-1$
+		        RelationsMessages
+		                .getString("ImportEmbeddedPage.label.database")); //$NON-NLS-1$
 		new Label(lComposite, SWT.NONE);
 
 		importFileName = createLabelCombo(
-				lComposite,
-				RelationsMessages.getString("RestoreEmbeddedPage.lbl.input"), SWT.DROP_DOWN); //$NON-NLS-1$
+		        lComposite,
+		        RelationsMessages.getString("RestoreEmbeddedPage.lbl.input"), SWT.DROP_DOWN); //$NON-NLS-1$
+		FormUtility.addDecorationHint(importFileName,
+		        RelationsMessages.getString("ImportPage.hint.drop")); //$NON-NLS-1$
 		createButtonFileDialog(lComposite,
-				RelationsMessages.getString("PrintOutWizardPage.lbl.browse")); //$NON-NLS-1$
+		        RelationsMessages.getString("PrintOutWizardPage.lbl.browse")); //$NON-NLS-1$
 		ImportDropHelper.wrapFileDrop(importFileName, FILTER_EXTENSIONS,
-				new IModifyListener() {
-					@Override
-					public void modifyText(final String inFileName) {
-						checkImportFileExists(inFileName, true);
-						updateStatuses(getStatuses());
-					}
-				});
+		        new IModifyListener() {
+			        @Override
+			        public void modifyText(final String inFileName) {
+				        checkImportFileExists(inFileName, true);
+				        updateStatuses(getStatuses());
+			        }
+		        });
 
 		new Label(lComposite, SWT.NONE);
 		reindexCheck = createCheckbox(lComposite,
-				RelationsMessages.getString("ImportEmbeddedPage.label.reindex")); //$NON-NLS-1$
+		        RelationsMessages.getString("ImportEmbeddedPage.label.reindex")); //$NON-NLS-1$
 		new Label(lComposite, SWT.NONE);
 
 		setControl(lComposite);
@@ -139,7 +141,7 @@ public class ImportEmbeddedPage extends ExportWizardPage {
 	}
 
 	private Button createCheckbox(final Composite inComposite,
-			final String inString) {
+	        final String inString) {
 		final Button outButton = new Button(inComposite, SWT.CHECK);
 		outButton.setText(inString);
 		return outButton;
@@ -195,7 +197,7 @@ public class ImportEmbeddedPage extends ExportWizardPage {
 	}
 
 	private void checkValidDBName(final String inText,
-			final boolean inCheckEmpty) {
+	        final boolean inCheckEmpty) {
 		if (inText.length() == 0) {
 			fileNameStatus = Status.OK_STATUS;
 			if (inCheckEmpty) {
@@ -207,7 +209,7 @@ public class ImportEmbeddedPage extends ExportWizardPage {
 	}
 
 	private void checkImportFileExists(final String inFileName,
-			final boolean inCheckEmpty) {
+	        final boolean inCheckEmpty) {
 		if (inFileName.length() == 0) {
 			if (inCheckEmpty) {
 				importNameStatus = nameEmpty;
@@ -238,7 +240,7 @@ public class ImportEmbeddedPage extends ExportWizardPage {
 	private void updateStatuses(final IStatus[] inStatuses) {
 		// handle error messages
 		final MultiStatus lStatus = new MultiStatus(
-				Activator.getSymbolicName(), 1, inStatuses, "", null); //$NON-NLS-1$
+		        Activator.getSymbolicName(), 1, inStatuses, "", null); //$NON-NLS-1$
 		setErrorMessage(FormUtility.getErrorMessage(lStatus));
 		setMessage(message);
 		//

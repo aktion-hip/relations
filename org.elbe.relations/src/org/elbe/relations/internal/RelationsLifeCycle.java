@@ -18,6 +18,10 @@
  ***************************************************************************/
 package org.elbe.relations.internal;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -30,13 +34,17 @@ import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
-import org.eclipse.e4.ui.workbench.lifecycle.PreSave;
 import org.eclipse.e4.ui.workbench.lifecycle.ProcessAdditions;
+import org.eclipse.e4.ui.workbench.lifecycle.ProcessRemovals;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.equinox.p2.core.IProvisioningAgent;
+import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
+import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.elbe.relations.RelationsConstants;
+import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.db.IDataService;
 import org.elbe.relations.handlers.DbEmbeddedCreateHandler;
 import org.elbe.relations.internal.controller.RelationsBrowserManager;
@@ -57,13 +65,16 @@ import org.osgi.service.prefs.BackingStoreException;
  * @PostContextCreate: Called after the application context is created
  * @ProcessAdditions: Called before the model is passed to the renderer
  * @ProcessRemovals: Called before the model is passed to the renderer
- * @PreSave: Called before the model is persisted
+ * @PreSave: Called before the model is persisted (does not work with
+ *           compatibility layer)
+ * @PreDestroy: Called before the model is destroyed
  * 
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
 public class RelationsLifeCycle {
-	private static final String ACTIVE_BROWSER_ID = "active.relations.browser";
+	// private static final String ACTIVE_BROWSER_ID =
+	// "active.relations.browser";
 
 	private RelationsBrowserManager browserManager;
 
@@ -82,7 +93,7 @@ public class RelationsLifeCycle {
 
 	@PostContextCreate
 	void initializeApp(final IEclipseContext inContext,
-			final IEventBroker inEventBroker) {
+	        final IEventBroker inEventBroker) {
 
 		// set db settings and controller to workspace context
 		if (dbSettings != null && inContext.get(DBSettings.class) == null) {
@@ -100,43 +111,46 @@ public class RelationsLifeCycle {
 
 		// set language service to the context
 		inContext.set(LanguageService.class,
-				ContextInjectionFactory.make(LanguageService.class, inContext));
+		        ContextInjectionFactory.make(LanguageService.class, inContext));
 
 		// set a suitable implementation of the IDataService to the context
 		final DataService lDataService = ContextInjectionFactory.make(
-				DataService.class, inContext);
+		        DataService.class, inContext);
 		inContext.set(IDataService.class, lDataService);
 
 		// set a suitable implementation of the IBrowserManager to the context
 		browserManager = ContextInjectionFactory.make(
-				RelationsBrowserManager.class, inContext);
+		        RelationsBrowserManager.class, inContext);
 		inContext.set(IBrowserManager.class, browserManager);
 
 		boolean lDBConfigured = false;
 		if (dbSettings.getDBConnectionConfig().isEmbedded()
-				&& RelationsConstants.DFT_DBCONFIG_PLUGIN_ID.equals(dbSettings
-						.getDBConnectionConfig().getName())) {
+		        && RelationsConstants.DFT_DBCONFIG_PLUGIN_ID.equals(dbSettings
+		                .getDBConnectionConfig().getName())) {
 			// check existence of default database and create one, if needed
 			if (!EmbeddedCatalogHelper.hasDefaultEmbedded()) {
 				if (dbController.checkEmbedded()) {
 					lDbAccess
-							.setActiveConfiguration(createDftDBAccessConfiguration());
+					        .setActiveConfiguration(createDftDBAccessConfiguration());
 					lDBConfigured = true;
 					final DbEmbeddedCreateHandler lDBCreate = ContextInjectionFactory
-							.make(DbEmbeddedCreateHandler.class, inContext);
+					        .make(DbEmbeddedCreateHandler.class, inContext);
 					lDBCreate.execute(dbSettings, inContext);
 
 				} else {
 					MessageDialog
-							.openError(new Shell(Display.getDefault()),
-									"Database error",
-									"There is no configuration for the embedded database provided.");
+					        .openError(
+					                new Shell(Display.getDefault()),
+					                RelationsMessages
+					                        .getString("relations.life.cycle.db.open.error.title"), //$NON-NLS-1$
+					                RelationsMessages
+					                        .getString("relations.life.cycle.db.open.error.msg")); //$NON-NLS-1$
 				}
 			}
 		}
 		if (!lDBConfigured) {
 			lDbAccess.setActiveConfiguration(ActionHelper
-					.createDBConfiguration(dbSettings));
+			        .createDBConfiguration(dbSettings));
 		}
 		lDataService.loadData(RelationsConstants.TOPIC_DB_CHANGED_RELOAD);
 
@@ -145,21 +159,40 @@ public class RelationsLifeCycle {
 
 	private DBAccessConfiguration createDftDBAccessConfiguration() {
 		return new DBAccessConfiguration(
-				RelationsConstants.DFT_DBCONFIG_PLUGIN_ID, "./"
-						+ RelationsConstants.DERBY_STORE + "/"
-						+ RelationsConstants.DFT_DB_EMBEDDED,
-				EmbeddedCatalogHelper.getEmbeddedDftDBChecked(), "", "");
+		        RelationsConstants.DFT_DBCONFIG_PLUGIN_ID, "./" //$NON-NLS-1$
+		                + RelationsConstants.DERBY_STORE + "/" //$NON-NLS-1$
+		                + RelationsConstants.DFT_DB_EMBEDDED,
+		        EmbeddedCatalogHelper.getEmbeddedDftDBChecked(), "", ""); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@ProcessAdditions
-	void preRendering(final MApplication inApplication,
-			final EModelService inModelService, final IEclipseContext inContext) {
+	void doRestore() {
 		browserManager.restoreState(preferences);
+	}
 
-		// additions
-		// final MUIElement lToolbar = inModelService.find(
-		// "relations.toolbar:text.styling", inApplication);
-		// System.out.println(lToolbar);
+	@ProcessRemovals
+	void preRendering(final IProvisioningAgent inAgent) {
+		addRepository(inAgent);
+	}
+
+	private void addRepository(final IProvisioningAgent inAgent) {
+		final IMetadataRepositoryManager lMetadataManager = (IMetadataRepositoryManager) inAgent
+		        .getService(IMetadataRepositoryManager.SERVICE_NAME);
+		final IArtifactRepositoryManager lArtifactManager = (IArtifactRepositoryManager) inAgent
+		        .getService(IArtifactRepositoryManager.SERVICE_NAME);
+		if (lMetadataManager == null || lArtifactManager == null) {
+			log.warn("P2 metadata/artifact manager is null!"); //$NON-NLS-1$
+			return;
+		}
+
+		try {
+			final URI lURI = new URI(RelationsConstants.UPDATE_SITE);
+			lMetadataManager.addRepository(lURI);
+			lArtifactManager.addRepository(lURI);
+		}
+		catch (final URISyntaxException exc) {
+			log.error(exc, exc.getMessage());
+		}
 	}
 
 	/**
@@ -169,14 +202,15 @@ public class RelationsLifeCycle {
 	 *            {@link MApplication}
 	 */
 	@SuppressWarnings("unchecked")
-	@PreSave
+	@PreDestroy
 	void saveApp(final MApplication inApplication,
-			final EModelService inModelService) {
+	        final EModelService inModelService) {
 		// save browser id
 		final MElementContainer<MUIElement> lBrowserStack = (MElementContainer<MUIElement>) inModelService
-				.find(RelationsConstants.PART_STACK_BROWSERS, inApplication);
-		preferences.put(ACTIVE_BROWSER_ID, lBrowserStack.getSelectedElement()
-				.getElementId());
+		        .find(RelationsConstants.PART_STACK_BROWSERS, inApplication);
+		final MUIElement lBrowser = lBrowserStack.getSelectedElement();
+		preferences.put(RelationsConstants.ACTIVE_BROWSER_ID,
+		        lBrowser.getElementId());
 
 		// save browser model
 		browserManager.saveState(preferences);

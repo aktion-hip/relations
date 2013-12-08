@@ -30,6 +30,7 @@ import org.hip.kernel.exc.VException;
  * 
  * @author Luthiger Created on 29.08.2006
  */
+@SuppressWarnings("serial")
 public abstract class AbstractTerm extends AbstractItem {
 
 	public AbstractTerm() {
@@ -63,7 +64,7 @@ public abstract class AbstractTerm extends AbstractItem {
 	@Override
 	protected Timestamp[] getCreatedModified() throws VException {
 		return new Timestamp[] { (Timestamp) get(TermHome.KEY_CREATED),
-				(Timestamp) get(TermHome.KEY_MODIFIED) };
+		        (Timestamp) get(TermHome.KEY_MODIFIED) };
 	}
 
 	/*
@@ -91,11 +92,11 @@ public abstract class AbstractTerm extends AbstractItem {
 	public ILightWeightItem getLightWeight() throws BOMException {
 		try {
 			return new LightWeightTerm(
-					((Long) get(TermHome.KEY_ID)).longValue(), get(
-							TermHome.KEY_TITLE).toString(),
-					getChecked(TermHome.KEY_TEXT),
-					(Timestamp) get(TermHome.KEY_CREATED),
-					(Timestamp) get(TermHome.KEY_MODIFIED));
+			        ((Long) get(TermHome.KEY_ID)).longValue(), get(
+			                TermHome.KEY_TITLE).toString(),
+			        getChecked(TermHome.KEY_TEXT),
+			        (Timestamp) get(TermHome.KEY_CREATED),
+			        (Timestamp) get(TermHome.KEY_MODIFIED));
 		}
 		catch (final Exception exc) {
 			throw new BOMException(exc.getMessage());
@@ -107,7 +108,7 @@ public abstract class AbstractTerm extends AbstractItem {
 	 */
 	@Override
 	public void saveTitleText(final String inTitle, final String inText)
-			throws BOMException {
+	        throws BOMException {
 		save(inTitle, inText);
 	}
 
@@ -121,7 +122,7 @@ public abstract class AbstractTerm extends AbstractItem {
 	 * @throws BOMException
 	 */
 	public void save(final String inTitle, final String inText)
-			throws BOMException {
+	        throws BOMException {
 		try {
 			setModel(inTitle, inText);
 			update(true);
@@ -151,7 +152,7 @@ public abstract class AbstractTerm extends AbstractItem {
 	 * @throws VException
 	 */
 	protected void setModel(final String inTitle, final String inText)
-			throws VException {
+	        throws VException {
 		set(TermHome.KEY_TITLE, inTitle);
 		set(TermHome.KEY_TEXT, inText);
 		set(TermHome.KEY_MODIFIED, new Timestamp(System.currentTimeMillis()));

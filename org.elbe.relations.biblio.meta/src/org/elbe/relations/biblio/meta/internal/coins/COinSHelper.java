@@ -33,7 +33,6 @@ import org.elbe.relations.utility.NewTextAction;
  * 
  * @author Luthiger Created on 22.11.2009
  */
-@SuppressWarnings("restriction")
 public class COinSHelper {
 	private static final String DELIMITER0 = "&"; //$NON-NLS-1$
 	private static final String DELIMITER1 = "&amp;"; //$NON-NLS-1$
@@ -57,7 +56,7 @@ public class COinSHelper {
 	 * @throws UnsupportedEncodingException
 	 */
 	public COinSHelper(final String inCoinsInfo, final IEclipseContext inContext)
-			throws UnsupportedEncodingException {
+	        throws UnsupportedEncodingException {
 		coinsParts = extract(URLDecoder.decode(inCoinsInfo, "UTF-8")); //$NON-NLS-1$
 		extractor = getExtractor();
 		context = inContext;
@@ -110,7 +109,7 @@ public class COinSHelper {
 
 	private static interface IExtractor {
 		public NewTextAction createAction(Map<String, String> inParts,
-				final IEclipseContext inContext);
+		        final IEclipseContext inContext);
 	}
 
 	private enum Extractor implements IExtractor {
@@ -131,7 +130,7 @@ public class COinSHelper {
 
 		@Override
 		public NewTextAction createAction(final Map<String, String> inParts,
-				final IEclipseContext inContext) {
+		        final IEclipseContext inContext) {
 			return helper.createAction(inParts, inContext);
 		}
 	}
@@ -212,7 +211,7 @@ public class COinSHelper {
 			final String[] lAuthorArr = lAuthors.split(DELIMITER3);
 			for (final String lAuthor : lAuthorArr) {
 				if (!lAuthor.contains(authorLast)
-						|| !lAuthor.contains(authorFirst)) {
+				        || !lAuthor.contains(authorFirst)) {
 					outAuthors.append(lAuthor).append(AUTHORS_SEP);
 				}
 			}
@@ -241,15 +240,15 @@ public class COinSHelper {
 		protected String getText() {
 			final StringBuilder outText = new StringBuilder();
 			outText.append(appendChecked(KEY_AUCORP,
-					Messages.COinSHelper_lbl_corp));
+			        Messages.COinSHelper_lbl_corp));
 			outText.append(appendChecked(KEY_DATE,
-					Messages.COinSHelper_lbl_date));
+			        Messages.COinSHelper_lbl_date));
 			outText.append(appendChecked(KEY_ISBN,
-					Messages.COinSHelper_lbl_isbn));
+			        Messages.COinSHelper_lbl_isbn));
 			outText.append(appendChecked(KEY_ISSN,
-					Messages.COinSHelper_lbl_issn));
+			        Messages.COinSHelper_lbl_issn));
 			outText.append(appendChecked(KEY_GENRE,
-					Messages.COinSHelper_lbl_genre));
+			        Messages.COinSHelper_lbl_genre));
 			return new String(outText);
 		}
 
@@ -258,7 +257,7 @@ public class COinSHelper {
 			String lValue = null;
 			if ((lValue = parts.get(inKey)) != null) {
 				outText.append(inLabel)
-						.append(": ").append(lValue).append(", "); //$NON-NLS-1$ //$NON-NLS-2$
+				        .append(": ").append(lValue).append(", "); //$NON-NLS-1$ //$NON-NLS-2$
 				return new String(outText);
 			}
 			return ""; //$NON-NLS-1$
@@ -269,7 +268,7 @@ public class COinSHelper {
 	 * Extract book information.
 	 */
 	private static class BookExtractor extends AbstractExtractor implements
-			IExtractor {
+	        IExtractor {
 		private static final String KEY_BTITLE = "rft.btitle"; //$NON-NLS-1$
 		private static final String KEY_ATITLE = "rft.atitle"; //$NON-NLS-1$
 		private static final String KEY_PLACE = "rft.place"; //$NON-NLS-1$
@@ -281,10 +280,10 @@ public class COinSHelper {
 
 		@Override
 		public NewTextAction createAction(final Map<String, String> inParts,
-				final IEclipseContext inContext) {
+		        final IEclipseContext inContext) {
 			setParts(inParts);
 			NewTextAction.Builder outAction = new NewTextAction.Builder(
-					getTitle(), getAuthor());
+			        getTitle(), getAuthor());
 			outAction = outAction.coAuthor(getCoAuthor());
 			outAction = outAction.pages(getPages());
 
@@ -304,13 +303,13 @@ public class COinSHelper {
 		private String getText(final Map<String, String> inParts) {
 			final StringBuilder outText = new StringBuilder();
 			outText.append(appendChecked(KEY_EDITION,
-					Messages.COinSHelper_lbl_ed));
+			        Messages.COinSHelper_lbl_ed));
 			outText.append(appendChecked(KEY_SERIES,
-					Messages.COinSHelper_lbl_series));
+			        Messages.COinSHelper_lbl_series));
 			outText.append(appendChecked(KEY_TPAGES,
-					Messages.COinSHelper_lbl_pages));
+			        Messages.COinSHelper_lbl_pages));
 			outText.append(appendChecked(KEY_BICI,
-					Messages.COinSHelper_lbl_bici));
+			        Messages.COinSHelper_lbl_bici));
 			outText.append(super.getText());
 
 			if (outText.length() > 2) {
@@ -334,7 +333,7 @@ public class COinSHelper {
 	 * Extract journal article information.
 	 */
 	private static class ArticleExtractor extends AbstractExtractor implements
-			IExtractor {
+	        IExtractor {
 		private static final String KEY_ATITLE = "rft.atitle"; //$NON-NLS-1$
 		private static final String KEY_JTITLE = "rft.jtitle"; //$NON-NLS-1$
 		private static final String KEY_STITLE = "rft.stitle"; //$NON-NLS-1$
@@ -351,10 +350,10 @@ public class COinSHelper {
 
 		@Override
 		public NewTextAction createAction(final Map<String, String> inParts,
-				final IEclipseContext inContext) {
+		        final IEclipseContext inContext) {
 			setParts(inParts);
 			NewTextAction.Builder outAction = new NewTextAction.Builder(
-					getTitle(), getAuthor());
+			        getTitle(), getAuthor());
 			outAction = outAction.coAuthor(getCoAuthor());
 			outAction = outAction.pages(getPages());
 			outAction = outAction.publication(getJournal());
@@ -407,21 +406,21 @@ public class COinSHelper {
 		private String getText(final Map<String, String> inParts) {
 			final StringBuilder outText = new StringBuilder();
 			outText.append(appendChecked(KEY_ARTNUM,
-					Messages.COinSHelper_lbl_number));
+			        Messages.COinSHelper_lbl_number));
 			outText.append(appendChecked(KEY_SICI,
-					Messages.COinSHelper_lbl_sici));
+			        Messages.COinSHelper_lbl_sici));
 			outText.append(appendChecked(KEY_CODEN,
-					Messages.COinSHelper_lbl_coden));
+			        Messages.COinSHelper_lbl_coden));
 			outText.append(appendChecked(KEY_CHRON,
-					Messages.COinSHelper_lbl_chronology));
+			        Messages.COinSHelper_lbl_chronology));
 			outText.append(appendChecked(KEY_EISSN,
-					Messages.COinSHelper_lbl_elissn));
+			        Messages.COinSHelper_lbl_elissn));
 			outText.append(appendChecked(KEY_SSN,
-					Messages.COinSHelper_lbl_season));
+			        Messages.COinSHelper_lbl_season));
 			outText.append(appendChecked(KEY_QUARTER,
-					Messages.COinSHelper_lbl_quarter));
+			        Messages.COinSHelper_lbl_quarter));
 			outText.append(appendChecked(KEY_PART,
-					Messages.COinSHelper_lbl_part));
+			        Messages.COinSHelper_lbl_part));
 			outText.append(super.getText());
 
 			if (outText.length() > 2) {

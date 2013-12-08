@@ -34,6 +34,7 @@ import org.hip.kernel.exc.VException;
  * 
  * @author Benno Luthiger Created on Sep 4, 2005
  */
+@SuppressWarnings("serial")
 public class Text extends AbstractText implements IIndexable {
 
 	public final static String HOME_CLASS_NAME = "org.elbe.relations.data.bom.TextHome"; //$NON-NLS-1$
@@ -42,10 +43,10 @@ public class Text extends AbstractText implements IIndexable {
 	private final static String NL = System.getProperty("line.separator");
 	private final static String ABC = "abcdefghijklmnopqrstuvwxyz";
 	private final static String INDENT = "     ";
-	private final static String[] REPLACE_TO = { " ", "ü", "ö", "ä", "Ü", "Ö",
-			"Ä", "ù", "è", "é", "à", "á", "\\{", "}" };
+	private final static String[] REPLACE_TO = { " ", "ü", "ö", "ä", "Ü",
+	        "Ö", "Ä", "ù", "è", "é", "à", "á", "\\{", "}" };
 	private final static String[] REPLACE_WITH = { "_", "ue", "oe", "ae", "Ue",
-			"Oe", "Ae", "u", "e", "e", "a", "a", "", "" };
+	        "Oe", "Ae", "u", "e", "e", "a", "a", "", "" };
 	private final static String QUOTE_START = "\"`";
 	private final static String QUOTE_END = "\"'";
 	private final static String QUOTE_FIND = "\"";
@@ -80,11 +81,11 @@ public class Text extends AbstractText implements IIndexable {
 
 		final FullTextHelper lFullText = new FullTextHelper();
 		lDocument.addField(getFieldUniqueID(UniqueID.getStringOf(IItem.TEXT,
-				getID())));
+		        getID())));
 		lDocument.addField(getFieldItemType(String.valueOf(IItem.TEXT)));
 		lDocument.addField(getFieldItemID(get(TextHome.KEY_ID).toString()));
 		lDocument.addField(getFieldTitle(lFullText.add(get(TextHome.KEY_TITLE)
-				.toString())));
+		        .toString())));
 		addCreatedModified(lDocument);
 
 		lFullText.add(getChecked(TextHome.KEY_AUTHOR));
@@ -111,7 +112,7 @@ public class Text extends AbstractText implements IIndexable {
 	 * @throws GettingException
 	 */
 	public String getBibtexFormatted(final Collection<String> inUniqueLabels)
-			throws GettingException {
+	        throws GettingException {
 		// default TYPE_BOOK
 		String lTextType = "BOOK";
 		boolean lCheckCoAuthor = true;
@@ -156,10 +157,10 @@ public class Text extends AbstractText implements IIndexable {
 
 		final StringBuilder outText = new StringBuilder("@");
 		outText.append(lTextType).append("{")
-				.append(createLabel(lAuthor, lYear, inUniqueLabels))
-				.append(",").append(NL);
+		        .append(createLabel(lAuthor, lYear, inUniqueLabels))
+		        .append(",").append(NL);
 		outText.append(createAuthor(lAuthor, lCheckCoAuthor)).append(
-				createGeneral(lIsPublisher, lCheckSubTitle, lYear));
+		        createGeneral(lIsPublisher, lCheckSubTitle, lYear));
 		outText.append(lPart);
 		return wrapUpChecks(outText) + NL + "}";
 	}
@@ -175,13 +176,13 @@ public class Text extends AbstractText implements IIndexable {
 	private StringBuilder createArticle() {
 		final StringBuilder outArticle = new StringBuilder();
 		outArticle.append(addPartChecked(
-				checkValueNotNull(TextHome.KEY_VOLUME), "VOLUME"));
+		        checkValueNotNull(TextHome.KEY_VOLUME), "VOLUME"));
 		outArticle.append(addPartChecked(
-				checkValueNotNull(TextHome.KEY_NUMBER), "NUMBER"));
+		        checkValueNotNull(TextHome.KEY_NUMBER), "NUMBER"));
 		outArticle.append(addPartChecked(
-				checkValueNotEmpty(TextHome.KEY_PAGES), "PAGES"));
+		        checkValueNotEmpty(TextHome.KEY_PAGES), "PAGES"));
 		outArticle.append(addPartChecked(
-				checkValueNotEmpty(TextHome.KEY_PLACE), "ADDRESS"));
+		        checkValueNotEmpty(TextHome.KEY_PLACE), "ADDRESS"));
 		return outArticle;
 	}
 
@@ -189,11 +190,11 @@ public class Text extends AbstractText implements IIndexable {
 		final StringBuilder outContribution = new StringBuilder();
 		outContribution.append(createEditors());
 		outContribution.append(addPartChecked(
-				checkValueNotEmpty(TextHome.KEY_PUBLICATION), "BOOKTITLE"));
+		        checkValueNotEmpty(TextHome.KEY_PUBLICATION), "BOOKTITLE"));
 		outContribution.append(addPartChecked(
-				checkValueNotNull(TextHome.KEY_VOLUME), "VOLUME"));
+		        checkValueNotNull(TextHome.KEY_VOLUME), "VOLUME"));
 		outContribution.append(addPartChecked(
-				checkValueNotEmpty(TextHome.KEY_PLACE), "ADDRESS"));
+		        checkValueNotEmpty(TextHome.KEY_PLACE), "ADDRESS"));
 		return outContribution;
 	}
 
@@ -209,8 +210,8 @@ public class Text extends AbstractText implements IIndexable {
 		final String lRest = lValue.substring(lPosition + 1);
 		lFirst += lRest.replaceAll(",\\s*", " and ");
 		outPart.append(INDENT).append("EDITOR = {")
-				.append(lFirst.replaceAll(" und ", " and ")).append("},")
-				.append(NL);
+		        .append(lFirst.replaceAll(" und ", " and ")).append("},")
+		        .append(NL);
 		return outPart;
 	}
 
@@ -226,7 +227,7 @@ public class Text extends AbstractText implements IIndexable {
 			}
 			if (lAccessed.length() > 0) {
 				outWebpage.append("(").append("accessed").append(" ")
-						.append(lAccessed).append(")");
+				        .append(lAccessed).append(")");
 			}
 			outWebpage.append("},");
 		}
@@ -234,13 +235,13 @@ public class Text extends AbstractText implements IIndexable {
 	}
 
 	private StringBuilder addPartChecked(final String inValue,
-			final String inBibtex) {
+	        final String inBibtex) {
 		final StringBuilder outPart = new StringBuilder();
 		if (inValue.length() == 0) {
 			return outPart;
 		}
 		outPart.append(INDENT).append(inBibtex).append(" = {").append(inValue)
-				.append("},").append(NL);
+		        .append("},").append(NL);
 		return outPart;
 	}
 
@@ -281,11 +282,11 @@ public class Text extends AbstractText implements IIndexable {
 	}
 
 	private StringBuilder createGeneral(final boolean inIsPublisher,
-			final boolean inCheckSubTitle, final String inYear)
-			throws GettingException {
+	        final boolean inCheckSubTitle, final String inYear)
+	        throws GettingException {
 		final StringBuilder outText = new StringBuilder(INDENT);
 		outText.append("TITLE = {").append(
-				replaceQuotes(get(TextHome.KEY_TITLE).toString()));
+		        replaceQuotes(get(TextHome.KEY_TITLE).toString()));
 		if (inCheckSubTitle) {
 			final String lSubTitle = checkValueNotEmpty(TextHome.KEY_SUBTITLE);
 			if (lSubTitle.length() > 0) {
@@ -295,20 +296,20 @@ public class Text extends AbstractText implements IIndexable {
 		outText.append("},").append(NL);
 		if (inIsPublisher) {
 			outText.append(addPartChecked(
-					checkValueNotEmpty(TextHome.KEY_PUBLISHER), "PUBLISHER"));
+			        checkValueNotEmpty(TextHome.KEY_PUBLISHER), "PUBLISHER"));
 		} else {
 			outText.append(addPartChecked(
-					checkValueNotEmpty(TextHome.KEY_PUBLICATION), "JOURNAL"));
+			        checkValueNotEmpty(TextHome.KEY_PUBLICATION), "JOURNAL"));
 		}
 		outText.append(INDENT).append("YEAR = ").append(inYear).append(",")
-				.append(NL);
+		        .append(NL);
 
 		return outText;
 	}
 
 	private StringBuilder replaceQuotes(final String inText) {
 		final StringTokenizer lTokenizer = new StringTokenizer(inText,
-				QUOTE_FIND);
+		        QUOTE_FIND);
 
 		final StringBuilder outQuoted = new StringBuilder();
 		boolean lStart = true;
@@ -331,7 +332,7 @@ public class Text extends AbstractText implements IIndexable {
 	}
 
 	private String createAuthor(final String inAuthor,
-			final boolean inCheckCoAuthor) throws GettingException {
+	        final boolean inCheckCoAuthor) throws GettingException {
 		final int lPosition = inAuthor.indexOf(",");
 
 		String outAuthor = inAuthor.substring(0, lPosition + 1);
@@ -346,11 +347,11 @@ public class Text extends AbstractText implements IIndexable {
 		}
 
 		return INDENT + "AUTHOR = {" + outAuthor.replaceAll(" und ", " and ")
-				+ "}," + NL;
+		        + "}," + NL;
 	}
 
 	private String createLabel(final String inAuthor, final String inYear,
-			final Collection<String> inUniqueLabels) {
+	        final Collection<String> inUniqueLabels) {
 		final StringTokenizer lTokenizer = new StringTokenizer(inAuthor, ",");
 		String outLabel = lTokenizer.nextToken();
 		outLabel = replace(outLabel);
@@ -361,7 +362,7 @@ public class Text extends AbstractText implements IIndexable {
 	}
 
 	private String checkUnique(final Collection<String> inUniqueLabels,
-			final String inLabel, final String inSuffix, final int inPosition) {
+	        final String inLabel, final String inSuffix, final int inPosition) {
 		if (inUniqueLabels.contains(inLabel + inSuffix)) {
 			final String lSuffix = ABC.substring(inPosition, inPosition + 1);
 			return checkUnique(inUniqueLabels, inLabel, lSuffix, inPosition + 1);
@@ -376,7 +377,7 @@ public class Text extends AbstractText implements IIndexable {
 		String outProcessed = inToProcess;
 		for (int i = 0; i < REPLACE_TO.length; i++) {
 			outProcessed = outProcessed.replaceAll(REPLACE_TO[i],
-					REPLACE_WITH[i]);
+			        REPLACE_WITH[i]);
 		}
 		return outProcessed;
 	}
@@ -386,7 +387,7 @@ public class Text extends AbstractText implements IIndexable {
 		String outChecked = new String(inToCheck);
 		if (outChecked.endsWith(lEnding)) {
 			outChecked = outChecked.substring(0,
-					outChecked.length() - lEnding.length());
+			        outChecked.length() - lEnding.length());
 		}
 		return outChecked.replaceAll("&", "\\\\&");
 	}

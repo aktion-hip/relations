@@ -40,9 +40,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * 
  * @author Luthiger Created on 29.12.2009
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractMetadataFormat extends DefaultHandler implements
-		IUnAPIHandler {
+        IUnAPIHandler {
 
 	private IEclipseContext context;
 
@@ -72,17 +71,18 @@ public abstract class AbstractMetadataFormat extends DefaultHandler implements
 	 */
 	@Override
 	public NewTextAction createAction(final URL inUrl,
-			final IEclipseContext inContext)
-			throws ParserConfigurationException, SAXException, IOException {
+	        final IEclipseContext inContext)
+	        throws ParserConfigurationException, SAXException, IOException {
 		context = inContext;
 		InputStream lInput = null;
 		try {
 			lInput = inUrl.openStream();
 			final SAXParser lParser = SAXParserFactory.newInstance()
-					.newSAXParser();
+			        .newSAXParser();
 			lParser.parse(lInput, this);
 			return getAction();
-		} finally {
+		}
+		finally {
 			if (lInput != null) {
 				lInput.close();
 			}
@@ -141,7 +141,7 @@ public abstract class AbstractMetadataFormat extends DefaultHandler implements
 		}
 
 		void addCharacters(final char[] inCharacters, final int inStart,
-				final int inLength) {
+		        final int inLength) {
 			for (int i = inStart; i < inStart + inLength; i++) {
 				content.append(inCharacters[i]);
 			}
@@ -165,7 +165,7 @@ public abstract class AbstractMetadataFormat extends DefaultHandler implements
 
 	protected static interface IElementHelper {
 		ElementListener getListener(String inElementName,
-				Attributes inAttributes);
+		        Attributes inAttributes);
 	}
 
 	protected static class GenericElementHelper implements IElementHelper {
@@ -177,7 +177,7 @@ public abstract class AbstractMetadataFormat extends DefaultHandler implements
 
 		@Override
 		public ElementListener getListener(final String inElementName,
-				final Attributes inAttributes) {
+		        final Attributes inAttributes) {
 			return new ElementListener(inElementName, textNodeName);
 		};
 	}
@@ -185,9 +185,9 @@ public abstract class AbstractMetadataFormat extends DefaultHandler implements
 	protected static class GenericFlatElementHelper implements IElementHelper {
 		@Override
 		public ElementListener getListener(final String inElementName,
-				final Attributes inAttributes) {
+		        final Attributes inAttributes) {
 			final ElementListener outListener = new ElementListener(
-					inElementName, ""); //$NON-NLS-1$
+			        inElementName, ""); //$NON-NLS-1$
 			outListener.isFlat = true;
 			return outListener;
 		}

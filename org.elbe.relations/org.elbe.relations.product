@@ -31,8 +31,8 @@ see http://www.eclipse.org/
 
    <splash
       location="org.elbe.relations"
-      startupProgressRect="0,283,455,12"
-      startupMessageRect="10,265,380,15"
+      startupProgressRect="3,275,449,15"
+      startupMessageRect="5,250,449,23"
       startupForegroundColor="FFFFFF" />
    <launcher name="Relations">
       <solaris/>
@@ -41,6 +41,8 @@ see http://www.eclipse.org/
          <bmp/>
       </win>
    </launcher>
+
+   <intro introId="org.eclipse.ui.intro.universal"/>
 
    <vm>
    </vm>
@@ -344,8 +346,9 @@ POSSIBILITY OF SUCH DAMAGES.
       <feature id="org.eclipse.emf.ecore" version="2.9.1.v20130827-0309"/>
       <feature id="org.eclipse.emf.common" version="2.9.1.v20130827-0309"/>
       <feature id="org.eclipse.rcp" version="4.3.1.v20130911-1000"/>
-      <feature id="org.eclipse.nebula.widgets.gallery.feature" version="1.0.0.201310241250"/>
       <feature id="org.eclipse.e4.rcp" version="1.2.1.v20130910-2014"/>
+      <feature id="org.eclipse.nebula.widgets.gallery.feature" version="1.0.0.201311081230"/>
+      <feature id="org.eclipse.equinox.p2.core.feature" version="1.2.1.v20130827-1605"/>
    </features>
 
 

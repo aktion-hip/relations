@@ -28,6 +28,7 @@ import org.hip.kernel.exc.VException;
  * 
  * @author Benno Luthiger Created on Sep 3, 2004
  */
+@SuppressWarnings("serial")
 public class Relation extends DomainObjectImpl {
 
 	public final static String HOME_CLASS_NAME = "org.elbe.relations.data.bom.RelationHome"; //$NON-NLS-1$

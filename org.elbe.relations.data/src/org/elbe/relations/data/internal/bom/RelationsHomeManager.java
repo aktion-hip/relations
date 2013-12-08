@@ -46,7 +46,7 @@ public enum RelationsHomeManager implements HomeManager {
 	public Home getHome(final String inHomeName) {
 
 		// Pre: inHomeName not null
-		if (VSys.assertNotNull(this, "getHome", inHomeName) == Assert.FAILURE) {
+		if (VSys.assertNotNull(this, "getHome", inHomeName) == Assert.FAILURE) { //$NON-NLS-1$
 			return null;
 		}
 

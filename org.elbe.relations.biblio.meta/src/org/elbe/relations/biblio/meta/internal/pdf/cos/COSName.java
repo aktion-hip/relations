@@ -44,75 +44,75 @@ public final class COSName extends COSBase implements Comparable<COSName> {
 	/**
     * A common COSName value.
     */
-    public static final COSName TYPE = new COSName("Type");
+    public static final COSName TYPE = new COSName("Type"); //$NON-NLS-1$
     /**
     * A common COSName value.
     */
-    public static final COSName LENGTH = new COSName("Length");
+    public static final COSName LENGTH = new COSName("Length"); //$NON-NLS-1$
     /**
      * A common COSName value.
      */
-    public static final COSName FILTER = new COSName("Filter");
+    public static final COSName FILTER = new COSName("Filter"); //$NON-NLS-1$
     /**
      * A common COSName value.
      */
-    public static final COSName FLATE_DECODE = new COSName("FlateDecode");
+    public static final COSName FLATE_DECODE = new COSName("FlateDecode"); //$NON-NLS-1$
     /**
      * A common COSName value.
      */
-    public static final COSName FLATE_DECODE_ABBREVIATION = new COSName("Fl");
+    public static final COSName FLATE_DECODE_ABBREVIATION = new COSName("Fl"); //$NON-NLS-1$
     /**
      * A common COSName value.
      */
-    public static final COSName DCT_DECODE = new COSName("DCTDecode");
+    public static final COSName DCT_DECODE = new COSName("DCTDecode"); //$NON-NLS-1$
     /**
      * A common COSName value.
      */
-    public static final COSName DCT_DECODE_ABBREVIATION = new COSName("DCT");
+    public static final COSName DCT_DECODE_ABBREVIATION = new COSName("DCT"); //$NON-NLS-1$
     /**
      * A common COSName value.
      */
-    public static final COSName CCITTFAX_DECODE = new COSName("CCITTFaxDecode");
+    public static final COSName CCITTFAX_DECODE = new COSName("CCITTFaxDecode"); //$NON-NLS-1$
     /**
      * A common COSName value.
      */
-    public static final COSName CCITTFAX_DECODE_ABBREVIATION = new COSName("CCF");
+    public static final COSName CCITTFAX_DECODE_ABBREVIATION = new COSName("CCF"); //$NON-NLS-1$
     /**
      * A common COSName value.
      */
-    public static final COSName LZW_DECODE = new COSName("LZWDecode");
+    public static final COSName LZW_DECODE = new COSName("LZWDecode"); //$NON-NLS-1$
     /**
      * A common COSName value.
      */
-    public static final COSName LZW_DECODE_ABBREVIATION = new COSName("LZW");
+    public static final COSName LZW_DECODE_ABBREVIATION = new COSName("LZW"); //$NON-NLS-1$
     /**
      * A common COSName value.
      */
-    public static final COSName ASCII_HEX_DECODE = new COSName("ASCIIHexDecode");
+    public static final COSName ASCII_HEX_DECODE = new COSName("ASCIIHexDecode"); //$NON-NLS-1$
     /**
      * A common COSName value.
      */
-    public static final COSName ASCII_HEX_DECODE_ABBREVIATION = new COSName("AHx");
+    public static final COSName ASCII_HEX_DECODE_ABBREVIATION = new COSName("AHx"); //$NON-NLS-1$
     /**
      * A common COSName value.
      */
-    public static final COSName ASCII85_DECODE = new COSName("ASCII85Decode");
+    public static final COSName ASCII85_DECODE = new COSName("ASCII85Decode"); //$NON-NLS-1$
     /**
      * A common COSName value.
      */
-    public static final COSName ASCII85_DECODE_ABBREVIATION = new COSName("A85");
+    public static final COSName ASCII85_DECODE_ABBREVIATION = new COSName("A85"); //$NON-NLS-1$
     /**
      * A common COSName value.
      */
-    public static final COSName RUN_LENGTH_DECODE = new COSName("RunLengthDecode");
+    public static final COSName RUN_LENGTH_DECODE = new COSName("RunLengthDecode"); //$NON-NLS-1$
     /**
      * A common COSName value.
      */
-    public static final COSName RUN_LENGTH_DECODE_ABBREVIATION = new COSName("RL");
+    public static final COSName RUN_LENGTH_DECODE_ABBREVIATION = new COSName("RL"); //$NON-NLS-1$
     /**
      * A common COSName value.
      */
-    public static final COSName INFO = new COSName("Info");
+    public static final COSName INFO = new COSName("Info"); //$NON-NLS-1$
 
     /**
      * The prefix to a PDF name.
@@ -199,7 +199,7 @@ public final class COSName extends COSBase implements Comparable<COSName> {
 
 	@Override
 	public String toString() {
-		return "COSName{" + name + "}";
+		return "COSName{" + name + "}"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	@Override

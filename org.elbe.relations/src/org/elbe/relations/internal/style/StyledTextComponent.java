@@ -28,9 +28,9 @@ import javax.inject.Inject;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.core.di.extensions.EventTopic;
 import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.Bullet;
 import org.eclipse.swt.custom.ExtendedModifyEvent;
@@ -76,9 +76,9 @@ public class StyledTextComponent {
 	private int fontSizeToUse = 0;
 
 	private final static Color white = Display.getCurrent().getSystemColor(
-			SWT.COLOR_WHITE);
+	        SWT.COLOR_WHITE);
 	private final static Color gray = Display.getCurrent().getSystemColor(
-			SWT.COLOR_WIDGET_BACKGROUND);
+	        SWT.COLOR_WIDGET_BACKGROUND);
 	private boolean disposed;
 
 	@Inject
@@ -100,16 +100,16 @@ public class StyledTextComponent {
 	 * @return {@link StyledTextComponent}
 	 */
 	public static StyledTextComponent createStyledText(
-			final Composite inContainer, final IEclipseContext inContext) {
+	        final Composite inContainer, final IEclipseContext inContext) {
 		final StyledTextComponent out = ContextInjectionFactory.make(
-				StyledTextComponent.class, inContext);
+		        StyledTextComponent.class, inContext);
 		out.initialize(inContainer);
 		return out;
 	}
 
 	private void initialize(final Composite inContainer) {
 		textWidget = new StyledText(inContainer, SWT.BORDER | SWT.MULTI
-				| SWT.WRAP | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
+		        | SWT.WRAP | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.H_SCROLL);
 
 		content = new TextContent();
 		textWidget.setContent(content);
@@ -121,20 +121,20 @@ public class StyledTextComponent {
 				if (textWidget.getCharCount() == 0)
 					return;
 				final StyleRange lRange = textWidget.getStyleRangeAtOffset(Math
-						.max(inEvent.start - 1, 0));
+				        .max(inEvent.start - 1, 0));
 				if (lRange != null) {
 					final StyleRange lNew = new StyleRange(lRange.start,
-							lRange.length + inEvent.length, lRange.foreground,
-							lRange.background, lRange.fontStyle);
+					        lRange.length + inEvent.length, lRange.foreground,
+					        lRange.background, lRange.fontStyle);
 					textWidget.replaceStyleRanges(lNew.start, lNew.length,
-							new StyleRange[] { lNew });
+					        new StyleRange[] { lNew });
 				}
 				final int lEndPos = inEvent.start + inEvent.length;
 				if (lEndPos
-						- textWidget.getOffsetAtLine(textWidget
-								.getLineAtOffset(lEndPos)) == 0) {
+				        - textWidget.getOffsetAtLine(textWidget
+				                .getLineAtOffset(lEndPos)) == 0) {
 					final int lLineIndex = textWidget
-							.getLineAtOffset(inEvent.start);
+					        .getLineAtOffset(inEvent.start);
 					if (lLineIndex + 2 > textWidget.getLineCount())
 						return;
 					// a new line has been entered, therefore, check whether we
@@ -145,7 +145,7 @@ public class StyledTextComponent {
 			}
 		});
 		textWidget.addPaintObjectListener(Styles
-				.getPaintObjectListener(textWidget));
+		        .getPaintObjectListener(textWidget));
 		textWidget.addVerifyKeyListener(new VerifyKeyListener() {
 			@Override
 			public void verifyKey(final VerifyEvent inEvent) {
@@ -157,7 +157,7 @@ public class StyledTextComponent {
 						if ((inEvent.stateMask & SWT.SHIFT) != 0) {
 							lStyler.dedentLines();
 							provider.notifyPositionChange(lWidget
-									.getCaretOffset());
+							        .getCaretOffset());
 						} else {
 							lStyler.indentLines();
 						}
@@ -188,7 +188,7 @@ public class StyledTextComponent {
 			}
 		});
 		provider = ContextInjectionFactory.make(TextStyleProvider.class,
-				context);
+		        context);
 		provider.setWidget(textWidget);
 
 		// font handling
@@ -211,7 +211,7 @@ public class StyledTextComponent {
 		final int lPosition = inWidget.getCaretOffset();
 		final int lLine = inWidget.getLineAtOffset(lPosition);
 		if (inWidget.getLineBullet(lLine) != null
-				&& lPosition == inWidget.getOffsetAtLine(lLine)) {
+		        && lPosition == inWidget.getOffsetAtLine(lLine)) {
 			return true;
 		}
 		return false;
@@ -300,7 +300,7 @@ public class StyledTextComponent {
 	 * @throws SAXException
 	 */
 	public void setTaggedText(final String inTextTagged) throws IOException,
-			SAXException {
+	        SAXException {
 		StyleParser.getInstance().parseTagged(inTextTagged, textWidget);
 	}
 
@@ -391,7 +391,7 @@ public class StyledTextComponent {
 
 	@Inject
 	void trackFontSize(
-			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_TEXT_FONT_SIZE) final int inFontSize) {
+	        @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_TEXT_FONT_SIZE) final int inFontSize) {
 		if (textWidget == null || textWidget.isDisposed()) {
 			fontSizeToUse = inFontSize;
 		} else {
@@ -476,7 +476,7 @@ public class StyledTextComponent {
 		@Inject
 		@Optional
 		public void setStyle(
-				@EventTopic(RelationsConstants.TOPIC_STYLE_CHANGE_FORM) final Styles.StyleEvent inEvent) {
+		        @UIEventTopic(RelationsConstants.TOPIC_STYLE_CHANGE_FORM) final Styles.StyleEvent inEvent) {
 			if (textWidget == null) {
 				return;
 			}
@@ -486,7 +486,7 @@ public class StyledTextComponent {
 					lStyler.format(inEvent.style, inEvent.isFormatNew);
 					final int lOffset = textWidget.getCaretOffset();
 					notifyPositionChange(Math.max(lOffset,
-							lOffset - textWidget.getSelectionCount()));
+					        lOffset - textWidget.getSelectionCount()));
 				}
 			}
 		}
@@ -494,9 +494,9 @@ public class StyledTextComponent {
 		void fireStyleChange(final StyleSnapshot inStyleSnapshot) {
 			if (inStyleSnapshot != null) {
 				eventBroker
-						.post(isFormStyle ? RelationsConstants.TOPIC_STYLE_CHANGED_FORM
-								: RelationsConstants.TOPIC_STYLE_CHANGED_INSPECTOR,
-								inStyleSnapshot.createStyleParameter());
+				        .post(isFormStyle ? RelationsConstants.TOPIC_STYLE_CHANGED_FORM
+				                : RelationsConstants.TOPIC_STYLE_CHANGED_INSPECTOR,
+				                inStyleSnapshot.createStyleParameter());
 			}
 		}
 
@@ -537,7 +537,7 @@ public class StyledTextComponent {
 
 		public boolean similarTo(final StyleSnapshot inSnapshot) {
 			if (similarRange(inSnapshot.styleRange)
-					&& similarBullet(inSnapshot.bullet))
+			        && similarBullet(inSnapshot.bullet))
 				return true;
 			return false;
 		}
@@ -598,7 +598,7 @@ public class StyledTextComponent {
 				final Bullet lBullet = inWidget.getLineBullet(i);
 				if (lBullet != null) {
 					bullets.add(new LineBulletState(i, lBullet.type,
-							lBullet.style.metrics.width));
+					        lBullet.style.metrics.width));
 				}
 			}
 		}
@@ -626,7 +626,7 @@ public class StyledTextComponent {
 				Bullet lBullet = lUsed.get(lBulletState.getKey());
 				if (lBullet == null) {
 					lBullet = Styles.getBullet(lBulletState.type,
-							lBulletState.width);
+					        lBulletState.width);
 					lUsed.put(lBulletState.getKey(), lBullet);
 				}
 				inWidget.setLineBullet(lBulletState.index, 1, lBullet);
@@ -640,7 +640,7 @@ public class StyledTextComponent {
 		private final int width;
 
 		public LineBulletState(final int inIndex, final int inBulletType,
-				final int inWidth) {
+		        final int inWidth) {
 			index = inIndex;
 			type = inBulletType;
 			width = inWidth;

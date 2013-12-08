@@ -72,7 +72,7 @@ public class COSObjectKey {
 
 	@Override
 	public String toString() {
-		return "" + getNumber() + " " + getGeneration() + " R";
+		return "" + getNumber() + " " + getGeneration() + " R"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	@Override

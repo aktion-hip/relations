@@ -30,6 +30,7 @@ import org.hip.kernel.exc.VException;
  * 
  * @author Benno Luthiger Created on Sep 3, 2005
  */
+@SuppressWarnings("serial")
 public class Term extends AbstractTerm implements IIndexable {
 
 	public final static String HOME_CLASS_NAME = "org.elbe.relations.data.bom.TermHome"; //$NON-NLS-1$
@@ -58,11 +59,11 @@ public class Term extends AbstractTerm implements IIndexable {
 
 		final FullTextHelper lFullText = new FullTextHelper();
 		lDocument.addField(getFieldUniqueID(UniqueID.getStringOf(IItem.TERM,
-				getID())));
+		        getID())));
 		lDocument.addField(getFieldItemType(String.valueOf(IItem.TERM)));
 		lDocument.addField(getFieldItemID(get(TermHome.KEY_ID).toString()));
 		lDocument.addField(getFieldTitle(lFullText.add(get(TermHome.KEY_TITLE)
-				.toString())));
+		        .toString())));
 		addCreatedModified(lDocument);
 		lFullText.add(getChecked(TermHome.KEY_TEXT));
 		lDocument.addField(getFieldText(lFullText.getFullText()));

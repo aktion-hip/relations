@@ -73,7 +73,7 @@ public class BrowserController {
 		private BrowserInfo(final IBrowserController inBrowser) {
 			browserClass = inBrowser.getBrowserClass();
 			final Bundle lBundle = FrameworkUtil.getBundle(browserClass);
-			name = lBundle.getHeaders().get("Bundle-Name");
+			name = lBundle.getHeaders().get("Bundle-Name"); //$NON-NLS-1$
 			name = name == null ? lBundle.getSymbolicName() : name;
 
 		}

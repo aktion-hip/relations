@@ -41,7 +41,7 @@ public class SelectedItemChangeEvent {
 	 *            {@link IRelationsBrowser} the source of the change event
 	 */
 	public SelectedItemChangeEvent(final ItemAdapter inItem,
-			final IRelationsBrowser inSource) {
+	        final IRelationsBrowser inSource) {
 		item = inItem;
 		source = inSource;
 	}
@@ -62,6 +62,6 @@ public class SelectedItemChangeEvent {
 	 *         of the event
 	 */
 	public boolean checkSource(final IRelationsBrowser inBrowser) {
-		return source.equals(inBrowser);
+		return source == null ? false : source.equals(inBrowser);
 	}
 }

@@ -35,7 +35,7 @@ public class PrinterComponent implements IPrintService {
 	 */
 	@Override
 	public String getName() {
-		return "Simple text file";
+		return "Simple text file"; //$NON-NLS-1$
 	}
 
 	/*
@@ -45,7 +45,7 @@ public class PrinterComponent implements IPrintService {
 	 */
 	@Override
 	public String getFileType() {
-		return "*.txt";
+		return "*.txt"; //$NON-NLS-1$
 	}
 
 	/*
@@ -55,7 +55,7 @@ public class PrinterComponent implements IPrintService {
 	 */
 	@Override
 	public String getFileTypeName() {
-		return "Text file (.txt)";
+		return "Text file (.txt)"; //$NON-NLS-1$
 	}
 
 	/*

@@ -145,13 +145,13 @@ public class FormDBConnection extends AbstractDBSettingsForm {
 			NamingException {
 		final IEclipsePreferences outStore = getPreferences();
 		hostField.getText().setText(
-				outStore.get(RelationsConstants.KEY_DB_HOST, ""));
+				outStore.get(RelationsConstants.KEY_DB_HOST, "")); //$NON-NLS-1$
 		catalogField.getText().setText(
-				outStore.get(RelationsConstants.KEY_DB_CATALOG, ""));
+				outStore.get(RelationsConstants.KEY_DB_CATALOG, "")); //$NON-NLS-1$
 		usernameField.getText().setText(
-				outStore.get(RelationsConstants.KEY_DB_USER_NAME, ""));
+				outStore.get(RelationsConstants.KEY_DB_USER_NAME, "")); //$NON-NLS-1$
 		passwrdField.getText().setText(
-				outStore.get(RelationsConstants.KEY_DB_PASSWORD, ""));
+				outStore.get(RelationsConstants.KEY_DB_PASSWORD, "")); //$NON-NLS-1$
 		dbLanguageCombo.select(getLanguageIndex(outStore.get(
 				RelationsConstants.KEY_LANGUAGE_CONTENT,
 				RelationsConstants.DFT_LANGUAGE), languages));
@@ -217,7 +217,7 @@ public class FormDBConnection extends AbstractDBSettingsForm {
 					final String lCatalogName = dbCatalogEmbeddedCombo
 							.getItem(dbCatalogEmbeddedCombo.getSelectionIndex());
 					final IDBSettings lTempSettings = new TempSettings(
-							lSelectedDB.getName(), "", lCatalogName, "", "",
+							lSelectedDB.getName(), "", lCatalogName, "", "", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 							getDBController());
 					lChangeDB.setTemporarySettings(lTempSettings);
 				} else {

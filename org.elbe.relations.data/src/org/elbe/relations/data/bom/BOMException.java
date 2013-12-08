@@ -23,6 +23,7 @@ package org.elbe.relations.data.bom;
  * 
  * @author Benno Luthiger Created on Oct 16, 2004
  */
+@SuppressWarnings("serial")
 public class BOMException extends Exception {
 
 	/**

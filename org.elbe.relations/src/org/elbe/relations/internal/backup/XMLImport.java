@@ -206,7 +206,7 @@ public class XMLImport {
 		private void notifyMonitor(final String inEntryType)
 				throws SAXException {
 			monitor = SubMonitor.convert(mainMonitor, String.format(
-					RelationsMessages.getString("XMLImport.msg.success"),
+					RelationsMessages.getString("XMLImport.msg.success"), //$NON-NLS-1$
 					inEntryType), 1000);
 			if (monitor.isCanceled()) {
 				throw new SAXException(OPERATION_CANCELED_ID);
@@ -421,7 +421,7 @@ public class XMLImport {
 			if ("String".equals(lType)) { //$NON-NLS-1$ 
 				field = new StringField(inName);
 			}
-			if ("Number".equals(lType) || "Long".equals(lType)) { //$NON-NLS-1$ 
+			if ("Number".equals(lType) || "Long".equals(lType)) { //$NON-NLS-1$ //$NON-NLS-2$ 
 				if (inCanSetIdentityField) {
 					field = new NumberField(inName);
 				} else {

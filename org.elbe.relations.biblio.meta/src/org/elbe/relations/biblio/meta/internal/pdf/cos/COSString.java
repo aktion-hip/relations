@@ -54,14 +54,14 @@ public class COSString extends COSBase {
                 }
             }
             if (lUnicode16) {
-                byte[] lData = inValue.getBytes("UTF-16BE");
+                byte[] lData = inValue.getBytes("UTF-16BE"); //$NON-NLS-1$
                 out = new ByteArrayOutputStream(lData.length +2);
                 out.write(0xFE);
                 out.write(0xFF);
                 out.write(lData);
             }
             else {
-                byte[] lData = inValue.getBytes("ISO-8859-1");
+                byte[] lData = inValue.getBytes("ISO-8859-1"); //$NON-NLS-1$
                 out = new ByteArrayOutputStream( lData.length );
                 out.write( lData );
             }
@@ -115,16 +115,16 @@ public class COSString extends COSBase {
             return this.str;
         }
         String outValue;
-        String lEncoding = "ISO-8859-1";
+        String lEncoding = "ISO-8859-1"; //$NON-NLS-1$
         byte[] lData = getBytes();
         int lStart = 0;
         if (lData.length > 2) {
             if( lData[0] == (byte)0xFF && lData[1] == (byte)0xFE ) {
-                lEncoding = "UTF-16LE";
+                lEncoding = "UTF-16LE"; //$NON-NLS-1$
                 lStart=2;
             }
             else if( lData[0] == (byte)0xFE && lData[1] == (byte)0xFF ) {
-                lEncoding = "UTF-16BE";
+                lEncoding = "UTF-16BE"; //$NON-NLS-1$
                 lStart=2;
             }
         }
@@ -152,15 +152,15 @@ public class COSString extends COSBase {
         StringBuilder lHexBuffer = new StringBuilder(inHex.trim());
         //if odd number then the last hex digit is assumed to be 0
         if (lHexBuffer.length() % 2 == 1 ) {
-            lHexBuffer.append( "0" );
+            lHexBuffer.append( "0" ); //$NON-NLS-1$
         }
         for (int i=0; i<lHexBuffer.length();) {
-            String lHexChars = "" + lHexBuffer.charAt(i++) + lHexBuffer.charAt( i++ );
+            String lHexChars = "" + lHexBuffer.charAt(i++) + lHexBuffer.charAt( i++ ); //$NON-NLS-1$
             try {
                 outValue.append( Integer.parseInt( lHexChars, 16 ) );
             }
             catch (NumberFormatException exc) {
-                throw new IOException( "Error: Expected hex number, actual='" + lHexChars + "'" );
+                throw new IOException( "Error: Expected hex number, actual='" + lHexChars + "'" ); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         return outValue;
@@ -168,7 +168,7 @@ public class COSString extends COSBase {
 
     @Override
     public String toString() {
-    	return "COSString{" + this.getString() + "}";
+    	return "COSString{" + this.getString() + "}"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     @Override

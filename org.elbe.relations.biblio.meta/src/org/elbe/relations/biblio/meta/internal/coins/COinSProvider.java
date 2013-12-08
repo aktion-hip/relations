@@ -33,29 +33,20 @@ import org.htmlcleaner.XPatherException;
  * 
  * @author Luthiger Created on 20.11.2009
  */
-@SuppressWarnings("restriction")
 public class COinSProvider implements IBibliographyProvider {
 	public static final String XPATH_COINS = "//span[@class='Z3988']"; //$NON-NLS-1$
 	private static final String ATTRIBUTE_NAME = "title"; //$NON-NLS-1$
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.services.IBibliographyProvider#evaluate(org.elbe.relations
-	 * .parsing.XPathHelper,
-	 * org.elbe.relations.parsing.WebPageParser.WebDropResult)
-	 */
 	@Override
 	public void evaluate(final XPathHelper inXPathHelper,
-			final WebDropResult inWebDrop, final IEclipseContext inContext)
-			throws ParserException {
+	        final WebDropResult inWebDrop, final IEclipseContext inContext)
+	        throws ParserException {
 		try {
 			final String lBibliographyValue = inXPathHelper.getAttribute(
-					XPATH_COINS, ATTRIBUTE_NAME);
+			        XPATH_COINS, ATTRIBUTE_NAME);
 			if (lBibliographyValue != null) {
 				final COinSHelper lHelper = new COinSHelper(lBibliographyValue,
-						inContext);
+				        inContext);
 				inWebDrop.setNewBiblioAction(lHelper.getAction());
 			}
 		}

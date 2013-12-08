@@ -25,6 +25,13 @@ import javax.inject.Inject;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.services.log.Logger;
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.MElementContainer;
+import org.eclipse.e4.ui.model.application.ui.MUIElement;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.data.bom.BOMException;
 import org.elbe.relations.internal.bom.BOMHelper;
 import org.elbe.relations.models.CentralAssociationsModel;
@@ -49,13 +56,28 @@ public class ItemBrowseHandler extends AbstractSelectionHandler {
 	@Inject
 	private Logger log;
 
+	@SuppressWarnings("unchecked")
 	@Execute
-	void setSelectionItemToBrowser(final IEclipseContext inContext) {
+	void setSelectionItemToBrowser(final IEclipseContext inContext,
+	        final EModelService inModelService,
+	        final EPartService inPartService, final MApplication inApplication) {
 		try {
+			if (getSelectionItem() == null) {
+				return;
+			}
+
 			final IItemModel lItem = BOMHelper.getItem(getSelectionItem(),
-					inContext);
+			        inContext);
 			browserManager.setModel(CentralAssociationsModel
-					.createCentralAssociationsModel(lItem, context));
+			        .createCentralAssociationsModel(lItem, context));
+
+			// move focus to browser
+			final MElementContainer<MUIElement> lBrowserStack = (MElementContainer<MUIElement>) inModelService
+			        .find(RelationsConstants.PART_STACK_BROWSERS, inApplication);
+			final MUIElement lBrowser = lBrowserStack.getSelectedElement();
+			if (lBrowser != null) {
+				inPartService.activate((MPart) lBrowser, true);
+			}
 		}
 		catch (final BOMException exc) {
 			log.error(exc, exc.getMessage());

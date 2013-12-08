@@ -90,32 +90,32 @@ public class ExtractedData {
 		lFirst = addPart(
 				outText,
 				author,
-				RelationsMessages.getString("ExtractedData.lbl.author") + ": ", lFirst); //$NON-NLS-1$
+				RelationsMessages.getString("ExtractedData.lbl.author") + ": ", lFirst); //$NON-NLS-1$ //$NON-NLS-2$
 		lFirst = addPart(
 				outText,
 				publisher,
-				RelationsMessages.getString("ExtractedData.lbl.publisher") + ": ", lFirst); //$NON-NLS-1$
+				RelationsMessages.getString("ExtractedData.lbl.publisher") + ": ", lFirst); //$NON-NLS-1$ //$NON-NLS-2$
 		lFirst = addPart(
 				outText,
 				contributor,
-				RelationsMessages.getString("ExtractedData.lbl.contributor") + ": ", lFirst); //$NON-NLS-1$
+				RelationsMessages.getString("ExtractedData.lbl.contributor") + ": ", lFirst); //$NON-NLS-1$ //$NON-NLS-2$
 		lFirst = addPart(outText, filePath, resourceType + ": ", lFirst); //$NON-NLS-1$
 		lFirst = addPart(
 				outText,
 				fileSize,
-				RelationsMessages.getString("ExtractedData.lbl.size") + ": ", lFirst); //$NON-NLS-1$
+				RelationsMessages.getString("ExtractedData.lbl.size") + ": ", lFirst); //$NON-NLS-1$ //$NON-NLS-2$
 		lFirst = addPart(
 				outText,
 				fileType,
-				RelationsMessages.getString("ExtractedData.lbl.type") + ": ", lFirst); //$NON-NLS-1$
+				RelationsMessages.getString("ExtractedData.lbl.type") + ": ", lFirst); //$NON-NLS-1$ //$NON-NLS-2$
 		lFirst = addPart(
 				outText,
 				dateCrated,
-				RelationsMessages.getString("ExtractedData.lbl.created") + ": ", lFirst); //$NON-NLS-1$
+				RelationsMessages.getString("ExtractedData.lbl.created") + ": ", lFirst); //$NON-NLS-1$ //$NON-NLS-2$
 		lFirst = addPart(
 				outText,
 				dateModified,
-				RelationsMessages.getString("ExtractedData.lbl.modified") + ": ", lFirst); //$NON-NLS-1$
+				RelationsMessages.getString("ExtractedData.lbl.modified") + ": ", lFirst); //$NON-NLS-1$ //$NON-NLS-2$
 		return outText;
 	}
 

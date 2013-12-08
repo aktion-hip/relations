@@ -31,6 +31,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.log.Logger;
 import org.elbe.relations.Activator;
 import org.elbe.relations.RelationsConstants;
+import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.data.search.RelationsIndexer;
 import org.elbe.relations.internal.data.IDBSettings;
 import org.elbe.relations.internal.search.RelationsIndexerWithLanguage;
@@ -50,12 +51,12 @@ public class EmbeddedCatalogHelper {
 			Status.ERROR,
 			Activator.getSymbolicName(),
 			1,
-			"RelationsMessages.getString(\"EmbeddedCatalogHelper.error.exists\")", null); //$NON-NLS-1$
+			RelationsMessages.getString("EmbeddedCatalogHelper.error.exists"), null); //$NON-NLS-1$
 	private final static IStatus ERROR_CHAR = new Status(
 			Status.ERROR,
 			Activator.getSymbolicName(),
 			1,
-			"RelationsMessages.getString(\"EmbeddedCatalogHelper.error.chars\")", null); //$NON-NLS-1$
+			RelationsMessages.getString("EmbeddedCatalogHelper.error.chars"), null); //$NON-NLS-1$
 	private final static Pattern ALLOWED_CHAR = Pattern.compile("\\w*"); //$NON-NLS-1$
 
 	private final String[] catalogs;

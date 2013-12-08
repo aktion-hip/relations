@@ -28,32 +28,16 @@ import org.elbe.relations.services.IBibliographyService;
  */
 public class BibliographyServiceEn implements IBibliographyService {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IBibliographyService#getId()
-	 */
 	@Override
 	public String getId() {
-		return "relations.bibliography.standard.en";
+		return "relations.bibliography.standard.en"; //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.services.IBibliographyService#getBibliographyName()
-	 */
 	@Override
 	public String getBibliographyName() {
-		return "Standard (en)";
+		return "Standard (en)"; //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IBibliographyService#getBiblioService()
-	 */
 	@Override
 	public IBibliography getBiblioService() {
 		return new StandardEn();

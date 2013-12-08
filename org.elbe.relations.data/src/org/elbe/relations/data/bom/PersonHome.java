@@ -31,8 +31,9 @@ import org.hip.kernel.exc.VException;
  * 
  * @author Benno Luthiger Created on Sep 3, 2005
  */
+@SuppressWarnings("serial")
 public class PersonHome extends AbstractHome implements IItemFactory,
-		ICreatableHome {
+        ICreatableHome {
 
 	private final static String OBJECT_CLASS_NAME = "org.elbe.relations.data.bom.Person";
 	public final static String KEY_ID = "ID";
@@ -45,55 +46,55 @@ public class PersonHome extends AbstractHome implements IItemFactory,
 	public final static String KEY_MODIFIED = "Modified";
 
 	private final static String XML_OBJECT_DEF = "<?xml version='1.0' encoding='ISO-8859-1'?>	"
-			+ "<objectDef objectName='Person' parent='org.hip.kernel.bom.DomainObject' version='1.0'>	"
-			+ "	<keyDefs>	"
-			+ "		<keyDef>	"
-			+ "			<keyItemDef seq='0' keyPropertyName='"
-			+ KEY_ID
-			+ "'/>	"
-			+ "		</keyDef>	"
-			+ "	</keyDefs>	"
-			+ "	<propertyDefs>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_ID
-			+ "' valueType='Long' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblPerson' columnName='PERSONID'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_NAME
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblPerson' columnName='SNAME'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_FIRSTNAME
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblPerson' columnName='SFIRSTNAME'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_TEXT
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblPerson' columnName='STEXT'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_FROM
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblPerson' columnName='SFROM'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_TO
-			+ "' valueType='String' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblPerson' columnName='STO'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_CREATED
-			+ "' valueType='Timestamp' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblPerson' columnName='DTCREATION'/>	"
-			+ "		</propertyDef>	"
-			+ "		<propertyDef propertyName='"
-			+ KEY_MODIFIED
-			+ "' valueType='Timestamp' propertyType='simple'>	"
-			+ "			<mappingDef tableName='tblPerson' columnName='DTMUTATION'/>	"
-			+ "		</propertyDef>	" + "	</propertyDefs>	" + "</objectDef>";
+	        + "<objectDef objectName='Person' parent='org.hip.kernel.bom.DomainObject' version='1.0'>	"
+	        + "	<keyDefs>	"
+	        + "		<keyDef>	"
+	        + "			<keyItemDef seq='0' keyPropertyName='"
+	        + KEY_ID
+	        + "'/>	"
+	        + "		</keyDef>	"
+	        + "	</keyDefs>	"
+	        + "	<propertyDefs>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_ID
+	        + "' valueType='Long' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblPerson' columnName='PERSONID'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_NAME
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblPerson' columnName='SNAME'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_FIRSTNAME
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblPerson' columnName='SFIRSTNAME'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_TEXT
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblPerson' columnName='STEXT'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_FROM
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblPerson' columnName='SFROM'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_TO
+	        + "' valueType='String' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblPerson' columnName='STO'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_CREATED
+	        + "' valueType='Timestamp' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblPerson' columnName='DTCREATION'/>	"
+	        + "		</propertyDef>	"
+	        + "		<propertyDef propertyName='"
+	        + KEY_MODIFIED
+	        + "' valueType='Timestamp' propertyType='simple'>	"
+	        + "			<mappingDef tableName='tblPerson' columnName='DTMUTATION'/>	"
+	        + "		</propertyDef>	" + "	</propertyDefs>	" + "</objectDef>";
 
 	/**
 	 * PersonHome constructor.
@@ -139,8 +140,8 @@ public class PersonHome extends AbstractHome implements IItemFactory,
 	 * @throws BOMException
 	 */
 	public AbstractPerson newPerson(final String inName,
-			final String inFirstname, final String inFrom, final String inTo,
-			final String inText) throws BOMException {
+	        final String inFirstname, final String inFrom, final String inTo,
+	        final String inText) throws BOMException {
 		try {
 			final Timestamp lCreated = new Timestamp(System.currentTimeMillis());
 			final Person outPerson = (Person) create();
@@ -215,13 +216,13 @@ public class PersonHome extends AbstractHome implements IItemFactory,
 	@Override
 	public String[] getSQLCreate() {
 		final String lSQL1 = "CREATE TABLE tblPerson (\n"
-				+ "  PersonID	BIGINT generated always as identity,\n"
-				+ "  sName		VARCHAR(99) not null,\n"
-				+ "  sFirstname	VARCHAR(50),\n" + "  sText		CLOB,\n"
-				+ "  sFrom		VARCHAR(30),\n" + "  sTo		VARCHAR(30),\n"
-				+ "  dtCreation	TIMESTAMP not null,\n"
-				+ "  dtMutation	TIMESTAMP not null,\n"
-				+ "  PRIMARY KEY (PersonID)\n" + ")";
+		        + "  PersonID	BIGINT generated always as identity,\n"
+		        + "  sName		VARCHAR(99) not null,\n"
+		        + "  sFirstname	VARCHAR(50),\n" + "  sText		CLOB,\n"
+		        + "  sFrom		VARCHAR(30),\n" + "  sTo		VARCHAR(30),\n"
+		        + "  dtCreation	TIMESTAMP not null,\n"
+		        + "  dtMutation	TIMESTAMP not null,\n"
+		        + "  PRIMARY KEY (PersonID)\n" + ")";
 		final String lSQL2 = "CREATE INDEX idxPerson_01 ON tblPerson(sName, sFirstname)";
 		final String lSQL3 = "CREATE INDEX idxPerson_02 ON tblPerson(sFrom, sTo)";
 		return new String[] { lSQL1, lSQL2, lSQL3 };

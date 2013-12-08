@@ -42,8 +42,8 @@ public class ItemCenterHandler {
 
 	@Execute
 	public void execute(final IEclipseContext inContext,
-			final IBrowserManager inBrowserManager,
-			final IEventBroker inEventBroker, final Logger inLog) {
+	        final IBrowserManager inBrowserManager,
+	        final IEventBroker inEventBroker, final Logger inLog) {
 		final ItemAdapter lSelected = inBrowserManager.getSelectedModel();
 		if (lSelected == null) {
 			return;
@@ -51,10 +51,10 @@ public class ItemCenterHandler {
 
 		try {
 			final CentralAssociationsModel lToCenter = CentralAssociationsModel
-					.createCentralAssociationsModel(lSelected, inContext);
+			        .createCentralAssociationsModel(lSelected, inContext);
 			inEventBroker
-					.post(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SEND_CENTER_MODEL,
-							lToCenter);
+			        .post(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SEND_CENTER_MODEL,
+			                lToCenter);
 			inBrowserManager.setModel(lToCenter);
 		}
 		catch (final VException exc) {

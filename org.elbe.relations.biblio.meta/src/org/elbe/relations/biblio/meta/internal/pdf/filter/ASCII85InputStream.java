@@ -139,7 +139,7 @@ public class ASCII85InputStream extends FilterInputStream
                         eof = true;
                         ascii = null;
                         b = null;
-                        throw new IOException("Invalid data in Ascii85 stream");
+                        throw new IOException("Invalid data in Ascii85 stream"); //$NON-NLS-1$
                     }
                     t = (t * 85L) + z;
                 }
@@ -250,6 +250,6 @@ public class ASCII85InputStream extends FilterInputStream
      */
     public void reset() throws IOException
     {
-        throw new IOException("Reset is not supported");
+        throw new IOException("Reset is not supported"); //$NON-NLS-1$
     }
 }

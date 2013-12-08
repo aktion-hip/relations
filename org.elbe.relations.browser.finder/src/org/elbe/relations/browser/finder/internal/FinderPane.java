@@ -20,14 +20,9 @@ package org.elbe.relations.browser.finder.internal;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.core.services.events.IEventBroker;
-import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.swt.modeling.EMenuService;
 import org.eclipse.nebula.widgets.gallery.AbstractGalleryGroupRenderer;
@@ -73,13 +68,13 @@ public class FinderPane {
 	private static final int ITEM_HEIGHT_MIN = 7; // 5
 	private static final Display DISPLAY = Display.getCurrent();
 	private static final Color COLOR_BACK_FOCUS_ON = DISPLAY
-			.getSystemColor(SWT.COLOR_BLUE);
+	        .getSystemColor(SWT.COLOR_BLUE);
 	private static final Color COLOR_BACK_FOCUS_OFF = DISPLAY
-			.getSystemColor(SWT.COLOR_GRAY);
+	        .getSystemColor(SWT.COLOR_GRAY);
 	private static final Color COLOR_TEXT_SELECTION_ON = DISPLAY
-			.getSystemColor(SWT.COLOR_WHITE);
+	        .getSystemColor(SWT.COLOR_WHITE);
 	private static final Color COLOR_TEXT_SELECTION_OFF = DISPLAY
-			.getSystemColor(SWT.COLOR_BLACK);
+	        .getSystemColor(SWT.COLOR_BLACK);
 
 	private final Gallery gallery;
 	private GalleryItem lastSelected = null;
@@ -87,15 +82,6 @@ public class FinderPane {
 	private final DropTarget dndTarget;
 	private SearchListHelper items = new SearchListHelper();
 	private final IBrowserCallback callback;
-
-	@Inject
-	private Logger log;
-
-	@Inject
-	private EHandlerService handlerService;
-
-	@Inject
-	private IEventBroker eventBroker;
 
 	/**
 	 * FinderPane constructor.
@@ -116,12 +102,12 @@ public class FinderPane {
 	 *            scrollbars, <code>false</code> if not
 	 */
 	public FinderPane(final Composite inParent, final EMenuService inService,
-			final MApplication inApplication,
-			final IBrowserCallback inCallback, final IEclipseContext inContext,
-			final boolean inShowScrollbar) {
+	        final MApplication inApplication,
+	        final IBrowserCallback inCallback, final IEclipseContext inContext,
+	        final boolean inShowScrollbar) {
 		callback = inCallback;
 		gallery = inShowScrollbar ? new Gallery(inParent, SWT.H_SCROLL
-				| SWT.BORDER) : new NoScrollGallery(inParent);
+		        | SWT.BORDER) : new NoScrollGallery(inParent);
 		gallery.setGroupRenderer(createGroupRenderer());
 		gallery.setItemRenderer(createItemRenderer());
 		setFontSize(getPreferenceFontSize());
@@ -132,9 +118,9 @@ public class FinderPane {
 		gallery.addMouseListener(new PaneMouseAdapter(inApplication));
 
 		dndSource = DragAndDropHelper.createDragSource(gallery,
-				!inShowScrollbar);
+		        !inShowScrollbar);
 		dndTarget = DragAndDropHelper.createDropTarget(gallery,
-				!inShowScrollbar, inContext);
+		        !inShowScrollbar, inContext);
 	}
 
 	/**
@@ -157,9 +143,9 @@ public class FinderPane {
 
 	private int getPreferenceFontSize() {
 		final IEclipsePreferences lStore = InstanceScope.INSTANCE
-				.getNode(RelationsConstants.PREFERENCE_NODE);
+		        .getNode(RelationsConstants.PREFERENCE_NODE);
 		final int outSize = lStore.getInt(FinderBrowserPart.class.getName(),
-				RelationsConstants.DFT_TEXT_FONT_SIZE);
+		        RelationsConstants.DFT_TEXT_FONT_SIZE);
 		return outSize;
 	}
 
@@ -236,11 +222,11 @@ public class FinderPane {
 	}
 
 	private void addItem(final GalleryItem inRootItem, final ItemAdapter inItem)
-			throws VException {
+	        throws VException {
 		final GalleryItemAdapter lItem = new GalleryItemAdapter(inRootItem,
-				inItem);
+		        inItem);
 		lItem.setFont(gallery.getFont());
-		items.add(lItem.getText());
+		items.add(inItem);
 	}
 
 	/**
@@ -275,8 +261,8 @@ public class FinderPane {
 	 * @throws VException
 	 */
 	public GalleryItemAdapter getSelected(final ItemAdapter inSelected)
-			throws VException {
-		final int lIndex = items.indexOf(inSelected.getTitle());
+	        throws VException {
+		final int lIndex = items.indexOf(inSelected.getUniqueID());
 		if (lIndex == -1) {
 			lastSelected = null;
 			return null;
@@ -294,11 +280,12 @@ public class FinderPane {
 	 * @param inFontSize
 	 *            int the font size (pt)
 	 */
+	@SuppressWarnings("deprecation")
 	public void setFontSize(final int inFontSize) {
 		final FontData lData = gallery.getFont().getFontData()[0];
 		lData.setHeight(inFontSize);
 		((AbstractGridGroupRenderer) gallery.getGroupRenderer()).setItemSize(
-				calculateWidth(inFontSize), calculateHeight(inFontSize));
+		        calculateWidth(inFontSize), calculateHeight(inFontSize));
 		final Font lNewFont = new Font(Display.getCurrent(), lData);
 		gallery.setFont(lNewFont);
 		((ListItemRenderer) gallery.getItemRenderer()).setTextFont(lNewFont);
@@ -318,7 +305,7 @@ public class FinderPane {
 		private final ItemAdapter adapted;
 
 		GalleryItemAdapter(final GalleryItem inParent, final ItemAdapter inItem)
-				throws VException {
+		        throws VException {
 			super(inParent, SWT.NONE);
 			adapted = inItem;
 			setText(inItem.getTitle());
@@ -346,9 +333,9 @@ public class FinderPane {
 		}
 
 		private void setSelectionColor(final Color inTextColor,
-				final Color inBgColor) {
+		        final Color inBgColor) {
 			final ListItemRenderer lRenderer = (ListItemRenderer) gallery
-					.getItemRenderer();
+			        .getItemRenderer();
 			lRenderer.setSelectionForegroundColor(inTextColor);
 			lRenderer.setSelectionBackgroundColor(inBgColor);
 
@@ -379,7 +366,7 @@ public class FinderPane {
 				}
 				// handle selection change by first chars
 				final int lIndex = items.search(inEvent.character,
-						getSelected(), inEvent.time & TIME_LONG);
+				        getSelected(), inEvent.time & TIME_LONG);
 				if (lIndex >= 0) {
 					handleSelection(gallery.getItem(0).getItem(lIndex));
 				}
@@ -390,7 +377,7 @@ public class FinderPane {
 		private void handleSelection(final GalleryItem inSelected) {
 			gallery.setSelection(new GalleryItem[] { inSelected });
 			callback.selectionChange(((GalleryItemAdapter) inSelected)
-					.getRelationsItem());
+			        .getRelationsItem());
 		}
 	}
 
@@ -404,11 +391,11 @@ public class FinderPane {
 		@Override
 		public void mouseDown(final MouseEvent inEvent) {
 			final GalleryItem lItem = gallery.getItem(new Point(inEvent.x,
-					inEvent.y));
+			        inEvent.y));
 			if (inEvent.button == 3) {
 				if (lItem == null) {
 					BrowserPopupStateController.setState(State.DISABLED,
-							application);
+					        application);
 					return;
 				} else {
 					callback.focusRequest(FinderPane.this);
@@ -432,7 +419,7 @@ public class FinderPane {
 		private void handleSelection(final GalleryItem inSelected) {
 			gallery.setSelection(new GalleryItem[] { inSelected });
 			callback.selectionChange(((GalleryItemAdapter) inSelected)
-					.getRelationsItem());
+			        .getRelationsItem());
 		}
 	}
 

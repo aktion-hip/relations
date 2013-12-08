@@ -30,6 +30,7 @@ import org.hip.kernel.exc.VException;
  * 
  * @author Luthiger Created on 01.09.2006
  */
+@SuppressWarnings("serial")
 public abstract class AbstractPerson extends AbstractItem implements IItem {
 
 	/**
@@ -57,7 +58,7 @@ public abstract class AbstractPerson extends AbstractItem implements IItem {
 
 	private String getSubTitle() throws VException {
 		final String outSubtitle = getChecked(PersonHome.KEY_FROM)
-				+ " - " + getChecked(PersonHome.KEY_TO); //$NON-NLS-1$
+		        + " - " + getChecked(PersonHome.KEY_TO); //$NON-NLS-1$
 		return outSubtitle.trim();
 	}
 
@@ -84,14 +85,14 @@ public abstract class AbstractPerson extends AbstractItem implements IItem {
 	public ILightWeightItem getLightWeight() throws BOMException {
 		try {
 			return new LightWeightPerson(
-					((Long) get(PersonHome.KEY_ID)).longValue(), get(
-							PersonHome.KEY_NAME).toString(),
-					getChecked(PersonHome.KEY_FIRSTNAME),
-					getChecked(PersonHome.KEY_TEXT),
-					getChecked(PersonHome.KEY_FROM),
-					getChecked(PersonHome.KEY_TO),
-					(Timestamp) get(PersonHome.KEY_CREATED),
-					(Timestamp) get(PersonHome.KEY_MODIFIED));
+			        ((Long) get(PersonHome.KEY_ID)).longValue(), get(
+			                PersonHome.KEY_NAME).toString(),
+			        getChecked(PersonHome.KEY_FIRSTNAME),
+			        getChecked(PersonHome.KEY_TEXT),
+			        getChecked(PersonHome.KEY_FROM),
+			        getChecked(PersonHome.KEY_TO),
+			        (Timestamp) get(PersonHome.KEY_CREATED),
+			        (Timestamp) get(PersonHome.KEY_MODIFIED));
 		}
 		catch (final Exception exc) {
 			throw new BOMException(exc.getMessage());
@@ -113,7 +114,7 @@ public abstract class AbstractPerson extends AbstractItem implements IItem {
 	@Override
 	protected Timestamp[] getCreatedModified() throws VException {
 		return new Timestamp[] { (Timestamp) get(PersonHome.KEY_CREATED),
-				(Timestamp) get(PersonHome.KEY_MODIFIED) };
+		        (Timestamp) get(PersonHome.KEY_MODIFIED) };
 	}
 
 	/**
@@ -121,7 +122,7 @@ public abstract class AbstractPerson extends AbstractItem implements IItem {
 	 */
 	@Override
 	public void saveTitleText(final String inTitle, final String inText)
-			throws BOMException {
+	        throws BOMException {
 		try {
 			setModel(inTitle, inText);
 			update(true);
@@ -135,7 +136,7 @@ public abstract class AbstractPerson extends AbstractItem implements IItem {
 	}
 
 	protected void setModel(final String inTitle, final String inText)
-			throws VException {
+	        throws VException {
 		set(PersonHome.KEY_TEXT, inText);
 		set(PersonHome.KEY_MODIFIED, new Timestamp(System.currentTimeMillis()));
 	}
@@ -151,8 +152,8 @@ public abstract class AbstractPerson extends AbstractItem implements IItem {
 	 * @throws BOMException
 	 */
 	public void save(final String inName, final String inFirstName,
-			final String inText, final String inFrom, final String inTo)
-			throws BOMException {
+	        final String inText, final String inFrom, final String inTo)
+	        throws BOMException {
 		try {
 			setModel(inName, inFirstName, inText, inFrom, inTo);
 			update(true);
@@ -173,8 +174,8 @@ public abstract class AbstractPerson extends AbstractItem implements IItem {
 	}
 
 	protected void setModel(final String inName, final String inFirstName,
-			final String inText, final String inFrom, final String inTo)
-			throws VException {
+	        final String inText, final String inFrom, final String inTo)
+	        throws VException {
 		set(PersonHome.KEY_NAME, inName);
 		set(PersonHome.KEY_FIRSTNAME, inFirstName);
 		set(PersonHome.KEY_TEXT, inText);

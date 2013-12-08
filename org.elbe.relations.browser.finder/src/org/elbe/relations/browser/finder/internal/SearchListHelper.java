@@ -18,11 +18,14 @@
  ***************************************************************************/
 package org.elbe.relations.browser.finder.internal;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
 import org.elbe.relations.browser.finder.internal.FinderPane.GalleryItemAdapter;
+import org.elbe.relations.data.utility.UniqueID;
+import org.elbe.relations.models.ItemAdapter;
+import org.hip.kernel.exc.VException;
 
 /**
  * Wrapper for <code>List<String></code>s providing a special search feature to
@@ -36,12 +39,14 @@ public class SearchListHelper {
 
 	private final List<String> original;
 	private final List<String> lower;
+	private final List<UniqueID> ids;
 	private long time;
 	private String search;
 
 	SearchListHelper() {
-		original = new Vector<String>();
-		lower = new Vector<String>();
+		original = new ArrayList<String>();
+		lower = new ArrayList<String>();
+		ids = new ArrayList<UniqueID>();
 		time = 0;
 		search = ""; //$NON-NLS-1$
 	}
@@ -49,25 +54,28 @@ public class SearchListHelper {
 	/**
 	 * Add method to fill the list.
 	 * 
-	 * @param inTitle
-	 *            String the text to add.
+	 * @param inItem
+	 *            ItemAdapter the item to add.
+	 * @throws VException
 	 */
-	public void add(final String inTitle) {
-		original.add(inTitle);
-		lower.add(inTitle.toLowerCase());
+	public void add(final ItemAdapter inItem) throws VException {
+		final String lText = inItem.getTitle();
+		original.add(lText);
+		lower.add(lText.toLowerCase());
+		ids.add(inItem.getUniqueID());
 	}
 
 	/**
 	 * Method to look up the specified element's position in the list.
 	 * 
-	 * @param inTitle
-	 *            String
+	 * @param inUniqueID
+	 *            UniqueID
 	 * @return int Returns the index in this list of the first occurrence of the
 	 *         specified element, or -1 if this list does not contain this
 	 *         element.
 	 */
-	public int indexOf(final String inTitle) {
-		return original.indexOf(inTitle);
+	public int indexOf(final UniqueID inUniqueID) {
+		return ids.indexOf(inUniqueID);
 	}
 
 	/**
@@ -83,9 +91,9 @@ public class SearchListHelper {
 	 *         matches.
 	 */
 	public int search(final char inSearch, final GalleryItemAdapter inSelected,
-			final long inTime) {
+	        final long inTime) {
 		final String lSearch = new String(new char[] { inSearch })
-				.toLowerCase();
+		        .toLowerCase();
 
 		// we combine multiple key pressed in a specified time span
 		if (inTime - time < KEY_PRESS_DELAY) {
@@ -101,7 +109,7 @@ public class SearchListHelper {
 		if (lSelected.toLowerCase().startsWith(search)) {
 			outIndex = original.indexOf(lSelected) + 1;
 			if (outIndex < original.size()
-					&& lower.get(outIndex).startsWith(search)) {
+			        && lower.get(outIndex).startsWith(search)) {
 				return outIndex;
 			}
 		}

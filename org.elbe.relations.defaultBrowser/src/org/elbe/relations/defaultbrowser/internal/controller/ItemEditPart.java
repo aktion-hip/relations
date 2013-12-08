@@ -49,6 +49,7 @@ import org.elbe.relations.defaultbrowser.internal.views.ItemFigure;
 import org.elbe.relations.models.IBrowserItem;
 import org.elbe.relations.models.IRelation;
 import org.elbe.relations.models.ItemAdapter;
+import org.elbe.relations.utility.SelectedItemChangeEvent;
 import org.hip.kernel.exc.VException;
 
 /**
@@ -58,7 +59,7 @@ import org.hip.kernel.exc.VException;
  */
 @SuppressWarnings("restriction")
 public class ItemEditPart extends AbstractGraphicalEditPart implements
-		NodeEditPart, IBrowserItem {
+        NodeEditPart, IBrowserItem {
 	private ItemAdapter model;
 
 	@Inject
@@ -83,9 +84,9 @@ public class ItemEditPart extends AbstractGraphicalEditPart implements
 	 * @return {@link ItemEditPart}
 	 */
 	public static ItemEditPart createItemEditPart(final ItemAdapter inModel,
-			final IEclipseContext inContext) {
+	        final IEclipseContext inContext) {
 		final ItemEditPart out = ContextInjectionFactory.make(
-				ItemEditPart.class, inContext);
+		        ItemEditPart.class, inContext);
 		out.model = inModel;
 		return out;
 	}
@@ -121,7 +122,7 @@ public class ItemEditPart extends AbstractGraphicalEditPart implements
 					return;
 				}
 				final ItemFigure lFigure = (ItemFigure) inMouseEvent
-						.getSource();
+				        .getSource();
 				if (inMouseEvent.getState() == SWT.CONTROL) {
 					lFigure.setClickable(true);
 				}
@@ -136,7 +137,7 @@ public class ItemEditPart extends AbstractGraphicalEditPart implements
 					return;
 				}
 				final ItemFigure lFigure = (ItemFigure) inMouseEvent
-						.getSource();
+				        .getSource();
 				lFigure.setClickable(false);
 			}
 		});
@@ -145,17 +146,17 @@ public class ItemEditPart extends AbstractGraphicalEditPart implements
 			@Override
 			public void mousePressed(final MouseEvent inMouseEvent) {
 				final ItemFigure lFigure = (ItemFigure) inMouseEvent
-						.getSource();
+				        .getSource();
 				if (lFigure.isClickable()) {
 					// first, we have to make sure that the item is selected
 					eventBroker
-							.send(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED,
-									model);
+					        .send(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED,
+					                new SelectedItemChangeEvent(model, null));
 					if (inMouseEvent.button == 1) {
 						handlerService.executeHandler(new ParameterizedCommand(
-								commandManager
-										.getCommand(ICommandIds.CMD_ITEM_CENTER),
-								null));
+						        commandManager
+						                .getCommand(ICommandIds.CMD_ITEM_CENTER),
+						        null));
 					}
 					inMouseEvent.consume();
 				}
@@ -165,12 +166,12 @@ public class ItemEditPart extends AbstractGraphicalEditPart implements
 			public void mouseDoubleClicked(final MouseEvent inMouseEvent) {
 				// first, we have to make sure that the item is selected
 				eventBroker
-						.send(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED,
-								model);
+				        .send(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED,
+				                model);
 
 				handlerService.executeHandler(new ParameterizedCommand(
-						commandManager.getCommand(ICommandIds.CMD_ITEM_EDIT),
-						null));
+				        commandManager.getCommand(ICommandIds.CMD_ITEM_EDIT),
+				        null));
 			}
 		});
 
@@ -181,17 +182,17 @@ public class ItemEditPart extends AbstractGraphicalEditPart implements
 	protected void createEditPolicies() {
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new ItemDragPolicy());
 		installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE,
-				new SelectionEditPolicy() {
-					@Override
-					protected void showSelection() {
-						((ItemFigure) getHostFigure()).changeColor(true);
-					}
+		        new SelectionEditPolicy() {
+			        @Override
+			        protected void showSelection() {
+				        ((ItemFigure) getHostFigure()).changeColor(true);
+			        }
 
-					@Override
-					protected void hideSelection() {
-						((ItemFigure) getHostFigure()).changeColor(false);
-					}
-				});
+			        @Override
+			        protected void hideSelection() {
+				        ((ItemFigure) getHostFigure()).changeColor(false);
+			        }
+		        });
 	}
 
 	@Override
@@ -206,13 +207,13 @@ public class ItemEditPart extends AbstractGraphicalEditPart implements
 
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(
-			final ConnectionEditPart inConnection) {
+	        final ConnectionEditPart inConnection) {
 		return new ChopboxAnchor(getFigure());
 	}
 
 	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(
-			final ConnectionEditPart inConnection) {
+	        final ConnectionEditPart inConnection) {
 		return new ChopboxAnchor(getFigure());
 	}
 
@@ -231,7 +232,7 @@ public class ItemEditPart extends AbstractGraphicalEditPart implements
 	 */
 	public boolean isCenter() {
 		return ((RelationsEditPart) getParent()).getModelID().equals(
-				model.getUniqueID());
+		        model.getUniqueID());
 	}
 
 	/**

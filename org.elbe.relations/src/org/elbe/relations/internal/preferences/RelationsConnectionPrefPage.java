@@ -18,8 +18,6 @@
  ***************************************************************************/
 package org.elbe.relations.internal.preferences;
 
-import javax.inject.Inject;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -33,7 +31,8 @@ import org.elbe.relations.internal.wizards.IUpdateListener;
 
 /**
  * Display and manipulation of the Relations preferences concerning the database
- * connection.
+ * connection.<br />
+ * This is an Eclipse 3 preference page. To make it e4, let the values for the annotated field be injected (instead of using the method init()). 
  * 
  * @author Luthiger
  */
@@ -41,7 +40,7 @@ public class RelationsConnectionPrefPage extends AbstractPreferencePage
 		implements IUpdateListener {
 	private FormDBConnection dbform;
 
-	@Inject
+//	@Inject
 	private IEclipseContext context;
 
 	public RelationsConnectionPrefPage() {
@@ -64,13 +63,11 @@ public class RelationsConnectionPrefPage extends AbstractPreferencePage
 		super(inTitle, inImage);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse
-	 * .swt.widgets.Composite)
-	 */
+	@Override
+	public void init(final IWorkbench inWorkbench) {
+		context = (IEclipseContext) inWorkbench.getAdapter(IEclipseContext.class);
+	}
+
 	@Override
 	protected Control createContents(final Composite inParent) {
 		final Composite outComposite = new Composite(inParent, SWT.NONE);
@@ -96,17 +93,6 @@ public class RelationsConnectionPrefPage extends AbstractPreferencePage
 	@Override
 	public boolean performOk() {
 		return dbform == null ? true : dbform.saveChanges();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-	 */
-	@Override
-	public void init(final IWorkbench inWorkbench) {
-		// nothing to do
 	}
 
 	@Override

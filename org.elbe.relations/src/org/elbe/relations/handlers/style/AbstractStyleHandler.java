@@ -42,7 +42,7 @@ import org.elbe.relations.internal.style.Styles.StyleParameter;
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractStyleHandler {
-	private static final String SELECTION_STATE = "selection.state";
+	private static final String SELECTION_STATE = "selection.state"; //$NON-NLS-1$
 
 	@Inject
 	private IEventBroker eventBroker;

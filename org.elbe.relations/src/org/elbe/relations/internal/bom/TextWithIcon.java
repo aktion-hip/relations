@@ -64,7 +64,7 @@ public class TextWithIcon extends Text implements IItemModel {
 	 * @throws VException
 	 */
 	public TextWithIcon(final AbstractText inText,
-			final IEclipseContext inContext) throws VException {
+	        final IEclipseContext inContext) throws VException {
 		context = inContext;
 		biblioController = context.get(BibliographyController.class);
 
@@ -88,79 +88,38 @@ public class TextWithIcon extends Text implements IItemModel {
 		reinitialize();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.models.IItemModel#addSource(org.elbe.relations.models
-	 * .IRelation)
-	 */
 	@Override
 	public void addSource(final IRelation inRelation) {
-		// TODO Auto-generated method stub
-
+		// nothing to do
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.models.IItemModel#addTarget(org.elbe.relations.models
-	 * .IRelation)
-	 */
 	@Override
 	public void addTarget(final IRelation inRelation) {
-		// TODO Auto-generated method stub
-
+		// nothing to do
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getSources()
-	 */
 	@Override
 	public List<IRelation> getSources() {
-		// TODO Auto-generated method stub
+		// nothing to do
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getTargets()
-	 */
 	@Override
 	public List<IRelation> getTargets() {
-		// TODO Auto-generated method stub
+		// nothing to do
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getImage()
-	 */
 	@Override
 	public Image getImage() {
 		return RelationsImages.TEXT.getImage();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getItemEditWizard()
-	 */
 	@Override
 	public Class<? extends IItemEditWizard> getItemEditWizard() {
 		return TextEditWizard.class;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.IItemModel#getItemDeleteAction()
-	 */
 	@Override
 	public IAction getItemDeleteAction(final Logger inLog) {
 		return new IAction() {
@@ -188,21 +147,11 @@ public class TextWithIcon extends Text implements IItemModel {
 		return RelationsIndexerWithLanguage.createRelationsIndexer(context);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.data.bom.AbstractText#getStyleParser()
-	 */
 	@Override
 	protected IStyleParser getStyleParser() {
 		return StyleParser.getInstance();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.data.bom.AbstractText#getBiblioHandler()
-	 */
 	@Override
 	protected IBibliography getBiblioHandler() {
 		final IBibliography out = biblioController.getBibliography();

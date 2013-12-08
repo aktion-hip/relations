@@ -35,12 +35,11 @@ import org.elbe.relations.dnd.DropDataHelper;
  * 
  * @author Luthiger Created on 17.12.2009
  */
-@SuppressWarnings("restriction")
-public class DragAndDropHelper {
+public final class DragAndDropHelper {
 	private static final int OPERATIONS = DND.DROP_MOVE | DND.DROP_COPY;
 
-	// prevent class instantiation
 	private DragAndDropHelper() {
+		// prevent class instantiation
 	}
 
 	/**
@@ -56,14 +55,14 @@ public class DragAndDropHelper {
 	 * @return {@link DragSource}
 	 */
 	public static DragSource createDragSource(final Gallery inGallery,
-			final boolean inIsCenter) {
+	        final boolean inIsCenter) {
 		final DragSource outDragSource = new DragSource(inGallery, OPERATIONS);
 		outDragSource.setTransfer(DropDataHelper.DRAG_TYPES);
 
 		outDragSource.addDragListener(new FinderDragSourceAdapter(inGallery,
-				inIsCenter));
+		        inIsCenter));
 		outDragSource
-				.setDragSourceEffect(new GalleryDragSourceEffect(inGallery));
+		        .setDragSourceEffect(new GalleryDragSourceEffect(inGallery));
 
 		return outDragSource;
 	}
@@ -81,11 +80,11 @@ public class DragAndDropHelper {
 	 * @return {@link DropTarget}
 	 */
 	public static DropTarget createDropTarget(final Gallery inGallery,
-			final boolean inIsCenter, final IEclipseContext inContext) {
+	        final boolean inIsCenter, final IEclipseContext inContext) {
 		final DropTarget outDropTarget = new DropTarget(inGallery, OPERATIONS);
 		outDropTarget.setTransfer(DropDataHelper.DROP_TYPES);
 		outDropTarget.addDropListener(FinderDropTargetListener.create(
-				inGallery, inIsCenter, inContext));
+		        inGallery, inIsCenter, inContext));
 		return outDropTarget;
 	}
 
@@ -96,7 +95,7 @@ public class DragAndDropHelper {
 		private final boolean isCenter;
 
 		FinderDragSourceAdapter(final Gallery inGallery,
-				final boolean inIsCenter) {
+		        final boolean inIsCenter) {
 			gallery = inGallery;
 			isCenter = inIsCenter;
 		}
@@ -115,9 +114,9 @@ public class DragAndDropHelper {
 		@Override
 		public void dragSetData(final DragSourceEvent inEvent) {
 			final GalleryItemAdapter lSelection = (GalleryItemAdapter) gallery
-					.getSelection()[0];
+			        .getSelection()[0];
 			inEvent.data = new UniqueID[] { lSelection.getRelationsItem()
-					.getUniqueID() };
+			        .getUniqueID() };
 		}
 	}
 

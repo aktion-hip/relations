@@ -32,24 +32,15 @@ import org.elbe.relations.utility.NewTextAction;
  * @author Luthiger Created on 06.02.2010
  * @see IBibliographyProvider
  */
-@SuppressWarnings("restriction")
 public class HmtlRDFaProvider implements IBibliographyProvider {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.ds.IBibliographyProvider#evaluate(org.elbe.relations
-	 * .parsing.XPathHelper,
-	 * org.elbe.relations.parsing.WebPageParser.WebDropResult)
-	 */
 	@Override
 	public void evaluate(final XPathHelper inXPathHelper,
-			final WebDropResult inWebDrop, final IEclipseContext inContext)
-			throws ParserException {
+	        final WebDropResult inWebDrop, final IEclipseContext inContext)
+	        throws ParserException {
 		try {
 			final NewTextAction lAction = RDFaExtractor.process(inXPathHelper,
-					inWebDrop.getUrl(), inContext);
+			        inWebDrop.getUrl(), inContext);
 			if (lAction != null) {
 				inWebDrop.setNewBiblioAction(lAction);
 			}
@@ -59,11 +50,6 @@ public class HmtlRDFaProvider implements IBibliographyProvider {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.ds.IBibliographyProvider#isMicroFormat()
-	 */
 	@Override
 	public boolean isMicroFormat() {
 		return true;

@@ -20,60 +20,40 @@ package org.elbe.relations.internal.preferences;
 
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.ui.css.swt.theme.ITheme;
 import org.eclipse.e4.ui.css.swt.theme.IThemeEngine;
 import org.eclipse.e4.ui.css.swt.theme.IThemeManager;
-import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
+import org.elbe.relations.RelationsMessages;
 
 /**
- * Preference page to provide Eclipse theme switching.
+ * Preference page to provide Eclipse theme switching.<br />
+ * This is an Eclipse 3 preference page. To make it e4, let the values for the annotated field be injected (instead of using the method init()). 
  * 
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
 public class AppearancePage extends AbstractPreferencePage {
 
-	@Inject
+	//@Inject
 	private IThemeManager themeManager;
-
-	@Inject
-	@Named(IServiceConstants.ACTIVE_SHELL)
-	protected Shell shell;
 
 	private Combo themes;
 	private IThemeEngine themeEngine;
 	private ThemeHelper themeHelper;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-	 */
 	@Override
 	public void init(final IWorkbench inWorkbench) {
-		// nothing to do
+		themeManager = (IThemeManager) inWorkbench.getAdapter(IThemeManager.class);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse
-	 * .swt.widgets.Composite)
-	 */
 	@Override
 	protected Control createContents(final Composite inParent) {
-		themeEngine = themeManager.getEngineForDisplay(shell.getDisplay());
+		themeEngine = themeManager.getEngineForDisplay(inParent.getDisplay());
 		themeHelper = new ThemeHelper(themeEngine);
 
 		final Composite outComposite = new Composite(inParent, SWT.NONE);
@@ -81,29 +61,19 @@ public class AppearancePage extends AbstractPreferencePage {
 		setLayout(outComposite, lColumns);
 		outComposite.setFont(inParent.getFont());
 
-		createLabel(outComposite, "Themes:");
+		createLabel(outComposite, RelationsMessages.getString("preferences.appearance.label.themes")); //$NON-NLS-1$
 		themes = createCombo(outComposite, themeHelper.getThemeItems());
 		themes.select(themeHelper.getActiveIndex());
 
 		return outComposite;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
-	 */
 	@Override
 	public boolean performOk() {
 		saveTheme();
 		return super.performOk();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.preference.PreferencePage#performApply()
-	 */
 	@Override
 	protected void performApply() {
 		saveTheme();

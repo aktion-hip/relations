@@ -23,8 +23,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -51,8 +49,9 @@ import org.elbe.relations.internal.wizards.IUpdateListener;
 import org.elbe.relations.services.IRelationsBrowser;
 
 /**
- * * Display and manipulation of the Relations preferences, i.e. language
- * selection, biblio schema selection and font size in the browser views.
+ * Display and manipulation of the Relations preferences, i.e. language
+ * selection, biblio schema selection and font size in the browser views.<br />
+ * This is an Eclipse 3 preference page. To make it e4, let the values for the annotated field be injected (instead of using the method init()). 
  * 
  * @author Luthiger
  */
@@ -62,13 +61,11 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 	private Text maxLastChanged;
 	private BrowserViewsHelper browserFontSizes;
 
-	@Inject
+	//@Inject
 	private BibliographyController biblioController;
-
-	@Inject
+	//@Inject
 	private BrowserController browserController;
-
-	@Inject
+	//@Inject
 	private IEventBroker eventBroker;
 
 	/**
@@ -94,13 +91,13 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 		super(inTitle, inImage);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse
-	 * .swt.widgets.Composite)
-	 */
+	@Override
+	public void init(final IWorkbench inWorkbench) {
+		eventBroker = (IEventBroker) inWorkbench.getAdapter(IEventBroker.class);
+		biblioController = (BibliographyController) inWorkbench.getAdapter(BibliographyController.class);
+		browserController = (BrowserController) inWorkbench.getAdapter(BrowserController.class);		
+	}
+	
 	@Override
 	protected Control createContents(final Composite inParent) {
 		final Composite outComposite = new Composite(inParent, SWT.NONE);
@@ -179,17 +176,6 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 		maxLastChanged.setText(String
 				.valueOf(RelationsConstants.DFT_MAX_LAST_CHANGED));
 		super.performDefaults();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-	 */
-	@Override
-	public void init(final IWorkbench inWorkbench) {
-		// nothing to do
 	}
 
 	/**
@@ -301,7 +287,7 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 		}
 
 		private String getTopic(final Class<IRelationsBrowser> inID) {
-			return inID.getName().replaceAll("\\.", "_");
+			return inID.getName().replaceAll("\\.", "_"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		/**

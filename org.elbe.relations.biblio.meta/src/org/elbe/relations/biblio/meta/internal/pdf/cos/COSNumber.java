@@ -65,7 +65,7 @@ public abstract class COSNumber extends COSBase {
                 return DIGITS[digit - '0'];
             }
             else {
-                throw new IOException("Not a number: " + number);
+                throw new IOException("Not a number: " + number); //$NON-NLS-1$
             }
         }
         else if (number.indexOf('.') == -1) {

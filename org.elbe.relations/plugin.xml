@@ -6,7 +6,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.elbe.relations.RelationsApplication"
-            description="Relations"
+            description="%product.description"
             name="org.elbe.relations">
          <property
                name="appName"
@@ -25,20 +25,16 @@
                value="icons/aboutRelations.gif">
          </property>
          <property
-               name="windowImages"
-               value="icons/relations.gif,icons/relations32.gif,icons/relations48.gif">
-         </property>
-         <property
                name="startupForegroundColor"
                value="FFFFFF">
          </property>
          <property
                name="startupMessageRect"
-               value="10,265,380,15">
+               value="5,250,449,23">
          </property>
          <property
                name="startupProgressRect"
-               value="0,283,455,12">
+               value="3,275,449,15">
          </property>
          <property
                name="preferenceCustomization"
@@ -51,6 +47,10 @@
          <property
                name="cssTheme"
                value="org.eclipse.e4.ui.css.theme.e4_default">
+         </property>
+         <property
+               name="windowImages"
+               value="icons/relations.gif,icons/relations32.gif,icons/relations48.gif">
          </property>
       </product>
    </extension>
@@ -91,23 +91,23 @@
       <page
             class="org.elbe.relations.internal.preferences.RelationsPreferencePage"
             id="org.elbe.relations.prefs"
-            name="Relations">
+            name="%page.name">
       </page>
       <page
             category="org.elbe.relations.prefs"
             class="org.elbe.relations.internal.preferences.RelationsConnectionPrefPage"
             id="org.elbe.relations.prefs.db"
-            name="Datenbank-Verbindung">
+            name="%page.prefs.name.db.connect">
       </page>
       <page
-            class="org.elbe.relations.internal.preferences.keys.RelationsKeysPreferencePage"
-            id="org.elbe.relations.prefs.keys"
-            name="Keys">
+            class="org.eclipse.ui.ExtensionFactory:newKeysPreferencePage"
+            id="newKeysPreferencePage"
+            name="%page.prefs.name.keys">
       </page>
       <page
             class="org.elbe.relations.internal.preferences.AppearancePage"
             id="org.elbe.relations.themes"
-            name="Appearance">
+            name="%page.prefs.name.appearance">
       </page>
    </extension>
    <extension
@@ -239,13 +239,9 @@
    <extension
          id="RelationsApplication"
          point="org.eclipse.core.runtime.applications">
-      <application
-            cardinality="singleton-global"
-            icon="icons/relations.gif"
-            thread="main"
-            visible="true">
+      <application>
          <run
-               class="org.elbe.relations.internal.RelationsApplication">
+               class="org.elbe.relations.app.RelationsApplication">
          </run>
       </application>
    </extension>
@@ -311,5 +307,427 @@
             label="HPUX"
             os="hpux">
       </theme>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro">
+      <introProductBinding
+            introId="org.eclipse.ui.intro.universal"
+            productId="org.elbe.relations.product">
+      </introProductBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.configExtension">
+      <configExtension
+            configId="org.eclipse.ui.intro.universalConfig"
+            content="intro/introOverview.xml"/>
+      <configExtension
+            configId="org.eclipse.ui.intro.universalConfig"
+            content="intro/introFirststeps.xml"/>
+      <configExtension
+            configId="org.eclipse.ui.intro.universalConfig"
+            content="intro/introWhatsNew.xml"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            id="org.elbe.relations.context.app"
+            name="%context.relations.app"
+            parentId="org.eclipse.ui.contexts.dialogAndWindow">
+      </context>
+      <context
+            id="org.elbe.relations.context.main"
+            name="%context.relations.main"
+            parentId="org.elbe.relations.context.app">
+      </context>
+      <context
+            id="org.elbe.relations.context.inspector"
+            name="%context.relations.inspector"
+            parentId="org.elbe.relations.context.main">
+      </context>
+      <context
+            id="org.elbe.relations.context.browser"
+            name="%context.relations.browser"
+            parentId="org.elbe.relations.context.main">
+      </context>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.elbe.relations.category"
+            name="%category.name">
+      </category>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.eclipse.ui.window.preferences"
+            name="%command.show.prefs">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            description="%command.quit.desc"
+            id="org.eclipse.ui.file.exit"
+            name="%command.quit">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            description="%command.save.desc"
+            id="org.elbe.relations.command.item.save"
+            name="%command.save">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            description="%command.undo.desc"
+            id="org.elbe.relations.command.item.undo"
+            name="%command.undo">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            description="%command.about.desc"
+            id="org.eclipse.ui.help.aboutAction"
+            name="%command.about">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            description="%command.new.desc"
+            id="org.eclipse.ui.newWizards"
+            name="%command.new">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.db.open"
+            name="%command.open.db">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.text.style.bold"
+            name="%command.text.bold">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.text.style.italic"
+            name="%command.text.italic">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.text.style.underline"
+            name="%command.text.underline">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.text.list.unordered"
+            name="%command.list.unordered">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.text.list.ordered"
+            name="%command.list.ordered">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.text.list.upper"
+            name="%command.list.upper">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.text.list.lower"
+            name="%command.list.lower">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            description="%command.show.item.edit"
+            id="org.elbe.relations.command.item.edit"
+            name="%command.item.edit">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.item.relation.edit"
+            name="%command.relations.edit">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            description="%command.print.desc"
+            id="org.elbe.relations.command.print"
+            name="%command.print">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            description="%command.center.desc"
+            id="org.elbe.relations.command.item.center"
+            name="%command.center">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            description="%command.del.relation.desc"
+            id="org.elbe.relations.command.item.relation.remove"
+            name="%command.del.relation">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.item.find"
+            name="%command.find">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.go.back"
+            name="%command.back">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.go.forward"
+            name="%command.forward">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.activate.browsers"
+            name="%command.activate.browser">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.activate.term"
+            name="%command.activate.terms">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.activate.text"
+            name="%command.activate.texts">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.activate.person"
+            name="%command.activate.persons">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.activate.bookmarks"
+            name="%command.activate.bookmarks">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.activate.changes"
+            name="%command.activate.last.changes">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.activate.inspector"
+            name="%command.activate.inspector">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            description="%command.bookmark.desc"
+            id="org.elbe.relations.command.bookmark"
+            name="%command.bookmark">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            description="%command.item.delete.desc"
+            id="org.elbe.relations.command.item.delete"
+            name="%command.item.delete">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            description="%command.open.browser.desc"
+            id="org.elbe.relations.command.open.url"
+            name="%command.open.browser">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.eclipse.ui.window.preferences"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M3+P">
+      </key>
+      <key
+            commandId="org.eclipse.ui.file.exit"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+Q">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.item.save"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+S">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.item.undo"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+Z">
+      </key>
+      <key
+            commandId="org.eclipse.ui.help.aboutAction"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+A">
+      </key>
+      <key
+            commandId="org.eclipse.ui.newWizards"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+N">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.db.open"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+O">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.text.style.bold"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+B">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.text.style.italic"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+I">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.text.style.underline"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+U">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.text.list.unordered"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+D">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.text.list.ordered"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+O">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.text.list.upper"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+U">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.text.list.lower"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+L">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.item.edit"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+E">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.item.relation.edit"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+R">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.print"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+P">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.item.center"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+C">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.item.relation.remove"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+R">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.item.find"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+F">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.go.back"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M3+ARROW_LEFT">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.go.forward"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M3+ARROW_RIGHT">
+      </key>
+      <key
+            commandId="org.eclipse.ui.help.helpContents"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="F1">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.activate.browsers"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M3+R">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.activate.term"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M3+T">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.activate.text"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M3+X">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.activate.person"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M3+P">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.activate.bookmarks"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M3+B">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.activate.changes"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M3+L">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.activate.inspector"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M3+I">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.open.url"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M3+U">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.bookmark"
+            contextId="org.elbe.relations.context.browser"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+B">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.item.delete"
+            contextId="org.elbe.relations.context.browser"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+DEL">
+      </key>
    </extension>
 </plugin>

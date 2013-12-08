@@ -54,22 +54,22 @@ import org.hip.kernel.exc.VException;
 @SuppressWarnings("restriction")
 public final class DropDataHelper {
 	public static final Transfer[] DRAG_TYPES = new Transfer[] { ItemTransfer
-			.getInstance(null) };
+	        .getInstance(null) };
 	public static final Transfer[] DROP_TYPES = new Transfer[] {
-			ItemTransfer.getInstance(null), FileTransfer.getInstance(),
-			URLTransfer.getInstance() };
+	        ItemTransfer.getInstance(null), FileTransfer.getInstance(),
+	        URLTransfer.getInstance() };
 
 	public enum TransferDropHandler {
 		ITEM_TRANSFER(ItemTransfer.getInstance(null),
-				new ItemTransferDropHandler()), FILE_TRANSFER(FileTransfer
-				.getInstance(), new FileTransferDropHandler()), URL_TRANSFER(
-				URLTransfer.getInstance(), new URLTransferDropHandler());
+		        new ItemTransferDropHandler()), FILE_TRANSFER(FileTransfer
+		        .getInstance(), new FileTransferDropHandler()), URL_TRANSFER(
+		        URLTransfer.getInstance(), new URLTransferDropHandler());
 
 		private Transfer transfer;
 		private IDropHandler handler;
 
 		TransferDropHandler(final Transfer inTransfer,
-				final IDropHandler inHandler) {
+		        final IDropHandler inHandler) {
 			transfer = inTransfer;
 			handler = inHandler;
 		}
@@ -105,11 +105,11 @@ public final class DropDataHelper {
 	}
 
 	private static void addAsRelations(final UniqueID[] inItemIDs,
-			final IAssociationsModel inModel, final IEclipseContext inContext) {
+	        final IAssociationsModel inModel, final IEclipseContext inContext) {
 		if (inItemIDs.length == 0)
 			return;
 		final RelateCommand lCommand = RelateCommand.createRelateCommand(
-				inModel, inItemIDs, inContext);
+		        inModel, inItemIDs, inContext);
 		lCommand.execute();
 	}
 
@@ -131,7 +131,7 @@ public final class DropDataHelper {
 		 *            {@link IEclipseContext}
 		 */
 		public void handleDrop(Object inEventData, IAssociationsModel inModel,
-				IEclipseContext inContext);
+		        IEclipseContext inContext);
 	}
 
 	/**
@@ -140,8 +140,8 @@ public final class DropDataHelper {
 	private static class ItemTransferDropHandler implements IDropHandler {
 		@Override
 		public void handleDrop(final Object inEventData,
-				final IAssociationsModel inModel,
-				final IEclipseContext inContext) {
+		        final IAssociationsModel inModel,
+		        final IEclipseContext inContext) {
 			if (inEventData instanceof UniqueID[]) {
 				addAsRelations((UniqueID[]) inEventData, inModel, inContext);
 			}
@@ -155,14 +155,14 @@ public final class DropDataHelper {
 
 		@Override
 		public void handleDrop(final Object inEventData,
-				final IAssociationsModel inModel,
-				final IEclipseContext inContext) {
+		        final IAssociationsModel inModel,
+		        final IEclipseContext inContext) {
 			try {
 				final String lFileName = ((String[]) inEventData)[0];
 				final IMetadataExtractor lMetadataExtractor = inContext
-						.get(IMetadataExtractor.class);
+				        .get(IMetadataExtractor.class);
 				final UniqueID lID = lMetadataExtractor.extract(new File(
-						lFileName));
+				        lFileName));
 				addAsRelations(new UniqueID[] { lID }, inModel, inContext);
 			}
 			catch (final Exception exc) {
@@ -180,29 +180,29 @@ public final class DropDataHelper {
 	private static class URLTransferDropHandler implements IDropHandler {
 		private static final int ITEM_TEXT_EXT = 4;
 		private static final int[] OPTIONS_DFT = new int[] { IItem.TERM,
-				IItem.TEXT, IItem.PERSON };
+		        IItem.TEXT, IItem.PERSON };
 		private static final int[] OPTIONS_EXT = new int[] { IItem.TERM,
-				IItem.TEXT, ITEM_TEXT_EXT, IItem.PERSON };
+		        IItem.TEXT, ITEM_TEXT_EXT, IItem.PERSON };
 		private static final String[] LABELS_DFT = new String[] {
-				RelationsMessages.getString("DropDataHelper.lbl.dft.term"), RelationsMessages.getString("DropDataHelper.lbl.dft.text"), RelationsMessages.getString("DropDataHelper.lbl.dft.person") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		        RelationsMessages.getString("DropDataHelper.lbl.dft.term"), RelationsMessages.getString("DropDataHelper.lbl.dft.text"), RelationsMessages.getString("DropDataHelper.lbl.dft.person") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		private static final String[] LABELS_EXT = new String[] {
-				RelationsMessages.getString("DropDataHelper.lbl.ext.term"), RelationsMessages.getString("DropDataHelper.lbl.ext.text"), RelationsMessages.getString("DropDataHelper.lbl.ext.biblio"), RelationsMessages.getString("DropDataHelper.lbl.ext.person") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		        RelationsMessages.getString("DropDataHelper.lbl.ext.term"), RelationsMessages.getString("DropDataHelper.lbl.ext.text"), RelationsMessages.getString("DropDataHelper.lbl.ext.biblio"), RelationsMessages.getString("DropDataHelper.lbl.ext.person") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 		@Override
 		public void handleDrop(final Object inEventData,
-				final IAssociationsModel inModel,
-				final IEclipseContext inContext) {
+		        final IAssociationsModel inModel,
+		        final IEclipseContext inContext) {
 			final String lURL = (String) inEventData;
 			try {
 				final IWebPageParser lWebPageParser = inContext
-						.get(IWebPageParser.class);
+				        .get(IWebPageParser.class);
 				ContextInjectionFactory.inject(lWebPageParser, inContext);
 				final WebDropResult lWebResult = lWebPageParser.parse(lURL);
 				final int lItemType = showItemSelectionDialog(lWebResult);
 				if (lItemType == -1)
 					return;
 				final UniqueID lID = createItemOfType(lItemType, lWebResult,
-						inContext);
+				        inContext);
 				addAsRelations(new UniqueID[] { lID }, inModel, inContext);
 			}
 			catch (final Exception exc) {
@@ -212,9 +212,9 @@ public final class DropDataHelper {
 				}
 				Display.getCurrent().beep();
 				final RelationsStatusLineManager lStatusLine = inContext
-						.get(RelationsStatusLineManager.class);
+				        .get(RelationsStatusLineManager.class);
 				lStatusLine.showStatusLineMessage(RelationsMessages
-						.getString("DropDataHelper.msg.parsing.error")); //$NON-NLS-1$
+				        .getString("DropDataHelper.msg.parsing.error")); //$NON-NLS-1$
 			}
 		}
 
@@ -231,14 +231,14 @@ public final class DropDataHelper {
 			RadioDialog lDialog = null;
 			if (inWebResult.hasBibliography()) {
 				lDialog = new RadioDialog(
-						new Shell(Display.getCurrent()),
-						RelationsMessages
-								.getString("DropDataHelper.view.title.drop"), RelationsMessages.getString("DropDataHelper.view.msg.drop"), OPTIONS_EXT, ITEM_TEXT_EXT, LABELS_EXT); //$NON-NLS-1$ //$NON-NLS-2$
+				        new Shell(Display.getCurrent()),
+				        RelationsMessages
+				                .getString("DropDataHelper.view.title.drop"), RelationsMessages.getString("DropDataHelper.view.msg.drop"), OPTIONS_EXT, ITEM_TEXT_EXT, LABELS_EXT); //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
 				lDialog = new RadioDialog(
-						new Shell(Display.getCurrent()),
-						RelationsMessages
-								.getString("DropDataHelper.view.title.drop"), RelationsMessages.getString("DropDataHelper.view.msg.drop"), OPTIONS_DFT, 0, LABELS_DFT); //$NON-NLS-1$ //$NON-NLS-2$
+				        new Shell(Display.getCurrent()),
+				        RelationsMessages
+				                .getString("DropDataHelper.view.title.drop"), RelationsMessages.getString("DropDataHelper.view.msg.drop"), OPTIONS_DFT, 0, LABELS_DFT); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (lDialog.open() == RadioDialog.OK) {
 				return lDialog.getResult();
@@ -258,8 +258,8 @@ public final class DropDataHelper {
 		 * @throws VException
 		 */
 		private UniqueID createItemOfType(final int inItemType,
-				final WebDropResult inWebResult, final IEclipseContext inContext)
-				throws VException {
+		        final WebDropResult inWebResult, final IEclipseContext inContext)
+		        throws VException {
 			IItem lItem = null;
 			switch (inItemType) {
 			case IItem.TERM:
@@ -279,10 +279,10 @@ public final class DropDataHelper {
 		}
 
 		private IItem createPerson(final WebDropResult inWebResult,
-				final IEclipseContext inContext) {
+		        final IEclipseContext inContext) {
 			final NewPersonAction lAction = new NewPersonAction.Builder(
-					inWebResult.getTitle()).text(inWebResult.getText()).build(
-					inContext);
+			        inWebResult.getTitle()).text(inWebResult.getText()).build(
+			        inContext);
 			lAction.execute();
 			return lAction.getNewItem();
 		}
@@ -293,10 +293,10 @@ public final class DropDataHelper {
 		}
 
 		private IItem createTerm(final WebDropResult inWebResult,
-				final IEclipseContext inContext) {
+		        final IEclipseContext inContext) {
 			final NewTermAction lAction = new NewTermAction.Builder(
-					inWebResult.getTitle()).text(inWebResult.getText()).build(
-					inContext);
+			        inWebResult.getTitle()).text(inWebResult.getText()).build(
+			        inContext);
 			lAction.execute();
 			return lAction.getNewItem();
 		}

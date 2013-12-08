@@ -30,7 +30,7 @@ import org.elbe.relations.data.bom.ILightWeightItem;
  * @author Luthiger
  */
 public class TermView extends AbstractSelectionView {
-	private static final String POPUP_ID = "org.elbe.relations.view.terms.popup";
+	private static final String POPUP_ID = "org.elbe.relations.view.terms.popup"; //$NON-NLS-1$
 
 	@Inject
 	public TermView(final Composite inParent) {

@@ -30,9 +30,7 @@ import org.elbe.relations.services.IBrowserManager;
  * 
  * @author Luthiger Created on 20.12.2009
  */
-@SuppressWarnings("restriction")
 public class DropHelper {
-
 	// prevent class instantiation
 	private DropHelper() {
 	}
@@ -51,15 +49,15 @@ public class DropHelper {
 	 * @throws Exception
 	 */
 	public static IAssociationsModel getModel(final ItemAdapter inSelected,
-			final IBrowserManager inBrowserManager,
-			final IEclipseContext inContext) throws Exception {
+	        final IBrowserManager inBrowserManager,
+	        final IEclipseContext inContext) throws Exception {
 		final CentralAssociationsModel lCenter = inBrowserManager
-				.getCenterModel();
+		        .getCenterModel();
 		if (lCenter.getCenter().equals(inSelected)) {
 			return lCenter;
 		}
 		return PeripheralAssociationsModel.createExternalAssociationsModel(
-				inSelected, inContext);
+		        inSelected, inContext);
 	}
 
 }

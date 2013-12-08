@@ -75,7 +75,7 @@ public class LZWFilter implements Filter {
                 }
                 if( data == null )
                 {
-                    throw new StreamCorruptedException( "Error: data is null" );
+                    throw new StreamCorruptedException( "Error: data is null" ); //$NON-NLS-1$
                 }
                 dic.visit(data);
 

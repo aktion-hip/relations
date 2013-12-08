@@ -125,7 +125,7 @@ public abstract class AbstractChangeDB implements IDBChange {
 		((TempSettings) dbSettings).saveToPreferences();
 
 		// trigger change
-		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_DB, "changeDB");
+		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_DB, "changeDB"); //$NON-NLS-1$
 	}
 
 	/*

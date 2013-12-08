@@ -36,7 +36,7 @@ public class NoOpIndexer extends RelationsIndexer {
 	 * NoOpIndexer constuctor.
 	 */
 	public NoOpIndexer() {
-		super("");
+		super(""); //$NON-NLS-1$
 	}
 
 	/*

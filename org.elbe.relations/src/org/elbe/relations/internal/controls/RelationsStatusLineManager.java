@@ -24,7 +24,6 @@ import javax.inject.Inject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.core.di.extensions.EventTopic;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.StatusLineContributionItem;
@@ -33,14 +32,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.RelationsMessages;
+import org.elbe.relations.data.Constants;
 import org.elbe.relations.db.IDataService;
+import org.elbe.relations.internal.utility.WizardHelper;
 
 /**
  * The Relations application's status line.
  * 
  * @author Luthiger
  */
-@SuppressWarnings("restriction")
 public class RelationsStatusLineManager {
 	private final static int DISPLAY_PERIOD = 5; // number of seconds
 
@@ -55,27 +55,29 @@ public class RelationsStatusLineManager {
 	 */
 	public RelationsStatusLineManager() {
 		statusItemDBName = new StatusLineContributionItem(
-				RelationsConstants.STATUS_ITEM_DB_NAME, 36);
+		        Constants.STATUS_ITEM_DB_NAME, 36);
 		statusItemDBSize = new StatusLineContributionItem(
-				RelationsConstants.STATUS_ITEM_DB_SIZE, 25);
+		        Constants.STATUS_ITEM_DB_SIZE, 25);
 	}
 
 	@PostConstruct
 	void afterInit(final Composite inParent, final IEclipseContext inContext,
-			final IDataService inDataService) {
+	        final IDataService inDataService) {
 		dataService = inDataService;
 
 		statusLineManager = new StatusLineManager();
 		statusLineManager.createControl(inParent);
 
 		statusLineManager.prependToGroup(StatusLineManager.BEGIN_GROUP,
-				statusItemDBName);
-		statusLineManager.insertAfter(RelationsConstants.STATUS_ITEM_DB_NAME,
-				statusItemDBSize);
+		        statusItemDBName);
+		statusLineManager.insertAfter(Constants.STATUS_ITEM_DB_NAME,
+		        statusItemDBSize);
 
 		setData();
-		inContext.set(IStatusLineManager.class, statusLineManager);
-		inContext.set(RelationsStatusLineManager.class, this);
+		final IEclipseContext lContext = WizardHelper
+		        .getWorkbenchContext(inContext);
+		lContext.set(IStatusLineManager.class, statusLineManager);
+		lContext.set(RelationsStatusLineManager.class, this);
 	}
 
 	private void setData() {
@@ -89,9 +91,9 @@ public class RelationsStatusLineManager {
 
 	private void setDBSize(final int inDBSize) {
 		statusItemDBSize
-				.setText(RelationsMessages
-						.getString(
-								"RelationsStatusLineManager.lbl.number", new Object[] { new Integer(inDBSize) })); //$NON-NLS-1$
+		        .setText(RelationsMessages
+		                .getString(
+		                        "RelationsStatusLineManager.lbl.number", new Object[] { new Integer(inDBSize) })); //$NON-NLS-1$
 	}
 
 	/**
@@ -115,7 +117,7 @@ public class RelationsStatusLineManager {
 	 *            long Number of seconds the messages is displayed.
 	 */
 	public void showStatusLineMessage(final String inText,
-			final int inDisplayTime) {
+	        final int inDisplayTime) {
 		statusLineManager.setMessage(inText);
 		Display.getCurrent().timerExec(inDisplayTime * 1000, new Runnable() {
 			@Override
@@ -141,14 +143,14 @@ public class RelationsStatusLineManager {
 	@Inject
 	@Optional
 	void updateCounter(
-			@UIEventTopic(RelationsConstants.TOPIC_DB_CHANGED_RELOAD) final String inEvent) {
+	        @UIEventTopic(RelationsConstants.TOPIC_DB_CHANGED_RELOAD) final String inEvent) {
 		setData();
 	}
 
 	@Inject
 	@Optional
 	void updateDB(
-			@EventTopic(RelationsConstants.TOPIC_DB_CHANGED_INITIALZED) final String inEvent) {
+	        @UIEventTopic(RelationsConstants.TOPIC_DB_CHANGED_INITIALZED) final String inEvent) {
 		setData();
 	}
 

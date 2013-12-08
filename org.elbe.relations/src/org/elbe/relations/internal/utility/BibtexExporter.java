@@ -41,7 +41,6 @@ import org.elbe.relations.data.bom.BOMHelper;
 import org.elbe.relations.data.bom.Text;
 import org.elbe.relations.data.bom.TextHome;
 import org.elbe.relations.db.IDataService;
-import org.elbe.relations.internal.controls.RelationsStatusLineManager;
 import org.hip.kernel.bom.OrderObject;
 import org.hip.kernel.bom.QueryResult;
 import org.hip.kernel.bom.impl.OrderObjectImpl;
@@ -54,9 +53,6 @@ import org.hip.kernel.bom.impl.OrderObjectImpl;
 @SuppressWarnings("restriction")
 public class BibtexExporter {
 	private final static String NL = System.getProperty("line.separator"); //$NON-NLS-1$
-
-	@Inject
-	private RelationsStatusLineManager statusLine;
 
 	@Inject
 	@Named(IServiceConstants.ACTIVE_SHELL)
@@ -85,9 +81,9 @@ public class BibtexExporter {
 	 */
 	public void export() {
 		final ProgressMonitorDialog lDialog = new ProgressMonitorJobsDialog(
-				shell);
+		        shell);
 		lDialog.open();
-		final ExportJob lJob = new ExportJob(); //$NON-NLS-1$
+		final ExportJob lJob = new ExportJob();
 		try {
 			lDialog.run(true, true, lJob);
 		}
@@ -111,16 +107,16 @@ public class BibtexExporter {
 
 			FileWriter lWriter = null;
 			final SubMonitor lProgress = SubMonitor.convert(inMonitor,
-					lNumberOf);
+			        lNumberOf);
 			lProgress.beginTask(RelationsMessages
-					.getString("BibtexExporter.action.message"), lNumberOf); //$NON-NLS-1$
+			        .getString("BibtexExporter.action.message"), lNumberOf); //$NON-NLS-1$
 			try {
 				lWriter = new FileWriter(lBibtex);
 
 				final OrderObject lOrder = new OrderObjectImpl();
 				lOrder.setValue(TextHome.KEY_AUTHOR, 1);
 				final QueryResult lTexts = BOMHelper.getTextHome().select(
-						lOrder);
+				        lOrder);
 
 				boolean lFirst = true;
 				while (lTexts.hasMoreElements()) {
@@ -138,7 +134,8 @@ public class BibtexExporter {
 			}
 			catch (final Exception exc) {
 				log.error(exc, exc.getMessage());
-			} finally {
+			}
+			finally {
 				if (lWriter != null) {
 					try {
 						lWriter.close();

@@ -1,11 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Finder type relations browser
+Bundle-Name: %relations.finder.browser.name
 Bundle-SymbolicName: org.elbe.relations.browser.finder;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: org.elbe.relations.browser.finder.Activator
-Bundle-Vendor: RelationWare
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: %relations.finder.browser.vendor
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7,
+ JavaSE-1.6
 Import-Package: javax.annotation;version="1.1.0",
  javax.inject;version="1.0.0",
  org.eclipse.core.commands,
@@ -29,13 +30,13 @@ Import-Package: javax.annotation;version="1.1.0",
  org.eclipse.swt.events,
  org.eclipse.swt.graphics,
  org.eclipse.swt.widgets,
- org.elbe.relations,
- org.elbe.relations.data.utility,
- org.elbe.relations.dnd,
- org.elbe.relations.models,
- org.elbe.relations.services,
- org.elbe.relations.utility,
- org.hip.kernel.exc,
+ org.elbe.relations;version="[2.0.0,3.0.0)",
+ org.elbe.relations.data.utility;version="[1.0.0,2.0.0)",
+ org.elbe.relations.dnd;version="[2.0.0,3.0.0)",
+ org.elbe.relations.models;version="[2.0.0,3.0.0)",
+ org.elbe.relations.services;version="[2.0.0,3.0.0)",
+ org.elbe.relations.utility;version="[2.0.0,3.0.0)",
+ org.hip.kernel.exc;version="[1.0.0,2.0.0)",
  org.osgi.framework;version="1.3.0",
  org.osgi.service.prefs;version="1.1.1"
 Bundle-ActivationPolicy: lazy

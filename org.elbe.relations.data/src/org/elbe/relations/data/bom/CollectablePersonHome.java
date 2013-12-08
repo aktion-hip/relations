@@ -33,6 +33,7 @@ import org.hip.kernel.sys.VSys;
  * 
  * @author Benno Luthiger Created on Sep 23, 2004
  */
+@SuppressWarnings("serial")
 public class CollectablePersonHome extends PersonHome {
 
 	/**
@@ -55,7 +56,7 @@ public class CollectablePersonHome extends PersonHome {
 	 */
 	@Override
 	public QueryResult select(final QueryStatement inStatement)
-			throws SQLException {
+	        throws SQLException {
 		if (VSys.assertNotNull(this, "select(QueryStatement)", inStatement) == Assert.FAILURE) //$NON-NLS-1$
 			return new AlternativeQueryResult(null, null, null);
 

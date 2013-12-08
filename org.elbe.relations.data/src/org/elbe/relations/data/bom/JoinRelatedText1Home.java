@@ -18,11 +18,11 @@
  ***************************************************************************/
 package org.elbe.relations.data.bom;
 
-
 /**
  * @author Luthiger
  * @see org.elbe.relations.data.bom.bom.JoinRelatedTextHome
  */
+@SuppressWarnings("serial")
 public class JoinRelatedText1Home extends JoinRelatedTextHome {
 	private final static String colName = RelationHome.KEY_ITEM1;
 

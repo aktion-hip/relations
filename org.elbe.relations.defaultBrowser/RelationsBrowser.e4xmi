@@ -10,39 +10,39 @@
   <imports xsi:type="commands:Command" xmi:id="_ruY98EI5EeK4WpHp4ZQ4aQ" elementId="org.elbe.relations.command.relation.remove"/>
   <imports xsi:type="commands:BindingContext" xmi:id="_UsLV0EJVEeK4WpHp4ZQ4aQ" elementId="org.elbe.relations.context.browser"/>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_gwxPwDTFEeKJCcF8Dmjvqg" featurename="children" parentElementId="relations.views" positionInList="first">
-    <elements xsi:type="basic:Part" xmi:id="_yf8x0DTGEeKJCcF8Dmjvqg" elementId="org.elbe.relations.browser.default" contributionURI="bundleclass://org.elbe.relations.defaultBrowser/org.elbe.relations.defaultbrowser.internal.DefaultBrowserPart" label="Relations" iconURI="platform:/plugin/org.elbe.relations.defaultBrowser/icons/relations.gif" tooltip="Relations" bindingContexts="_UsLV0EJVEeK4WpHp4ZQ4aQ" closeable="true">
+    <elements xsi:type="basic:Part" xmi:id="_yf8x0DTGEeKJCcF8Dmjvqg" elementId="org.elbe.relations.browser.default" contributionURI="bundleclass://org.elbe.relations.defaultBrowser/org.elbe.relations.defaultbrowser.internal.DefaultBrowserPart" label="%part.label.title" iconURI="platform:/plugin/org.elbe.relations.defaultBrowser/icons/relations.gif" tooltip="%part.label.title" bindingContexts="_UsLV0EJVEeK4WpHp4ZQ4aQ" closeable="true">
       <menus xsi:type="menu:PopupMenu" xmi:id="_KOgOIEI2EeK4WpHp4ZQ4aQ" elementId="org.elbe.relations.defaultbrowser.popup">
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_XbYfIEI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:item.edit" label="ausgew&#xe4;hltes Item: editieren" iconURI="platform:/plugin/org.elbe.relations.defaultBrowser/icons/edit.gif" tooltip="" command="_-qVgAEI4EeK4WpHp4ZQ4aQ">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_XbYfIEI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:item.edit" label="%handled.menuitem.label.edit" iconURI="platform:/plugin/org.elbe.relations.defaultBrowser/icons/edit.gif" tooltip="" command="_-qVgAEI4EeK4WpHp4ZQ4aQ">
           <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_Uvnh0EJJEeK4WpHp4ZQ4aQ" coreExpressionId="org.elbe.relations.definition.browser.popup.item"/>
         </children>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_hcAPgEI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:item.delete" label="ausgew&#xe4;hltes Item: l&#xf6;schen" iconURI="platform:/plugin/org.elbe.relations.defaultBrowser/icons/delete.png" command="_pH9HMEI5EeK4WpHp4ZQ4aQ">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_hcAPgEI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:item.delete" label="%handled.menuitem.label.delete" iconURI="platform:/plugin/org.elbe.relations.defaultBrowser/icons/delete.png" command="_pH9HMEI5EeK4WpHp4ZQ4aQ">
           <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_zYzRoEJJEeK4WpHp4ZQ4aQ" coreExpressionId="org.elbe.relations.definition.browser.popup.item"/>
         </children>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_iUFuEEI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:relation.edit" label="ausgew&#xe4;hltes Item: Beziehungen" iconURI="platform:/plugin/org.elbe.relations.defaultBrowser/icons/relations.gif" command="_pqDusEI5EeK4WpHp4ZQ4aQ">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_iUFuEEI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:relation.edit" label="%handled.menuitem.label.relate" iconURI="platform:/plugin/org.elbe.relations.defaultBrowser/icons/relations.gif" command="_pqDusEI5EeK4WpHp4ZQ4aQ">
           <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_1EEgoEJJEeK4WpHp4ZQ4aQ" coreExpressionId="org.elbe.relations.definition.browser.popup.item"/>
         </children>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_iwpuQEI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:print" label="Drucken" iconURI="platform:/plugin/org.elbe.relations.defaultBrowser/icons/print.gif" command="_qHbnMEI5EeK4WpHp4ZQ4aQ">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_iwpuQEI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:print" label="%handled.menuitem.label.print" iconURI="platform:/plugin/org.elbe.relations.defaultBrowser/icons/print.gif" command="_qHbnMEI5EeK4WpHp4ZQ4aQ">
           <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_2w85MEJJEeK4WpHp4ZQ4aQ" coreExpressionId="org.elbe.relations.definition.browser.popup.item"/>
         </children>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_jKGJAEI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:bookmark" label="Lesezeichen" iconURI="platform:/plugin/org.elbe.relations.defaultBrowser/icons/bkmrk_nav.gif" command="_qeZVsEI5EeK4WpHp4ZQ4aQ">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_jKGJAEI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:bookmark" label="%handled.menuitem.label.bookmark" iconURI="platform:/plugin/org.elbe.relations.defaultBrowser/icons/bkmrk_nav.gif" command="_qeZVsEI5EeK4WpHp4ZQ4aQ">
           <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_3wse8EJJEeK4WpHp4ZQ4aQ" coreExpressionId="org.elbe.relations.definition.browser.popup.item"/>
         </children>
         <children xsi:type="menu:MenuSeparator" xmi:id="_kIu7gEI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:separator.center"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_lZ9S0EI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:item.center" label="ausgew&#xe4;hltes Item: zentrieren" command="_q2maUEI5EeK4WpHp4ZQ4aQ">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_lZ9S0EI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:item.center" label="%handled.menuitem.label.center" command="_q2maUEI5EeK4WpHp4ZQ4aQ">
           <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_4x-80EJJEeK4WpHp4ZQ4aQ" coreExpressionId="org.elbe.relations.definition.browser.popup.item"/>
         </children>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_l3aq4EI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:relation.remove" label="Beziehung entfernen" command="_rPvTEEI5EeK4WpHp4ZQ4aQ">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_l3aq4EI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:relation.remove" label="%handled.menuitem.label.delete.relation" command="_rPvTEEI5EeK4WpHp4ZQ4aQ">
           <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_5um9IEJJEeK4WpHp4ZQ4aQ" coreExpressionId="org.elbe.relations.definition.browser.popup.item"/>
         </children>
         <children xsi:type="menu:MenuSeparator" xmi:id="_m9osEEI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:separator.connection"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_noow4EI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:relation.delete" label="Beziehung entfernen" command="_ruY98EI5EeK4WpHp4ZQ4aQ">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_noow4EI2EeK4WpHp4ZQ4aQ" elementId="defaultbrowser.popup:relation.delete" label="%handled.menuitem.label.delete.relation" command="_ruY98EI5EeK4WpHp4ZQ4aQ">
           <visibleWhen xsi:type="ui:CoreExpression" xmi:id="_7FvvMEJJEeK4WpHp4ZQ4aQ" coreExpressionId="org.elbe.relations.definition.browser.popup.connection"/>
         </children>
       </menus>
     </elements>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_VWVw4EgDEeOTkOOXfroLuQ" featurename="descriptors" parentElementId="org.elbe.relations.application" positionInList="first">
-    <elements xsi:type="basic_1:PartDescriptor" xmi:id="__3LZQEgFEeOTkOOXfroLuQ" elementId="relations.browser.0" label="Relations" iconURI="platform:/plugin/org.elbe.relations.defaultBrowser/icons/relations.gif" tooltip="The classic relations browser with the focus item in the center and all related items on circles.">
+    <elements xsi:type="basic_1:PartDescriptor" xmi:id="__3LZQEgFEeOTkOOXfroLuQ" elementId="relations.browser.0" label="%part.label.title" iconURI="platform:/plugin/org.elbe.relations.defaultBrowser/icons/relations.gif" tooltip="%part.descriptor.tooltip" bindingContexts="_UsLV0EJVEeK4WpHp4ZQ4aQ" closeable="true" dirtyable="true" contributionURI="bundleclass://org.elbe.relations.defaultBrowser/org.elbe.relations.defaultbrowser.internal.DefaultBrowserPart">
       <tags>View</tags>
       <tags>categoryTag:Relations Browsers</tags>
     </elements>

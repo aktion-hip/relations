@@ -40,7 +40,7 @@ public class COSDocument extends COSBase {
 
 	private File tmpFile = null;
 	private RandomAccess scratchFile = null;
-	private String headerString = "%PDF-1.4";
+	private String headerString = "%PDF-1.4"; //$NON-NLS-1$
 	private float version;
 	private COSDictionary trailer;
 
@@ -59,7 +59,7 @@ public class COSDocument extends COSBase {
 	 * @throws IOException
 	 */
 	public COSDocument() throws IOException {
-		this(new File(System.getProperty("java.io.tmpdir")));
+		this(new File(System.getProperty("java.io.tmpdir"))); //$NON-NLS-1$
 	}
 
 	/**
@@ -68,8 +68,8 @@ public class COSDocument extends COSBase {
 	 * @throws IOException
 	 */
 	public COSDocument(File inScratchDir) throws IOException {
-		tmpFile = File.createTempFile("pdfbox", "tmp", inScratchDir);
-		scratchFile = new RandomAccessFile(tmpFile, "rw");
+		tmpFile = File.createTempFile("pdfbox", "tmp", inScratchDir); //$NON-NLS-1$ //$NON-NLS-2$
+		scratchFile = new RandomAccessFile(tmpFile, "rw"); //$NON-NLS-1$
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class COSDocument extends COSBase {
      */
 	public void parseXrefStreams() throws IOException {
         COSDictionary lTrailerDict = new COSDictionary();
-        Iterator<COSObject> lXrefIterator = getObjectsByType("XRef").iterator();
+        Iterator<COSObject> lXrefIterator = getObjectsByType("XRef").iterator(); //$NON-NLS-1$
         while (lXrefIterator.hasNext()) {
             COSObject lXrefStream = lXrefIterator.next();
             COSStream lStream = (COSStream)lXrefStream.getObject();
@@ -245,7 +245,7 @@ public class COSDocument extends COSBase {
 	public boolean isEncrypted() {
         boolean outEncrypted = false;
         if (trailer != null) {
-            outEncrypted = trailer.getDictionaryObject("Encrypt") != null;
+            outEncrypted = trailer.getDictionaryObject("Encrypt") != null; //$NON-NLS-1$
         }
         return outEncrypted;
 	}
@@ -257,7 +257,7 @@ public class COSDocument extends COSBase {
      * @throws IOException If there is an error parsing the stream.
      */
 	public void dereferenceObjectStreams() throws IOException {
-        Iterator<COSObject> lObjectStreams = getObjectsByType("ObjStm").iterator();
+        Iterator<COSObject> lObjectStreams = getObjectsByType("ObjStm").iterator(); //$NON-NLS-1$
         while (lObjectStreams.hasNext()) {
             COSObject lObjectStream = lObjectStreams.next();
             COSStream lStream = (COSStream)lObjectStream.getObject();

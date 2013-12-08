@@ -30,7 +30,7 @@ import org.elbe.relations.data.bom.ILightWeightItem;
  * @author Luthiger
  */
 public class TextView extends AbstractSelectionView {
-	private static final String POPUP_ID = "org.elbe.relations.view.texts.popup";
+	private static final String POPUP_ID = "org.elbe.relations.view.texts.popup"; //$NON-NLS-1$
 
 	@Inject
 	public TextView(final Composite inParent) {

@@ -70,7 +70,7 @@ public class CCITTFaxDecodeFilter implements Filter
 
 
         // Get ImageParams from PDF
-        COSBase baseObj = options.getDictionaryObject(new String[] {"DecodeParms","DP"});
+        COSBase baseObj = options.getDictionaryObject(new String[] {"DecodeParms","DP"}); //$NON-NLS-1$ //$NON-NLS-2$
         COSDictionary dict = null;
         if( baseObj instanceof COSDictionary )
         {
@@ -85,24 +85,24 @@ public class CCITTFaxDecodeFilter implements Filter
             }
             else
             {
-                throw new IOException( "Error: DecodeParms cannot be null for CCITTFaxDecode" );
+                throw new IOException( "Error: DecodeParms cannot be null for CCITTFaxDecode" ); //$NON-NLS-1$
             }
         }
         else if( baseObj == null )
         {
-            throw new IOException( "Error: DecodeParms cannot be null for CCITTFaxDecode" );
+            throw new IOException( "Error: DecodeParms cannot be null for CCITTFaxDecode" ); //$NON-NLS-1$
         }
         else
         {
-            throw new IOException( "Error: Expected COSArray or COSDictionary and not "
+            throw new IOException( "Error: Expected COSArray or COSDictionary and not " //$NON-NLS-1$
                     + baseObj.getClass().getName() );
         }
 
-        int width = options.getInt("Width");
-        int height = options.getInt("Height");
+        int width = options.getInt("Width"); //$NON-NLS-1$
+        int height = options.getInt("Height"); //$NON-NLS-1$
         int length = options.getInt(COSName.LENGTH);
-        int compressionType = dict.getInt("K");
-        boolean blackIs1 = dict.getBoolean("BlackIs1", false);
+        int compressionType = dict.getInt("K"); //$NON-NLS-1$
+        boolean blackIs1 = dict.getBoolean("BlackIs1", false); //$NON-NLS-1$
 
 
         // HEADER-INFO and starting point of TAG-DICTIONARY
@@ -179,7 +179,7 @@ public class CCITTFaxDecodeFilter implements Filter
 
         // SOFTWARE 0x0131
         // minimum 4 chars
-        writeTagSoftware(result, "pdfbox".getBytes());
+        writeTagSoftware(result, "pdfbox".getBytes()); //$NON-NLS-1$
 
         // DATE AND TIME 0x0132
         writeTagDateTime(result, new Date());
@@ -713,7 +713,7 @@ public class CCITTFaxDecodeFilter implements Filter
         result.write(i3);
         result.write(i4);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss"); //$NON-NLS-1$
         String datetime = sdf.format(date);
         tailer.write(datetime.getBytes());
         tailer.write(0);
@@ -727,6 +727,6 @@ public class CCITTFaxDecodeFilter implements Filter
     public void encode(InputStream rawData, OutputStream result, COSDictionary options, int filterIndex )
         throws IOException
     {
-        System.err.println("Warning: CCITTFaxDecode.encode is not implemented yet, skipping this stream.");
+        System.err.println("Warning: CCITTFaxDecode.encode is not implemented yet, skipping this stream."); //$NON-NLS-1$
     }
 }

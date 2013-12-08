@@ -35,20 +35,23 @@ import org.elbe.relations.internal.backup.ZipBackup;
 import org.elbe.relations.internal.controls.RelationsStatusLineManager;
 import org.elbe.relations.internal.data.DBSettings;
 import org.elbe.relations.internal.utility.EmbeddedCatalogHelper;
+import org.elbe.relations.internal.utility.WizardHelper;
 
 /**
- * Wizard to backup the embedded database.
+ * Wizard to backup the embedded database.<br />
+ * Note: this is an Eclipse 3 wizard. To make it e4, let the values for the
+ * annotated field be injected (instead of using the method init()).
  * 
- * @author Luthiger Created on 25.04.2007
+ * @author Luthiger
  */
 @SuppressWarnings("restriction")
 public class BackupEmbedded extends Wizard implements IExportWizard {
 	private final static MessageFormat SUCCESS_MSG = new MessageFormat(
-			RelationsMessages.getString("BackupEmbedded.feedback.success")); //$NON-NLS-1$
+	        RelationsMessages.getString("BackupEmbedded.feedback.success")); //$NON-NLS-1$
 	private final static MessageFormat PROBLEMS_MSG = new MessageFormat(
-			RelationsMessages.getString("BackupEmbedded.feedback.problems")); //$NON-NLS-1$
+	        RelationsMessages.getString("BackupEmbedded.feedback.problems")); //$NON-NLS-1$
 	private final static String NO_OP_MESSAGE = RelationsMessages
-			.getString("BackupEmbedded.message.noop"); //$NON-NLS-1$
+	        .getString("BackupEmbedded.message.noop"); //$NON-NLS-1$
 
 	@Inject
 	private Logger log;
@@ -63,7 +66,12 @@ public class BackupEmbedded extends Wizard implements IExportWizard {
 
 	@Override
 	public void init(final IWorkbench inWorkbench,
-			final IStructuredSelection inSelection) {
+	        final IStructuredSelection inSelection) {
+		log = (Logger) inWorkbench.getAdapter(Logger.class);
+		dbSettings = (DBSettings) inWorkbench.getAdapter(DBSettings.class);
+		statusLine = WizardHelper.getFromWorkbench(
+		        RelationsStatusLineManager.class, inWorkbench);
+
 		setWindowTitle(RelationsMessages.getString("BackupEmbedded.page.title")); //$NON-NLS-1$
 	}
 
@@ -80,40 +88,30 @@ public class BackupEmbedded extends Wizard implements IExportWizard {
 		addPage(page);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
-	 */
 	@Override
 	public boolean performFinish() {
 		final String lCatalog = dbSettings.getCatalog();
 		try {
 			final String lDataDirectory = EmbeddedCatalogHelper
-					.getDBStorePath().getCanonicalPath()
-					+ File.separator
-					+ lCatalog;
+			        .getDBStorePath().getCanonicalPath()
+			        + File.separator
+			        + lCatalog;
 			final ZipBackup lBackup = new ZipBackup(lDataDirectory,
-					page.getFileName());
+			        page.getFileName());
 			lBackup.backup();
 			statusLine.showStatusLineMessage(SUCCESS_MSG
-					.format(new String[] { lCatalog }));
+			        .format(new String[] { lCatalog }));
 		}
 		catch (final IOException exc) {
 			MessageDialog
-					.openError(
-							getShell(),
-							RelationsMessages.getString("BackupEmbedded.error"), PROBLEMS_MSG.format(new String[] { lCatalog })); //$NON-NLS-1$
+			        .openError(
+			                getShell(),
+			                RelationsMessages.getString("BackupEmbedded.error"), PROBLEMS_MSG.format(new String[] { lCatalog })); //$NON-NLS-1$
 			log.error(exc, exc.getMessage());
 		}
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.wizard.Wizard#dispose()
-	 */
 	@Override
 	public void dispose() {
 		if (page != null)

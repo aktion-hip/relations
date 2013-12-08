@@ -4,10 +4,10 @@ Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.elbe.relations.biblio.dft
 Bundle-Version: 1.1.0.qualifier
 Bundle-Vendor: RelationWare
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: org.elbe.relations.data.bom,
- org.elbe.relations.data.utility,
- org.elbe.relations.services,
- org.elbe.relations.utility,
- org.hip.kernel.exc
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: org.elbe.relations.data.bom;version="[1.0.0,2.0.0)",
+ org.elbe.relations.data.utility;version="[1.0.0,2.0.0)",
+ org.elbe.relations.services;version="[2.0.0,3.0.0)",
+ org.elbe.relations.utility;version="[2.0.0,3.0.0)",
+ org.hip.kernel.exc;version="[1.0.0,2.0.0)"
 Service-Component: OSGI-INF/bibliography.xml

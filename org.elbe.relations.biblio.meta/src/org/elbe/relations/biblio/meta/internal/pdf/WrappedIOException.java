@@ -20,29 +20,33 @@ import java.io.IOException;
 
 /**
  * An simple class that allows a sub exception to be stored.
- *
+ * 
  * @author <a href="mailto:ben@benlitchfield.com">Ben Litchfield</a>
  * @version copied from org.apache.pdfbox (1.0.0)
  */
+@SuppressWarnings("serial")
 public class WrappedIOException extends IOException {
-    /**
-     * constructor comment.
-     *
-     * @param exc The root exception that caused this exception.
-     */
-    public WrappedIOException(Throwable exc) {
-        initCause(exc);
-    }
+	/**
+	 * constructor comment.
+	 * 
+	 * @param exc
+	 *            The root exception that caused this exception.
+	 */
+	public WrappedIOException(final Throwable exc) {
+		initCause(exc);
+	}
 
-    /**
-     * constructor comment.
-     *
-     * @param inMessage Descriptive text for the exception.
-     * @param exc The root exception that caused this exception.
-     */
-    public WrappedIOException(String inMessage, Throwable exc) {
-        super(inMessage);
-        initCause(exc);
-    }
+	/**
+	 * constructor comment.
+	 * 
+	 * @param inMessage
+	 *            Descriptive text for the exception.
+	 * @param exc
+	 *            The root exception that caused this exception.
+	 */
+	public WrappedIOException(final String inMessage, final Throwable exc) {
+		super(inMessage);
+		initCause(exc);
+	}
 
 }

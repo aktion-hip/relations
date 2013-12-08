@@ -18,16 +18,23 @@
  ***************************************************************************/
 package org.elbe.relations.internal.utility;
 
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IWorkbench;
 
 /**
  * Helper class providing utility methods for wizard pages.
  * 
- * @author Luthiger Created on 15.01.2007
+ * @author Luthiger
  */
-public class WizardHelper {
+public final class WizardHelper {
+	private static final String WORKBENCH_CONTEXT_ID = "WorkbenchContext"; //$NON-NLS-1$
+
+	private WizardHelper() {
+		// prevent instantiation
+	}
 
 	/**
 	 * Creates a composite using a <code>GridLayout</code> with the specified
@@ -40,7 +47,7 @@ public class WizardHelper {
 	 * @return Composite
 	 */
 	public static Composite createComposite(final Composite inParent,
-			final int inColumns) {
+	        final int inColumns) {
 		final GridLayout lLayout = new GridLayout();
 		lLayout.numColumns = inColumns;
 		lLayout.marginHeight = 0;
@@ -49,6 +56,41 @@ public class WizardHelper {
 		final Composite outComposite = new Composite(inParent, SWT.NONE);
 		outComposite.setLayout(lLayout);
 		return outComposite;
+	}
+
+	/**
+	 * Retrieves the <code>WorkbenchContext</code> from the passed context.
+	 * 
+	 * @param inContext
+	 *            {@link IEclipseContext}
+	 * @return {@link IEclipseContext} the workbench context or the actual
+	 *         (OSGi) context
+	 */
+	public static IEclipseContext getWorkbenchContext(
+	        final IEclipseContext inContext) {
+		IEclipseContext lContext;
+		while ((lContext = inContext.getParent()) != null) {
+			if (WORKBENCH_CONTEXT_ID.equals(lContext.toString())) {
+				return lContext;
+			}
+		}
+		return inContext;
+	}
+
+	/**
+	 * Returns value associated with the given class from the workbench context.
+	 * 
+	 * @param inClass
+	 *            the class that needs to be found in the workbench context
+	 * @param inWorkbench
+	 *            {@link IWorkbench} the E3 workbench containing the workbench
+	 *            context
+	 * @return an object corresponding to the given class, or <code>null</code>
+	 */
+	public static <T> T getFromWorkbench(final Class<T> inClass,
+	        final IWorkbench inWorkbench) {
+		return ((IEclipseContext) inWorkbench.getAdapter(IEclipseContext.class))
+		        .get(inClass);
 	}
 
 }

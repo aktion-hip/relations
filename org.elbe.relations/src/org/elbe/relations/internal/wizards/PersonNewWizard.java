@@ -18,11 +18,7 @@
  ***************************************************************************/
 package org.elbe.relations.internal.wizards;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
-import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.elbe.relations.RelationsImages;
@@ -40,30 +36,15 @@ import org.elbe.relations.internal.wizards.interfaces.IItemWizardPage;
 public class PersonNewWizard extends AbstractNewWizard {
 	private PersonNewWizardPage page;
 
-	@Inject
-	private IEclipseContext context;
-
-	@Inject
-	private Logger log;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.wizard.Wizard#addPages()
-	 */
 	@Override
 	public void addPages() {
-		page = ContextInjectionFactory.make(PersonNewWizardPage.class, context);
+		page = ContextInjectionFactory.make(PersonNewWizardPage.class,
+		        getEclipseContext());
 		addPage(page);
 		addPages(
-				RelationsMessages.getString("PersonNewWizard.page.title"), RelationsMessages.getString("PersonNewWizard.page.msg")); //$NON-NLS-1$ //$NON-NLS-2$
+		        RelationsMessages.getString("PersonNewWizard.page.title"), RelationsMessages.getString("PersonNewWizard.page.msg")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
-	 */
 	@Override
 	public boolean performFinish() {
 		prepareFinish(page, RelationsImages.PERSON.getImage());
@@ -72,11 +53,11 @@ public class PersonNewWizard extends AbstractNewWizard {
 		}
 		catch (final BOMTruncationException exc) {
 			MessageDialog.openError(Display.getCurrent().getActiveShell(),
-					ERROR_DIALOG, exc.getMessage());
+			        ERROR_DIALOG, exc.getMessage());
 			return false;
 		}
 		catch (final BOMException exc) {
-			log.error(exc, exc.getMessage());
+			log().error(exc, exc.getMessage());
 			return false;
 		}
 		return true;
