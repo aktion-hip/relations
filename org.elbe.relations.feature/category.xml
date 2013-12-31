@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.elbe.relations.add.feature_2.0.0.qualifier.jar" id="org.elbe.relations.add.feature" version="2.0.0.qualifier">
+      <category name="org.elbe.relations"/>
+   </feature>
+   <feature url="features/org.elbe.relations.feature_2.0.0.qualifier.jar" id="org.elbe.relations.feature" version="2.0.0.qualifier">
+      <category name="org.elbe.relations"/>
+   </feature>
+   <category-def name="org.elbe.relations" label="Relations"/>
+</site>

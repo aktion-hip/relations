@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Test
+Bundle-SymbolicName: org.elbe.relations.biblio.dft.test
+Bundle-Version: 1.1.0.qualifier
+Bundle-Vendor: RelationWare
+Fragment-Host: org.elbe.relations.biblio.dft;bundle-version="1.1.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.junit,
+ org.mockito.mockito-all;bundle-version="1.9.5"
+Import-Package: org.hip.kernel.bom.impl

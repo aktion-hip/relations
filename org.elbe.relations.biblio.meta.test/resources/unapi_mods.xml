@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modsCollection version="3.0" xmlns="http://www.loc.gov/mods/v3"
+    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-0.xsd">
+    <mods>
+        <titleInfo>
+            <title>Effects of pulp mill effluents and restricted diet on growth and physiology of rainbow trout (Oncorhynchus mykiss).</title>
+        </titleInfo>
+        <name type="personal">
+            <namePart type="given">K</namePart>
+            <namePart type="family">Mattsson</namePart>
+            <role>
+                <roleTerm type="text">author</roleTerm>
+            </role>
+        </name>
+        <name type="personal">
+            <namePart type="given">KJ</namePart>
+            <namePart type="family">Lehtinen</namePart>
+            <role>
+                <roleTerm type="text">author</roleTerm>
+            </role>
+        </name>
+        <name type="personal">
+            <namePart type="given">J</namePart>
+            <namePart type="family">Tana</namePart>
+            <role>
+                <roleTerm type="text">author</roleTerm>
+            </role>
+        </name>
+        <name type="personal">
+            <namePart type="given">J</namePart>
+            <namePart type="family">Hardig</namePart>
+            <role>
+                <roleTerm type="text">author</roleTerm>
+            </role>
+        </name>
+        <name type="personal">
+            <namePart type="given">J</namePart>
+            <namePart type="family">Kukkonen</namePart>
+            <role>
+                <roleTerm type="text">author</roleTerm>
+            </role>
+        </name>
+        <name type="personal">
+            <namePart type="given">T</namePart>
+            <namePart type="family">Nakari</namePart>
+            <role>
+                <roleTerm type="text">author</roleTerm>
+            </role>
+        </name>
+        <name type="personal">
+            <namePart type="given">C</namePart>
+            <namePart type="family">Engstrom</namePart>
+            <role>
+                <roleTerm type="text">author</roleTerm>
+            </role>
+        </name>
+        <typeOfResource>text</typeOfResource>
+        <relatedItem type="host">
+            <titleInfo>
+                <title>Ecotoxicol Environ Saf</title>
+            </titleInfo>
+            <identifier type="issn">0147-6513</identifier>
+            <originInfo>
+                <issuance>continuing</issuance>
+            </originInfo>
+            <part>
+                <detail type="volume">
+                    <number>49</number>
+                </detail>
+                <detail type="issue">
+                    <number>2</number>
+                </detail>
+                <extent unit="page">
+                    <start>144</start>
+                    <end>54</end>
+                </extent>
+                <date>2001</date>
+            </part>
+        </relatedItem>
+        <subject authority="mesh">
+            <topic>Food Deprivation/physiology</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Water Purification</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Female</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Microsomes, Liver/drug effects/enzymology</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Industrial Waste/*adverse effects</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>In Vitro</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Hepatocytes/drug effects/enzymology</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Gonadal Steroid Hormones/blood</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Hematologic Tests</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Water Pollutants, Chemical/*adverse effects</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Vitellogenin/metabolism</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Sewage/adverse effects/chemistry</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Thyroid Hormones/blood</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Phytosterols/analysis/metabolism</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>*Paper</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Oncorhynchus mykiss/blood/*growth &amp; development/metabolism</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Animal Feed</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>*Chemical Industry</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Animals</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Bile/chemistry/drug effects/metabolism</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Body Weight/*drug effects/physiology</topic>
+        </subject>
+        <subject authority="mesh">
+            <topic>Cytochrome P-450 CYP1A1/metabolism</topic>
+        </subject>
+        <abstract>Academic libraries need to change their recruiting and hiring procedures to stay competitive in today's changing marketplace.</abstract>
+    </mods>
+</modsCollection>

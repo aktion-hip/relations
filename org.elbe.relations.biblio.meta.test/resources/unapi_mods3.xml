@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modsCollection xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mods="http://www.loc.gov/mods/v3"
+    xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+    <mods:mods version="3.3">
+        <mods:titleInfo>
+            <mods:title>Florida Environments Online</mods:title>
+        </mods:titleInfo>
+        <mods:name type="personal">
+            <mods:namePart>Florida Geological Society</mods:namePart>
+        </mods:name>
+        <mods:name type="corporate" authority="naf">
+            <mods:namePart>Florida</mods:namePart>
+            <mods:namePart>Department of Agriculture and Consumer Affairs</mods:namePart>
+        </mods:name>
+        <mods:name type="corporate">
+            <mods:namePart>Agricultural Experiment Station/Extension Service (IFAS) </mods:namePart>
+        </mods:name>
+        <mods:name type="corporate" authority="naf">
+            <mods:namePart>University of Florida</mods:namePart>
+            <mods:namePart>Engineering and Industrial Experiment Station</mods:namePart>
+        </mods:name>
+        <mods:typeOfResource collection="yes">text</mods:typeOfResource>
+        <mods:language>
+            <mods:languageTerm authority="rfc3066">en</mods:languageTerm>
+        </mods:language>
+        <mods:physicalDescription>
+            <mods:internetMediaType>text/html</mods:internetMediaType>
+        </mods:physicalDescription>
+        <mods:abstract>Florida Environments Online contains both digital full text materials and
+            research bibliographies about the ecology and environment of Florida. Digitized
+            materials include more than 200 seminal texts on species and ecosystems selected by
+            scientific experts throughout the state of Florida and digitized specifically for the
+            Linking Florida's Natural Heritage project. They also include the publications of the
+            Florida Geological Society, and agricultural documents created by the Agricultural
+            Experiment Station/Extension Service (IFAS) and the Florida Department of Agriculture
+            and Consumer Affairs, as well as engineering documents created by the UF Engineering and
+            Industrial Experiment Station</mods:abstract>
+        <mods:subject authority="lcsh">
+            <mods:topic>Environmental sciences</mods:topic>
+        </mods:subject>
+        <mods:subject authority="lcsh">
+            <mods:topic>Geology</mods:topic>
+        </mods:subject>
+        <mods:subject authority="lcsh">
+            <mods:topic>Agriculture</mods:topic>
+        </mods:subject>
+        <mods:location>
+            <url>http://palmm.fcla.edu/feol/</url>
+        </mods:location>
+        <mods:recordInfo>
+            <mods:recordContentSource authority="marcorg">MARC organization code for my favorite
+                Library</mods:recordContentSource>
+            <mods:recordCreationDate encoding="iso8601">20030331 </mods:recordCreationDate>
+            <mods:recordIdentifier>12345</mods:recordIdentifier>
+        </mods:recordInfo>
+    </mods:mods>
+</modsCollection>

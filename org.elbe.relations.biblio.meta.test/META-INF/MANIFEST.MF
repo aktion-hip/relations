@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Bibliographical Metadata Test Fragment
+Bundle-SymbolicName: org.elbe.relations.biblio.meta.test
+Bundle-Version: 1.0.0.qualifier
+Fragment-Host: org.elbe.relations.biblio.meta;bundle-version="[1.1.0,2.0.0)"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.junit,
+ org.mockito.mockito-all;bundle-version="1.9.5"
+Import-Package: org.eclipse.e4.core.services.log,
+ org.elbe.relations.db;version="2.0.0"

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<formats>
+<format name="endnote" type="text/plain"/>
+<format name="bibtex" type="text/plain"/>
+<format name="oai_dc" type="application/xml"/>
+<format name="mods" type="application/xml"/>
+</formats>

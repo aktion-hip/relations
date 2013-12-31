@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Default Browser Test Fragment
+Bundle-SymbolicName: org.elbe.relations.defaultBrowser.test
+Bundle-Version: 2.0.0.qualifier
+Fragment-Host: org.elbe.relations.defaultBrowser;bundle-version="[2.0.0,3.0.0)"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.junit
