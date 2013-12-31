@@ -34,7 +34,7 @@ import org.elbe.relations.models.ILightWeightModel;
  * @author Luthiger
  */
 public class LightWeightPersonWithIcon extends LightWeightPerson implements
-		ILightWeightModel {
+        ILightWeightModel {
 
 	/**
 	 * LightWeightPersonWithIcon constructor.
@@ -49,11 +49,11 @@ public class LightWeightPersonWithIcon extends LightWeightPerson implements
 	 * @param inModified
 	 */
 	public LightWeightPersonWithIcon(final long inID, final String inName,
-			final String inFirstname, final String inText, final String inFrom,
-			final String inTo, final Timestamp inCreated,
-			final Timestamp inModified) {
+	        final String inFirstname, final String inText, final String inFrom,
+	        final String inTo, final Timestamp inCreated,
+	        final Timestamp inModified) {
 		super(inID, inName, inFirstname, inText, inFrom, inTo, inCreated,
-				inModified);
+		        inModified);
 	}
 
 	/**
@@ -64,24 +64,14 @@ public class LightWeightPersonWithIcon extends LightWeightPerson implements
 	 */
 	public LightWeightPersonWithIcon(final LightWeightPerson inPerson) {
 		super(inPerson.id, inPerson.name, inPerson.firstname, inPerson.text,
-				inPerson.from, inPerson.to, inPerson.created, inPerson.modified);
+		        inPerson.from, inPerson.to, inPerson.created, inPerson.modified);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.ILightWeightModel#getImage()
-	 */
 	@Override
 	public Image getImage() {
 		return RelationsImages.PERSON.getImage();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.ILightWeightModel#getItemDeleteAction()
-	 */
 	@Override
 	public IAction getItemDeleteAction() {
 		return new IAction() {

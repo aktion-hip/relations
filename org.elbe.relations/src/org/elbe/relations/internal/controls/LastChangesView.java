@@ -25,12 +25,11 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.core.di.extensions.EventTopic;
 import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.di.Focus;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.swt.modeling.EMenuService;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -66,10 +65,9 @@ public class LastChangesView extends AbstractToolPart {
 	private IEclipsePreferences preferences;
 
 	@Inject
-	public LastChangesView(final Composite inParent,
-			final IEclipseContext inContext) {
+	public LastChangesView(final Composite inParent) {
 		lastChangesView = new TableViewer(inParent, SWT.H_SCROLL | SWT.V_SCROLL
-				| SWT.BORDER | SWT.MULTI);
+		        | SWT.BORDER | SWT.MULTI);
 		lastChangesView.setContentProvider(new IStructuredContentProvider() {
 			@Override
 			@SuppressWarnings("unchecked")
@@ -85,16 +83,16 @@ public class LastChangesView extends AbstractToolPart {
 
 			@Override
 			public void inputChanged(final Viewer inViewer,
-					final Object inOldInput, final Object inNewInput) {
+			        final Object inOldInput, final Object inNewInput) {
 			}
 		});
 		lastChangesView.setLabelProvider(getLabelProvider());
 
 		lastChangesView.addDoubleClickListener(getDoubleClickListener());
 		lastChangesView.addDragSupport(DND.DROP_COPY, getDragTypes(),
-				getDragSourceAdapter(lastChangesView));
+		        getDragSourceAdapter(lastChangesView));
 		lastChangesView
-				.addSelectionChangedListener(getSelectionChangedListener());
+		        .addSelectionChangedListener(getSelectionChangedListener());
 	}
 
 	@PostConstruct
@@ -103,19 +101,19 @@ public class LastChangesView extends AbstractToolPart {
 
 		// restore settings
 		final String lState = preferences.get(
-				LastChangesController.LAST_CHANGES_VIEW_TYPE,
-				LastChangesType.LAST_CREATED.getValue());
+		        LastChangesController.LAST_CHANGES_VIEW_TYPE,
+		        LastChangesType.LAST_CREATED.getValue());
 		setTitle(lastChangesController.updateType(lState));
 	}
 
 	@Inject
 	@Optional
 	public void update(
-			@EventTopic(RelationsConstants.TOPIC_DB_CHANGED_INITIALZED) final String inEvent) {
+	        @UIEventTopic(RelationsConstants.TOPIC_DB_CHANGED_INITIALZED) final String inEvent) {
 		try {
 			if (!lastChangesView.getControl().isDisposed()) {
 				lastChangesView.setInput(lastChangesController
-						.getLastChangedItems());
+				        .getLastChangedItems());
 			}
 		}
 		catch (final VException exc) {
@@ -139,7 +137,7 @@ public class LastChangesView extends AbstractToolPart {
 
 	@Inject
 	void setViewState(
-			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = LastChangesController.LAST_CHANGES_VIEW_TYPE) final String inLastChangeState) {
+	        @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = LastChangesController.LAST_CHANGES_VIEW_TYPE) final String inLastChangeState) {
 		setTitle(lastChangesController.updateType(inLastChangeState));
 		update("reload"); //$NON-NLS-1$
 	}

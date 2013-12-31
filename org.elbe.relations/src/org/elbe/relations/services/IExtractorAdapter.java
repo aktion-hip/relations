@@ -39,7 +39,7 @@ public interface IExtractorAdapter {
 	 * @return boolean <code>true</code> if the adapter is able to extract
 	 *         metadata from the file.
 	 */
-	public boolean acceptsFile(File inFile);
+	boolean acceptsFile(File inFile);
 
 	/**
 	 * Processes the file and returns the extracted metadata.
@@ -49,6 +49,6 @@ public interface IExtractorAdapter {
 	 * @return {@link ExtractedData}
 	 * @throws IOException
 	 */
-	public ExtractedData process(File inFile) throws IOException;
+	ExtractedData process(File inFile) throws IOException;
 
 }

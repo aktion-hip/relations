@@ -59,4 +59,9 @@ public class ItemWithIcon {
 		return icon;
 	}
 
+	@Override
+	public String toString() {
+		return getItem().toString();
+	}
+
 }

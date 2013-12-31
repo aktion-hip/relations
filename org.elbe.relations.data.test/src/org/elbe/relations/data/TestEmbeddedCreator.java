@@ -29,11 +29,6 @@ import org.elbe.relations.data.db.AbstractDBObjectCreator;
 public class TestEmbeddedCreator extends AbstractDBObjectCreator {
 	private static String XSL = "db_derby.xsl"; //$NON-NLS-1$
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.data.db.AbstractDBObjectCreator#getXSL()
-	 */
 	@Override
 	protected URL getXSL() {
 		return getClass().getResource(XSL);

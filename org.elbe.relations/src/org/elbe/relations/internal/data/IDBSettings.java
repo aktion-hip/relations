@@ -34,23 +34,30 @@ public interface IDBSettings {
 	IDBConnectionConfig getDBConnectionConfig();
 
 	/**
-	 * @return
+	 * @return String DB catalog
 	 */
 	String getCatalog();
 
 	/**
-	 * @return
+	 * @return String DB host
 	 */
 	String getHost();
 
 	/**
-	 * @return
+	 * @return String DB user
 	 */
 	String getUser();
 
 	/**
-	 * @return
+	 * @return String DB password
 	 */
 	String getPassword();
+
+	/**
+	 * Convenience method for StatusLine.
+	 * 
+	 * @return String e.g. <i>jdbc:mysql://localhost/relations</i>
+	 */
+	String getDBName();
 
 }

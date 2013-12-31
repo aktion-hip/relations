@@ -41,10 +41,10 @@ import org.elbe.relations.services.IDBConnectionConfig;
 @SuppressWarnings("restriction")
 @Creatable
 public class DBSettings implements IDBSettings {
-	private final static MessageFormat CLIENT_URL_PATTERN = new MessageFormat(
-			"jdbc:{0}://{1}/{2}"); //$NON-NLS-1$
-	private final static String EMBEDDED = RelationsMessages
-			.getString("DBHandler.embedded"); //$NON-NLS-1$
+	protected final static MessageFormat CLIENT_URL_PATTERN = new MessageFormat(
+	        "jdbc:{0}://{1}/{2}"); //$NON-NLS-1$
+	protected final static String EMBEDDED = RelationsMessages
+	        .getString("DBHandler.embedded"); //$NON-NLS-1$
 
 	private final IDBController dbController;
 	private IDBConnectionConfig dbConnectionConfig;
@@ -61,15 +61,15 @@ public class DBSettings implements IDBSettings {
 	 */
 	@Inject
 	public DBSettings(
-			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE) final IEclipsePreferences inPreferences,
-			final IDBController inDBController) {
+	        @Preference(nodePath = RelationsConstants.PREFERENCE_NODE) final IEclipsePreferences inPreferences,
+	        final IDBController inDBController) {
 		dbController = inDBController;
 		dbConnectionConfig = inDBController.getConfiguration(inPreferences.get(
-				RelationsConstants.KEY_DB_PLUGIN_ID,
-				RelationsConstants.DFT_DBCONFIG_PLUGIN_ID));
+		        RelationsConstants.KEY_DB_PLUGIN_ID,
+		        RelationsConstants.DFT_DBCONFIG_PLUGIN_ID));
 		host = inPreferences.get(RelationsConstants.KEY_DB_HOST, ""); //$NON-NLS-1$
 		catalog = inPreferences.get(RelationsConstants.KEY_DB_CATALOG,
-				RelationsConstants.DFT_DB_EMBEDDED);
+		        RelationsConstants.DFT_DB_EMBEDDED);
 		user = inPreferences.get(RelationsConstants.KEY_DB_USER_NAME, ""); //$NON-NLS-1$
 		password = inPreferences.get(RelationsConstants.KEY_DB_PASSWORD, ""); //$NON-NLS-1$
 	}
@@ -85,7 +85,7 @@ public class DBSettings implements IDBSettings {
 	@Inject
 	@Optional
 	void trackHost(
-			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_DB_HOST) final String inHost) {
+	        @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_DB_HOST) final String inHost) {
 		host = inHost == null ? "" : inHost; //$NON-NLS-1$
 	}
 
@@ -100,7 +100,7 @@ public class DBSettings implements IDBSettings {
 	@Inject
 	@Optional
 	void trackCatalog(
-			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_DB_CATALOG) final String inCatalog) {
+	        @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_DB_CATALOG) final String inCatalog) {
 		catalog = inCatalog == null ? "" : inCatalog; //$NON-NLS-1$
 	}
 
@@ -115,7 +115,7 @@ public class DBSettings implements IDBSettings {
 	@Inject
 	@Optional
 	void trackUser(
-			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_DB_USER_NAME) final String inUser) {
+	        @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_DB_USER_NAME) final String inUser) {
 		user = inUser == null ? "" : inUser; //$NON-NLS-1$
 	}
 
@@ -130,7 +130,7 @@ public class DBSettings implements IDBSettings {
 	@Inject
 	@Optional
 	void trackPassword(
-			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_DB_PASSWORD) final String inPassword) {
+	        @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_DB_PASSWORD) final String inPassword) {
 		password = inPassword == null ? "" : inPassword; //$NON-NLS-1$
 	}
 
@@ -146,7 +146,7 @@ public class DBSettings implements IDBSettings {
 	@Inject
 	@Optional
 	void trackDBConfiguration(
-			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_DB_PLUGIN_ID) final String inPluginID) {
+	        @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_DB_PLUGIN_ID) final String inPluginID) {
 		if (inPluginID != null) {
 			dbConnectionConfig = dbController.getConfiguration(inPluginID);
 		}
@@ -157,13 +157,14 @@ public class DBSettings implements IDBSettings {
 	 * 
 	 * @return String e.g. <i>jdbc:mysql://localhost/relations</i>
 	 */
+	@Override
 	public String getDBName() {
 		if (getDBConnectionConfig().isEmbedded()) {
 			return EMBEDDED + ": " + getCatalog(); //$NON-NLS-1$
 		}
 		return CLIENT_URL_PATTERN.format(new Object[] {
-				getDBConnectionConfig().getSubprotocol(), getHost(),
-				getCatalog() });
+		        getDBConnectionConfig().getSubprotocol(), getHost(),
+		        getCatalog() });
 	}
 
 }

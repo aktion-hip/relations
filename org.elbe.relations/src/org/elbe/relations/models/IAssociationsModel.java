@@ -113,6 +113,6 @@ public interface IAssociationsModel {
 	 *            UniqueID
 	 * @return boolean <code>true</code> if the specified ID is an association.
 	 */
-	public boolean isAssociated(UniqueID inID);
+	boolean isAssociated(UniqueID inID);
 
 }

@@ -42,16 +42,11 @@ public class RelationsIndexerWithLanguage extends RelationsIndexer {
 	 * instead of this constructor.
 	 */
 	public RelationsIndexerWithLanguage(final String inIndexDir,
-			final String inLanguage) {
+	        final String inLanguage) {
 		super(inIndexDir);
 		language = inLanguage;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.data.search.RelationsIndexer#getLanguage()
-	 */
 	@Override
 	protected String getLanguage() {
 		return language;
@@ -67,10 +62,10 @@ public class RelationsIndexerWithLanguage extends RelationsIndexer {
 	 * @return {@link RelationsIndexerWithLanguage}
 	 */
 	public static RelationsIndexerWithLanguage createRelationsIndexer(
-			final IEclipseContext inContext) {
+	        final IEclipseContext inContext) {
 		final DBSettings lDBSettings = inContext.get(DBSettings.class);
 		return new RelationsIndexerWithLanguage(lDBSettings.getCatalog(),
-				LanguageService.getContentLocale().getLanguage());
+		        LanguageService.getContentLocale().getLanguage());
 	}
 
 }

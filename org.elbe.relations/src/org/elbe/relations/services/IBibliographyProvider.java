@@ -33,7 +33,7 @@ import org.elbe.relations.parsing.XPathHelper;
  * <code>WebPageParser.registerProviders()</code>.
  * </p>
  * 
- * @author Luthiger 
+ * @author Luthiger
  * @see WebPageParser
  */
 public interface IBibliographyProvider {
@@ -51,8 +51,8 @@ public interface IBibliographyProvider {
 	 *            {@link IEclipseContext}
 	 * @throws ParserException
 	 */
-	public void evaluate(XPathHelper inXPathHelper, WebDropResult inWebDrop,
-			IEclipseContext inContext) throws ParserException;
+	void evaluate(XPathHelper inXPathHelper, WebDropResult inWebDrop,
+	        IEclipseContext inContext) throws ParserException;
 
 	/**
 	 * Is the provided bibliographical information a micro data format?
@@ -60,6 +60,6 @@ public interface IBibliographyProvider {
 	 * @return boolean <code>true</code> if the bibliographical metadata is
 	 *         embedded in the web page.
 	 */
-	public boolean isMicroFormat();
+	boolean isMicroFormat();
 
 }

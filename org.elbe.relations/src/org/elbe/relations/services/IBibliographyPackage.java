@@ -31,5 +31,5 @@ public interface IBibliographyPackage {
 	 * @return IBibliographyProvider[] the array of
 	 *         <code>IBibliographyProvider</code>s this component can provide.
 	 */
-	public IBibliographyProvider[] getBibliographyProviders();
+	IBibliographyProvider[] getBibliographyProviders();
 }

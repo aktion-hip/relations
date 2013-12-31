@@ -137,11 +137,10 @@ public abstract class AbstractNewWizard extends Wizard implements INewWizard {
 	public void init(final IStructuredSelection inSelection) {
 		try {
 			ItemAdapter lSelected = null;
-			if ((inSelection != null) && !inSelection.isEmpty()) {
-				if (inSelection.getFirstElement() instanceof IBrowserItem) {
-					lSelected = (ItemAdapter) ((IBrowserItem) inSelection
-					        .getFirstElement()).getModel();
-				}
+			if ((inSelection != null) && !inSelection.isEmpty()
+			        && (inSelection.getFirstElement() instanceof IBrowserItem)) {
+				lSelected = (ItemAdapter) ((IBrowserItem) inSelection
+				        .getFirstElement()).getModel();
 			}
 			if (lSelected == null) {
 				lSelected = browserManager.getSelectedModel();

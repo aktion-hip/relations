@@ -20,11 +20,11 @@ package org.elbe.relations.data.internal.bom;
 
 import static org.junit.Assert.fail;
 
-import org.elbe.relations.data.DataHouseKeeper;
 import org.elbe.relations.data.bom.AbstractPerson;
 import org.elbe.relations.data.bom.AbstractTerm;
 import org.elbe.relations.data.bom.IItem;
 import org.elbe.relations.data.bom.RelationHome;
+import org.elbe.relations.data.test.DataHouseKeeper;
 import org.elbe.relations.data.utility.UniqueID;
 import org.hip.kernel.exc.VException;
 import org.junit.After;

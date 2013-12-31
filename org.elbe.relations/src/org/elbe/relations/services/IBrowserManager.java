@@ -31,8 +31,8 @@ import org.hip.kernel.exc.VException;
  * @author Luthiger
  */
 public interface IBrowserManager {
-	static final String STORE_CENTRAL_KEY = "relations.browser.center"; //$NON-NLS-1$
-	
+	String STORE_CENTRAL_KEY = "relations.browser.center"; //$NON-NLS-1$
+
 	/**
 	 * Returns the browsers' central model.
 	 * 

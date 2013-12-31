@@ -39,8 +39,7 @@ public interface IPrintOut {
 	 * @throws IOException
 	 * @throws TransformerException
 	 */
-	public void openNew(String inFileName) throws IOException,
-			TransformerException;
+	void openNew(String inFileName) throws IOException, TransformerException;
 
 	/**
 	 * Open document to append text.
@@ -50,14 +49,14 @@ public interface IPrintOut {
 	 *            the selected content can be printed out.
 	 * @throws IOException
 	 */
-	public void openAppend(String inFileName) throws IOException;
+	void openAppend(String inFileName) throws IOException;
 
 	/**
 	 * Close the document.
 	 * 
 	 * @throws IOException
 	 */
-	public void close() throws IOException;
+	void close() throws IOException;
 
 	/**
 	 * Sets the title of the output document.
@@ -66,7 +65,7 @@ public interface IPrintOut {
 	 *            String
 	 * @throws IOException
 	 */
-	public void setDocTitle(String inDocTitle) throws IOException;
+	void setDocTitle(String inDocTitle) throws IOException;
 
 	/**
 	 * Sets the subtitle (e.g. database store, date) of the output document.
@@ -75,7 +74,7 @@ public interface IPrintOut {
 	 *            String
 	 * @throws IOException
 	 */
-	public void setDocSubTitle(String inDocSubtitle) throws IOException;
+	void setDocSubTitle(String inDocSubtitle) throws IOException;
 
 	/**
 	 * Passes the serialized item to print out.
@@ -85,8 +84,7 @@ public interface IPrintOut {
 	 * @throws TransformerException
 	 * @throws IOException
 	 */
-	public void printItem(String inXML) throws TransformerException,
-			IOException;
+	void printItem(String inXML) throws TransformerException, IOException;
 
 	/**
 	 * The plug-in has to notify the system whether it can work or not.
@@ -94,6 +92,6 @@ public interface IPrintOut {
 	 * @return boolean <code>true</code> if the ressources the print out plug-in
 	 *         needs to work are available on the system.
 	 */
-	public boolean isAvailable();
+	boolean isAvailable();
 
 }

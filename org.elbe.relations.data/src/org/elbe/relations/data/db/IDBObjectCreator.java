@@ -42,8 +42,7 @@ public interface IDBObjectCreator {
 	 * @throws TransformerFactoryConfigurationError
 	 * @throws TransformerException
 	 */
-	public Collection<String> getCreateStatemens(String inXMLName)
-			throws IOException, TransformerFactoryConfigurationError,
-			TransformerException;
+	Collection<String> getCreateStatemens(String inXMLName) throws IOException,
+	        TransformerFactoryConfigurationError, TransformerException;
 
 }

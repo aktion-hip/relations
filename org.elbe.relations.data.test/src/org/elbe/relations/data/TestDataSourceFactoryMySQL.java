@@ -39,60 +39,39 @@ public class TestDataSourceFactoryMySQL implements DataSourceFactory {
 
 	@Override
 	public DataSource createDataSource(final Properties inProps)
-			throws SQLException {
+	        throws SQLException {
 		final MysqlDataSource outSource = new MysqlDataSource();
 		setup(outSource, inProps);
 		return outSource;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.osgi.service.jdbc.DataSourceFactory#createConnectionPoolDataSource
-	 * (java.util.Properties)
-	 */
 	@Override
 	public ConnectionPoolDataSource createConnectionPoolDataSource(
-			final Properties inProps) throws SQLException {
+	        final Properties inProps) throws SQLException {
 		final MysqlConnectionPoolDataSource outSource = new MysqlConnectionPoolDataSource();
 		setup(outSource, inProps);
 		return outSource;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.osgi.service.jdbc.DataSourceFactory#createXADataSource(java.util.
-	 * Properties)
-	 */
 	@Override
 	public XADataSource createXADataSource(final Properties inProps)
-			throws SQLException {
+	        throws SQLException {
 		return new MysqlXADataSource();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.osgi.service.jdbc.DataSourceFactory#createDriver(java.util.Properties
-	 * )
-	 */
 	@Override
 	public Driver createDriver(final Properties inProps) throws SQLException {
 		return new com.mysql.jdbc.Driver();
 	}
 
 	private void setup(final MysqlDataSource inSource,
-			final Properties inProperties) {
+	        final Properties inProperties) {
 		if (inProperties == null) {
 			return;
 		}
 		if (inProperties.containsKey(JDBC_DATABASE_NAME)) {
 			inSource.setDatabaseName(inProperties
-					.getProperty(JDBC_DATABASE_NAME));
+			        .getProperty(JDBC_DATABASE_NAME));
 		}
 		if (inProperties.containsKey(JDBC_DATASOURCE_NAME)) {
 			// not supported?
@@ -108,7 +87,7 @@ public class TestDataSourceFactoryMySQL implements DataSourceFactory {
 		}
 		if (inProperties.containsKey(JDBC_PORT_NUMBER)) {
 			inSource.setPortNumber(Integer.parseInt(inProperties
-					.getProperty(JDBC_PORT_NUMBER)));
+			        .getProperty(JDBC_PORT_NUMBER)));
 		}
 		if (inProperties.containsKey(JDBC_ROLE_NAME)) {
 			// not supported?

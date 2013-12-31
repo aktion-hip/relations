@@ -27,8 +27,8 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({ JoinRelatedPersonHomeTest.class, JoinRelatedTermHomeTest.class,
-		JoinRelatedTextHomeTest.class, PersonTest.class, RelationTest.class,
-		TermTest.class, TextTest.class })
+        JoinRelatedTextHomeTest.class, PersonTest.class, RelationTest.class,
+        TermTest.class, TextTest.class })
 public class AllTests {
 
 }

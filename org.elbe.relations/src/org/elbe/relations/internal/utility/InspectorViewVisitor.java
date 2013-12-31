@@ -29,61 +29,30 @@ public class InspectorViewVisitor extends AbstractItemVisitor {
 	private boolean isTextEditable;
 	private String realText;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.utility.IItemVisitor#setSubTitle(java.lang.String)
-	 */
 	@Override
 	public void setSubTitle(final String inSubTitle) {
 		// not used
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.utility.IItemVisitor#getSubTitle()
-	 */
 	@Override
 	public String getSubTitle() {
 		return ""; //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.utility.IItemVisitor#setTitleEditable(boolean)
-	 */
 	@Override
 	public void setTitleEditable(final boolean inTitleEditable) {
 		isTitleEditable = inTitleEditable;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.utility.IItemVisitor#getTitleEditable()
-	 */
 	public boolean isTitleEditable() {
 		return isTitleEditable;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.utility.IItemVisitor#setTextEditable(boolean)
-	 */
 	@Override
 	public void setTextEditable(final boolean inTextEditable) {
 		isTextEditable = inTextEditable;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.utility.IItemVisitor#getTextEditable()
-	 */
 	public boolean isTextEditable() {
 		return isTextEditable;
 	}
@@ -96,12 +65,6 @@ public class InspectorViewVisitor extends AbstractItemVisitor {
 		return realText == null ? getText() : realText;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.utility.IItemVisitor#setRealText(java.lang.String)
-	 */
 	@Override
 	public void setRealText(final String inText) {
 		realText = inText;

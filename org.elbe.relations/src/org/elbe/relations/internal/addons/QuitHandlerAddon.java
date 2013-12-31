@@ -55,8 +55,8 @@ public class QuitHandlerAddon {
 		@Override
 		public boolean close(final MWindow inWindow) {
 			final List<Object> lHelpWindows = modelService.findElements(app,
-					null, null,
-					Collections.singletonList(RelationsConstants.WINDOW_HELP));
+			        null, null,
+			        Collections.singletonList(RelationsConstants.WINDOW_HELP));
 			for (final Object lHelp : lHelpWindows) {
 				final MWindow lHelpWindow = (MWindow) lHelp;
 				lHelpWindow.setVisible(false);
@@ -76,23 +76,23 @@ public class QuitHandlerAddon {
 				return;
 			}
 			final Object lElement = inEvent
-					.getProperty(UIEvents.EventTags.ELEMENT);
+			        .getProperty(UIEvents.EventTags.ELEMENT);
 			if (!(lElement instanceof MWindow)) {
 				return;
 			}
 			final MWindow lWindow = (MWindow) lElement;
 			if (RelationsConstants.RELATIONS_CONTRIBUTOR_URI.equals(lWindow
-					.getContributorURI())) {
-				if (lWindow.equals(inEvent.getProperty("ChangedElement")) //$NON-NLS-1$
-						&& lWindow.getContext() != null) {
+			        .getContributorURI())) {
+				if (lWindow.equals(inEvent.getProperty("ChangedElement")) //$NON-NLS-1$ // NOPMD 
+				        && lWindow.getContext() != null) {
 					lWindow.getContext().runAndTrack(new RunAndTrack() {
 						@Override
 						public boolean changed(final IEclipseContext inContext) {
 							final Object lHandler = inContext
-									.get(IWindowCloseHandler.class);
+							        .get(IWindowCloseHandler.class);
 							if (!quitHandler.equals(lHandler)) {
 								inContext.set(IWindowCloseHandler.class,
-										quitHandler);
+								        quitHandler);
 							}
 							return true;
 						}

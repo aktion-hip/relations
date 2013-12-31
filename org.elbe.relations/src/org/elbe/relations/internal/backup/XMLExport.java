@@ -68,15 +68,15 @@ public class XMLExport {
 	 * @throws IOException
 	 */
 	public XMLExport(final String inExportFileName, final Locale inAppLocale)
-			throws IOException {
+	        throws IOException {
 		exportFile = new File(inExportFileName);
 		appLocale = inAppLocale;
 		deleteExisting(exportFile);
 		if (!exportFile.exists() && exportFile.getParentFile().exists()) {
-			if (exportFile.createNewFile()) {
+			if (exportFile.createNewFile()) { // NOPMD
 				if (!exportFile.canRead() || !exportFile.canWrite()) {
 					throw new IOException(
-							"Could not open file for read/write: " + exportFile.getName()); //$NON-NLS-1$
+					        "Could not open file for read/write: " + exportFile.getName()); //$NON-NLS-1$
 				}
 				outputStream = createStream(exportFile);
 			}
@@ -84,7 +84,7 @@ public class XMLExport {
 	}
 
 	protected OutputStream createStream(final File inExportFile)
-			throws IOException {
+	        throws IOException {
 		final FileOutputStream lStream = new FileOutputStream(inExportFile);
 		return new BufferedOutputStream(lStream);
 	}
@@ -107,35 +107,39 @@ public class XMLExport {
 	 * @throws IOException
 	 */
 	public int export(final IProgressMonitor inMonitor) throws VException,
-			SQLException, IOException {
+	        SQLException, IOException {
 		final SubMonitor lProgress = SubMonitor.convert(inMonitor, 100);
 		int outExported = 0;
 
 		appendText("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NL); //$NON-NLS-1$
 		final DateFormat lFormat = DateFormat.getDateTimeInstance(
-				DateFormat.MEDIUM, DateFormat.MEDIUM, appLocale);
+		        DateFormat.MEDIUM, DateFormat.MEDIUM, appLocale);
 		appendText(String
-				.format("<%s date=\"%s\">" + NL, NODE_ROOT, lFormat.format(Calendar.getInstance().getTime()))); //$NON-NLS-1$
+		        .format("<%s date=\"%s\">" + NL, NODE_ROOT, lFormat.format(Calendar.getInstance().getTime()))); //$NON-NLS-1$
 
 		outExported += processTable(
-				RelationsMessages.getString("XMLExport.export.terms"), NODE_TERMS, BOMHelper.getTermHome(), lProgress.newChild(25)); //$NON-NLS-1$
-		if (inMonitor.isCanceled())
+		        RelationsMessages.getString("XMLExport.export.terms"), NODE_TERMS, BOMHelper.getTermHome(), lProgress.newChild(25)); //$NON-NLS-1$
+		if (inMonitor.isCanceled()) {
 			return outExported;
+		}
 
 		outExported += processTable(
-				RelationsMessages.getString("XMLExport.export.texts"), NODE_TEXTS, BOMHelper.getTextHome(), lProgress.newChild(25)); //$NON-NLS-1$
-		if (inMonitor.isCanceled())
+		        RelationsMessages.getString("XMLExport.export.texts"), NODE_TEXTS, BOMHelper.getTextHome(), lProgress.newChild(25)); //$NON-NLS-1$
+		if (inMonitor.isCanceled()) {
 			return outExported;
+		}
 
 		outExported += processTable(
-				RelationsMessages.getString("XMLExport.export.persons"), NODE_PERSONS, BOMHelper.getPersonHome(), lProgress.newChild(25)); //$NON-NLS-1$
-		if (inMonitor.isCanceled())
+		        RelationsMessages.getString("XMLExport.export.persons"), NODE_PERSONS, BOMHelper.getPersonHome(), lProgress.newChild(25)); //$NON-NLS-1$
+		if (inMonitor.isCanceled()) {
 			return outExported;
+		}
 
 		outExported += processTable(
-				RelationsMessages.getString("XMLExport.export.relations"), NODE_RELATIONS, BOMHelper.getRelationHome(), lProgress.newChild(25)); //$NON-NLS-1$
-		if (inMonitor.isCanceled())
+		        RelationsMessages.getString("XMLExport.export.relations"), NODE_RELATIONS, BOMHelper.getRelationHome(), lProgress.newChild(25)); //$NON-NLS-1$
+		if (inMonitor.isCanceled()) {
 			return outExported;
+		}
 
 		appendEnd(NODE_ROOT);
 
@@ -143,9 +147,9 @@ public class XMLExport {
 	}
 
 	private int processTable(final String inTaskName, final String inNodeName,
-			final GeneralDomainObjectHome inHome,
-			final IProgressMonitor inMonitor) throws IOException, VException,
-			SQLException {
+	        final GeneralDomainObjectHome inHome,
+	        final IProgressMonitor inMonitor) throws IOException, VException,
+	        SQLException {
 		int outExported = 0;
 
 		inMonitor.subTask(inTaskName);
@@ -177,8 +181,8 @@ public class XMLExport {
 	}
 
 	private int processSelection(final GeneralDomainObjectHome inHome,
-			final IProgressMonitor inMonitor) throws VException, SQLException,
-			IOException {
+	        final IProgressMonitor inMonitor) throws VException, SQLException,
+	        IOException {
 		final SubMonitor lProgress = SubMonitor.convert(inMonitor, 100);
 		int outExported = 0;
 		final QueryResult lResult = inHome.select();
@@ -199,8 +203,9 @@ public class XMLExport {
 	}
 
 	private void appendText(final String inText) throws IOException {
-		if (outputStream == null)
+		if (outputStream == null) {
 			return;
+		}
 		outputStream.write(inText.getBytes());
 	}
 

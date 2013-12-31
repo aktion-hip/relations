@@ -33,6 +33,7 @@ import org.elbe.relations.data.internal.search.IndexerRegistration;
 public abstract class AbstractSearching {
 	public static final String ITEM_TYPE = "itemType"; //$NON-NLS-1$
 	public static final String ITEM_ID = "itemID"; //$NON-NLS-1$
+	public static final String UNIQUE_ID = "uniqueID"; //$NON-NLS-1$
 	public static final String TITLE = "itemTitle"; //$NON-NLS-1$
 	public static final String TEXT = "itemText"; //$NON-NLS-1$
 	public static final String CONTENT_FULL = "itemFull"; //$NON-NLS-1$
@@ -76,23 +77,6 @@ public abstract class AbstractSearching {
 		return cDirectoryFactory;
 	}
 
-	// protected String getLanguage() {
-	// if (language == null) {
-	// try {
-	// language = EclipseContextHelper.getPreferences().get(
-	// RelationsConstants.KEY_LANGUAGE_CONTENT,
-	// RelationsConstants.DFT_LANGUAGE);
-	// // language =
-	// //
-	// RelationsPlugin.getDefault().getPreferenceStore().getString(RelationsConstants.KEY_LANGUAGE_CONTENT);
-	// }
-	// catch (final NullPointerException exc) {
-	// language = RelationsConstants.DFT_LANGUAGE;
-	// }
-	// }
-	// return language;
-	// }
-
 	/**
 	 * Returns the number of documents actually indexed.
 	 * 
@@ -128,7 +112,7 @@ public abstract class AbstractSearching {
 		@Override
 		public File getDirectory(final String inIndexName) throws IOException {
 			final File lIndexContainer = checkDir(new File(root,
-					Constants.LUCENE_STORE));
+			        Constants.LUCENE_STORE));
 			return checkDir(new File(lIndexContainer, inIndexName));
 		}
 
@@ -141,13 +125,13 @@ public abstract class AbstractSearching {
 
 		protected File getRoot() {
 			return ResourcesPlugin.getWorkspace().getRoot().getLocation()
-					.toFile();
+			        .toFile();
 		}
 
 		@Override
 		public File getIndexContainer(final String inIndexName) {
 			final File lIndexContainer = checkDir(new File(root,
-					Constants.LUCENE_STORE));
+			        Constants.LUCENE_STORE));
 			return checkDir(new File(lIndexContainer, inIndexName));
 		}
 	}

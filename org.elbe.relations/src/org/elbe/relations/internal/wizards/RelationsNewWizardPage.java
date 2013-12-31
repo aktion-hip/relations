@@ -64,10 +64,8 @@ public class RelationsNewWizardPage extends WizardPage {
 
 	@Override
 	public void setVisible(final boolean inVisible) {
-		if (!loaded) {
-			if (inVisible) {
-				form.loadModel(((AbstractNewWizard) getWizard()).getNewModel());
-			}
+		if (!loaded && inVisible) {
+			form.loadModel(((AbstractNewWizard) getWizard()).getNewModel());
 		}
 		loaded = true;
 		super.setVisible(inVisible);

@@ -219,7 +219,7 @@ public class InspectorView implements ISelectedTextProvider {
 		// if the focus moved outside of the part, we ask for saving pending
 		// changes
 		if (checkDirtyService.isDirty()) {
-			if (partService.getActivePart() != partService
+			if (partService.getActivePart() != partService // NOPMD
 			        .findPart(RelationsConstants.PART_INSPECTOR)) {
 				isSaving = true;
 				if (MessageDialog
@@ -488,7 +488,7 @@ public class InspectorView implements ISelectedTextProvider {
 		}
 	}
 
-	private static interface IDisplay {
+	interface IDisplay {
 		void refresh(final Text inText, final StyledTextComponent inStyled,
 		        InspectorViewVisitor inVisitor) throws IOException,
 		        SAXException;

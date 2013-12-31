@@ -44,7 +44,7 @@ import org.hip.kernel.exc.VException;
  */
 @SuppressWarnings("restriction")
 public class CentralAssociationsModel extends AbstractAssociationsModel
-		implements IAssociationsModel {
+        implements IAssociationsModel {
 	private Collection<IRelation> relations;
 
 	@Inject
@@ -69,8 +69,8 @@ public class CentralAssociationsModel extends AbstractAssociationsModel
 	 * @throws VException
 	 */
 	public static CentralAssociationsModel createCentralAssociationsModel(
-			final IItemModel inItem, final IEclipseContext inContext)
-			throws VException, SQLException {
+	        final IItemModel inItem, final IEclipseContext inContext)
+	        throws VException, SQLException {
 		final ItemAdapter lItem = new ItemAdapter(inItem, inContext);
 		return createCentralAssociationsModel(lItem, inContext);
 	}
@@ -88,10 +88,10 @@ public class CentralAssociationsModel extends AbstractAssociationsModel
 	 * @throws VException
 	 */
 	public static CentralAssociationsModel createCentralAssociationsModel(
-			final ItemAdapter inItem, final IEclipseContext inContext)
-			throws VException, SQLException {
+	        final ItemAdapter inItem, final IEclipseContext inContext)
+	        throws VException, SQLException {
 		final CentralAssociationsModel outModel = ContextInjectionFactory.make(
-				CentralAssociationsModel.class, inContext);
+		        CentralAssociationsModel.class, inContext);
 		outModel.setFocusedItem(inItem);
 		outModel.initialize(outModel.getFocusedItem());
 		return outModel;
@@ -107,7 +107,7 @@ public class CentralAssociationsModel extends AbstractAssociationsModel
 	 */
 	@Override
 	protected void initialize(final ItemAdapter inItem) throws VException,
-			SQLException {
+	        SQLException {
 		beforeInit();
 		super.initialize(getFocusedItem());
 		afterInit();
@@ -118,13 +118,13 @@ public class CentralAssociationsModel extends AbstractAssociationsModel
 		relations = new Vector<IRelation>();
 	}
 
-	@SuppressWarnings("rawtypes")//$NON-NLS-1$
+	@SuppressWarnings("rawtypes")
 	private void afterInit() {
 		final ItemAdapter lCenter = getCenter();
 
 		// add created relations as source to the center item
 		for (final Iterator lRelations = relations.iterator(); lRelations
-				.hasNext();) {
+		        .hasNext();) {
 			lCenter.addSource((IRelation) lRelations.next());
 		}
 
@@ -135,10 +135,10 @@ public class CentralAssociationsModel extends AbstractAssociationsModel
 
 	@Override
 	protected IRelation createRelation(final IItem inItem,
-			final ItemAdapter inSource) throws VException {
+	        final ItemAdapter inSource) throws VException {
 		// create and configure relation
 		final IRelation outRelation = new RelationWrapper(
-				((IRelated) inItem).getRelationID());
+		        ((IRelated) inItem).getRelationID());
 		outRelation.setSourceItem(inSource);
 		outRelation.setTargetItem(inItem);
 		relations.add(outRelation);
@@ -176,7 +176,7 @@ public class CentralAssociationsModel extends AbstractAssociationsModel
 	protected void afterSave() throws VException, SQLException {
 		initialize(getFocusedItem());
 		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_CREATED,
-				getFocusedItem().getUniqueID());
+		        getFocusedItem().getUniqueID());
 	}
 
 	/**
@@ -222,33 +222,23 @@ public class CentralAssociationsModel extends AbstractAssociationsModel
 	 * @throws SQLException
 	 */
 	public IAssociationsModel getAssociationsModel(final ItemAdapter inItem)
-			throws VException, SQLException {
+	        throws VException, SQLException {
 		if (getCenter().equals(inItem)) {
 			return this;
 		}
 		return PeripheralAssociationsModel.createExternalAssociationsModel(
-				inItem, context);
+		        inItem, context);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int lPrime = 31;
 		int outHash = super.hashCode();
 		outHash = lPrime * outHash
-				+ ((relations == null) ? 0 : relations.hashCode());
+		        + ((relations == null) ? 0 : relations.hashCode());
 		return outHash;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(final Object inObj) {
 		if (this == inObj)

@@ -50,7 +50,7 @@ public class LanguageService {
 	 */
 	@Inject
 	public LanguageService(
-			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_LANGUAGE_CONTENT) final String inLanguageContent) {
+	        @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_LANGUAGE_CONTENT) final String inLanguageContent) {
 		appLocale = createLocale();
 		setContentLanguage(inLanguageContent);
 	}
@@ -58,7 +58,8 @@ public class LanguageService {
 	private Locale createLocale() {
 		try {
 			final String lNL = Platform.getNL();
-			return new Locale(lNL.substring(0, 2), lNL.substring(3));
+			return lNL.length() > 2 ? new Locale(lNL.substring(0, 2),
+			        lNL.substring(3)) : new Locale(lNL);
 		}
 		catch (final NullPointerException exc) {
 			// for testing purpose
@@ -74,10 +75,10 @@ public class LanguageService {
 	 */
 	@Inject
 	void setContentLanguage(
-			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_LANGUAGE_CONTENT) final String inLanguageContent) {
+	        @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_LANGUAGE_CONTENT) final String inLanguageContent) {
 		contentLocale = new Locale(
-				inLanguageContent == null || inLanguageContent.isEmpty() ? RelationsConstants.DFT_LANGUAGE
-						: inLanguageContent);
+		        inLanguageContent == null || inLanguageContent.isEmpty() ? RelationsConstants.DFT_LANGUAGE
+		                : inLanguageContent);
 	}
 
 	/**
@@ -103,10 +104,10 @@ public class LanguageService {
 	 */
 	public static Locale getContentLocale() {
 		final IEclipsePreferences lPreferences = InstanceScope.INSTANCE
-				.getNode(RelationsConstants.PREFERENCE_NODE);
+		        .getNode(RelationsConstants.PREFERENCE_NODE);
 		return new Locale(lPreferences.get(
-				RelationsConstants.KEY_LANGUAGE_CONTENT,
-				Locale.ENGLISH.getLanguage()));
+		        RelationsConstants.KEY_LANGUAGE_CONTENT,
+		        Locale.ENGLISH.getLanguage()));
 	}
 
 }

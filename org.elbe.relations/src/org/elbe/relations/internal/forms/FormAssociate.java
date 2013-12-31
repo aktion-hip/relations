@@ -112,9 +112,9 @@ public final class FormAssociate extends AbstractEditForm {
 	 * @return {@link FormAssociate}
 	 */
 	public static FormAssociate createFormAssociate(final Composite inParent,
-			final IEclipseContext inContext) {
+	        final IEclipseContext inContext) {
 		final FormAssociate out = ContextInjectionFactory.make(
-				FormAssociate.class, inContext);
+		        FormAssociate.class, inContext);
 		out.setEditMode(false);
 		out.initialize(inParent);
 		return out;
@@ -132,7 +132,7 @@ public final class FormAssociate extends AbstractEditForm {
 	 * @return {@link FormAssociate}
 	 */
 	public static FormAssociate createFormAssociate(final Composite inParent,
-			final IAssociationsModel inModel, final IEclipseContext inContext) {
+	        final IAssociationsModel inModel, final IEclipseContext inContext) {
 		final FormAssociate out = createFormAssociate(inParent, inContext);
 		out.loadModel(inModel);
 		return out;
@@ -144,14 +144,14 @@ public final class FormAssociate extends AbstractEditForm {
 		// first column
 		final Composite lRelatedFill = createTableContainer(container);
 		createLabel(
-				RelationsMessages.getString("FormAssociate.list.related"), lRelatedFill); //$NON-NLS-1$
+		        RelationsMessages.getString("FormAssociate.list.related"), lRelatedFill); //$NON-NLS-1$
 		relatedViewer = new TableViewer(lRelatedFill, SWT.MULTI | SWT.V_SCROLL
-				| SWT.H_SCROLL | SWT.BORDER);
+		        | SWT.H_SCROLL | SWT.BORDER);
 		relatedViewer.getTable().setLayoutData(createListLayoutData());
 		relatedViewer.setContentProvider(createRelatedContentProvider());
 		relatedViewer.setLabelProvider(createRelatedLabelProvider());
 		relatedViewer.setSorter(new ViewerSorter(languageService
-				.getContentLanguage()));
+		        .getContentLanguage()));
 
 		// second column
 		createArrowButtons(container);
@@ -159,14 +159,14 @@ public final class FormAssociate extends AbstractEditForm {
 		// third column
 		final Composite lSelectionFill = createTableContainer(container);
 		createLabel(
-				RelationsMessages.getString("FormAssociate.list.selection"), lSelectionFill); //$NON-NLS-1$
+		        RelationsMessages.getString("FormAssociate.list.selection"), lSelectionFill); //$NON-NLS-1$
 		selectionViewer = new TableViewer(lSelectionFill, SWT.MULTI
-				| SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
+		        | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
 		selectionViewer.getTable().setLayoutData(createListLayoutData());
 		selectionViewer.setContentProvider(createContentProvider());
 		selectionViewer.setLabelProvider(createLabelProvider());
 		selectionViewer.setSorter(new ViewerSorter(languageService
-				.getContentLanguage()));
+		        .getContentLanguage()));
 
 		createMenusAndToolbars();
 	}
@@ -207,11 +207,11 @@ public final class FormAssociate extends AbstractEditForm {
 
 	private void makeActions() {
 		actionAssociate = new Action(
-				RelationsMessages.getString("FormAssociate.action.associate")) { //$NON-NLS-1$
+		        RelationsMessages.getString("FormAssociate.action.associate")) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				final IStructuredSelection lSelected = (IStructuredSelection) selectionViewer
-						.getSelection();
+				        .getSelection();
 				if (!lSelected.isEmpty()) {
 					model.addAssociations(lSelected.toArray());
 					relatedViewer.refresh(false);
@@ -220,17 +220,17 @@ public final class FormAssociate extends AbstractEditForm {
 			}
 		};
 		ActionHelper
-				.initializeAction(
-						actionAssociate,
-						"associateItemsActionID", RelationsMessages.getString("FormAssociate.action.assiciate.msg"), ICommandIds.CMD_ASSOCIATIONS_ADD, null); //$NON-NLS-1$ //$NON-NLS-2$
+		        .initializeAction(
+		                actionAssociate,
+		                "associateItemsActionID", RelationsMessages.getString("FormAssociate.action.assiciate.msg"), ICommandIds.CMD_ASSOCIATIONS_ADD, null); //$NON-NLS-1$ //$NON-NLS-2$
 		actionAssociate.setEnabled(true);
 
 		actionDissolve = new Action(
-				RelationsMessages.getString("FormAssociate.action.dissolve")) { //$NON-NLS-1$
+		        RelationsMessages.getString("FormAssociate.action.dissolve")) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				final IStructuredSelection lSelected = (IStructuredSelection) relatedViewer
-						.getSelection();
+				        .getSelection();
 				if (!lSelected.isEmpty()) {
 					model.removeAssociations(lSelected.toArray());
 					relatedViewer.refresh(false);
@@ -239,9 +239,9 @@ public final class FormAssociate extends AbstractEditForm {
 			}
 		};
 		ActionHelper
-				.initializeAction(
-						actionDissolve,
-						"dissolveAssociationsActionID", RelationsMessages.getString("FormAssociate.action.dissolve.msg"), ICommandIds.CMD_ASSOCIATIONS_REMOVE, null); //$NON-NLS-1$ //$NON-NLS-2$
+		        .initializeAction(
+		                actionDissolve,
+		                "dissolveAssociationsActionID", RelationsMessages.getString("FormAssociate.action.dissolve.msg"), ICommandIds.CMD_ASSOCIATIONS_REMOVE, null); //$NON-NLS-1$ //$NON-NLS-2$
 		actionDissolve.setEnabled(true);
 	}
 
@@ -253,7 +253,7 @@ public final class FormAssociate extends AbstractEditForm {
 			public void menuAboutToShow(final IMenuManager inManager) {
 				inManager.add(actionAssociate);
 				inManager.add(new Separator(
-						IWorkbenchActionConstants.MB_ADDITIONS));
+				        IWorkbenchActionConstants.MB_ADDITIONS));
 			}
 		});
 
@@ -267,7 +267,7 @@ public final class FormAssociate extends AbstractEditForm {
 			public void menuAboutToShow(final IMenuManager inManager) {
 				inManager.add(actionDissolve);
 				inManager.add(new Separator(
-						IWorkbenchActionConstants.MB_ADDITIONS));
+				        IWorkbenchActionConstants.MB_ADDITIONS));
 			}
 		});
 
@@ -292,7 +292,7 @@ public final class FormAssociate extends AbstractEditForm {
 					for (int i = 0; i < inItems.length; i++) {
 						final ItemAdapter lItem = (ItemAdapter) inItems[i];
 						outIDs[i] = new UniqueID(lItem.getItemType(), lItem
-								.getID());
+						        .getID());
 					}
 					return outIDs;
 				}
@@ -328,64 +328,64 @@ public final class FormAssociate extends AbstractEditForm {
 		lLayout.marginWidth = 0;
 		outComposite.setLayout(lLayout);
 		outComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
-				1, SWT.NULL));
+		        1, SWT.NULL));
 		return outComposite;
 	}
 
 	private void addDropSupport(final TableViewer inViewer,
-			final ItemTransfer inItemTransfer,
-			final IAction1 inHandleAssociations) {
+	        final ItemTransfer inItemTransfer,
+	        final IAction1 inHandleAssociations) {
 
 		inViewer.addDropSupport(DND.DROP_MOVE | DND.DROP_DEFAULT,
-				new Transfer[] { inItemTransfer }, new DropTargetAdapter() {
-					@Override
-					public void dragEnter(final DropTargetEvent inEvent) {
-						if (inViewer.getControl().equals(dragSourceControl)) {
-							inEvent.detail = DND.DROP_NONE;
-							return;
-						}
+		        new Transfer[] { inItemTransfer }, new DropTargetAdapter() {
+			        @Override
+			        public void dragEnter(final DropTargetEvent inEvent) {
+				        if (inViewer.getControl().equals(dragSourceControl)) {
+					        inEvent.detail = DND.DROP_NONE;
+					        return;
+				        }
 
-						if (inEvent.detail == DND.DROP_DEFAULT) {
-							if ((inEvent.operations & DND.DROP_MOVE) != 0) {
-								inEvent.detail = DND.DROP_MOVE;
-							} else {
-								inEvent.detail = DND.DROP_NONE;
-							}
-						}
-					}
+				        if (inEvent.detail == DND.DROP_DEFAULT) {
+					        if ((inEvent.operations & DND.DROP_MOVE) != 0) {
+						        inEvent.detail = DND.DROP_MOVE;
+					        } else {
+						        inEvent.detail = DND.DROP_NONE;
+					        }
+				        }
+			        }
 
-					@Override
-					public void drop(final DropTargetEvent inEvent) {
-						if (inEvent.data != null) {
-							inHandleAssociations.run((UniqueID[]) inEvent.data);
-							relatedViewer.refresh(false);
-							selectionViewer.refresh(false);
-						}
-					}
-				});
+			        @Override
+			        public void drop(final DropTargetEvent inEvent) {
+				        if (inEvent.data != null) {
+					        inHandleAssociations.run((UniqueID[]) inEvent.data);
+					        relatedViewer.refresh(false);
+					        selectionViewer.refresh(false);
+				        }
+			        }
+		        });
 	}
 
 	private void addDragSupport(final TableViewer inViewer,
-			final ItemTransfer inItemTransfer, final IAction2 inHandleTransfer) {
+	        final ItemTransfer inItemTransfer, final IAction2 inHandleTransfer) {
 
 		inViewer.addDragSupport(DND.DROP_MOVE | DND.DROP_DEFAULT,
-				new Transfer[] { inItemTransfer }, new DragSourceAdapter() {
-					@Override
-					public void dragSetData(final DragSourceEvent inEvent) {
-						final IStructuredSelection lSelected = (IStructuredSelection) inViewer
-								.getSelection();
-						if (!lSelected.isEmpty()) {
-							inEvent.data = inHandleTransfer
-									.createIDArray(lSelected.toArray());
-						}
-					}
+		        new Transfer[] { inItemTransfer }, new DragSourceAdapter() {
+			        @Override
+			        public void dragSetData(final DragSourceEvent inEvent) {
+				        final IStructuredSelection lSelected = (IStructuredSelection) inViewer
+				                .getSelection();
+				        if (!lSelected.isEmpty()) {
+					        inEvent.data = inHandleTransfer
+					                .createIDArray(lSelected.toArray());
+				        }
+			        }
 
-					@Override
-					public void dragStart(final DragSourceEvent inEvent) {
-						dragSourceControl = inViewer.getControl();
-						super.dragStart(inEvent);
-					}
-				});
+			        @Override
+			        public void dragStart(final DragSourceEvent inEvent) {
+				        dragSourceControl = inViewer.getControl();
+				        super.dragStart(inEvent);
+			        }
+		        });
 	}
 
 	/**
@@ -413,7 +413,7 @@ public final class FormAssociate extends AbstractEditForm {
 
 			@Override
 			public void inputChanged(final Viewer inViewer, final Object inOld,
-					final Object inNew) {
+			        final Object inNew) {
 				// e.g. set listener to new input or remove listener from old
 				// input.
 			}
@@ -425,7 +425,7 @@ public final class FormAssociate extends AbstractEditForm {
 			@Override
 			public Object[] getElements(final Object inElement) {
 				return inElement == null ? null
-						: ((IAssociationsModel) inElement).getElements();
+				        : ((IAssociationsModel) inElement).getElements();
 			}
 
 			@Override
@@ -434,7 +434,7 @@ public final class FormAssociate extends AbstractEditForm {
 
 			@Override
 			public void inputChanged(final Viewer inViewer,
-					final Object inOldInput, final Object inNewInput) {
+			        final Object inOldInput, final Object inNewInput) {
 				// e.g. set listener to new input or remove listener from old
 				// input.
 			}
@@ -481,7 +481,7 @@ public final class FormAssociate extends AbstractEditForm {
 		outArrowButtons.setLayout(lLayout);
 		toRelated = new Button(outArrowButtons, SWT.ARROW | SWT.LEFT);
 		toRelated.setToolTipText(RelationsMessages
-				.getString("FormAssociate.tool.associate")); //$NON-NLS-1$
+		        .getString("FormAssociate.tool.associate")); //$NON-NLS-1$
 		toRelated.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent inEvent) {
@@ -491,7 +491,7 @@ public final class FormAssociate extends AbstractEditForm {
 
 		toSelection = new Button(outArrowButtons, SWT.ARROW | SWT.RIGHT);
 		toSelection.setToolTipText(RelationsMessages
-				.getString("FormAssociate.tool.remove")); //$NON-NLS-1$
+		        .getString("FormAssociate.tool.remove")); //$NON-NLS-1$
 		toSelection.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent inEvent) {
@@ -566,18 +566,18 @@ public final class FormAssociate extends AbstractEditForm {
 		 */
 		@Override
 		public boolean select(final Viewer inViewer,
-				final Object inParentElement, final Object inElement) {
+		        final Object inParentElement, final Object inElement) {
 			return model.select((ILightWeightItem) inElement);
 		}
 
 	}
 
 	private interface IAction1 {
-		public void run(UniqueID[] inItems);
+		void run(UniqueID[] inItems);
 	}
 
 	private interface IAction2 {
-		public UniqueID[] createIDArray(Object[] inItems);
+		UniqueID[] createIDArray(Object[] inItems);
 	}
 
 }

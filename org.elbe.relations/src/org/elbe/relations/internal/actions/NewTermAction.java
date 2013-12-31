@@ -47,12 +47,6 @@ public class NewTermAction implements ICommand {
 	private IDataService data;
 
 	/**
-	 * Private constructor.
-	 */
-	private NewTermAction() {
-	}
-
-	/**
 	 * Called by Builder.build().
 	 * 
 	 * @param inBuilder
@@ -62,11 +56,6 @@ public class NewTermAction implements ICommand {
 		builder = inBuilder;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.actions.ICommand#execute()
-	 */
 	@Override
 	public void execute() {
 		final TermHome lHome = BOMHelper.getTermHome();
@@ -107,7 +96,7 @@ public class NewTermAction implements ICommand {
 
 		public NewTermAction build(final IEclipseContext inContext) {
 			final NewTermAction out = ContextInjectionFactory.make(
-					NewTermAction.class, inContext);
+			        NewTermAction.class, inContext);
 			out.setBuilder(this);
 			return out;
 		}

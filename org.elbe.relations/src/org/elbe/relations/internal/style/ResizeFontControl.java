@@ -48,7 +48,7 @@ import org.elbe.relations.RelationsConstants;
 public class ResizeFontControl {
 	private Combo combo;
 	private int initIndex = findIndexOf(Integer
-			.toString(RelationsConstants.DFT_TEXT_FONT_SIZE));
+	        .toString(RelationsConstants.DFT_TEXT_FONT_SIZE));
 
 	@Inject
 	@Preference(nodePath = RelationsConstants.PREFERENCE_NODE)
@@ -60,12 +60,12 @@ public class ResizeFontControl {
 		combo.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent inEvent) {
-				handleWidgetSelected(inEvent);
+				handleWidgetSelected();
 			}
 
 			@Override
 			public void widgetSelected(final SelectionEvent inEvent) {
-				handleWidgetSelected(inEvent);
+				handleWidgetSelected();
 			}
 		});
 		combo.addFocusListener(new FocusListener() {
@@ -85,7 +85,7 @@ public class ResizeFontControl {
 		combo.setEnabled(false);
 	}
 
-	private void handleWidgetSelected(final SelectionEvent inEvent) {
+	private void handleWidgetSelected() {
 		Integer lFontSize = null;
 		try {
 			lFontSize = new Integer(combo.getText());
@@ -95,7 +95,7 @@ public class ResizeFontControl {
 		}
 		if (lFontSize != null) {
 			preferences.putInt(RelationsConstants.KEY_TEXT_FONT_SIZE,
-					lFontSize.intValue());
+			        lFontSize.intValue());
 		}
 	}
 
@@ -124,14 +124,14 @@ public class ResizeFontControl {
 
 	@Inject
 	public void setFontSize(
-			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_TEXT_FONT_SIZE) final String inFontSize) {
+	        @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_TEXT_FONT_SIZE) final String inFontSize) {
 		setValue(inFontSize);
 	}
 
 	@Inject
 	@Optional
 	public void updateEnablement(
-			@UIEventTopic(RelationsConstants.TOPIC_STYLE_ITEMS_FORM) final Boolean inEnable) {
+	        @UIEventTopic(RelationsConstants.TOPIC_STYLE_ITEMS_FORM) final Boolean inEnable) {
 		if (combo != null && !combo.isDisposed() && !combo.isFocusControl()) {
 			combo.setEnabled(inEnable.booleanValue());
 		}

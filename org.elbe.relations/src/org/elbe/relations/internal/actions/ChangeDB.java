@@ -18,11 +18,42 @@
  ***************************************************************************/
 package org.elbe.relations.internal.actions;
 
+import java.io.IOException;
+
+import javax.inject.Inject;
+
+import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.elbe.relations.data.search.RelationsIndexer;
+import org.elbe.relations.internal.search.RelationsIndexerWithLanguage;
+
 /**
  * Helper to change to a different DB catalog (schema).
  * 
  * @author Luthiger
  */
 public class ChangeDB extends AbstractChangeDB {
+
+	@Inject
+	private IEclipseContext context;
+
+	@Override
+	public void execute() {
+		super.execute();
+		initIndex();
+	}
+
+	@SuppressWarnings("restriction")
+	private void initIndex() {
+		final RelationsIndexer lIndexer = RelationsIndexerWithLanguage
+		        .createRelationsIndexer(context);
+		if (!lIndexer.isIndexAvailable()) {
+			try {
+				lIndexer.initializeIndex();
+			}
+			catch (final IOException exc) {
+				getLog().error(exc, exc.getMessage());
+			}
+		}
+	}
 
 }

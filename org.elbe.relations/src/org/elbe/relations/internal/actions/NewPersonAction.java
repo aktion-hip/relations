@@ -48,12 +48,6 @@ public class NewPersonAction implements ICommand {
 	private IDataService data;
 
 	/**
-	 * Private constructor, called by Builder.build().
-	 */
-	private NewPersonAction() {
-	}
-
-	/**
 	 * Called by Builder.build().
 	 * 
 	 * @param inBuilder
@@ -63,17 +57,12 @@ public class NewPersonAction implements ICommand {
 		builder = inBuilder;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.actions.ICommand#execute()
-	 */
 	@Override
 	public void execute() {
 		final PersonHome lHome = BOMHelper.getPersonHome();
 		try {
 			person = lHome.newPerson(builder.name, builder.firstname,
-					builder.dateFrom, builder.dateTo, builder.textString);
+			        builder.dateFrom, builder.dateTo, builder.textString);
 			data.loadNew((LightWeightPerson) person.getLightWeight());
 		}
 		catch (final BOMException exc) {
@@ -122,7 +111,7 @@ public class NewPersonAction implements ICommand {
 
 		public NewPersonAction build(final IEclipseContext inContext) {
 			final NewPersonAction out = ContextInjectionFactory.make(
-					NewPersonAction.class, inContext);
+			        NewPersonAction.class, inContext);
 			out.setBuilder(this);
 			return out;
 		}

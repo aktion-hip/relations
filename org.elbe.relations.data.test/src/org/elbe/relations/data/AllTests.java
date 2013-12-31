@@ -18,6 +18,7 @@
  ***************************************************************************/
 package org.elbe.relations.data;
 
+import org.elbe.relations.data.search.RelationsIndexerTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -29,7 +30,9 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({ org.elbe.relations.data.bom.AllTests.class,
-		org.elbe.relations.data.internal.bom.AllTests.class })
+        org.elbe.relations.data.internal.bom.AllTests.class,
+        RelationsIndexerTest.class,
+        org.elbe.relations.data.utility.AllTests.class })
 public class AllTests {
 
 }

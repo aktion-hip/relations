@@ -22,20 +22,20 @@ package org.elbe.relations.data;
  * Constants used by the Relations application.
  */
 public interface Constants {
-	public final static String MAIN_ID = "org.elbe.relations"; //$NON-NLS-1$
+	String MAIN_ID = "org.elbe.relations"; //$NON-NLS-1$
 
 	// Keys used in the preference store
-	public final static String KEY_LANGUAGE_CONTENT = "uiContentLanguage"; //$NON-NLS-1$
+	String KEY_LANGUAGE_CONTENT = "uiContentLanguage"; //$NON-NLS-1$
 
-	public final static String LUCENE_STORE = "index"; //$NON-NLS-1$
+	String LUCENE_STORE = "index"; //$NON-NLS-1$
 
 	// IDs for the status line items
-	public static final String STATUS_ITEM_DB_NAME = "StatusItemDBName"; //$NON-NLS-1$
-	public static final String STATUS_ITEM_DB_SIZE = "StatusItemDBSize"; //$NON-NLS-1$
-	public static final String STATUS_ITEM_MSG = "StatusItemMessage"; //$NON-NLS-1$
-	public static final String STATUS_ITEM_KEYB = "StatusItemKeyboardStatus"; //$NON-NLS-1$
+	String STATUS_ITEM_DB_NAME = "StatusItemDBName"; //$NON-NLS-1$
+	String STATUS_ITEM_DB_SIZE = "StatusItemDBSize"; //$NON-NLS-1$
+	String STATUS_ITEM_MSG = "StatusItemMessage"; //$NON-NLS-1$
+	String STATUS_ITEM_KEYB = "StatusItemKeyboardStatus"; //$NON-NLS-1$
 
 	// database object creation
-	public static final String NODE_NAME_CREATED_OBJECT = "CreateObject"; //$NON-NLS-1$
-	public static final String XML_CREATE_OBJECTS = "dbCreateObjects.xml"; //$NON-NLS-1$
+	String NODE_NAME_CREATED_OBJECT = "CreateObject"; //$NON-NLS-1$
+	String XML_CREATE_OBJECTS = "dbCreateObjects.xml"; //$NON-NLS-1$
 }

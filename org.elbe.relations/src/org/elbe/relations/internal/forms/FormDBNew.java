@@ -89,9 +89,9 @@ public class FormDBNew extends AbstractDBSettingsForm {
 	 * @return {@link FormDBNew}
 	 */
 	public static FormDBNew createFormDBNew(final Composite inParent,
-			final int inColumns, final IEclipseContext inContext) {
+	        final int inColumns, final IEclipseContext inContext) {
 		final FormDBNew out = ContextInjectionFactory.make(FormDBNew.class,
-				inContext);
+		        inContext);
 		out.initialize(inParent, inColumns);
 		return out;
 	}
@@ -101,7 +101,7 @@ public class FormDBNew extends AbstractDBSettingsForm {
 		dbDirtySettings = new CheckDirtyServiceNoop();
 
 		final int lIndent = FieldDecorationRegistry.getDefault()
-				.getMaximumDecorationWidth();
+		        .getMaximumDecorationWidth();
 
 		dbDbasesCombo = createDbasesCombo(inParent, inColumns, lIndent);
 
@@ -112,7 +112,7 @@ public class FormDBNew extends AbstractDBSettingsForm {
 				final String lName = ((Text) inEvent.widget).getText();
 				if (lName.length() != 0) {
 					checkModifiedCatalogField(lName, getDBController()
-							.checkEmbedded(dbDbasesCombo.getSelectionIndex()));
+					        .checkEmbedded(dbDbasesCombo.getSelectionIndex()));
 					notifyAboutUpdate(getStati());
 				}
 			}
@@ -125,9 +125,9 @@ public class FormDBNew extends AbstractDBSettingsForm {
 
 		languages = indexer.getContentLanguages();
 		dbLanguageCombo = createLabelCombo(
-				inParent,
-				inColumns,
-				RelationsMessages.getString("FormDBConnection.lbl.language"), languages); //$NON-NLS-1$
+		        inParent,
+		        inColumns,
+		        RelationsMessages.getString("FormDBConnection.lbl.language"), languages); //$NON-NLS-1$
 		((GridData) dbLanguageCombo.getLayoutData()).horizontalIndent = lIndent;
 
 		try {
@@ -142,30 +142,27 @@ public class FormDBNew extends AbstractDBSettingsForm {
 	}
 
 	private void checkModifiedCatalogField(final String inText,
-			final boolean isEmbedded) {
+	        final boolean isEmbedded) {
 		if (isEmbedded) {
 			setFieldStatus(catalogField.getText(),
-					catalogHelper.validate(inText.toLowerCase()));
+			        catalogHelper.validate(inText.toLowerCase()));
 		} else {
 			setFieldStatus(catalogField.getText(),
-					catalogHelper.validateForAllowedChars(inText.toLowerCase()));
+			        catalogHelper.validateForAllowedChars(inText.toLowerCase()));
 		}
 	}
 
 	private void initializeValues() throws SQLException, NamingException {
 		final IEclipsePreferences lStore = getPreferences();
-		initDBCombos(lStore.get(RelationsConstants.KEY_DB_PLUGIN_ID,
-				RelationsConstants.DFT_DBCONFIG_PLUGIN_ID), lStore.get(
-				RelationsConstants.KEY_DB_CATALOG, "")); //$NON-NLS-1$
+		initDBCombos();
 		dbLanguageCombo.select(getLanguageIndex(lStore.get(
-				RelationsConstants.KEY_LANGUAGE_CONTENT,
-				RelationsConstants.DFT_LANGUAGE), languages));
+		        RelationsConstants.KEY_LANGUAGE_CONTENT,
+		        RelationsConstants.DFT_LANGUAGE), languages));
 		initialized = true;
 		dbDbasesCombo.setFocus();
 	}
 
-	private void initDBCombos(final String inDBPluginName,
-			final String inDerbySchema) throws SQLException, NamingException {
+	private void initDBCombos() throws SQLException, NamingException {
 		dbDbasesCombo.setItems(getDBController().getDBNames());
 		dbDbasesCombo.select(getDBController().getSelectedIndex());
 		embeddedSwitch(getDBController().isInitialEmbedded());
@@ -180,7 +177,7 @@ public class FormDBNew extends AbstractDBSettingsForm {
 		usernameField.setRequired(!inIsEmbedded);
 		passwrdField.setRequired(!inIsEmbedded);
 		checkModifiedCatalogField(catalogField.getText().getText(),
-				inIsEmbedded);
+		        inIsEmbedded);
 		if (inIsEmbedded) {
 			resetFieldStatusExcept(catalogField.getText());
 		}
@@ -199,7 +196,7 @@ public class FormDBNew extends AbstractDBSettingsForm {
 	 */
 	public boolean getPageComplete() {
 		final MultiStatus lMulti = new MultiStatus(Activator.getSymbolicName(),
-				1, getStati(), "", null); //$NON-NLS-1$
+		        1, getStati(), "", null); //$NON-NLS-1$
 		if (lMulti.getSeverity() == IStatus.ERROR)
 			return false;
 
@@ -207,7 +204,7 @@ public class FormDBNew extends AbstractDBSettingsForm {
 			return catalogField.length() != 0;
 		}
 		return catalogField.length() * hostField.length()
-				* usernameField.length() * passwrdField.length() != 0;
+		        * usernameField.length() * passwrdField.length() != 0;
 	}
 
 	@Override
@@ -226,14 +223,14 @@ public class FormDBNew extends AbstractDBSettingsForm {
 	 */
 	public IDBChange getResultObject() {
 		final IDBConnectionConfig lSelectedDB = getDBController()
-				.getConfiguration(dbDbasesCombo.getSelectionIndex());
+		        .getConfiguration(dbDbasesCombo.getSelectionIndex());
 		final String lCatalog = catalogField.getText().getText();
 
 		IDBChange out;
 		if (lSelectedDB.isEmbedded()) {
 			final IDBSettings lTempSettings = new TempSettings(
-					lSelectedDB.getName(), "", lCatalog, "", "", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					getDBController());
+			        lSelectedDB.getName(), "", lCatalog, "", "", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			        getDBController());
 			out = ContextInjectionFactory.make(CreateEmbeddedDB.class, context);
 			out.setTemporarySettings(lTempSettings);
 			((CreateEmbeddedDB) out).setHelper(catalogHelper);
@@ -242,8 +239,8 @@ public class FormDBNew extends AbstractDBSettingsForm {
 			final String lUser = usernameField.getText().getText();
 			final String lPasswrd = passwrdField.getText().getText();
 			final IDBSettings lTempSettings = new TempSettings(
-					lSelectedDB.getName(), lHost, lCatalog, lUser, lPasswrd,
-					getDBController());
+			        lSelectedDB.getName(), lHost, lCatalog, lUser, lPasswrd,
+			        getDBController());
 			out = ContextInjectionFactory.make(CreateExternalDB.class, context);
 			out.setTemporarySettings(lTempSettings);
 		}

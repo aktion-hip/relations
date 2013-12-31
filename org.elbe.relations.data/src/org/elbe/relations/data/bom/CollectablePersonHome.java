@@ -57,8 +57,9 @@ public class CollectablePersonHome extends PersonHome {
 	@Override
 	public QueryResult select(final QueryStatement inStatement)
 	        throws SQLException {
-		if (VSys.assertNotNull(this, "select(QueryStatement)", inStatement) == Assert.FAILURE) //$NON-NLS-1$
+		if (VSys.assertNotNull(this, "select(QueryStatement)", inStatement) == Assert.FAILURE) { //$NON-NLS-1$
 			return new AlternativeQueryResult(null, null, null);
+		}
 
 		final QueryResult outResult = inStatement.executeQuery();
 		return outResult;

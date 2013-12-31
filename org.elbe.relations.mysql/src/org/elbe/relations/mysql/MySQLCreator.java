@@ -29,14 +29,9 @@ import org.elbe.relations.data.db.IDBObjectCreator;
  * @author Luthiger Created on 09.10.2008
  */
 public class MySQLCreator extends AbstractDBObjectCreator implements
-		IDBObjectCreator {
+        IDBObjectCreator {
 	private static String XSL = "db_mysql.xsl"; //$NON-NLS-1$
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.utility.AbstractDBObjectCreator#getXSL()
-	 */
 	@Override
 	protected URL getXSL() {
 		return getClass().getResource(XSL);

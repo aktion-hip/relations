@@ -29,9 +29,9 @@ import org.hip.kernel.exc.VException;
  */
 public interface IItem {
 	// constants
-	public static final int TERM = 1;
-	public static final int TEXT = 2;
-	public static final int PERSON = 3;
+	int TERM = 1;
+	int TEXT = 2;
+	int PERSON = 3;
 
 	/**
 	 * The item's unique ID.

@@ -34,7 +34,7 @@ import org.elbe.relations.models.ILightWeightModel;
  * @author Luthiger
  */
 public class LightWeightTextWithIcon extends LightWeightText implements
-		ILightWeightModel {
+        ILightWeightModel {
 
 	/**
 	 * LightWeightTextWithIcon constructor.
@@ -57,15 +57,15 @@ public class LightWeightTextWithIcon extends LightWeightText implements
 	 * @param inModified
 	 */
 	public LightWeightTextWithIcon(final long inID, final String inTitle,
-			final String inText, final String inAuthor,
-			final String inCoAuthor, final String inSubtitle,
-			final String inYear, final String inPublication,
-			final String inPages, final int inVolume, final int inNumber,
-			final String inPublisher, final String inPlace, final int inType,
-			final Timestamp inCreated, final Timestamp inModified) {
+	        final String inText, final String inAuthor,
+	        final String inCoAuthor, final String inSubtitle,
+	        final String inYear, final String inPublication,
+	        final String inPages, final int inVolume, final int inNumber,
+	        final String inPublisher, final String inPlace, final int inType,
+	        final Timestamp inCreated, final Timestamp inModified) {
 		super(inID, inTitle, inText, inAuthor, inCoAuthor, inSubtitle, inYear,
-				inPublication, inPages, inVolume, inNumber, inPublisher,
-				inPlace, inType, inCreated, inModified);
+		        inPublication, inPages, inVolume, inNumber, inPublisher,
+		        inPlace, inType, inCreated, inModified);
 	}
 
 	/**
@@ -76,27 +76,17 @@ public class LightWeightTextWithIcon extends LightWeightText implements
 	 */
 	public LightWeightTextWithIcon(final LightWeightText inText) {
 		super(inText.id, inText.title, inText.text, inText.author,
-				inText.coauthor, inText.subtitle, inText.year,
-				inText.publication, inText.pages, inText.volume, inText.number,
-				inText.publisher, inText.place, inText.type, inText.created,
-				inText.modified);
+		        inText.coauthor, inText.subtitle, inText.year,
+		        inText.publication, inText.pages, inText.volume, inText.number,
+		        inText.publisher, inText.place, inText.type, inText.created,
+		        inText.modified);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.ILightWeightModel#getImage()
-	 */
 	@Override
 	public Image getImage() {
 		return RelationsImages.TEXT.getImage();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.ILightWeightModel#getItemDeleteAction()
-	 */
 	@Override
 	public IAction getItemDeleteAction() {
 		return new IAction() {

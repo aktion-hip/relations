@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelationsExport date="Dec 25, 2013 11:19:44 PM">
+	<TermEntries>
+		<TermEntry>
+			<ID field="TERMID" type="Long">11
+			</ID>
+			<Title field="STITLE" type="String">test term
+			</Title>
+			<Modified field="DTMUTATION" type="Timestamp">2013-12-25 23:19:42.0
+			</Modified>
+			<Text field="STEXT" type="String">the test term's description
+			</Text>
+			<Created field="DTCREATION" type="Timestamp">2013-12-25 23:19:42.0
+			</Created>
+		</TermEntry>
+	</TermEntries>
+	<TextEntries>
+		<TextEntry>
+			<Created field="DTCREATION" type="Timestamp">2013-12-25 23:19:42.0
+			</Created>
+			<Type field="NTYPE" type="Number">1
+			</Type>
+			<Year field="SYEAR" type="String">
+			</Year>
+			<Place field="SPLACE" type="String">
+			</Place>
+			<Publisher field="SPUBLISHER" type="String">
+			</Publisher>
+			<Text field="STEXT" type="String">
+			</Text>
+			<Publication field="SPUBLICATION" type="String">
+			</Publication>
+			<Author field="SAUTHOR" type="String">Test, Text
+			</Author>
+			<Subtitle field="SSUBTITLE" type="String">
+			</Subtitle>
+			<CoAuthors field="SCOAUTHORS" type="String">
+			</CoAuthors>
+			<Title field="STITLE" type="String">test text
+			</Title>
+			<Number field="NNUMBER" type="Number">0
+			</Number>
+			<Modified field="DTMUTATION" type="Timestamp">2013-12-25 23:19:42.0
+			</Modified>
+			<ID field="TEXTID" type="Long">12
+			</ID>
+			<Volume field="NVOLUME" type="Number">0
+			</Volume>
+			<Pages field="SPAGES" type="String">
+			</Pages>
+		</TextEntry>
+	</TextEntries>
+	<PersonEntries>
+		<PersonEntry>
+			<ID field="PERSONID" type="Long">13
+			</ID>
+			<Name field="SNAME" type="String">Doe
+			</Name>
+			<To field="STO" type="String">
+			</To>
+			<Modified field="DTMUTATION" type="Timestamp">2013-12-25 23:19:42.0
+			</Modified>
+			<Firstname field="SFIRSTNAME" type="String">Jane
+			</Firstname>
+			<Text field="STEXT" type="String">
+			</Text>
+			<From field="SFROM" type="String">
+			</From>
+			<Created field="DTCREATION" type="Timestamp">2013-12-25 23:19:42.0
+			</Created>
+		</PersonEntry>
+	</PersonEntries>
+	<RelationEntries>
+		<RelationEntry>
+			<ID field="RELATIONID" type="Long">1
+			</ID>
+			<Item2 field="NITEM2" type="Long">13
+			</Item2>
+			<Item1 field="NITEM1" type="Long">11
+			</Item1>
+			<Type2 field="NTYPE2" type="Integer">3
+			</Type2>
+			<Type1 field="NTYPE1" type="Integer">1
+			</Type1>
+		</RelationEntry>
+	</RelationEntries>
+</RelationsExport>
+

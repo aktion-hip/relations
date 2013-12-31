@@ -39,7 +39,7 @@ public class TestDataSourceFactoryDerby implements DataSourceFactory {
 
 	@Override
 	public DataSource createDataSource(final Properties inProperties)
-			throws SQLException {
+	        throws SQLException {
 		final EmbeddedDataSource outSource = new EmbeddedDataSource();
 		setup(outSource, inProperties);
 		return outSource;
@@ -47,48 +47,34 @@ public class TestDataSourceFactoryDerby implements DataSourceFactory {
 
 	@Override
 	public ConnectionPoolDataSource createConnectionPoolDataSource(
-			final Properties inProperties) throws SQLException {
+	        final Properties inProperties) throws SQLException {
 		final EmbeddedConnectionPoolDataSource outSource = new EmbeddedConnectionPoolDataSource();
 		setup(outSource, inProperties);
 		return outSource;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.osgi.service.jdbc.DataSourceFactory#createXADataSource(java.util.
-	 * Properties)
-	 */
 	@Override
 	public XADataSource createXADataSource(final Properties inProperties)
-			throws SQLException {
+	        throws SQLException {
 		final EmbeddedXADataSource outSource = new EmbeddedXADataSource();
 		setup(outSource, inProperties);
 		return outSource;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.osgi.service.jdbc.DataSourceFactory#createDriver(java.util.Properties
-	 * )
-	 */
 	@Override
 	public Driver createDriver(final Properties inProperties)
-			throws SQLException {
+	        throws SQLException {
 		return new EmbeddedDriver();
 	}
 
 	protected void setup(final EmbeddedDataSource inSource,
-			final Properties inProperties) {
+	        final Properties inProperties) {
 		if (inProperties == null) {
 			return;
 		}
 		if (inProperties.containsKey(DataSourceFactory.JDBC_DATABASE_NAME)) {
 			inSource.setDatabaseName(inProperties
-					.getProperty(DataSourceFactory.JDBC_DATABASE_NAME));
+			        .getProperty(DataSourceFactory.JDBC_DATABASE_NAME));
 			inSource.setCreateDatabase("create");
 		}
 		if (inProperties.containsKey(DataSourceFactory.JDBC_DATASOURCE_NAME)) {
@@ -102,11 +88,11 @@ public class TestDataSourceFactoryDerby implements DataSourceFactory {
 		}
 		if (inProperties.containsKey(DataSourceFactory.JDBC_PASSWORD)) {
 			inSource.setPassword(inProperties
-					.getProperty(DataSourceFactory.JDBC_PASSWORD));
+			        .getProperty(DataSourceFactory.JDBC_PASSWORD));
 		}
 		if (inProperties.containsKey(DataSourceFactory.JDBC_USER)) {
 			inSource.setUser(inProperties
-					.getProperty(DataSourceFactory.JDBC_USER));
+			        .getProperty(DataSourceFactory.JDBC_USER));
 		}
 	}
 

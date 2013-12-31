@@ -23,3 +23,4 @@ Export-Package: org.elbe.relations.data;version="1.0.0",
  org.elbe.relations.data.search;version="1.0.0",
  org.elbe.relations.data.utility;version="1.0.0"
 Service-Component: OSGI-INF/indexerService.xml
+Eclipse-ExtensibleAPI: true

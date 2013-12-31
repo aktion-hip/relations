@@ -73,7 +73,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 
 	// Note: entry {"&amp;lt;", "&lt;"} must be the last one!
 	private final static String[][] ENTITIES = { { "&", "&amp;" }, //$NON-NLS-1$ //$NON-NLS-2$
-			{ "&amp;lt;", "&lt;" } }; //$NON-NLS-1$ //$NON-NLS-2$
+	        { "&amp;lt;", "&lt;" } }; //$NON-NLS-1$ //$NON-NLS-2$
 
 	// tags
 	private enum InlineTag {
@@ -86,7 +86,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 		private boolean underline;
 
 		InlineTag(final String inName, final int inSWTValue,
-				final boolean inUnderline) {
+		        final boolean inUnderline) {
 			name = inName;
 			swtValue = inSWTValue;
 			underline = inUnderline;
@@ -164,8 +164,8 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 
 	@Override
 	public void startElement(final String inUri, final String inLocalName,
-			final String inName, final Attributes inAttributes)
-			throws SAXException {
+	        final String inName, final Attributes inAttributes)
+	        throws SAXException {
 		if (inName.equals(TAG_ROOT))
 			return;
 		if (inName.equals(LIST_EL_TAG)) {
@@ -187,19 +187,19 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 	}
 
 	private void handleListTag(final String inName,
-			final Attributes inAttributes) {
+	        final Attributes inAttributes) {
 		BulletHelperFactory lFactory = null;
 		if (inName.equals(ListTag.Unordered.getName())) {
 			lFactory = new SimpleListFactory(ST.BULLET_DOT,
-					getBulletWidth(inAttributes));
+			        getBulletWidth(inAttributes));
 		} else if (inName.equals(ListTag.OrderedNumeric.getName())) {
 			lFactory = new CustomListFactory(getBulletWidth(inAttributes));
 		} else if (inName.equals(ListTag.OrderedLetterUpper.getName())) {
 			lFactory = new SimpleListFactory(ST.BULLET_LETTER_UPPER,
-					getBulletWidth(inAttributes));
+			        getBulletWidth(inAttributes));
 		} else if (inName.equals(ListTag.OrderedLetterLower.getName())) {
 			lFactory = new SimpleListFactory(ST.BULLET_LETTER_LOWER,
-					getBulletWidth(inAttributes));
+			        getBulletWidth(inAttributes));
 		}
 		bulletStack.push(lFactory);
 
@@ -234,13 +234,13 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 
 	private int getBulletWidth(final Attributes inAttributes) {
 		final int lIndent = Integer
-				.parseInt(inAttributes.getValue(INDENT_ATTR));
+		        .parseInt(inAttributes.getValue(INDENT_ATTR));
 		return Styles.BULLET_WIDTH + lIndent * Styles.INDENT;
 	}
 
 	@Override
 	public void endElement(final String inUri, final String inLocalName,
-			final String inName) throws SAXException {
+	        final String inName) throws SAXException {
 		if (inName.equals(TAG_ROOT))
 			return;
 		if (inName.equals(LIST_EL_TAG)) {
@@ -260,7 +260,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 
 	@Override
 	public void characters(final char[] inCharacters, int inStart, int inLength)
-			throws SAXException {
+	        throws SAXException {
 		final int lStartPosition = text.length();
 
 		if (isInList() && startsWithLineFeed(inCharacters, inStart)) {
@@ -289,7 +289,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 	}
 
 	private boolean startsWithLineFeed(final char[] inCharacters,
-			final int inStart) {
+	        final int inStart) {
 		return inCharacters[inStart] == LF;
 	}
 
@@ -310,10 +310,8 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 		for (int i = 0; i < inTarget.length; i++) {
 			final char lChar = inTarget[i];
 			if (lChar == CR) {
-				if (i + 1 < lLength) {
-					if (inTarget[i + 1] == LF) {
-						i++;
-					}
+				if (i + 1 < lLength && (inTarget[i + 1] == LF)) {
+					i++;
 				}
 				outLines++;
 			} else if (lChar == LF) {
@@ -335,7 +333,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 	 * @throws IOException
 	 */
 	public void parseTagged(final String inTagged, final StyledText inWidget)
-			throws IOException, SAXException {
+	        throws IOException, SAXException {
 		doParsing(stripNonValidXML(handleXMLEntities(unescapeBackSlashes(inTagged))));
 		applyStyles(inWidget);
 	}
@@ -357,9 +355,9 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 		for (int i = 0; i < inTagged.length(); i++) {
 			lCurrent = inTagged.charAt(i);
 			if ((lCurrent == 0x9) || (lCurrent == 0xA) || (lCurrent == 0xD)
-					|| (lCurrent >= 0x20) && (lCurrent <= 0xD7FF)
-					|| (lCurrent >= 0xE000) && (lCurrent <= 0xFFFD)
-					|| (lCurrent >= 0x10000) && (lCurrent <= 0x10FFFF)) {
+			        || (lCurrent >= 0x20) && (lCurrent <= 0xD7FF)
+			        || (lCurrent >= 0xE000) && (lCurrent <= 0xFFFD)
+			        || (lCurrent >= 0x10000) && (lCurrent <= 0x10FFFF)) {
 				out.append(lCurrent);
 			}
 		}
@@ -377,13 +375,13 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 	 */
 	@Override
 	public String getUntaggedText(final String inTagged) throws IOException,
-			SAXException {
+	        SAXException {
 		doParsing(stripNonValidXML(handleXMLEntities(inTagged)));
 		return new String(text);
 	}
 
 	private void doParsing(final String inTagged) throws IOException,
-			SAXException {
+	        SAXException {
 		final String lXML = String.format(XML_TEMPL, inTagged);
 		final StringReader lReader = new StringReader(lXML);
 		final InputSource lInputSource = new InputSource(lReader);
@@ -456,20 +454,20 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 	}
 
 	private List<String> applyInlineTags(final List<String> inLines,
-			final StyledText inWidget) {
+	        final StyledText inWidget) {
 		final List<String> outLines = new Vector<String>(inLines.size());
 		int lStart = 0;
 		for (final String lLine : inLines) {
 			final int lLength = lLine.length();
 			outLines.add(tagLine(lLine, lStart,
-					inWidget.getStyleRanges(lStart, lLength)));
+			        inWidget.getStyleRanges(lStart, lLength)));
 			lStart += lLength;
 		}
 		return outLines;
 	}
 
 	private String tagLine(final String inText, final int inOffset,
-			final StyleRange[] inStyles) {
+	        final StyleRange[] inStyles) {
 		int lPosition = 0;
 		final StringBuffer outText = new StringBuffer();
 		for (int i = 0; i < inStyles.length; i++) {
@@ -481,7 +479,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 
 			final Tagger lTagger = new Tagger(lRange);
 			outText.append(lTagger.getTagged(processLT(inText.substring(lStart,
-					lStart + lRange.length))));
+			        lStart + lRange.length))));
 			lPosition = lStart + lRange.length;
 		}
 		// the tail
@@ -496,7 +494,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 	}
 
 	private String applyBlockTags(final List<String> inLines,
-			final StyledText inWidget) {
+	        final StyledText inWidget) {
 		int lLine = 0;
 		final int lLength = inWidget.getLineCount();
 
@@ -527,13 +525,13 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 	}
 
 	private Collection<BulletHelper> consolidateBullets(
-			final Collection<BulletHelper> inBullets) {
+	        final Collection<BulletHelper> inBullets) {
 		if (inBullets.size() == 0)
 			return inBullets;
 
 		final Collection<BulletHelper> outBullets = new Vector<BulletHelper>();
 		final BulletHelper[] lBullets = inBullets
-				.toArray(new BulletHelper[] {});
+		        .toArray(new BulletHelper[] {});
 		int i = 0;
 		BulletHelper lCursor = lBullets[i++];
 		BulletHelper lNext;
@@ -554,7 +552,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 		if (parser == null) {
 			try {
 				parser = SAXParserFactory.newInstance().newSAXParser()
-						.getXMLReader();
+				        .getXMLReader();
 				parser.setContentHandler(this);
 				parser.setErrorHandler(this);
 			}
@@ -573,20 +571,20 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 		String list_template = "<ul indent=\"%s\">%s</ul>"; //$NON-NLS-1$
 		if ((inBullet.type & ST.BULLET_DOT) != 0) {
 			list_template = String.format(template,
-					ListTag.Unordered.getName(), INDENT_ATTR,
-					ListTag.Unordered.getName());
+			        ListTag.Unordered.getName(), INDENT_ATTR,
+			        ListTag.Unordered.getName());
 		} else if ((inBullet.type & ST.BULLET_CUSTOM) != 0) {
 			list_template = String.format(template,
-					ListTag.OrderedNumeric.getName(), INDENT_ATTR,
-					ListTag.OrderedNumeric.getName());
+			        ListTag.OrderedNumeric.getName(), INDENT_ATTR,
+			        ListTag.OrderedNumeric.getName());
 		} else if ((inBullet.type & ST.BULLET_LETTER_UPPER) != 0) {
 			list_template = String.format(template,
-					ListTag.OrderedLetterUpper.getName(), INDENT_ATTR,
-					ListTag.OrderedLetterUpper.getName());
+			        ListTag.OrderedLetterUpper.getName(), INDENT_ATTR,
+			        ListTag.OrderedLetterUpper.getName());
 		} else if ((inBullet.type & ST.BULLET_LETTER_LOWER) != 0) {
 			list_template = String.format(template,
-					ListTag.OrderedLetterLower.getName(), INDENT_ATTR,
-					ListTag.OrderedLetterLower.getName());
+			        ListTag.OrderedLetterLower.getName(), INDENT_ATTR,
+			        ListTag.OrderedLetterLower.getName());
 		}
 
 		return new TagTemplate(list_template, item_template);
@@ -638,10 +636,10 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 		// return outRange;
 		// }
 		protected void applyInlineStyle(final StyledText inWidget,
-				final int inStyle, final boolean inUnderline) {
+		        final int inStyle, final boolean inUnderline) {
 			final StyleRange lInitRange = getInitialRange();
 			final StyleRange[] lRanges = inWidget.getStyleRanges(
-					lInitRange.start, lInitRange.length);
+			        lInitRange.start, lInitRange.length);
 			if (lRanges == null || lRanges.length == 0) {
 				lInitRange.fontStyle = inStyle;
 				lInitRange.underline = inUnderline;
@@ -687,7 +685,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 	}
 
 	private class UnderlineRange extends RangeHelper implements
-			StyleRangeHelper {
+	        StyleRangeHelper {
 		@Override
 		public void applyStyle(final StyledText inWidget) {
 			applyInlineStyle(inWidget, SWT.NORMAL, true);
@@ -700,7 +698,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 		public Bullet bullet;
 
 		public BulletHelper(final int inStart, final int inLength,
-				final Bullet inBullet) {
+		        final Bullet inBullet) {
 			startLine = inStart;
 			lineCount = inLength;
 			bullet = inBullet;
@@ -713,13 +711,13 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 		@Override
 		public String toString() {
 			return String
-					.format("BulletHelper type: %s, start: %s, line count: %s", bullet.type, startLine, lineCount); //$NON-NLS-1$
+			        .format("BulletHelper type: %s, start: %s, line count: %s", bullet.type, startLine, lineCount); //$NON-NLS-1$
 		}
 	}
 
 	private class CustomBulletHelper extends BulletHelper {
 		public CustomBulletHelper(final int inStart, final int inLength,
-				final Bullet inBullet) {
+		        final Bullet inBullet) {
 			super(inStart, inLength, inBullet);
 		}
 
@@ -727,7 +725,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 		public void setLineBullet(final StyledText inWidget) {
 			inWidget.setLineBullet(startLine, lineCount, bullet);
 			inWidget.addPaintObjectListener(Styles
-					.getPaintObjectListener(inWidget));
+			        .getPaintObjectListener(inWidget));
 		}
 	}
 
@@ -744,27 +742,27 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 
 		@Override
 		public BulletHelper getBulletHelper(final int inStart,
-				final int inLength) {
+		        final int inLength) {
 			return new BulletHelper(inStart, inLength, bullet);
 		}
 	}
 
 	private class SimpleListFactory extends HelperFactory implements
-			BulletHelperFactory {
+	        BulletHelperFactory {
 		public SimpleListFactory(final int inBulletStyle, final int inWidth) {
 			super(Styles.getBullet(inBulletStyle, inWidth));
 		}
 	}
 
 	private class CustomListFactory extends HelperFactory implements
-			BulletHelperFactory {
+	        BulletHelperFactory {
 		public CustomListFactory(final int inWidth) {
 			super(Styles.getBullet(ST.BULLET_CUSTOM, inWidth));
 		}
 
 		@Override
 		public BulletHelper getBulletHelper(final int inStart,
-				final int inLength) {
+		        final int inLength) {
 			return new CustomBulletHelper(inStart, inLength, bullet);
 		}
 	}
@@ -798,7 +796,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 		String list_template;
 
 		public TagTemplate(final String inListTemplate,
-				final String inItemTemplate) {
+		        final String inItemTemplate) {
 			list_template = inListTemplate;
 			item_template = inItemTemplate;
 		}
@@ -821,7 +819,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 		private TagTemplate tagTemplate = new TagTemplate("%s", "%s"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		public ListSerializer(final Bullet inBullet, final int inStart,
-				final ListSerializer inParent) {
+		        final ListSerializer inParent) {
 			bullet = inBullet;
 			startLine = inStart;
 			parent = inParent;
@@ -842,7 +840,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 		 *         sublist's serializer.
 		 */
 		public ListSerializer processBullet(final Bullet inBullet,
-				final int inLine) {
+		        final int inLine) {
 			// we're still in the same list
 			if (inBullet == bullet)
 				return this;
@@ -879,7 +877,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 		 * @return BulletSerializer the root serializer
 		 */
 		public ListSerializer consolidate(final int inLine,
-				final ListSerializer inAncestor) {
+		        final ListSerializer inAncestor) {
 			endLine = inLine;
 			if (isRoot()) {
 				return this;
@@ -896,7 +894,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 			LineSerializer lLine = searchSpecial(endLine);
 			if (lLine == null) {
 				lLine = new LineSerializer(endLine,
-						tagTemplate.getItemTemplate());
+				        tagTemplate.getItemTemplate());
 				specialLines.add(lLine);
 			}
 			lLine.addSublist(inSerializer);
@@ -930,7 +928,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 			int i = startLine;
 			for (final LineSerializer lLineWithSublist : specialLines) {
 				lRendered.append(renderToChild(i, lLineWithSublist.line,
-						inLines));
+				        inLines));
 				lRendered.append(lLineWithSublist.render(inLines));
 				i = lLineWithSublist.getEndLine();
 			}
@@ -938,20 +936,20 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 			// render the lines from the last child to the end
 			while (i < endLine) {
 				lRendered.append(
-						String.format(tagTemplate.getItemTemplate(), inLines
-								.get(i++).trim())).append(NL);
+				        String.format(tagTemplate.getItemTemplate(), inLines
+				                .get(i++).trim())).append(NL);
 			}
 			return finish(lRendered);
 		}
 
 		private StringBuffer renderToChild(final int inStart, final int inEnd,
-				final List<String> inLines) {
+		        final List<String> inLines) {
 			final StringBuffer outRendered = new StringBuffer();
 			int i = inStart;
 			while (i < inEnd - 1) {
 				outRendered.append(
-						String.format(tagTemplate.getItemTemplate(), inLines
-								.get(i).trim())).append(NL);
+				        String.format(tagTemplate.getItemTemplate(), inLines
+				                .get(i).trim())).append(NL);
 				i++;
 			}
 			return outRendered;
@@ -963,7 +961,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 				return outRendered;
 			}
 			return String.format(tagTemplate.getListTemplate(),
-					computeIndent(), outRendered);
+			        computeIndent(), outRendered);
 		}
 
 		private int computeIndent() {
@@ -981,7 +979,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 			if (isRoot())
 				return "<root/>"; //$NON-NLS-1$
 			return String.format(tagTemplate.getListTemplate(),
-					computeIndent(), "*"); //$NON-NLS-1$
+			        computeIndent(), "*"); //$NON-NLS-1$
 		}
 	}
 
@@ -1009,7 +1007,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 			if (line == 0)
 				return outRendered;
 			return String.format(item_template, inLines.get(line - 1)
-					+ outRendered);
+			        + outRendered);
 		}
 
 		public int getEndLine() {

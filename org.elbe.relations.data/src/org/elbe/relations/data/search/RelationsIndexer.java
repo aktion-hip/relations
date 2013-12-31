@@ -43,6 +43,7 @@ import org.hip.kernel.exc.VException;
  */
 public abstract class RelationsIndexer extends AbstractSearching {
 	private final static int CHUNK_SIZE = 50;
+	private static final String INDEX_INDICATOR = "segments";
 
 	/**
 	 * RelationsIndexer constructor
@@ -65,66 +66,66 @@ public abstract class RelationsIndexer extends AbstractSearching {
 	 * @throws SQLException
 	 */
 	public int refreshIndex(final IProgressMonitor inMonitor)
-			throws IOException, VException, SQLException {
+	        throws IOException, VException, SQLException {
 		return doIndex(new IndexerHelper(), inMonitor, getIndexer());
 	}
 
 	protected int doIndex(final IndexerHelper inIndexHelper,
-			final IProgressMonitor inMonitor, final IIndexer inIndexer)
-			throws VException, SQLException, IOException {
+	        final IProgressMonitor inMonitor, final IIndexer inIndexer)
+	        throws VException, SQLException, IOException {
 		final SubMonitor lProgress = SubMonitor.convert(inMonitor, 100);
 		int outIndexed = 0;
 		inIndexer.initializeIndex(getIndexDir());
 
 		inMonitor.subTask(Messages.getString("RelationsIndexer.task.term")); //$NON-NLS-1$
 		outIndexed += indexTerms(inIndexHelper, lProgress.newChild(34),
-				inIndexer);
+		        inIndexer);
 		if (inMonitor.isCanceled())
 			return outIndexed;
 
 		inMonitor.subTask(Messages.getString("RelationsIndexer.task.text")); //$NON-NLS-1$
 		outIndexed += indexTexts(inIndexHelper, lProgress.newChild(33),
-				inIndexer);
+		        inIndexer);
 		if (inMonitor.isCanceled())
 			return outIndexed;
 
 		inMonitor.subTask(Messages.getString("RelationsIndexer.task.person")); //$NON-NLS-1$
 		outIndexed += indexPersons(inIndexHelper, lProgress.newChild(33),
-				inIndexer);
+		        inIndexer);
 		return outIndexed;
 	}
 
 	private int indexTerms(final IndexerHelper inIndexHelper,
-			final IProgressMonitor inMonitor, final IIndexer inIndexer)
-			throws VException, SQLException, IOException {
+	        final IProgressMonitor inMonitor, final IIndexer inIndexer)
+	        throws VException, SQLException, IOException {
 		return processSelection(inIndexHelper, BOMHelper.getTermHome(),
-				inMonitor, inIndexer);
+		        inMonitor, inIndexer);
 	}
 
 	private int indexTexts(final IndexerHelper inIndexHelper,
-			final IProgressMonitor inMonitor, final IIndexer inIndexer)
-			throws VException, SQLException, IOException {
+	        final IProgressMonitor inMonitor, final IIndexer inIndexer)
+	        throws VException, SQLException, IOException {
 		return processSelection(inIndexHelper, BOMHelper.getTextHome(),
-				inMonitor, inIndexer);
+		        inMonitor, inIndexer);
 	}
 
 	private int indexPersons(final IndexerHelper inIndexHelper,
-			final IProgressMonitor inMonitor, final IIndexer inIndexer)
-			throws VException, SQLException, IOException {
+	        final IProgressMonitor inMonitor, final IIndexer inIndexer)
+	        throws VException, SQLException, IOException {
 		return processSelection(inIndexHelper, BOMHelper.getPersonHome(),
-				inMonitor, inIndexer);
+		        inMonitor, inIndexer);
 	}
 
 	protected int processSelection(final IndexerHelper inIndexHelper,
-			final GeneralDomainObjectHome inHome,
-			final IProgressMonitor inMonitor, final IIndexer inIndexer)
-			throws VException, SQLException, IOException {
+	        final GeneralDomainObjectHome inHome,
+	        final IProgressMonitor inMonitor, final IIndexer inIndexer)
+	        throws VException, SQLException, IOException {
 		final SubMonitor lProgress = SubMonitor.convert(inMonitor, 100);
 		int outNumberOfIndexed = 0;
 		final QueryResult lResult = inHome.select();
 		while (lResult.hasMoreElements()) {
 			final IIndexable lIndexable = (IIndexable) lResult
-					.nextAsDomainObject();
+			        .nextAsDomainObject();
 			lIndexable.indexContent(inIndexHelper);
 			((DomainObject) lIndexable).release();
 
@@ -144,7 +145,7 @@ public abstract class RelationsIndexer extends AbstractSearching {
 	}
 
 	private void processIndexer(final IIndexer inIndexer,
-			final IndexerHelper inIndexHelper) throws IOException {
+	        final IndexerHelper inIndexHelper) throws IOException {
 		inIndexer.processIndexer(inIndexHelper, getIndexDir(), getLanguage());
 		inIndexHelper.reset();
 	}
@@ -162,7 +163,7 @@ public abstract class RelationsIndexer extends AbstractSearching {
 	 * @throws IOException
 	 */
 	public void addToIndex(final IIndexable inIndexable) throws BOMException,
-			IOException {
+	        IOException {
 		final IndexerHelper lIndexer = new IndexerHelper();
 		try {
 			inIndexable.indexContent(lIndexer);
@@ -182,7 +183,7 @@ public abstract class RelationsIndexer extends AbstractSearching {
 	 */
 	public void deleteItemInIndex(final String inUniqueID) throws IOException {
 		getIndexer().deleteItemInIndex(inUniqueID, AbstractSearching.ITEM_ID,
-				getIndexDir());
+		        getIndexDir());
 	}
 
 	/**
@@ -195,9 +196,9 @@ public abstract class RelationsIndexer extends AbstractSearching {
 	 * @throws VException
 	 */
 	public void refreshItemInIndex(final IItem inItem) throws IOException,
-			BOMException, VException {
+	        BOMException, VException {
 		final String lUniqueID = UniqueID.getStringOf(inItem.getItemType(),
-				inItem.getID());
+		        inItem.getID());
 		deleteItemInIndex(lUniqueID);
 		addToIndex((IIndexable) inItem);
 	}
@@ -229,7 +230,9 @@ public abstract class RelationsIndexer extends AbstractSearching {
 			return false;
 		}
 		for (int i = 0; i < lContent.length; i++) {
-			if ("segments".equals(lContent[i]))return true; //$NON-NLS-1$
+			if (lContent[i].startsWith(INDEX_INDICATOR)) {
+				return true;
+			}
 		}
 		return false;
 	}

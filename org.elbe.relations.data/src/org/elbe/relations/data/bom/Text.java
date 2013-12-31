@@ -43,8 +43,8 @@ public class Text extends AbstractText implements IIndexable {
 	private final static String NL = System.getProperty("line.separator");
 	private final static String ABC = "abcdefghijklmnopqrstuvwxyz";
 	private final static String INDENT = "     ";
-	private final static String[] REPLACE_TO = { " ", "ü", "ö", "ä", "Ü",
-	        "Ö", "Ä", "ù", "è", "é", "à", "á", "\\{", "}" };
+	private final static String[] REPLACE_TO = { " ", "ü", "ö", "ä", "Ü", "Ö",
+	        "Ä", "ù", "è", "é", "à", "á", "\\{", "}" };
 	private final static String[] REPLACE_WITH = { "_", "ue", "oe", "ae", "Ue",
 	        "Oe", "Ae", "u", "e", "e", "a", "a", "", "" };
 	private final static String QUOTE_START = "\"`";
@@ -68,13 +68,6 @@ public class Text extends AbstractText implements IIndexable {
 		return HOME_CLASS_NAME;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.search.Indexable#indexContent(org.elbe.relations.search
-	 * .Indexer)
-	 */
 	@Override
 	public void indexContent(final IndexerHelper inIndexer) throws VException {
 		final IndexerDocument lDocument = new IndexerDocument();

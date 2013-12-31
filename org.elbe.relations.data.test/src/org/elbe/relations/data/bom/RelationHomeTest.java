@@ -22,8 +22,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.elbe.relations.data.DataHouseKeeper;
 import org.elbe.relations.data.internal.bom.Relation;
+import org.elbe.relations.data.test.DataHouseKeeper;
 import org.hip.kernel.bom.QueryResult;
 import org.junit.After;
 import org.junit.Before;

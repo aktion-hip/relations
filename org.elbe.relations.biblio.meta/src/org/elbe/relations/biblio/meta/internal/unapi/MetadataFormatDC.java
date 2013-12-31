@@ -70,25 +70,11 @@ public class MetadataFormatDC extends AbstractMetadataFormat {
 	private ElementListener listener;
 	private NewTextAction action = null;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.biblio.meta.internal.unapi.AbstractMetadataFormat#
-	 * canHandle(java.lang.String)
-	 */
 	@Override
 	public boolean canHandle(final String inFormat) {
 		return METADATA_FORMAT_ID.equalsIgnoreCase(inFormat);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.biblio.meta.internal.unapi.AbstractMetadataFormat#
-	 * getAction()
-	 */
 	@Override
 	protected NewTextAction getAction() {
 		return action;
@@ -102,17 +88,17 @@ public class MetadataFormatDC extends AbstractMetadataFormat {
 	@Override
 	public void endDocument() throws SAXException {
 		final String lAuthor = getCollection(
-				elements.get(DCElements.CREATOR.getElementName()), ", "); //$NON-NLS-1$
+		        elements.get(DCElements.CREATOR.getElementName()), ", "); //$NON-NLS-1$
 		final NewTextAction.Builder lActionBuilder = new NewTextAction.Builder(
-				getChecked(DCElements.TITLE.getElementName()),
-				lAuthor == null ? "-" : lAuthor); //$NON-NLS-1$
+		        getChecked(DCElements.TITLE.getElementName()),
+		        lAuthor == null ? "-" : lAuthor); //$NON-NLS-1$
 
 		String lAdditional = getChecked(DCElements.PUBLISHER.getElementName());
 		if (lAdditional != null) {
 			lActionBuilder.publisher(lAdditional);
 		}
 		lAdditional = getCollection(
-				elements.get(DCElements.CONTRIBUTOR.getElementName()), ", "); //$NON-NLS-1$
+		        elements.get(DCElements.CONTRIBUTOR.getElementName()), ", "); //$NON-NLS-1$
 		if (lAdditional != null) {
 			lActionBuilder.coAuthor(lAdditional);
 		}
@@ -123,7 +109,7 @@ public class MetadataFormatDC extends AbstractMetadataFormat {
 
 		final String lSubject = getChecked(DCElements.SUBJECT.getElementName());
 		final String lDescription = getChecked(DCElements.DESCRIPTION
-				.getElementName());
+		        .getElementName());
 		if (lSubject != null && lDescription != null) {
 			lActionBuilder.text(lSubject + NL + lDescription);
 		} else {
@@ -134,11 +120,11 @@ public class MetadataFormatDC extends AbstractMetadataFormat {
 		}
 
 		action = lActionBuilder.type(AbstractText.TYPE_BOOK)
-				.build(getContext());
+		        .build(getContext());
 	}
 
 	private String getCollection(final Collection<IContent> inContents,
-			final String inDelimiter) {
+	        final String inDelimiter) {
 		if (inContents == null)
 			return null;
 
@@ -156,8 +142,8 @@ public class MetadataFormatDC extends AbstractMetadataFormat {
 
 	@Override
 	public void startElement(final String inUri, final String inLocalName,
-			final String inName, final Attributes inAttributes)
-			throws SAXException {
+	        final String inName, final Attributes inAttributes)
+	        throws SAXException {
 		final String lName = checkNameSpace(inName);
 		if (lName == null)
 			return;
@@ -166,7 +152,7 @@ public class MetadataFormatDC extends AbstractMetadataFormat {
 			for (final DCElements lElement : DCElements.values()) {
 				if (lName == lElement.getElementName()) {
 					final ElementListener lListener = lElement
-							.getListener(inAttributes);
+					        .getListener(inAttributes);
 					if (lListener != null) {
 						listener = lListener;
 						listener.activate(lName, inAttributes);
@@ -179,7 +165,7 @@ public class MetadataFormatDC extends AbstractMetadataFormat {
 
 	@Override
 	public void endElement(final String inUri, final String inLocalName,
-			final String inName) throws SAXException {
+	        final String inName) throws SAXException {
 		final String lName = checkNameSpace(inName);
 		if (lName == null)
 			return;
@@ -205,7 +191,7 @@ public class MetadataFormatDC extends AbstractMetadataFormat {
 
 	@Override
 	public void characters(final char[] inCharacters, final int inStart,
-			final int inLength) throws SAXException {
+	        final int inLength) throws SAXException {
 		if (listener != null && listener.isActive()) {
 			listener.addCharacters(inCharacters, inStart, inLength);
 		}

@@ -65,13 +65,6 @@ public abstract class AbstractChangeDB implements IDBChange {
 	@Inject
 	private Logger log;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.internal.actions.IDBChange#setTemporarySettings(org
-	 * .elbe.relations.internal.data.DBSettings)
-	 */
 	@Override
 	public void setTemporarySettings(final IDBSettings inDBSettings) {
 		dbSettings = inDBSettings;
@@ -81,21 +74,16 @@ public abstract class AbstractChangeDB implements IDBChange {
 		return dbSettings;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.internal.actions.ICommand#execute()
-	 */
 	@Override
 	public void execute() {
 		try {
 			// check structure with temporary settings
 			if (!checker.hasExpectedStructure(dbSettings)) {
 				MessageDialog.openError(new Shell(Display.getCurrent()),
-						RelationsMessages
-								.getString("FormDBConnection.error.title"), //$NON-NLS-1$
-						RelationsMessages
-								.getString("FormDBConnection.error.msg")); //$NON-NLS-1$ //$NON-NLS-2$
+				        RelationsMessages
+				                .getString("FormDBConnection.error.title"), //$NON-NLS-1$
+				        RelationsMessages
+				                .getString("FormDBConnection.error.msg")); //$NON-NLS-1$ 
 				return;
 			}
 
@@ -105,6 +93,14 @@ public abstract class AbstractChangeDB implements IDBChange {
 		}
 		catch (final SQLException exc) {
 			log.error(exc, exc.getMessage());
+			MessageDialog
+			        .openError(new Shell(Display.getCurrent()),
+			                RelationsMessages
+			                        .getString("FormDBConnection.error.title"),
+			                RelationsMessages.getString(
+			                        "FormDBConnection.error.connection.msg",
+			                        new Object[] { dbSettings.getDBName(),
+			                                dbSettings.getUser() }));
 		}
 		catch (final VException exc) {
 			log.error(exc, exc.getMessage());
@@ -117,9 +113,9 @@ public abstract class AbstractChangeDB implements IDBChange {
 	 */
 	protected void doDBChange() {
 		restoreSettings = new TempSettings(origDbSettings.getHost(),
-				origDbSettings.getCatalog(), origDbSettings.getUser(),
-				origDbSettings.getPassword(),
-				origDbSettings.getDBConnectionConfig());
+		        origDbSettings.getCatalog(), origDbSettings.getUser(),
+		        origDbSettings.getPassword(),
+		        origDbSettings.getDBConnectionConfig());
 
 		// persist temporary settings
 		((TempSettings) dbSettings).saveToPreferences();
@@ -128,11 +124,6 @@ public abstract class AbstractChangeDB implements IDBChange {
 		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_DB, "changeDB"); //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.internal.actions.IDBChange#restore()
-	 */
 	@Override
 	public void restore() {
 		if (restoreSettings == null) {
@@ -141,7 +132,7 @@ public abstract class AbstractChangeDB implements IDBChange {
 
 		((TempSettings) restoreSettings).saveToPreferences();
 		dbAccess.setActiveConfiguration(ActionHelper
-				.createDBConfiguration(restoreSettings));
+		        .createDBConfiguration(restoreSettings));
 	}
 
 	/**
@@ -149,23 +140,18 @@ public abstract class AbstractChangeDB implements IDBChange {
 	 */
 	protected void setTempDBSettings() {
 		dbAccess.setActiveConfiguration(ActionHelper
-				.createDBConfiguration(dbSettings));
+		        .createDBConfiguration(dbSettings));
 	}
 
 	protected void setOrigDBSettings() {
 		dbAccess.setActiveConfiguration(ActionHelper
-				.createDBConfiguration(origDbSettings));
+		        .createDBConfiguration(origDbSettings));
 	}
 
 	protected Logger getLog() {
 		return log;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.internal.actions.IDBChange#checkPreconditions()
-	 */
 	@Override
 	public void checkPreconditions() throws DBPreconditionException {
 		// default implementation doing nothing

@@ -32,41 +32,41 @@ public interface IItemVisitor {
 	 * @param inTitle
 	 *            String the item's title
 	 */
-	public void setTitle(String inTitle);
+	void setTitle(String inTitle);
 
 	/**
 	 * @return String the item's title
 	 */
-	public String getTitle();
+	String getTitle();
 
 	/**
 	 * @param inTitleEditable
 	 *            boolean indicates whether the item's title should be editable
 	 *            in the inspector view
 	 */
-	public void setTitleEditable(boolean inTitleEditable);
+	void setTitleEditable(boolean inTitleEditable);
 
 	/**
 	 * @param inSubTitle
 	 *            String the item's sub-title
 	 */
-	public void setSubTitle(String inSubTitle);
+	void setSubTitle(String inSubTitle);
 
 	/**
 	 * @return String the item's sub-title
 	 */
-	public String getSubTitle();
+	String getSubTitle();
 
 	/**
 	 * @param inText
 	 *            String the item's text
 	 */
-	public void setText(String inText);
+	void setText(String inText);
 
 	/**
 	 * @return String the item's text
 	 */
-	public String getText();
+	String getText();
 
 	/**
 	 * @param inTextEditable
@@ -83,10 +83,10 @@ public interface IItemVisitor {
 	 * @param inText
 	 *            String the real text field's content as is.
 	 */
-	public void setRealText(String inText);
+	void setRealText(String inText);
 
 	/**
 	 * @return the real text field's content as is.
 	 */
-	public String getRealText();
+	String getRealText();
 }

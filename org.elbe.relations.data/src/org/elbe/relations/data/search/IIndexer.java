@@ -44,8 +44,8 @@ public interface IIndexer {
 	 *            String ISO Language Code defined in ISO-639.
 	 * @throws IOException
 	 */
-	public void processIndexer(IndexerHelper inIndexer, File inIndexDir,
-			String inLanguage) throws IOException;
+	void processIndexer(IndexerHelper inIndexer, File inIndexDir,
+	        String inLanguage) throws IOException;
 
 	/**
 	 * Process the specified <code>Indexer</code>.
@@ -62,8 +62,8 @@ public interface IIndexer {
 	 *            index
 	 * @throws IOException
 	 */
-	public void processIndexer(IndexerHelper inIndexer, File inIndexDir,
-			String inLanguage, boolean inCreate) throws IOException;
+	void processIndexer(IndexerHelper inIndexer, File inIndexDir,
+	        String inLanguage, boolean inCreate) throws IOException;
 
 	/**
 	 * Returns the number of documents actually indexed.
@@ -73,7 +73,7 @@ public interface IIndexer {
 	 * @return int Number of documents in the index.
 	 * @throws IOException
 	 */
-	public int numberOfIndexed(File inIndexDir) throws IOException;
+	int numberOfIndexed(File inIndexDir) throws IOException;
 
 	/**
 	 * Returns the collection of languages for which the indexer bundle can
@@ -82,7 +82,7 @@ public interface IIndexer {
 	 * @return Collection<String> languages, i.e. ISO Language Codes defined in
 	 *         ISO-639.
 	 */
-	public Collection<String> getAnalyzerLanguages();
+	Collection<String> getAnalyzerLanguages();
 
 	/**
 	 * Deletes the item with the specified unique ID from this search index.
@@ -95,8 +95,8 @@ public interface IIndexer {
 	 *            File the directory where the search index is stored.
 	 * @throws IOException
 	 */
-	public void deleteItemInIndex(String inUniqueID, String inFieldName,
-			File inIndexDir) throws IOException;
+	void deleteItemInIndex(String inUniqueID, String inFieldName,
+	        File inIndexDir) throws IOException;
 
 	/**
 	 * Convenience method: initialize the specified index directory.
@@ -105,7 +105,7 @@ public interface IIndexer {
 	 *            File the directory where the search index is stored.
 	 * @throws IOException
 	 */
-	public void initializeIndex(File inIndexDir) throws IOException;
+	void initializeIndex(File inIndexDir) throws IOException;
 
 	/**
 	 * Searches the indexed items using the specified search query.
@@ -122,7 +122,7 @@ public interface IIndexer {
 	 * @throws IOException
 	 * @throws RException
 	 */
-	public List<RetrievedItem> search(String inQueryTerm, File inIndexDir,
-			String inLanguage, int inMaxHits) throws IOException, RException;
+	List<RetrievedItem> search(String inQueryTerm, File inIndexDir,
+	        String inLanguage, int inMaxHits) throws IOException, RException;
 
 }

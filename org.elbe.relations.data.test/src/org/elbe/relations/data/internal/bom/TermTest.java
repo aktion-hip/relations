@@ -27,7 +27,6 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Vector;
 
-import org.elbe.relations.data.DataHouseKeeper;
 import org.elbe.relations.data.bom.AbstractItem;
 import org.elbe.relations.data.bom.AbstractTerm;
 import org.elbe.relations.data.bom.IItem;
@@ -37,6 +36,7 @@ import org.elbe.relations.data.bom.TermHome;
 import org.elbe.relations.data.search.IndexerDocument;
 import org.elbe.relations.data.search.IndexerField;
 import org.elbe.relations.data.search.IndexerHelper;
+import org.elbe.relations.data.test.DataHouseKeeper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;

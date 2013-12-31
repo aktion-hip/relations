@@ -88,15 +88,15 @@ public class XMLImport {
 	 * @throws InterruptedException
 	 */
 	public int processFile(final IProgressMonitor inMonitor,
-			final boolean inCanSetIdentityField) throws SAXException,
-			ParserConfigurationException, IOException, InterruptedException {
+	        final boolean inCanSetIdentityField) throws SAXException,
+	        ParserConfigurationException, IOException, InterruptedException {
 		final Reader lReader = getReader();
 		try {
 			final InputSource lSource = new InputSource(lReader);
 			final XMLReader lParser = SAXParserFactory.newInstance()
-					.newSAXParser().getXMLReader();
+			        .newSAXParser().getXMLReader();
 			lParser.setContentHandler(new XMLHandler(inMonitor,
-					inCanSetIdentityField));
+			        inCanSetIdentityField));
 			lParser.parse(lSource);
 			return numberOfEntries;
 		}
@@ -106,7 +106,8 @@ public class XMLImport {
 			} else {
 				throw exc;
 			}
-		} finally {
+		}
+		finally {
 			close(lReader);
 		}
 	}
@@ -148,19 +149,19 @@ public class XMLImport {
 		private final IProgressMonitor mainMonitor;
 
 		public XMLHandler(final IProgressMonitor inMonitor,
-				final boolean inCanSetIdentityField) {
+		        final boolean inCanSetIdentityField) {
 			mainMonitor = inMonitor;
 			// monitor = SubMonitor.convert(inMonitor,
 			// IProgressMonitor.UNKNOWN);
 			canSetIdentityField = inCanSetIdentityField;
 			insertBehaviour = canSetIdentityField ? new StraightInsertBehaviour()
-					: new CautiousInsertBehaviour();
+			        : new CautiousInsertBehaviour();
 		}
 
 		@Override
 		public void startElement(final String inUri, final String inLocalName,
-				final String inName, final Attributes inAttributes)
-				throws SAXException {
+		        final String inName, final Attributes inAttributes)
+		        throws SAXException {
 			if (ROOT.equals(inName)) {
 				canImport = true;
 				numberOfEntries = 0;
@@ -174,13 +175,13 @@ public class XMLImport {
 						return;
 					}
 					inserter.initializeField(inName, inAttributes,
-							canSetIdentityField);
+					        canSetIdentityField);
 					return;
 				}
 				if (inserterFactory != null) {
 					// e.g. "Term"
 					inserter = inserterFactory.createInserter(inName,
-							insertBehaviour);
+					        insertBehaviour);
 					return;
 				}
 				if (XMLExport.NODE_TERMS.equals(inName)) {
@@ -204,10 +205,10 @@ public class XMLImport {
 		}
 
 		private void notifyMonitor(final String inEntryType)
-				throws SAXException {
+		        throws SAXException {
 			monitor = SubMonitor.convert(mainMonitor, String.format(
-					RelationsMessages.getString("XMLImport.msg.success"), //$NON-NLS-1$
-					inEntryType), 1000);
+			        RelationsMessages.getString("XMLImport.msg.success"), //$NON-NLS-1$
+			        inEntryType), 1000);
 			if (monitor.isCanceled()) {
 				throw new SAXException(OPERATION_CANCELED_ID);
 			}
@@ -215,7 +216,7 @@ public class XMLImport {
 
 		@Override
 		public void endElement(final String inUri, final String inLocalName,
-				final String inName) throws SAXException {
+		        final String inName) throws SAXException {
 			if (ROOT.equals(inName)) {
 				canImport = false;
 				return;
@@ -241,9 +242,9 @@ public class XMLImport {
 					}
 				}
 				if (XMLExport.NODE_TERMS.equals(inName)
-						|| XMLExport.NODE_TEXTS.equals(inName)
-						|| XMLExport.NODE_PERSONS.equals(inName)
-						|| XMLExport.NODE_RELATIONS.equals(inName)) {
+				        || XMLExport.NODE_TEXTS.equals(inName)
+				        || XMLExport.NODE_PERSONS.equals(inName)
+				        || XMLExport.NODE_RELATIONS.equals(inName)) {
 					inserterFactory = null;
 				}
 			}
@@ -251,7 +252,7 @@ public class XMLImport {
 
 		@Override
 		public void characters(final char[] inChars, final int inStart,
-				final int inLength) throws SAXException {
+		        final int inLength) throws SAXException {
 			if (inserter != null) {
 				final char[] lTarget = new char[inLength];
 				System.arraycopy(inChars, inStart, lTarget, 0, inLength);
@@ -267,10 +268,10 @@ public class XMLImport {
 	 * @author Luthiger Created on 23.10.2008
 	 */
 	private interface IInserterFactory {
-		public IEntryInserter createInserter(String inEntryName,
-				IInsertBehaviour inBehaviour) throws SAXException;
+		IEntryInserter createInserter(String inEntryName,
+		        IInsertBehaviour inBehaviour) throws SAXException;
 
-		public String getElementNode();
+		String getElementNode();
 	}
 
 	private class TermInserterFactory implements IInserterFactory {
@@ -279,7 +280,7 @@ public class XMLImport {
 
 		@Override
 		public IEntryInserter createInserter(final String inEntryName,
-				final IInsertBehaviour inBehaviour) throws SAXException {
+		        final IInsertBehaviour inBehaviour) throws SAXException {
 			if (ELEMENT_NODE.equals(inEntryName)) {
 				try {
 					return new TermInserter(home.create(), inBehaviour);
@@ -303,7 +304,7 @@ public class XMLImport {
 
 		@Override
 		public IEntryInserter createInserter(final String inEntryName,
-				final IInsertBehaviour inBehaviour) throws SAXException {
+		        final IInsertBehaviour inBehaviour) throws SAXException {
 			if (ELEMENT_NODE.equals(inEntryName)) {
 				try {
 					return new TextInserter(home.create(), inBehaviour);
@@ -327,7 +328,7 @@ public class XMLImport {
 
 		@Override
 		public IEntryInserter createInserter(final String inEntryName,
-				final IInsertBehaviour inBehaviour) throws SAXException {
+		        final IInsertBehaviour inBehaviour) throws SAXException {
 			if (ELEMENT_NODE.equals(inEntryName)) {
 				try {
 					return new PersonInserter(home.create(), inBehaviour);
@@ -351,7 +352,7 @@ public class XMLImport {
 
 		@Override
 		public IEntryInserter createInserter(final String inEntryName,
-				final IInsertBehaviour inBehaviour) throws SAXException {
+		        final IInsertBehaviour inBehaviour) throws SAXException {
 			if (ELEMENT_NODE.equals(inEntryName)) {
 				try {
 					return new RelationInserter(home.create(), inBehaviour);
@@ -377,20 +378,20 @@ public class XMLImport {
 	 * @author Luthiger Created on 23.10.2008
 	 */
 	private interface IEntryInserter {
-		public void insert() throws SAXException;
+		void insert() throws SAXException;
 
-		public void initializeField(String inName, Attributes inAttributes,
-				boolean inCanSetIdentityField);
+		void initializeField(String inName, Attributes inAttributes,
+		        boolean inCanSetIdentityField);
 
-		public boolean testEndField(String inName) throws SAXException;
+		boolean testEndField(String inName) throws SAXException;
 
-		public void append(char[] inChars);
+		void append(char[] inChars);
 
-		public void appendStartNode(String inName, Attributes inAttributes);
+		void appendStartNode(String inName, Attributes inAttributes);
 
-		public void appendEndNode(String inName);
+		void appendEndNode(String inName);
 
-		public boolean isListening();
+		boolean isListening();
 	}
 
 	abstract class Inserter {
@@ -402,7 +403,7 @@ public class XMLImport {
 		private Long expectedID;
 
 		public Inserter(final DomainObject inModel,
-				final IInsertBehaviour inBehaviour, final int inItemType) {
+		        final IInsertBehaviour inBehaviour, final int inItemType) {
 			model = inModel;
 			insertBehaviour = inBehaviour;
 			itemType = inItemType;
@@ -415,8 +416,8 @@ public class XMLImport {
 		}
 
 		public void initializeField(final String inName,
-				final Attributes inAttributes,
-				final boolean inCanSetIdentityField) {
+		        final Attributes inAttributes,
+		        final boolean inCanSetIdentityField) {
 			final String lType = inAttributes.getValue("type"); //$NON-NLS-1$
 			if ("String".equals(lType)) { //$NON-NLS-1$ 
 				field = new StringField(inName);
@@ -466,17 +467,17 @@ public class XMLImport {
 		}
 
 		public void appendStartNode(final String inName,
-				final Attributes inAttributes) {
+		        final Attributes inAttributes) {
 			value.append(String.format(
-					"<%s%s>", inName, processAttributes(inAttributes))); //$NON-NLS-1$
+			        "<%s%s>", inName, processAttributes(inAttributes))); //$NON-NLS-1$
 		}
 
 		private StringBuilder processAttributes(final Attributes inAttributes) {
 			final StringBuilder outAttributes = new StringBuilder();
 			for (int i = 0; i < inAttributes.getLength(); i++) {
 				outAttributes
-						.append(String
-								.format(" %s=\"%s\"", inAttributes.getQName(i), inAttributes.getValue(i))); //$NON-NLS-1$
+				        .append(String
+				                .format(" %s=\"%s\"", inAttributes.getQName(i), inAttributes.getValue(i))); //$NON-NLS-1$
 			}
 			return outAttributes;
 		}
@@ -492,28 +493,28 @@ public class XMLImport {
 
 	private class TermInserter extends Inserter implements IEntryInserter {
 		public TermInserter(final DomainObject inModel,
-				final IInsertBehaviour inBehaviour) {
+		        final IInsertBehaviour inBehaviour) {
 			super(inModel, inBehaviour, IItem.TERM);
 		}
 	}
 
 	private class TextInserter extends Inserter implements IEntryInserter {
 		public TextInserter(final DomainObject inModel,
-				final IInsertBehaviour inBehaviour) {
+		        final IInsertBehaviour inBehaviour) {
 			super(inModel, inBehaviour, IItem.TEXT);
 		}
 	}
 
 	private class PersonInserter extends Inserter implements IEntryInserter {
 		public PersonInserter(final DomainObject inModel,
-				final IInsertBehaviour inBehaviour) {
+		        final IInsertBehaviour inBehaviour) {
 			super(inModel, inBehaviour, IItem.PERSON);
 		}
 	}
 
 	private class RelationInserter extends Inserter implements IEntryInserter {
 		public RelationInserter(final DomainObject inModel,
-				final IInsertBehaviour inBehaviour) {
+		        final IInsertBehaviour inBehaviour) {
 			super(inModel, inBehaviour, 0);
 		}
 	}
@@ -524,10 +525,10 @@ public class XMLImport {
 	 * @author Luthiger Created on 23.10.2008
 	 */
 	private interface IInsertField {
-		public String getFieldName();
+		String getFieldName();
 
-		public boolean setValueTo(DomainObject inModel, String inValue)
-				throws VException;
+		boolean setValueTo(DomainObject inModel, String inValue)
+		        throws VException;
 	}
 
 	abstract class AbstractField implements IInsertField {
@@ -550,9 +551,9 @@ public class XMLImport {
 
 		@Override
 		public boolean setValueTo(final DomainObject inModel,
-				final String inValue) throws VException {
+		        final String inValue) throws VException {
 			inModel.set(fieldName,
-					RelationsSerializer.prepareForImport(inValue));
+			        RelationsSerializer.prepareForImport(inValue));
 			return false;
 		}
 	}
@@ -564,7 +565,7 @@ public class XMLImport {
 
 		@Override
 		public boolean setValueTo(final DomainObject inModel,
-				final String inValue) throws VException {
+		        final String inValue) throws VException {
 			inModel.set(fieldName, new Long(inValue));
 			return false;
 		}
@@ -577,9 +578,9 @@ public class XMLImport {
 
 		@Override
 		public boolean setValueTo(final DomainObject inModel,
-				final String inValue) throws VException {
+		        final String inValue) throws VException {
 			if (fieldName.equals(inModel.getObjectDef().getPrimaryKeyDef()
-					.getKeyName(0))) {
+			        .getKeyName(0))) {
 				return true;
 			}
 			inModel.set(fieldName, new Long(inValue));
@@ -594,7 +595,7 @@ public class XMLImport {
 
 		@Override
 		public boolean setValueTo(final DomainObject inModel,
-				final String inValue) throws VException {
+		        final String inValue) throws VException {
 			inModel.set(fieldName, new Integer(inValue));
 			return false;
 		}
@@ -607,9 +608,9 @@ public class XMLImport {
 
 		@Override
 		public boolean setValueTo(final DomainObject inModel,
-				final String inValue) throws VException {
+		        final String inValue) throws VException {
 			if (fieldName.equals(inModel.getObjectDef().getPrimaryKeyDef()
-					.getKeyName(0))) {
+			        .getKeyName(0))) {
 				return true;
 			}
 			inModel.set(fieldName, new Integer(inValue));
@@ -624,7 +625,7 @@ public class XMLImport {
 
 		@Override
 		public boolean setValueTo(final DomainObject inModel,
-				final String inValue) throws VException {
+		        final String inValue) throws VException {
 			inModel.set(fieldName, Timestamp.valueOf(inValue));
 			return false;
 		}
@@ -648,14 +649,14 @@ public class XMLImport {
 		 *            int
 		 * @throws SAXException
 		 */
-		public void insert(DomainObject inModel, Long inExpectedID,
-				int inItemType) throws SAXException;
+		void insert(DomainObject inModel, Long inExpectedID, int inItemType)
+		        throws SAXException;
 	}
 
 	private class StraightInsertBehaviour implements IInsertBehaviour {
 		@Override
 		public void insert(final DomainObject inModel, final Long inExpectedID,
-				final int inItemType) throws SAXException {
+		        final int inItemType) throws SAXException {
 			try {
 				inModel.insert(true);
 			}
@@ -671,7 +672,7 @@ public class XMLImport {
 	private class CautiousInsertBehaviour implements IInsertBehaviour {
 		@Override
 		public void insert(final DomainObject inModel, final Long inExpectedID,
-				final int inItemType) throws SAXException {
+		        final int inItemType) throws SAXException {
 			try {
 				final Long lID = inModel.insert(true);
 				if (inItemType == 0) {
@@ -679,8 +680,8 @@ public class XMLImport {
 				}
 				if (!lID.equals(inExpectedID)) {
 					final RelationReplaceHelper lAdjusted = new RelationReplaceHelper(
-							new UniqueID(inItemType, inExpectedID.longValue()),
-							new UniqueID(inItemType, lID.longValue()));
+					        new UniqueID(inItemType, inExpectedID.longValue()),
+					        new UniqueID(inItemType, lID.longValue()));
 					relationsToRebind.add(lAdjusted);
 				}
 			}
@@ -711,7 +712,7 @@ public class XMLImport {
 		@Override
 		public String toString() {
 			return String
-					.format("%s -> %s", oldID.toString(), newID.toString()); //$NON-NLS-1$
+			        .format("%s -> %s", oldID.toString(), newID.toString()); //$NON-NLS-1$
 		}
 	}
 

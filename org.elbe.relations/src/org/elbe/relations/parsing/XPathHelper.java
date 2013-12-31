@@ -63,18 +63,21 @@ public class XPathHelper {
 
 	public enum XmlSerializer {
 		SIMPLE(new ISerializerFactory() {
+			@Override
 			public org.htmlcleaner.XmlSerializer createSerializer(
-					final CleanerProperties inProperties) {
+			        final CleanerProperties inProperties) {
 				return new SimpleXmlSerializer(inProperties);
 			}
 		}), PRETTY(new ISerializerFactory() {
+			@Override
 			public org.htmlcleaner.XmlSerializer createSerializer(
-					final CleanerProperties inProperties) {
+			        final CleanerProperties inProperties) {
 				return new PrettyXmlSerializer(inProperties);
 			}
 		}), COMPACT(new ISerializerFactory() {
+			@Override
 			public org.htmlcleaner.XmlSerializer createSerializer(
-					final CleanerProperties inProperties) {
+			        final CleanerProperties inProperties) {
 				return new CompactXmlSerializer(inProperties);
 			}
 		});
@@ -86,7 +89,7 @@ public class XPathHelper {
 		}
 
 		public org.htmlcleaner.XmlSerializer getSerializer(
-				final CleanerProperties inProperties) {
+		        final CleanerProperties inProperties) {
 			return factory.createSerializer(inProperties);
 		}
 	}
@@ -128,7 +131,7 @@ public class XPathHelper {
 	 * @throws SAXException
 	 */
 	public static Document createDocument(final String inUrl)
-			throws ParserConfigurationException, IOException, SAXException {
+	        throws ParserConfigurationException, IOException, SAXException {
 		return createDocument(new URL(inUrl));
 	}
 
@@ -144,19 +147,20 @@ public class XPathHelper {
 	 * @throws SAXException
 	 */
 	public static Document createDocument(final URL inUrl)
-			throws ParserConfigurationException, IOException, SAXException {
+	        throws ParserConfigurationException, IOException, SAXException {
 		final HtmlCleaner lCleaner = new HtmlCleaner();
 		lCleaner.clean(inUrl);
 
 		final DocumentBuilder lBuilder = DocumentBuilderFactory.newInstance()
-				.newDocumentBuilder();
+		        .newDocumentBuilder();
 		final URLConnection lConnection = inUrl.openConnection();
 		BufferedInputStream lStream = null;
 		Document outDocument = null;
 		try {
 			lStream = new BufferedInputStream(lConnection.getInputStream());
 			outDocument = lBuilder.parse(lStream);
-		} finally {
+		}
+		finally {
 			lStream.close();
 		}
 		return outDocument;
@@ -176,7 +180,7 @@ public class XPathHelper {
 			return null;
 		final Object[] lResult = docNode.evaluateXPath(inXPath);
 		return lResult.length == 0 ? null : ((TagNode) lResult[0]).getText()
-				.toString();
+		        .toString();
 	}
 
 	/**
@@ -191,7 +195,7 @@ public class XPathHelper {
 	 * @throws XPathExpressionException
 	 */
 	public static String getElement(final Document inDocument,
-			final String inXPath) throws XPathExpressionException {
+	        final String inXPath) throws XPathExpressionException {
 		final Element lElement = createElement(inDocument, inXPath);
 		return lElement == null ? "" : lElement.getFirstChild().getNodeValue(); //$NON-NLS-1$
 	}
@@ -207,12 +211,12 @@ public class XPathHelper {
 	 * @throws XPatherException
 	 */
 	public String getAttribute(final String inXPath, final String inAttribute)
-			throws XPatherException {
+	        throws XPatherException {
 		if (docNode == null)
 			return null;
 		final Object[] lResult = docNode.evaluateXPath(inXPath);
 		return (lResult.length == 0) ? null : ((TagNode) lResult[0])
-				.getAttributeByName(inAttribute);
+		        .getAttributeByName(inAttribute);
 	}
 
 	/**
@@ -229,19 +233,19 @@ public class XPathHelper {
 	 * @throws XPathExpressionException
 	 */
 	public static String getAttribute(final Document inDocument,
-			final String inXPath, final String inAttribute)
-			throws XPathExpressionException {
+	        final String inXPath, final String inAttribute)
+	        throws XPathExpressionException {
 		final Element lElement = createElement(inDocument, inXPath);
 		return lElement == null ? null : lElement.getAttribute(inAttribute);
 	}
 
 	private static Element createElement(final Document inDocument,
-			final String inXPath) throws XPathExpressionException {
+	        final String inXPath) throws XPathExpressionException {
 		final XPathFactory lFactory = XPathFactory.newInstance();
 		final XPath lXPath = lFactory.newXPath();
 		final XPathExpression lXExpression = lXPath.compile(inXPath);
 		final Element lElement = (Element) lXExpression.evaluate(
-				inDocument.getDocumentElement(), XPathConstants.NODE);
+		        inDocument.getDocumentElement(), XPathConstants.NODE);
 		return lElement;
 	}
 
@@ -254,7 +258,7 @@ public class XPathHelper {
 	 * @throws IOException
 	 */
 	public String getSerialized(final XmlSerializer inSerializer)
-			throws IOException {
+	        throws IOException {
 		if (docNode == null)
 			return ""; //$NON-NLS-1$
 
@@ -284,9 +288,9 @@ public class XPathHelper {
 		return docNode.getDocType() == null ? "" : docNode.getDocType().getContent(); //$NON-NLS-1$
 	}
 
-	private static interface ISerializerFactory {
+	private interface ISerializerFactory {
 		org.htmlcleaner.XmlSerializer createSerializer(
-				CleanerProperties inProperties);
+		        CleanerProperties inProperties);
 	}
 
 	/**

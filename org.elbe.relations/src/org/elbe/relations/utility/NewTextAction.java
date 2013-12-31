@@ -59,20 +59,15 @@ public class NewTextAction implements ICommand {
 		builder = inBuilder;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.actions.ICommand#execute()
-	 */
 	@Override
 	public void execute() {
 		final TextHome lHome = BOMHelper.getTextHome();
 		try {
 			text = lHome.newText(builder.title, builder.textString,
-					builder.author, builder.coAuthor, builder.subTitle,
-					builder.year, builder.publication, builder.pages,
-					builder.volume, builder.number, builder.publisher,
-					builder.place, builder.type);
+			        builder.author, builder.coAuthor, builder.subTitle,
+			        builder.year, builder.publication, builder.pages,
+			        builder.volume, builder.number, builder.publisher,
+			        builder.place, builder.type);
 			data.loadNew((LightWeightText) text.getLightWeight());
 		}
 		catch (final BOMException exc) {
@@ -93,10 +88,10 @@ public class NewTextAction implements ICommand {
 	public String toString() {
 		final String lFormat = "title=%s&author=%s&coAuthor=%s&subTitle=%s&year=%s&publication=%s&pages=%s&volume=%s&number=%s&publisher=%s&place=%s&type=%s&text=%s"; //$NON-NLS-1$
 		return String.format(lFormat, builder.title, builder.author,
-				builder.coAuthor, builder.subTitle, builder.year,
-				builder.publication, builder.pages, builder.volume,
-				builder.number, builder.publisher, builder.place, builder.type,
-				builder.textString);
+		        builder.coAuthor, builder.subTitle, builder.year,
+		        builder.publication, builder.pages, builder.volume,
+		        builder.number, builder.publisher, builder.place, builder.type,
+		        builder.textString);
 	}
 
 	// --- inner class builder ---
@@ -180,7 +175,7 @@ public class NewTextAction implements ICommand {
 
 		public NewTextAction build(final IEclipseContext inContext) {
 			final NewTextAction out = ContextInjectionFactory.make(
-					NewTextAction.class, inContext);
+			        NewTextAction.class, inContext);
 			out.setBuilder(this);
 			return out;
 		}

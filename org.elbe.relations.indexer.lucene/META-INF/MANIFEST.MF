@@ -12,5 +12,6 @@ Bundle-ClassPath: lib/lucene-analyzers-2.4.0.jar,
 Import-Package: org.elbe.relations.data.search;version="[1.0.0,2.0.0)",
  org.elbe.relations.data.utility;version="[1.0.0,2.0.0)",
  org.elbe.relations.search;version="[2.0.0,3.0.0)",
- org.hip.kernel.exc;version="[1.0.0,2.0.0)"
+ org.hip.kernel.exc;version="[1.0.0,2.0.0)",
+ org.slf4j;version="1.6.4"
 Service-Component: OSGI-INF/indexerService.xml

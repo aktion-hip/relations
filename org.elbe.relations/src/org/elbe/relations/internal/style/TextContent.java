@@ -40,19 +40,19 @@ public class TextContent implements StyledTextContent {
 	private int gapStart = -1; // the character position start of the gap
 	private int gapEnd = -1; // the character position after the end of the gap
 	private int gapLine = -1; // the line on which the gap exists, the gap will
-								// always be associated with one line
+	                          // always be associated with one line
 	private final int highWatermark = 300;
 	private final int lowWatermark = 50;
 
 	private int[][] lines = new int[50][2]; // array of character positions and
-											// lengths representing the lines of
-											// text
+	                                        // lengths representing the lines of
+	                                        // text
 	private int lineCount = 0; // the number of lines of text
 	private int expandExp = 1; // the expansion exponent, used to increase the
-								// lines array exponentially
+	                           // lines array exponentially
 	private int replaceExpandExp = 1; // the expansion exponent, used to
-										// increase the lines array
-										// exponentially
+	                                  // increase the lines array
+	                                  // exponentially
 
 	public TextContent() {
 		super();
@@ -98,7 +98,7 @@ public class TextContent implements StyledTextContent {
 		if (!gapExists() || (lEnd < gapStart) || (lStart >= gapEnd)) {
 			// line is before or after the gap
 			while ((lLength - 1 >= 0)
-					&& isDelimiter(textStore[lStart + lLength - 1])) {
+			        && isDelimiter(textStore[lStart + lLength - 1])) {
 				lLength--;
 			}
 			return new String(textStore, lStart, lLength);
@@ -108,10 +108,10 @@ public class TextContent implements StyledTextContent {
 			final int gapLength = gapEnd - gapStart;
 			lBuffer.append(textStore, lStart, gapStart - lStart);
 			lBuffer.append(textStore, gapEnd, lLength - gapLength
-					- (gapStart - lStart));
+			        - (gapStart - lStart));
 			lLength = lBuffer.length();
 			while ((lLength - 1 >= 0)
-					&& isDelimiter(lBuffer.charAt(lLength - 1))) {
+			        && isDelimiter(lBuffer.charAt(lLength - 1))) {
 				lLength--;
 			}
 			return lBuffer.toString().substring(0, lLength);
@@ -240,28 +240,15 @@ public class TextContent implements StyledTextContent {
 		return lBuffer.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.swt.custom.StyledTextContent#removeTextChangeListener(org
-	 * .eclipse.swt.custom.TextChangeListener)
-	 */
 	@Override
 	public void removeTextChangeListener(final TextChangeListener inListener) {
 		listeners.remove(inListener);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.swt.custom.StyledTextContent#replaceTextRange(int, int,
-	 * java.lang.String)
-	 */
 	@Override
 	public void replaceTextRange(final int inStart, final int inReplaceLength,
-			final String inText) {
-		if (!isValidReplace(inStart, inReplaceLength, inText))
+	        final String inText) {
+		if (!isValidReplace(inStart, inReplaceLength))
 			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
 
 		// inform listeners
@@ -284,7 +271,7 @@ public class TextContent implements StyledTextContent {
 		// inform listeners again
 		for (int i = 0; i < lListeners.length; ++i) {
 			((TextChangeListener) lListeners[i])
-					.textChanged(new TextChangedEvent(this));
+			        .textChanged(new TextChangedEvent(this));
 		}
 	}
 
@@ -315,7 +302,7 @@ public class TextContent implements StyledTextContent {
 
 		// figure out the number of new lines that have been inserted
 		final int[][] lNewLines = indexLines(lStartLineOffset,
-				lStartLineLength, 10);
+		        lStartLineLength, 10);
 		// only insert an empty line if it is the last line in the text
 		int lNewLinesNum = lNewLines.length - 1;
 		if (lNewLines[lNewLinesNum][1] == 0) {
@@ -383,7 +370,7 @@ public class TextContent implements StyledTextContent {
 	}
 
 	private int[][] indexLines(final int inOffset, final int inLength,
-			final int inNumLines) {
+	        final int inNumLines) {
 		int[][] lIndexedLines = new int[inNumLines][2];
 		int lStart = 0;
 		int lLineCount = 0;
@@ -404,12 +391,12 @@ public class TextContent implements StyledTextContent {
 						}
 					}
 					lIndexedLines = addLineIndex(lStart, i - lStart + 1,
-							lIndexedLines, lLineCount);
+					        lIndexedLines, lLineCount);
 					lLineCount++;
 					lStart = i + 1;
 				} else if (lChar == SWT.LF) {
 					lIndexedLines = addLineIndex(lStart, i - lStart + 1,
-							lIndexedLines, lLineCount);
+					        lIndexedLines, lLineCount);
 					lLineCount++;
 					lStart = i + 1;
 				}
@@ -423,7 +410,7 @@ public class TextContent implements StyledTextContent {
 	}
 
 	private int[][] addLineIndex(final int inStart, final int inLength,
-			final int[][] inLinesArray, final int inCount) {
+	        final int[][] inLinesArray, final int inCount) {
 		final int lSize = inLinesArray.length;
 		int[][] outLines = inLinesArray;
 		if (inCount == lSize) {
@@ -449,7 +436,7 @@ public class TextContent implements StyledTextContent {
 	}
 
 	void adjustGap(final int inStart, final int inSizeHint,
-			final int inStartLine) {
+	        final int inStartLine) {
 		if (inStart == gapStart) {
 			// text is being inserted at the gap position
 			final int lSize = (gapEnd - gapStart) - inSizeHint;
@@ -465,7 +452,7 @@ public class TextContent implements StyledTextContent {
 	}
 
 	void moveAndResizeGap(final int inStart, final int inSize,
-			final int inGapLine) {
+	        final int inGapLine) {
 		char[] lContent = null;
 		final int lOldSize = gapEnd - gapStart;
 		int lNewSize;
@@ -490,7 +477,7 @@ public class TextContent implements StyledTextContent {
 				lContent = new char[textStore.length - lOldSize];
 				System.arraycopy(textStore, 0, lContent, 0, gapStart);
 				System.arraycopy(textStore, gapEnd, lContent, gapStart,
-						lContent.length - gapStart);
+				        lContent.length - gapStart);
 				textStore = lContent;
 			}
 			gapStart = gapEnd = inStart;
@@ -502,20 +489,20 @@ public class TextContent implements StyledTextContent {
 		if (lOldSize == 0) {
 			System.arraycopy(textStore, 0, lContent, 0, lNewGapStart);
 			System.arraycopy(textStore, lNewGapStart, lContent, lNewGapEnd,
-					lContent.length - lNewGapEnd);
+			        lContent.length - lNewGapEnd);
 		} else if (lNewGapStart < gapStart) {
 			final int lDelta = gapStart - lNewGapStart;
 			System.arraycopy(textStore, 0, lContent, 0, lNewGapStart);
 			System.arraycopy(textStore, lNewGapStart, lContent, lNewGapEnd,
-					lDelta);
+			        lDelta);
 			System.arraycopy(textStore, gapEnd, lContent, lNewGapEnd + lDelta,
-					textStore.length - gapEnd);
+			        textStore.length - gapEnd);
 		} else {
 			final int lDelta = lNewGapStart - gapStart;
 			System.arraycopy(textStore, 0, lContent, 0, gapStart);
 			System.arraycopy(textStore, gapEnd, lContent, gapStart, lDelta);
 			System.arraycopy(textStore, gapEnd + lDelta, lContent, lNewGapEnd,
-					lContent.length - lNewGapEnd);
+			        lContent.length - lNewGapEnd);
 		}
 		textStore = lContent;
 		gapStart = lNewGapStart;
@@ -535,7 +522,7 @@ public class TextContent implements StyledTextContent {
 	}
 
 	private void delete(final int inPosition, final int inLength,
-			final int inNumLines) {
+	        final int inNumLines) {
 		if (inLength == 0)
 			return;
 
@@ -548,14 +535,14 @@ public class TextContent implements StyledTextContent {
 		if (inPosition + inLength < getCharCount()) {
 			lEndText = getTextRange(inPosition + inLength - 1, 2);
 			if ((lEndText.charAt(0) == SWT.CR)
-					&& (lEndText.charAt(1) == SWT.LF)) {
+			        && (lEndText.charAt(1) == SWT.LF)) {
 				lSplittingDelimiter = true;
 			}
 		}
 
 		adjustGap(inPosition + inLength, -inLength, lStartLine);
 		final int[][] lOldLines = indexLines(inPosition, inLength
-				+ (gapEnd - gapStart), inNumLines);
+		        + (gapEnd - gapStart), inNumLines);
 
 		// enlarge the gap - the gap can be enlarged either to the
 		// right or left
@@ -573,10 +560,9 @@ public class TextContent implements StyledTextContent {
 			if (j < gapStart || j >= gapEnd) {
 				final char lChar = textStore[j];
 				if (isDelimiter(lChar)) {
-					if (j + 1 < textStore.length) {
-						if (lChar == SWT.CR && (textStore[j + 1] == SWT.LF)) {
-							j++;
-						}
+					if (j + 1 < textStore.length
+					        && (lChar == SWT.CR && (textStore[j + 1] == SWT.LF))) {
+						j++;
 					}
 					eol = true;
 				}
@@ -585,7 +571,7 @@ public class TextContent implements StyledTextContent {
 		}
 		// update the line where the deletion started
 		lines[lStartLine][1] = (inPosition - lStartLineOffset)
-				+ (j - inPosition);
+		        + (j - inPosition);
 		// figure out the number of lines that have been deleted
 		int lNumOldLines = lOldLines.length - 1;
 		if (lSplittingDelimiter)
@@ -651,8 +637,7 @@ public class TextContent implements StyledTextContent {
 		return outLineCount;
 	}
 
-	private boolean isValidReplace(final int inStart,
-			final int inReplaceLength, final String inText) {
+	private boolean isValidReplace(final int inStart, final int inReplaceLength) {
 		if (inReplaceLength == 0) {
 			// inserting text, see if the \r\n line delimiter is being split
 			if (inStart == 0)
@@ -671,19 +656,19 @@ public class TextContent implements StyledTextContent {
 			final char lStart = getTextRange(inStart, 1).charAt(0);
 			if (lStart == '\n') {
 				// see if char before delete position is \r
-				if (inStart != 0) {
+				if (inStart != 0) { // NOPMD
 					final char lBefore = getTextRange(inStart - 1, 1).charAt(0);
 					if (lBefore == '\r')
 						return false;
 				}
 			}
 			final char lEnd = getTextRange(inStart + inReplaceLength - 1, 1)
-					.charAt(0);
+			        .charAt(0);
 			if (lEnd == '\r') {
 				// see if char after delete position is \n
-				if (inStart + inReplaceLength != getCharCount()) {
+				if (inStart + inReplaceLength != getCharCount()) { // NOPMD
 					final char lAfter = getTextRange(inStart + inReplaceLength,
-							1).charAt(0);
+					        1).charAt(0);
 					if (lAfter == '\n')
 						return false;
 				}
@@ -708,7 +693,7 @@ public class TextContent implements StyledTextContent {
 		final Object[] lListeners = listeners.getListeners();
 		for (int i = 0; i < lListeners.length; ++i) {
 			((TextChangeListener) lListeners[i]).textSet(new TextChangedEvent(
-					this));
+			        this));
 		}
 	}
 

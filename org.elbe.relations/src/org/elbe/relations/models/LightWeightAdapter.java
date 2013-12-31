@@ -147,7 +147,7 @@ public class LightWeightAdapter implements IItemModel {
 			final IItem lItem = (IItem) inObject;
 			try {
 				return getItemType() == lItem.getItemType()
-						&& getID() == lItem.getID();
+				        && getID() == lItem.getID();
 			}
 			catch (final VException exc) {
 				return false;
@@ -156,15 +156,26 @@ public class LightWeightAdapter implements IItemModel {
 		return false;
 	}
 
+	@Override
+	public int hashCode() {
+		try {
+			return (int) getID();
+		}
+		catch (final VException exc) {
+			// intentionally left empty
+		}
+		return super.hashCode();
+	}
+
 	/**
 	 * @see org.elbe.relations.bom.IItem#saveTitleText(java.lang.String,
 	 *      java.lang.String)
 	 */
 	@Override
 	public void saveTitleText(final String inTitle, final String inText)
-			throws BOMException {
+	        throws BOMException {
 		throw new BOMException(
-				RelationsMessages.getString("LightWeightAdapter.exc.msg")); //$NON-NLS-1$
+		        RelationsMessages.getString("LightWeightAdapter.exc.msg")); //$NON-NLS-1$
 	}
 
 	/**

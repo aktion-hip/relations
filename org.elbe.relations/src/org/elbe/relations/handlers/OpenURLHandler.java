@@ -57,7 +57,7 @@ public class OpenURLHandler {
 		final MPart lPart = inPartService
 		        .findPart(RelationsConstants.PART_INSPECTOR);
 		if (lPart != null) {
-			if (lPart.getObject() instanceof ISelectedTextProvider) {
+			if (lPart.getObject() instanceof ISelectedTextProvider) { // NOPMD
 				String lURL = ((ISelectedTextProvider) lPart.getObject())
 				        .getSelection();
 				if (!lURL.isEmpty()) {
@@ -72,8 +72,12 @@ public class OpenURLHandler {
 					}
 					catch (final MalformedURLException exc) {
 						MessageDialog
-						        .openError(inShell, RelationsMessages.getString("handler.open.url.error.title"), //$NON-NLS-1$
-						                RelationsMessages.getString("handler.open.url.error.msg")); //$NON-NLS-1$
+						        .openError(
+						                inShell,
+						                RelationsMessages
+						                        .getString("handler.open.url.error.title"), //$NON-NLS-1$
+						                RelationsMessages
+						                        .getString("handler.open.url.error.msg")); //$NON-NLS-1$
 						log.error(exc, exc.getMessage());
 					}
 				}

@@ -39,39 +39,20 @@ public class NoOpIndexer extends RelationsIndexer {
 		super(""); //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.data.search.RelationsIndexer#getLanguage()
-	 */
 	@Override
 	protected String getLanguage() {
 		return Locale.ENGLISH.getLanguage();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.data.search.RelationsIndexer#refreshItemInIndex(org
-	 * .elbe.relations.data.bom.IItem)
-	 */
 	@Override
 	public void refreshItemInIndex(final IItem inItem) throws IOException,
-			BOMException, VException {
+	        BOMException, VException {
 		// intentionally do nothing
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.data.search.RelationsIndexer#addToIndex(org.elbe.relations
-	 * .data.search.IIndexable)
-	 */
 	@Override
 	public void addToIndex(final IIndexable inIndexable) throws BOMException,
-			IOException {
+	        IOException {
 		// intentionally do nothing
 	}
 

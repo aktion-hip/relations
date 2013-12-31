@@ -49,8 +49,8 @@ public class ImportDropHelper {
 	 *            {@link ModifyListener}
 	 */
 	public static void wrapFileDrop(final Combo inInput,
-			final String[] inFilterExtensions,
-			final IModifyListener inModifyListener) {
+	        final String[] inFilterExtensions,
+	        final IModifyListener inModifyListener) {
 		final DropTarget lTarget = new DropTarget(inInput, DND.DROP_COPY);
 		final FileTransfer lFileTransfer = FileTransfer.getInstance();
 		lTarget.setTransfer(new Transfer[] { lFileTransfer });
@@ -84,20 +84,20 @@ public class ImportDropHelper {
 	}
 
 	private static Collection<String> createExtensions(
-			final String[] inFilterExtensions) {
+	        final String[] inFilterExtensions) {
 		final Vector<String> outExtensions = new Vector<String>(
-				inFilterExtensions.length);
+		        inFilterExtensions.length);
 		for (final String lExtension : inFilterExtensions) {
 			outExtensions
-					.add(lExtension.startsWith("*") ? lExtension.replaceAll("\\*", "") : lExtension); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			        .add(lExtension.startsWith("*") ? lExtension.replaceAll("\\*", "") : lExtension); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		return outExtensions;
 	}
 
 	// --- inner classes ---
 
-	public static interface IModifyListener {
-		public void modifyText(String inFileName);
+	public interface IModifyListener {
+		void modifyText(String inFileName);
 	}
 
 }

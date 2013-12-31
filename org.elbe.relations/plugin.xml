@@ -52,6 +52,10 @@
                name="windowImages"
                value="icons/relations.gif,icons/relations32.gif,icons/relations48.gif">
          </property>
+         <property
+               name="introBrandingImage"
+               value="product:icons/RelationWare.png">
+         </property>
       </product>
    </extension>
    <extension

@@ -168,10 +168,9 @@ public class StyledTextComponent {
 		textWidget.addTraverseListener(new TraverseListener() {
 			@Override
 			public void keyTraversed(final TraverseEvent inEvent) {
-				if (inEvent.detail == SWT.TRAVERSE_TAB_PREVIOUS) {
-					if (consumeTabKey((StyledText) inEvent.getSource())) {
-						inEvent.doit = false;
-					}
+				if (inEvent.detail == SWT.TRAVERSE_TAB_PREVIOUS
+				        && consumeTabKey((StyledText) inEvent.getSource())) {
+					inEvent.doit = false;
 				}
 			}
 		});
@@ -480,14 +479,13 @@ public class StyledTextComponent {
 			if (textWidget == null) {
 				return;
 			}
-			if (!(isFormStyle ^ inEvent.isFormStyle)) {
-				if (inEvent.style.isToggle()) {
-					final TextStyler lStyler = new TextStyler(textWidget);
-					lStyler.format(inEvent.style, inEvent.isFormatNew);
-					final int lOffset = textWidget.getCaretOffset();
-					notifyPositionChange(Math.max(lOffset,
-					        lOffset - textWidget.getSelectionCount()));
-				}
+			if (!(isFormStyle ^ inEvent.isFormStyle)
+			        && inEvent.style.isToggle()) {
+				final TextStyler lStyler = new TextStyler(textWidget);
+				lStyler.format(inEvent.style, inEvent.isFormatNew);
+				final int lOffset = textWidget.getCaretOffset();
+				notifyPositionChange(Math.max(lOffset,
+				        lOffset - textWidget.getSelectionCount()));
 			}
 		}
 
@@ -603,23 +601,6 @@ public class StyledTextComponent {
 			}
 		}
 
-		@Override
-		public boolean equals(final Object inObj) {
-			if (this == inObj)
-				return true;
-			if (inObj == null)
-				return false;
-			if (getClass() != inObj.getClass())
-				return false;
-			final BulletsState lOther = (BulletsState) inObj;
-			if (bullets == null) {
-				if (lOther.bullets != null)
-					return false;
-			} else if (!bullets.equals(lOther.bullets))
-				return false;
-			return true;
-		}
-
 		public void undo(final StyledText inWidget) {
 			final Hashtable<String, Bullet> lUsed = new Hashtable<String, Bullet>();
 			for (final LineBulletState lBulletState : bullets) {
@@ -632,6 +613,40 @@ public class StyledTextComponent {
 				inWidget.setLineBullet(lBulletState.index, 1, lBullet);
 			}
 		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result
+			        + ((bullets == null) ? 0 : bullets.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			final BulletsState other = (BulletsState) obj;
+			if (!getOuterType().equals(other.getOuterType()))
+				return false;
+			if (bullets == null) {
+				if (other.bullets != null)
+					return false;
+			} else if (!bullets.equals(other.bullets))
+				return false;
+			return true;
+		}
+
+		private StyledTextComponent getOuterType() {
+			return StyledTextComponent.this;
+		}
+
 	}
 
 	private class LineBulletState {

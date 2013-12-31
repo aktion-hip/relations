@@ -28,7 +28,7 @@ import org.hip.kernel.exc.VException;
  * @author Luthiger
  */
 public class LightWeightText extends AbstractLightWeight implements
-		ILightWeightItem {
+        ILightWeightItem {
 	public long id;
 	public String title;
 	public String text;
@@ -47,12 +47,12 @@ public class LightWeightText extends AbstractLightWeight implements
 	public final int type;
 
 	public LightWeightText(final long inID, final String inTitle,
-			final String inText, final String inAuthor,
-			final String inCoAuthor, final String inSubtitle,
-			final String inYear, final String inPublication,
-			final String inPages, final int inVolume, final int inNumber,
-			final String inPublisher, final String inPlace, final int inType,
-			final Timestamp inCreated, final Timestamp inModified) {
+	        final String inText, final String inAuthor,
+	        final String inCoAuthor, final String inSubtitle,
+	        final String inYear, final String inPublication,
+	        final String inPages, final int inVolume, final int inNumber,
+	        final String inPublisher, final String inPlace, final int inType,
+	        final Timestamp inCreated, final Timestamp inModified) {
 		super();
 		id = inID;
 		title = inTitle;
@@ -87,13 +87,6 @@ public class LightWeightText extends AbstractLightWeight implements
 		return IItem.TEXT;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.data.internal.bom.AbstractLightWeight#getCreatedModified
-	 * ()
-	 */
 	@Override
 	protected Object[] getCreatedModified() throws VException {
 		return new Object[] { created, modified };

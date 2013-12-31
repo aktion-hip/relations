@@ -119,7 +119,7 @@ public final class DropDataHelper {
 	 * Interface for classes that can handle drop events on items in the
 	 * relations browser view.
 	 */
-	public static interface IDropHandler {
+	public interface IDropHandler {
 		/**
 		 * Handle the drop event, i.e. add the adequate relation.
 		 * 
@@ -130,7 +130,7 @@ public final class DropDataHelper {
 		 * @param inContext
 		 *            {@link IEclipseContext}
 		 */
-		public void handleDrop(Object inEventData, IAssociationsModel inModel,
+		void handleDrop(Object inEventData, IAssociationsModel inModel,
 		        IEclipseContext inContext);
 	}
 

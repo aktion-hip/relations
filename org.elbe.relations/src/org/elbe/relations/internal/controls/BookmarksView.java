@@ -21,7 +21,6 @@ package org.elbe.relations.internal.controls;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.PersistState;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -50,17 +49,16 @@ public class BookmarksView extends AbstractToolPart {
 	private BookmarksController bookmarksController;
 
 	@Inject
-	public BookmarksView(final Composite inParent,
-			final IEclipseContext inContext) {
+	public BookmarksView(final Composite inParent) {
 		bookmarksView = new TableViewer(inParent, SWT.H_SCROLL | SWT.V_SCROLL
-				| SWT.BORDER | SWT.MULTI);
+		        | SWT.BORDER | SWT.MULTI);
 		bookmarksView.setContentProvider(new ObservableListContentProvider());
 		bookmarksView.setLabelProvider(getLabelProvider());
 		bookmarksView.addDoubleClickListener(getDoubleClickListener());
 		bookmarksView.addDragSupport(DND.DROP_COPY, getDragTypes(),
-				getDragSourceAdapter(bookmarksView));
+		        getDragSourceAdapter(bookmarksView));
 		bookmarksView
-				.addSelectionChangedListener(getSelectionChangedListener());
+		        .addSelectionChangedListener(getSelectionChangedListener());
 	}
 
 	@PostConstruct
@@ -119,7 +117,7 @@ public class BookmarksView extends AbstractToolPart {
 	 */
 	public void removeSelected() {
 		final Object lSelected = ((IStructuredSelection) bookmarksView
-				.getSelection()).getFirstElement();
+		        .getSelection()).getFirstElement();
 		if (lSelected instanceof RetrievedItemWithIcon) {
 			bookmarksView.remove(lSelected);
 			bookmarksController.removeItem(lSelected);

@@ -38,8 +38,8 @@ public class CreateEmbeddedDB extends AbstractCreateDB {
 	public void checkPreconditions() throws DBPreconditionException {
 		if (catalogHelper.validate(getTempSettings().getCatalog()) != Status.OK_STATUS) {
 			throw new DBPreconditionException(
-					RelationsMessages
-							.getString("CreateEmbeddedDB.exception.exists")); //$NON-NLS-1$
+			        RelationsMessages
+			                .getString("CreateEmbeddedDB.exception.exists")); //$NON-NLS-1$
 		}
 	}
 
@@ -55,11 +55,11 @@ public class CreateEmbeddedDB extends AbstractCreateDB {
 		setTempDBSettings();
 
 		final DbEmbeddedCreateHandler lDBCreate = ContextInjectionFactory.make(
-				DbEmbeddedCreateHandler.class, getContext());
+		        DbEmbeddedCreateHandler.class, getContext());
 		lDBCreate.execute(getTempSettings(), getContext());
 
-		createIndex();
 		doDBChange();
+		createIndex();
 	}
 
 }

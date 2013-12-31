@@ -56,8 +56,7 @@ import org.xml.sax.SAXException;
  * @author Luthiger
  */
 public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
-	private static Bundle bundle = FrameworkUtil
-			.getBundle(Constants.class);
+	private static Bundle bundle = FrameworkUtil.getBundle(Constants.class);
 	// private static Bundle bundle = Platform
 	// .getBundle(RelationsConstants.MAIN_ID);
 	private static String RESOURCES_DIR = "resources/"; //$NON-NLS-1$
@@ -74,8 +73,8 @@ public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
 	 */
 	@Override
 	public Collection<String> getCreateStatemens(final String inXMLName)
-			throws IOException, TransformerFactoryConfigurationError,
-			TransformerException {
+	        throws IOException, TransformerFactoryConfigurationError,
+	        TransformerException {
 		final XMLHandler lHandler = new XMLHandler();
 		InputStream lXML = null;
 		InputStream lXSL = null;
@@ -89,15 +88,18 @@ public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
 
 			// transform xml
 			final Templates lTemplates = TransformerFactory.newInstance()
-					.newTemplates(lXSLSource);
+			        .newTemplates(lXSLSource);
 			final Transformer lTransformer = lTemplates.newTransformer();
 			final Result lResult = new SAXResult(lHandler);
 			lTransformer.transform(lXMLSource, lResult);
-		} finally {
-			if (lXSL != null)
+		}
+		finally {
+			if (lXSL != null) {
 				lXSL.close();
-			if (lXML != null)
+			}
+			if (lXML != null) {
 				lXML.close();
+			}
 		}
 		return lHandler.getStatements();
 	}
@@ -113,8 +115,8 @@ public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
 
 		@Override
 		public void startElement(final String inUri, final String inLocalName,
-				final String inName, final Attributes inAtts)
-				throws SAXException {
+		        final String inName, final Attributes inAtts)
+		        throws SAXException {
 			if (Constants.NODE_NAME_CREATED_OBJECT.equals(inName)) {
 				entry = new StringBuilder();
 				isInEntry = true;
@@ -123,7 +125,7 @@ public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
 
 		@Override
 		public void endElement(final String inUri, final String inLocalName,
-				final String inName) throws SAXException {
+		        final String inName) throws SAXException {
 			if (Constants.NODE_NAME_CREATED_OBJECT.equals(inName)) {
 				final String lEntry = entry.toString().trim();
 				if (lEntry.length() > 0) {
@@ -135,7 +137,7 @@ public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
 
 		@Override
 		public void characters(final char[] inChars, final int inStart,
-				final int inLength) throws SAXException {
+		        final int inLength) throws SAXException {
 			if (isInEntry) {
 				final char[] lTarget = new char[inLength];
 				System.arraycopy(inChars, inStart, lTarget, 0, inLength);
@@ -157,12 +159,12 @@ public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
 
 		@Override
 		public void ignorableWhitespace(final char[] inCh, final int inStart,
-				final int inLength) throws SAXException {
+		        final int inLength) throws SAXException {
 		}
 
 		@Override
 		public void processingInstruction(final String inTarget,
-				final String inData) throws SAXException {
+		        final String inData) throws SAXException {
 		}
 
 		@Override
@@ -175,7 +177,7 @@ public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
 
 		@Override
 		public void startPrefixMapping(final String inPrefix, final String inUri)
-				throws SAXException {
+		        throws SAXException {
 		}
 
 		@Override

@@ -63,6 +63,8 @@ import org.elbe.relations.data.search.RetrievedItem;
 import org.elbe.relations.data.utility.RException;
 import org.elbe.relations.data.utility.UniqueID;
 import org.elbe.relations.search.RetrievedItemWithIcon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Lucene implementation of the <code>IIndexer</code> interface.
@@ -70,6 +72,9 @@ import org.elbe.relations.search.RetrievedItemWithIcon;
  * @author Luthiger
  */
 public class LuceneIndexer implements IIndexer {
+	private static final Logger LOG = LoggerFactory
+	        .getLogger(LuceneIndexer.class);
+
 	// enum for language analyzers (see
 	// contrib/analyzers/lucene-analyzers-2.2.0.jar)
 	private enum LanguageAnalyzer {
@@ -95,12 +100,12 @@ public class LuceneIndexer implements IIndexer {
 
 	@Override
 	public void processIndexer(final IndexerHelper inIndexer,
-			final File inIndexDir, final String inLanguage,
-			final boolean inCreate) throws IOException {
+	        final File inIndexDir, final String inLanguage,
+	        final boolean inCreate) throws IOException {
 		IndexWriter lWriter = null;
 		try {
 			lWriter = new IndexWriter(inIndexDir, getAnalyzer(inLanguage),
-					inCreate, IndexWriter.MaxFieldLength.UNLIMITED);
+			        inCreate, IndexWriter.MaxFieldLength.UNLIMITED);
 			for (final IndexerDocument lDoc : inIndexer.getDocuments()) {
 				final Document lDocument = transformDoc(lDoc);
 				lWriter.addDocument(lDocument);
@@ -109,7 +114,11 @@ public class LuceneIndexer implements IIndexer {
 			synchronized (this) {
 				lWriter.optimize();
 			}
-		} finally {
+		}
+		catch (final IOException exc) {
+			LOG.error("Error with Lucene index encountered!", exc);
+		}
+		finally {
 			if (lWriter != null) {
 				lWriter.close();
 			}
@@ -118,7 +127,7 @@ public class LuceneIndexer implements IIndexer {
 
 	@Override
 	public void processIndexer(final IndexerHelper inIndexer,
-			final File inIndexDir, final String inLanguage) throws IOException {
+	        final File inIndexDir, final String inLanguage) throws IOException {
 		processIndexer(inIndexer, inIndexDir, inLanguage, false);
 	}
 
@@ -166,7 +175,7 @@ public class LuceneIndexer implements IIndexer {
 		if (inField instanceof IndexerDateField) {
 			final IndexerDateField lDateField = (IndexerDateField) inField;
 			lValue = DateTools.timeToString(lDateField.getTime(),
-					getResolution(lDateField.getResolution()));
+			        getResolution(lDateField.getResolution()));
 		}
 		return new Field(inField.getFieldName(), lValue, lStore, lIndex);
 	}
@@ -194,10 +203,11 @@ public class LuceneIndexer implements IIndexer {
 	public int numberOfIndexed(final File inIndexDir) throws IOException {
 		int outNumber = 0;
 		final IndexReader lReader = IndexReader.open(FSDirectory
-				.getDirectory(inIndexDir));
+		        .getDirectory(inIndexDir));
 		try {
 			outNumber = lReader.numDocs();
-		} finally {
+		}
+		finally {
 			lReader.close();
 		}
 		return outNumber;
@@ -214,13 +224,19 @@ public class LuceneIndexer implements IIndexer {
 
 	@Override
 	public void deleteItemInIndex(final String inUniqueID,
-			final String inFieldName, final File inIndexDir) throws IOException {
+	        final String inFieldName, final File inIndexDir) throws IOException {
 		IndexReader lReader = null;
 		try {
 			lReader = IndexReader.open(inIndexDir);
 			lReader.deleteDocuments(new Term(inFieldName, inUniqueID));
-		} finally {
-			lReader.close();
+		}
+		catch (final IOException exc) {
+			LOG.error("Error with Lucene index encountered!", exc);
+		}
+		finally {
+			if (lReader != null) {
+				lReader.close();
+			}
 		}
 	}
 
@@ -229,9 +245,10 @@ public class LuceneIndexer implements IIndexer {
 		IndexWriter lWriter = null;
 		try {
 			lWriter = new IndexWriter(inIndexDir,
-					getAnalyzer(""), true, IndexWriter.MaxFieldLength.UNLIMITED); //$NON-NLS-1$
+			        getAnalyzer(""), true, IndexWriter.MaxFieldLength.UNLIMITED); //$NON-NLS-1$
 			lWriter.commit();
-		} finally {
+		}
+		finally {
 			if (lWriter != null)
 				lWriter.close();
 		}
@@ -239,41 +256,42 @@ public class LuceneIndexer implements IIndexer {
 
 	@Override
 	public List<RetrievedItem> search(final String inQueryTerm,
-			final File inIndexDir, final String inLanguage, final int inMaxHits)
-			throws IOException, RException {
+	        final File inIndexDir, final String inLanguage, final int inMaxHits)
+	        throws IOException, RException {
 		final Searcher lSearcher = new IndexSearcher(
-				FSDirectory.getDirectory(inIndexDir));
+		        FSDirectory.getDirectory(inIndexDir));
 		try {
 			final TopDocs lDocs = lSearcher.search(
-					parseQuery(inQueryTerm, inLanguage), inMaxHits);
+			        parseQuery(inQueryTerm, inLanguage), inMaxHits);
 			return createResults(lDocs, lSearcher);
 		}
 		catch (final ParseException exc) {
 			throw new RException(exc.getMessage());
-		} finally {
+		}
+		finally {
 			lSearcher.close();
 		}
 	}
 
 	private List<RetrievedItem> createResults(final TopDocs inDocs,
-			final Searcher inSearcher) throws CorruptIndexException,
-			IOException {
+	        final Searcher inSearcher) throws CorruptIndexException,
+	        IOException {
 		final ScoreDoc[] lDocs = inDocs.scoreDocs;
 		final List<RetrievedItem> out = new Vector<RetrievedItem>(lDocs.length);
 		for (int i = 0; i < lDocs.length; i++) {
 			final int lDocID = lDocs[i].doc;
 			final Document lDocument = inSearcher.doc(lDocID);
 			out.add(new RetrievedItemWithIcon(new UniqueID(lDocument
-					.get(AbstractSearching.ITEM_ID)), lDocument
-					.get(AbstractSearching.TITLE)));
+			        .get(AbstractSearching.ITEM_ID)), lDocument
+			        .get(AbstractSearching.TITLE)));
 		}
 		return out;
 	}
 
 	private Query parseQuery(final String inQueryTerm, final String inLanguage)
-			throws ParseException {
+	        throws ParseException {
 		final QueryParser outParser = new QueryParser(
-				AbstractSearching.CONTENT_FULL, getAnalyzer(inLanguage));
+		        AbstractSearching.CONTENT_FULL, getAnalyzer(inLanguage));
 		return outParser.parse(inQueryTerm);
 	}
 

@@ -49,10 +49,10 @@ public class TempSettings implements IDBSettings {
 	 *            {@link IDBController}
 	 */
 	public TempSettings(final String inPluginID, final String inHost,
-			final String inCatalog, final String inUsername,
-			final String inPassword, final IDBController inDBController) {
+	        final String inCatalog, final String inUsername,
+	        final String inPassword, final IDBController inDBController) {
 		this(inHost, inCatalog, inUsername, inPassword, inDBController
-				.getConfiguration(inPluginID));
+		        .getConfiguration(inPluginID));
 	}
 
 	/**
@@ -66,8 +66,8 @@ public class TempSettings implements IDBSettings {
 	 *            {@link IDBConnectionConfig}
 	 */
 	public TempSettings(final String inHost, final String inCatalog,
-			final String inUsername, final String inPassword,
-			final IDBConnectionConfig inDBConfig) {
+	        final String inUsername, final String inPassword,
+	        final IDBConnectionConfig inDBConfig) {
 		dbConfig = inDBConfig;
 		host = inHost;
 		catalog = inCatalog;
@@ -75,51 +75,26 @@ public class TempSettings implements IDBSettings {
 		password = inPassword;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.internal.data.IDBSettings#getDBConfiguration()
-	 */
 	@Override
 	public IDBConnectionConfig getDBConnectionConfig() {
 		return dbConfig;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.internal.data.IDBSettings#getCatalog()
-	 */
 	@Override
 	public String getCatalog() {
 		return catalog;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.internal.data.IDBSettings#getHost()
-	 */
 	@Override
 	public String getHost() {
 		return host;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.internal.data.IDBSettings#getUser()
-	 */
 	@Override
 	public String getUser() {
 		return username;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.internal.data.IDBSettings#getPassword()
-	 */
 	@Override
 	public String getPassword() {
 		return password;
@@ -127,12 +102,22 @@ public class TempSettings implements IDBSettings {
 
 	public void saveToPreferences() {
 		final IEclipsePreferences lStore = InstanceScope.INSTANCE
-				.getNode(RelationsConstants.PREFERENCE_NODE);
+		        .getNode(RelationsConstants.PREFERENCE_NODE);
 		lStore.put(RelationsConstants.KEY_DB_PLUGIN_ID, dbConfig.getName());
 		lStore.put(RelationsConstants.KEY_DB_HOST, host);
 		lStore.put(RelationsConstants.KEY_DB_CATALOG, catalog);
 		lStore.put(RelationsConstants.KEY_DB_USER_NAME, username);
 		lStore.put(RelationsConstants.KEY_DB_PASSWORD, password);
+	}
+
+	@Override
+	public String getDBName() {
+		if (getDBConnectionConfig().isEmbedded()) {
+			return DBSettings.EMBEDDED + ": " + getCatalog(); //$NON-NLS-1$
+		}
+		return DBSettings.CLIENT_URL_PATTERN.format(new Object[] {
+		        getDBConnectionConfig().getSubprotocol(), getHost(),
+		        getCatalog() });
 	}
 
 }

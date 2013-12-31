@@ -24,10 +24,10 @@ import static org.junit.Assert.fail;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.elbe.relations.data.DataHouseKeeper;
 import org.elbe.relations.data.bom.JoinRelatedText1Home;
 import org.elbe.relations.data.bom.JoinRelatedTextHome;
 import org.elbe.relations.data.bom.RelationHome;
+import org.elbe.relations.data.test.DataHouseKeeper;
 import org.hip.kernel.bom.KeyObject;
 import org.hip.kernel.bom.impl.KeyObjectImpl;
 import org.hip.kernel.exc.VException;

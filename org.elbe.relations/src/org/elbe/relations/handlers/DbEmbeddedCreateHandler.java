@@ -46,18 +46,18 @@ public class DbEmbeddedCreateHandler {
 
 	@Execute
 	public void execute(final IDBSettings inDBSettings,
-			final IEclipseContext inContext) {
+	        final IEclipseContext inContext) {
 		createEmbedded(inDBSettings);
-		prepareIndex(inDBSettings, inContext);
+		prepareIndex(inContext);
 	}
 
 	private void createEmbedded(final IDBSettings inDBSettings) {
 		try {
-			final IDBObjectCreator lCreator = inDBSettings.getDBConnectionConfig()
-					.getCreator();
+			final IDBObjectCreator lCreator = inDBSettings
+			        .getDBConnectionConfig().getCreator();
 			final DefaultStatement lStatement = new DefaultStatement();
 			for (final String lSQLCreate : lCreator
-					.getCreateStatemens(Constants.XML_CREATE_OBJECTS)) {
+			        .getCreateStatemens(Constants.XML_CREATE_OBJECTS)) {
 				lStatement.execute(lSQLCreate);
 			}
 		}
@@ -66,11 +66,10 @@ public class DbEmbeddedCreateHandler {
 		}
 	}
 
-	private void prepareIndex(final IDBSettings inDBSettings,
-			final IEclipseContext inContext) {
+	private void prepareIndex(final IEclipseContext inContext) {
 		try {
 			final RelationsIndexer lIndexer = RelationsIndexerWithLanguage
-					.createRelationsIndexer(inContext);
+			        .createRelationsIndexer(inContext);
 			if (!lIndexer.isIndexAvailable()) {
 				lIndexer.initializeIndex();
 			}

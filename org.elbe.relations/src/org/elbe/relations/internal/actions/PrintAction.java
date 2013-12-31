@@ -70,20 +70,15 @@ public class PrintAction implements ICommand {
 	@Inject
 	private Logger log;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.internal.actions.ICommand#execute()
-	 */
 	@Override
 	public void execute() {
 		final PrintOutWizard lWizard = ContextInjectionFactory.make(
-				PrintOutWizard.class, context);
+		        PrintOutWizard.class, context);
 		final WizardDialog lDialog = new WizardDialog(shell, lWizard);
 		if (lDialog.open() == Window.OK) {
 			if (lWizard.isInitNew()) {
 				if (!printOutManager.initNew(lWizard.getPrintOutFileName(),
-						lWizard.getPrintOutPlugin())) {
+				        lWizard.getPrintOutPlugin())) {
 					return;
 				}
 			} else {
@@ -93,12 +88,12 @@ public class PrintAction implements ICommand {
 			}
 			printOutManager.setContentScope(lWizard.getPrintOutScope());
 			printOutManager.setPrintOutReferences(lWizard
-					.getPrintOutReferences());
+			        .getPrintOutReferences());
 
-			final PrintJob lJob = new PrintJob(
-					RelationsMessages.getString("PrintAction.job.title"), printOutManager, browserManager.getSelectedModel()); //$NON-NLS-1$
+			final PrintJob lJob = new PrintJob(printOutManager,
+			        browserManager.getSelectedModel());
 			final ProgressMonitorDialog lMonitor = new ProgressMonitorJobsDialog(
-					shell);
+			        shell);
 			lMonitor.open();
 			try {
 				lMonitor.run(true, true, lJob);
@@ -108,7 +103,8 @@ public class PrintAction implements ICommand {
 			}
 			catch (final InterruptedException exc) {
 				log.error(exc, exc.getMessage());
-			} finally {
+			}
+			finally {
 				lMonitor.close();
 			}
 		}
@@ -120,8 +116,7 @@ public class PrintAction implements ICommand {
 		private final PrintOutManager printManager;
 		private final IItem selectedItem;
 
-		public PrintJob(final String inName, final PrintOutManager inManager,
-				final IItem inSelected) {
+		public PrintJob(final PrintOutManager inManager, final IItem inSelected) {
 			printManager = inManager;
 			selectedItem = inSelected;
 		}
@@ -132,11 +127,11 @@ public class PrintAction implements ICommand {
 			try {
 				lItems = printManager.getItemSet(selectedItem);
 				final SubMonitor lProgress = SubMonitor.convert(inMonitor,
-						lItems.size());
+				        lItems.size());
 				lProgress
-						.beginTask(
-								RelationsMessages
-										.getString("PrintAction.job.start"), lItems.size()); //$NON-NLS-1$
+				        .beginTask(
+				                RelationsMessages
+				                        .getString("PrintAction.job.start"), lItems.size()); //$NON-NLS-1$
 				int lNumberOfPrinted = 0;
 				for (final IItem lItem : lItems) {
 					lNumberOfPrinted += printManager.printItem(lItem);
@@ -150,7 +145,8 @@ public class PrintAction implements ICommand {
 				final String lErrorMsg = exc.getMessage();
 				giveFeedback(getErrorMsgAction(lErrorMsg));
 				log.error(exc, exc.getMessage());
-			} finally {
+			}
+			finally {
 				try {
 					printManager.close();
 				}
@@ -175,22 +171,22 @@ public class PrintAction implements ICommand {
 			@Override
 			public void run() {
 				MessageDialog
-						.openInformation(
-								shell,
-								RelationsMessages
-										.getString("PrintAction.job.completed"), RelationsMessages.getString("PrintAction.job.completed.msg", new Object[] { new Integer(inNumberOfProcessed) })); //$NON-NLS-1$ //$NON-NLS-2$
+				        .openInformation(
+				                shell,
+				                RelationsMessages
+				                        .getString("PrintAction.job.completed"), RelationsMessages.getString("PrintAction.job.completed.msg", new Object[] { new Integer(inNumberOfProcessed) })); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		};
 	}
 
 	private Action getErrorMsgAction(final String inErrorMsg) {
 		return new Action(
-				RelationsMessages.getString("PrintAction.error.title")) { //$NON-NLS-1$
+		        RelationsMessages.getString("PrintAction.error.title")) { //$NON-NLS-1$
 			@Override
 			public void run() {
 				MessageDialog
-						.openError(shell, RelationsMessages
-								.getString("PrintAction.error.msg"), inErrorMsg); //$NON-NLS-1$
+				        .openError(shell, RelationsMessages
+				                .getString("PrintAction.error.msg"), inErrorMsg); //$NON-NLS-1$
 			}
 		};
 	}

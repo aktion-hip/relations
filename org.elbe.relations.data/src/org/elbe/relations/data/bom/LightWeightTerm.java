@@ -46,8 +46,8 @@ public class LightWeightTerm extends AbstractLightWeight {
 	 *            {@link Timestamp}
 	 */
 	public LightWeightTerm(final long inID, final String inTitle,
-			final String inText, final Timestamp inCreated,
-			final Timestamp inModified) {
+	        final String inText, final Timestamp inCreated,
+	        final Timestamp inModified) {
 		id = inID;
 		title = inTitle;
 		text = inText;
@@ -65,23 +65,11 @@ public class LightWeightTerm extends AbstractLightWeight {
 		return id;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.data.bom.ILightWeightItem#getItemType()
-	 */
 	@Override
 	public int getItemType() {
 		return IItem.TERM;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.data.internal.bom.AbstractLightWeight#getCreatedModified
-	 * ()
-	 */
 	@Override
 	protected Object[] getCreatedModified() throws VException {
 		return new Object[] { created, modified };

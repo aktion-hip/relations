@@ -73,8 +73,6 @@ import org.osgi.service.prefs.BackingStoreException;
  */
 @SuppressWarnings("restriction")
 public class RelationsLifeCycle {
-	// private static final String ACTIVE_BROWSER_ID =
-	// "active.relations.browser";
 
 	private RelationsBrowserManager browserManager;
 
@@ -128,7 +126,7 @@ public class RelationsLifeCycle {
 		        && RelationsConstants.DFT_DBCONFIG_PLUGIN_ID.equals(dbSettings
 		                .getDBConnectionConfig().getName())) {
 			// check existence of default database and create one, if needed
-			if (!EmbeddedCatalogHelper.hasDefaultEmbedded()) {
+			if (!EmbeddedCatalogHelper.hasDefaultEmbedded()) { // NOPMD
 				if (dbController.checkEmbedded()) {
 					lDbAccess
 					        .setActiveConfiguration(createDftDBAccessConfiguration());

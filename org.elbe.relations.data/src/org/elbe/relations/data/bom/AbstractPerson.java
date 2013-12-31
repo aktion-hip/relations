@@ -40,13 +40,6 @@ public abstract class AbstractPerson extends AbstractItem implements IItem {
 		super();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.bom.IItem#visit(org.elbe.relations.utility.IItemVisitor
-	 * )
-	 */
 	@Override
 	public void visit(final IItemVisitor inVisitor) throws VException {
 		inVisitor.setTitle(getTitle());

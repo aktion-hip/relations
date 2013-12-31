@@ -26,8 +26,8 @@ import org.junit.runners.Suite.SuiteClasses;
  * @author Luthiger
  */
 @RunWith(Suite.class)
-@SuiteClasses({ PersonHomeTest.class, RelationHomeTest.class,
-		TermHomeTest.class, TextHomeTest.class })
+@SuiteClasses({ PersonHomeTest.class, PersonTest.class, RelationHomeTest.class,
+        TermHomeTest.class, TermTest.class, TextHomeTest.class, TextTest.class })
 public class AllTests {
 
 }

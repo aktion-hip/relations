@@ -40,12 +40,6 @@ import org.hip.kernel.bom.impl.DomainObjectHomeImpl;
 public class CreateExternalDB extends AbstractCreateDB {
 	private boolean withTableCreation = true;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.internal.actions.AbstractCreateDB#checkPreconditions()
-	 */
 	@Override
 	public void checkPreconditions() throws DBPreconditionException {
 		setTempDBSettings();
@@ -57,25 +51,26 @@ public class CreateExternalDB extends AbstractCreateDB {
 			// we can connect
 
 			// is catalog empty?
-			if (lTables.size() == 0)
+			if (lTables.size() == 0) {
 				return;
+			}
 			// catalog is empty and we return positive
 
 			// do the tables we need exist and are they empty?
 			final int lTableCheck = tryHome(BOMHelper.getTermHome())
-					+ tryHome(BOMHelper.getTextHome())
-					+ tryHome(BOMHelper.getPersonHome())
-					+ tryHome(BOMHelper.getRelationHome());
+			        + tryHome(BOMHelper.getTextHome())
+			        + tryHome(BOMHelper.getPersonHome())
+			        + tryHome(BOMHelper.getRelationHome());
 
 			if (lTableCheck > 0) {
 				throw new DBPreconditionException(
-						RelationsMessages
-								.getString("CreateExternalDB.precondition.non.empty")); //$NON-NLS-1$
+				        RelationsMessages
+				                .getString("CreateExternalDB.precondition.non.empty")); //$NON-NLS-1$
 			}
 			if (lTableCheck < 0 && lTableCheck > -4) {
 				throw new DBPreconditionException(
-						RelationsMessages
-								.getString("CreateExternalDB.precondition.some.tables")); //$NON-NLS-1$
+				        RelationsMessages
+				                .getString("CreateExternalDB.precondition.some.tables")); //$NON-NLS-1$
 			}
 			if (lTableCheck == 0) {
 				// the tables we need are there but they are all empty
@@ -88,7 +83,8 @@ public class CreateExternalDB extends AbstractCreateDB {
 		}
 		catch (final BOMException exc) {
 			getLog().error(exc, exc.getMessage());
-		} finally {
+		}
+		finally {
 			setOrigDBSettings();
 		}
 	}
@@ -104,17 +100,12 @@ public class CreateExternalDB extends AbstractCreateDB {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.internal.actions.AbstractChangeDB#execute()
-	 */
 	@Override
 	public void execute() {
 		setTempDBSettings();
 		if (withTableCreation) {
 			final DbEmbeddedCreateHandler lDBCreate = ContextInjectionFactory
-					.make(DbEmbeddedCreateHandler.class, getContext());
+			        .make(DbEmbeddedCreateHandler.class, getContext());
 			lDBCreate.execute(getTempSettings(), getContext());
 		}
 		createIndex();

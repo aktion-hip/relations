@@ -28,7 +28,7 @@ import org.hip.kernel.exc.VException;
  * @author Luthiger
  */
 public class LightWeightPerson extends AbstractLightWeight implements
-		ILightWeightItem {
+        ILightWeightItem {
 	public long id;
 	public String name;
 	public String firstname;
@@ -53,9 +53,9 @@ public class LightWeightPerson extends AbstractLightWeight implements
 	 *            {@link Timestamp}
 	 */
 	public LightWeightPerson(final long inID, final String inName,
-			final String inFirstname, final String inText, final String inFrom,
-			final String inTo, final Timestamp inCreated,
-			final Timestamp inModified) {
+	        final String inFirstname, final String inText, final String inFrom,
+	        final String inTo, final Timestamp inCreated,
+	        final Timestamp inModified) {
 		super();
 		id = inID;
 		name = inName;
@@ -84,13 +84,6 @@ public class LightWeightPerson extends AbstractLightWeight implements
 		return IItem.PERSON;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.data.internal.bom.AbstractLightWeight#getCreatedModified
-	 * ()
-	 */
 	@Override
 	protected Object[] getCreatedModified() throws VException {
 		return new Object[] { created, modified };

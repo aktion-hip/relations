@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ***************************************************************************/
-package org.elbe.relations.data;
+package org.elbe.relations.data.test;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,13 +24,20 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
+import org.elbe.relations.data.Constants;
+import org.elbe.relations.data.TestDataSourceFactoryDerby;
+import org.elbe.relations.data.TestDataSourceFactoryMySQL;
+import org.elbe.relations.data.TestEmbeddedCreator;
 import org.elbe.relations.data.bom.AbstractPerson;
 import org.elbe.relations.data.bom.AbstractTerm;
 import org.elbe.relations.data.bom.AbstractText;
@@ -42,6 +49,8 @@ import org.elbe.relations.data.bom.RelationHome;
 import org.elbe.relations.data.bom.TermHome;
 import org.elbe.relations.data.bom.TextHome;
 import org.elbe.relations.data.db.IDBObjectCreator;
+import org.elbe.relations.data.search.IndexerDocument;
+import org.elbe.relations.data.search.IndexerField;
 import org.hip.kernel.bom.impl.DefaultStatement;
 import org.hip.kernel.dbaccess.DBAccessConfiguration;
 import org.hip.kernel.dbaccess.DataSourceRegistry;
@@ -61,7 +70,7 @@ public enum DataHouseKeeper {
 	INSTANCE;
 
 	private static final Logger LOG = LoggerFactory
-			.getLogger(DataHouseKeeper.class);
+	        .getLogger(DataHouseKeeper.class);
 
 	// constants
 	private static final String PROPERTIES_FILE = "relations_db.properties";
@@ -100,7 +109,7 @@ public enum DataHouseKeeper {
 	}
 
 	public AbstractTerm createTerm(final String inTitle, final String inText)
-			throws BOMException {
+	        throws BOMException {
 		return getTermHome().newTerm(inTitle, inText);
 	}
 
@@ -109,18 +118,18 @@ public enum DataHouseKeeper {
 	}
 
 	public AbstractPerson createPerson(final String inName,
-			final String inFirstName) throws BOMException {
+	        final String inFirstName) throws BOMException {
 		return getPersonHome().newPerson(inName, inFirstName, "", "", "");
 	}
 
 	public AbstractText createText(final String inTitle, final String inAuthor)
-			throws BOMException {
+	        throws BOMException {
 		return getTextHome().newText(inTitle, "", inAuthor, "", "", "", "", "",
-				new Integer(0), new Integer(0), "", "", new Integer(1));
+		        new Integer(0), new Integer(0), "", "", new Integer(1));
 	}
 
 	public void createRelation(final IItem inItem1, final IItem inItem2)
-			throws BOMException {
+	        throws BOMException {
 		getRelationHome().newRelation(inItem1, inItem2);
 	}
 
@@ -128,9 +137,9 @@ public enum DataHouseKeeper {
 
 	@SuppressWarnings("static-access")
 	void deleteAllFrom(final String inTableName) throws SQLException,
-			VException, InterruptedException {
+	        VException, InterruptedException {
 		final Connection lConnection = DataSourceRegistry.INSTANCE
-				.getConnection();
+		        .getConnection();
 		final Statement lStatement = lConnection.createStatement();
 		lStatement.execute("DELETE FROM " + inTableName);
 		// lConnection.commit();
@@ -142,27 +151,27 @@ public enum DataHouseKeeper {
 	}
 
 	public void deleteAllFromTerm() throws SQLException, VException,
-			InterruptedException {
+	        InterruptedException {
 		deleteAllFrom("tblTerm");
 	}
 
 	public void deleteAllFromText() throws SQLException, VException,
-			InterruptedException {
+	        InterruptedException {
 		deleteAllFrom("tblText");
 	}
 
 	public void deleteAllFromPerson() throws SQLException, VException,
-			InterruptedException {
+	        InterruptedException {
 		deleteAllFrom("tblPerson");
 	}
 
 	public void deleteAllFromRelation() throws SQLException, VException,
-			InterruptedException {
+	        InterruptedException {
 		deleteAllFrom("tblRelation");
 	}
 
 	public void deleteAllInAll() throws SQLException, VException,
-			InterruptedException {
+	        InterruptedException {
 		deleteAllFromPerson();
 		deleteAllFromRelation();
 		deleteAllFromTerm();
@@ -177,12 +186,12 @@ public enum DataHouseKeeper {
 	 * @see org.elbe.relations.handlers.DbEmbeddedCreateHandler
 	 */
 	private void createEmbeddedTables() throws IOException, SAXException,
-			ParserConfigurationException, SQLException,
-			TransformerFactoryConfigurationError, TransformerException {
+	        ParserConfigurationException, SQLException,
+	        TransformerFactoryConfigurationError, TransformerException {
 		final IDBObjectCreator lCreator = new TestEmbeddedCreator();
 		final DefaultStatement lStatement = new DefaultStatement();
 		for (final String lSQLCreate : lCreator
-				.getCreateStatemens(Constants.XML_CREATE_OBJECTS)) {
+		        .getCreateStatemens(Constants.XML_CREATE_OBJECTS)) {
 			lStatement.execute(lSQLCreate);
 		}
 	}
@@ -190,15 +199,15 @@ public enum DataHouseKeeper {
 	private void initMySQL() {
 		try {
 			DataSourceRegistry.INSTANCE
-					.setFactory(new TestDataSourceFactoryMySQL());
+			        .setFactory(new TestDataSourceFactoryMySQL());
 			DataSourceRegistry.INSTANCE
-					.setActiveConfiguration(createDBAccessConfiguration());
+			        .setActiveConfiguration(createDBAccessConfiguration());
 
 			VSys.setContextPath(new File("").getAbsolutePath());
 		}
 		catch (final IOException exc) {
 			LOG.error("Could not initialize the DataHouseKeeper for MySQL!",
-					exc);
+			        exc);
 		}
 	}
 
@@ -206,35 +215,36 @@ public enum DataHouseKeeper {
 		try {
 			isEmbeddedDerby = true;
 			DataSourceRegistry.INSTANCE
-					.setFactory(new TestDataSourceFactoryDerby());
+			        .setFactory(new TestDataSourceFactoryDerby());
 			DataSourceRegistry.INSTANCE
-					.setActiveConfiguration(createDBAccessConfigurationEmbedded());
+			        .setActiveConfiguration(createDBAccessConfigurationEmbedded());
 
 			VSys.setContextPath(new File("").getAbsolutePath());
 			createEmbeddedTables();
 		}
 		catch (final Exception exc) {
 			LOG.error("Could not initialize the DataHouseKeeper for Derby!",
-					exc);
+			        exc);
 		}
 	}
 
 	private DBAccessConfiguration createDBAccessConfiguration()
-			throws IOException {
+	        throws IOException {
 		InputStream lStream = null;
 		try {
 			lStream = DataHouseKeeper.class.getClassLoader()
-					.getResourceAsStream(PROPERTIES_FILE);
+			        .getResourceAsStream(PROPERTIES_FILE);
 			final Properties lProperties = new Properties();
 			lProperties.load(lStream);
 			lStream.close();
 			return new DBAccessConfiguration(
-					lProperties.getProperty("org.hip.vif.db.driver"),
-					lProperties.getProperty("org.hip.vif.db.server"),
-					lProperties.getProperty("org.hip.vif.db.schema"),
-					lProperties.getProperty("org.hip.vif.db.userId"),
-					lProperties.getProperty("org.hip.vif.db.password"));
-		} finally {
+			        lProperties.getProperty("org.hip.vif.db.driver"),
+			        lProperties.getProperty("org.hip.vif.db.server"),
+			        lProperties.getProperty("org.hip.vif.db.schema"),
+			        lProperties.getProperty("org.hip.vif.db.userId"),
+			        lProperties.getProperty("org.hip.vif.db.password"));
+		}
+		finally {
 			if (lStream != null) {
 				lStream.close();
 			}
@@ -244,7 +254,7 @@ public enum DataHouseKeeper {
 	private DBAccessConfiguration createDBAccessConfigurationEmbedded() {
 		final File lSchema = new File(".");
 		return new DBAccessConfiguration(EMBEDDED_DERBY, "", new File(lSchema,
-				"./data/relations_test").getAbsolutePath(), "", "");
+		        "./data/relations_test").getAbsolutePath(), "", "");
 	}
 
 	/**
@@ -252,7 +262,24 @@ public enum DataHouseKeeper {
 	 */
 	public boolean isGerman() {
 		return Locale.GERMAN.getLanguage().equals(
-				Locale.getDefault().getLanguage());
+		        Locale.getDefault().getLanguage());
+	}
+
+	/**
+	 * Creates a field map of the specified <code>IndexerDocument</code>.
+	 * 
+	 * @param inDoc
+	 *            {@link IndexerDocument} the document to process
+	 * @return Map&lt;String, String> field name / field value
+	 */
+	public static Map<String, String> createFieldMap(final IndexerDocument inDoc) {
+		final Collection<IndexerField> lFields = inDoc.getFields();
+		final Map<String, String> out = new HashMap<String, String>(
+		        lFields.size());
+		for (final IndexerField lField : lFields) {
+			out.put(lField.getFieldName(), lField.getValue());
+		}
+		return out;
 	}
 
 }

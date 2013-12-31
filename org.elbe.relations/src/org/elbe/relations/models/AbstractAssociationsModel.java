@@ -91,7 +91,7 @@ public abstract class AbstractAssociationsModel implements IAssociationsModel {
 	 * @throws SQLException
 	 */
 	protected void initialize(final ItemAdapter inItem) throws VException,
-			SQLException {
+	        SQLException {
 		related = new ArrayList<ItemAdapter>();
 		uniqueIDs = new ArrayList<UniqueID>();
 
@@ -106,8 +106,8 @@ public abstract class AbstractAssociationsModel implements IAssociationsModel {
 	}
 
 	private void processResult(final ItemAdapter inSource,
-			final Collection<ItemWithIcon> inItems) throws VException,
-			SQLException {
+	        final Collection<ItemWithIcon> inItems) throws VException,
+	        SQLException {
 		for (final ItemWithIcon lItemIcon : inItems) {
 			final IItem lItem = lItemIcon.getItem();
 
@@ -116,7 +116,7 @@ public abstract class AbstractAssociationsModel implements IAssociationsModel {
 
 			// create and configure (adapted) item
 			final ItemAdapter lAdapted = new ItemAdapter(lItem,
-					lItemIcon.getIcon(), context);
+			        lItemIcon.getIcon(), context);
 			lAdapted.addTarget(lRelation);
 
 			related.add(lAdapted);
@@ -135,7 +135,7 @@ public abstract class AbstractAssociationsModel implements IAssociationsModel {
 	 * @throws VException
 	 */
 	protected IRelation createRelation(final IItem inItem,
-			final ItemAdapter inSource) throws VException {
+	        final ItemAdapter inSource) throws VException {
 		return null;
 	}
 
@@ -166,7 +166,7 @@ public abstract class AbstractAssociationsModel implements IAssociationsModel {
 	@Override
 	public boolean select(final ILightWeightItem inItem) {
 		if (uniqueIDs.contains(new UniqueID(inItem.getItemType(), inItem
-				.getID()))) {
+		        .getID()))) {
 			return false;
 		}
 		return true;
@@ -182,7 +182,7 @@ public abstract class AbstractAssociationsModel implements IAssociationsModel {
 	public void addAssociations(final Object[] inAssociations) {
 		for (int i = 0; i < inAssociations.length; i++) {
 			final LightWeightAdapter lItem = new LightWeightAdapter(
-					(ILightWeightModel) inAssociations[i]);
+			        (ILightWeightModel) inAssociations[i]);
 			final UniqueID lID = lItem.getUniqueID();
 			related.add(new ItemAdapter(lItem, context));
 			handleUniqueAdd(lID);
@@ -199,14 +199,20 @@ public abstract class AbstractAssociationsModel implements IAssociationsModel {
 	public void addAssociations(final UniqueID[] inAssociations) {
 		try {
 			for (int i = 0; i < inAssociations.length; i++) {
-				final IItemModel lItem = data.retrieveItem(inAssociations[i]);
-				related.add(new ItemAdapter(lItem, context));
+				related.add(adapt(data.retrieveItem(inAssociations[i])));
 				handleUniqueAdd(inAssociations[i]);
 			}
 		}
 		catch (final BOMException exc) {
 			log.error(exc, exc.getMessage());
 		}
+	}
+
+	private ItemAdapter adapt(final IItemModel inItem) {
+		if (inItem instanceof ItemAdapter) {
+			return (ItemAdapter) inItem;
+		}
+		return new ItemAdapter(inItem, context);
 	}
 
 	/**
@@ -244,8 +250,7 @@ public abstract class AbstractAssociationsModel implements IAssociationsModel {
 	public void removeAssociations(final UniqueID[] inAssociations) {
 		try {
 			for (int i = 0; i < inAssociations.length; i++) {
-				final IItemModel lItem = data.retrieveItem(inAssociations[i]);
-				related.remove(new ItemAdapter(lItem, context));
+				related.remove(adapt(data.retrieveItem(inAssociations[i])));
 				handleUniqueRemove(inAssociations[i]);
 			}
 		}
@@ -263,14 +268,14 @@ public abstract class AbstractAssociationsModel implements IAssociationsModel {
 	@Override
 	public void removeRelation(final IRelation inRelation) {
 		final ItemAdapter lItem = new ItemAdapter(inRelation.getTargetItem(),
-				null, context);
+		        null, context);
 		related.remove(lItem);
 		handleUniqueRemove(lItem.getUniqueID());
 
 		// save the change in the database
 		try {
 			BOMHelper.getRelationHome().deleteRelation(
-					inRelation.getRelationID());
+			        inRelation.getRelationID());
 			afterSave();
 		}
 		catch (final BOMException exc) {
@@ -414,10 +419,10 @@ public abstract class AbstractAssociationsModel implements IAssociationsModel {
 
 		@Override
 		public void saveTitleText(final String inTitle, final String inText)
-				throws BOMException {
+		        throws BOMException {
 			throw new BOMException(
-					RelationsMessages
-							.getString("AbstractAssociationsModel.error.msg")); //$NON-NLS-1$
+			        RelationsMessages
+			                .getString("AbstractAssociationsModel.error.msg")); //$NON-NLS-1$
 		}
 
 		@Override
@@ -431,27 +436,17 @@ public abstract class AbstractAssociationsModel implements IAssociationsModel {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int lPrime = 31;
 		int outResult = 1;
 		outResult = lPrime * outResult
-				+ ((focusItem == null) ? 0 : focusItem.hashCode());
+		        + ((focusItem == null) ? 0 : focusItem.hashCode());
 		outResult = lPrime * outResult
-				+ ((related == null) ? 0 : related.hashCode());
+		        + ((related == null) ? 0 : related.hashCode());
 		return outResult;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(final Object inObj) {
 		if (this == inObj) {

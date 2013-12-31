@@ -33,7 +33,7 @@ import org.elbe.relations.data.Constants;
  * @author Luthiger Created on 20.01.2007
  */
 public class ItemCollator extends Collator {
-	private Collator collator;
+	private final Collator collator;
 
 	/**
 	 * ItemCollator constructor.
@@ -45,8 +45,8 @@ public class ItemCollator extends Collator {
 	private Locale getLocale() {
 		try {
 			return new Locale(Platform.getPreferencesService().getString(
-					Constants.MAIN_ID, Constants.KEY_LANGUAGE_CONTENT,
-					Locale.ENGLISH.getLanguage(), null));
+			        Constants.MAIN_ID, Constants.KEY_LANGUAGE_CONTENT,
+			        Locale.ENGLISH.getLanguage(), null));
 		}
 		catch (final NullPointerException exc) {
 			// this may be encountered in case of testing
@@ -62,34 +62,40 @@ public class ItemCollator extends Collator {
 		return this.compare(inSource.toString(), inTarget.toString());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.text.Collator#compare(java.lang.String, java.lang.String)
-	 */
 	@Override
 	public int compare(final String inSource, final String inTarget) {
 		return collator.compare(inSource, inTarget);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.text.Collator#getCollationKey(java.lang.String)
-	 */
 	@Override
 	public CollationKey getCollationKey(final String inSource) {
 		return collator.getCollationKey(inSource);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.text.Collator#hashCode()
-	 */
 	@Override
 	public int hashCode() {
-		return collator.hashCode();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+		        + ((collator == null) ? 0 : collator.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final ItemCollator other = (ItemCollator) obj;
+		if (collator == null) {
+			if (other.collator != null)
+				return false;
+		} else if (!collator.equals(other.collator))
+			return false;
+		return true;
 	}
 
 }

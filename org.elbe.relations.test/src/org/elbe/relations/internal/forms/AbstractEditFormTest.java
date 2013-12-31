@@ -26,6 +26,7 @@ import org.eclipse.swt.SWT;
 import org.junit.Test;
 
 /**
+ * JUnit test
  * 
  * @author Luthiger
  */
@@ -35,7 +36,7 @@ public class AbstractEditFormTest {
 	public void testKeyStrokes() {
 		final KeyStroke lKeyStroke = KeyStroke.getInstance(SWT.MOD1, 'I');
 		assertEquals(SWT.MOD1 | 'I',
-				lKeyStroke.getModifierKeys() | lKeyStroke.getNaturalKey());
+		        lKeyStroke.getModifierKeys() | lKeyStroke.getNaturalKey());
 		assertEquals("CTRL+I", lKeyStroke.format());
 
 		final KeySequence lSequence = KeySequence.getInstance(lKeyStroke);

@@ -37,17 +37,17 @@ import org.osgi.framework.BundleContext;
 public class FormUtility {
 	// constants
 	public static final Image IMG_INFO = FieldDecorationRegistry.getDefault()
-			.getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION)
-			.getImage();
+	        .getFieldDecoration(FieldDecorationRegistry.DEC_INFORMATION)
+	        .getImage();
 	public static final Image IMG_HINT = FieldDecorationRegistry.getDefault()
-			.getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL)
-			.getImage();
+	        .getFieldDecoration(FieldDecorationRegistry.DEC_CONTENT_PROPOSAL)
+	        .getImage();
 	public static final Image IMG_ERROR = FieldDecorationRegistry.getDefault()
-			.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
+	        .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
 	public static final Image IMG_REQUIRED = FieldDecorationRegistry
-			.getDefault()
-			.getFieldDecoration(FieldDecorationRegistry.DEC_REQUIRED)
-			.getImage();
+	        .getDefault()
+	        .getFieldDecoration(FieldDecorationRegistry.DEC_REQUIRED)
+	        .getImage();
 
 	private final static String NL = System.getProperty("line.separator"); //$NON-NLS-1$
 
@@ -63,11 +63,12 @@ public class FormUtility {
 	 * @return String The error message or <code>null</code>.
 	 */
 	public static String getErrorMessage(final IStatus inStatus) {
-		if (inStatus.getSeverity() < IStatus.ERROR)
+		if (inStatus.getSeverity() < IStatus.ERROR) {
 			return null;
+		}
 
 		if (inStatus.isMultiStatus()) {
-			final StringBuffer outMessage = new StringBuffer();
+			final StringBuilder outMessage = new StringBuilder();
 			final IStatus[] lStati = inStatus.getChildren();
 			boolean lFirst = true;
 			for (int i = 0; i < lStati.length; i++) {
@@ -94,9 +95,9 @@ public class FormUtility {
 	 * @return IStatus
 	 */
 	public static IStatus createErrorStatus(final String inMessage,
-			final BundleContext inContext) {
+	        final BundleContext inContext) {
 		return createErrorStatus(inMessage, inContext.getBundle()
-				.getSymbolicName());
+		        .getSymbolicName());
 	}
 
 	/**
@@ -109,7 +110,7 @@ public class FormUtility {
 	 * @return {@link IStatus}
 	 */
 	public static IStatus createErrorStatus(final String inMessage,
-			final String inBundleID) {
+	        final String inBundleID) {
 		return new Status(Status.ERROR, inBundleID, 1, inMessage, null);
 	}
 
@@ -132,9 +133,9 @@ public class FormUtility {
 	 * @return FieldDecoration
 	 */
 	public final static FieldDecoration createRequiredDecoration(
-			final Image inImage) {
+	        final Image inImage) {
 		return new FieldDecoration(inImage,
-				RelationsMessages.getString("RequiredText.deco.required")); //$NON-NLS-1$
+		        RelationsMessages.getString("RequiredText.deco.required")); //$NON-NLS-1$
 	}
 
 	/**
@@ -148,9 +149,9 @@ public class FormUtility {
 	 * @return ControlDecoration the hint decoration
 	 */
 	public final static ControlDecoration addDecorationInfo(
-			final Control inControl, final String inInfo) {
+	        final Control inControl, final String inInfo) {
 		final ControlDecoration outDecoration = new ControlDecoration(
-				inControl, SWT.LEFT | SWT.TOP);
+		        inControl, SWT.LEFT | SWT.TOP);
 		outDecoration.setImage(IMG_INFO);
 		outDecoration.setDescriptionText(inInfo);
 		outDecoration.setShowOnlyOnFocus(true);
@@ -168,9 +169,9 @@ public class FormUtility {
 	 * @return ControlDecoration the hint decoration
 	 */
 	public final static ControlDecoration addDecorationHint(
-			final Control inControl, final String inHint) {
+	        final Control inControl, final String inHint) {
 		final ControlDecoration outDecoration = new ControlDecoration(
-				inControl, SWT.LEFT | SWT.TOP);
+		        inControl, SWT.LEFT | SWT.TOP);
 		outDecoration.setImage(IMG_HINT);
 		outDecoration.setDescriptionText(inHint);
 		outDecoration.setShowOnlyOnFocus(true);
@@ -185,12 +186,12 @@ public class FormUtility {
 	 * @return ControlDecoration the decoration
 	 */
 	public final static ControlDecoration addDecorationRequired(
-			final Control inControl) {
+	        final Control inControl) {
 		final ControlDecoration outDecoration = new ControlDecoration(
-				inControl, SWT.LEFT | SWT.BOTTOM);
+		        inControl, SWT.LEFT | SWT.BOTTOM);
 		outDecoration.setImage(IMG_REQUIRED);
 		outDecoration.setDescriptionText(RelationsMessages
-				.getString("RequiredText.deco.required")); //$NON-NLS-1$
+		        .getString("RequiredText.deco.required")); //$NON-NLS-1$
 		outDecoration.show();
 		return outDecoration;
 	}
@@ -203,9 +204,9 @@ public class FormUtility {
 	 * @return ControlDecoration the decoration
 	 */
 	public final static ControlDecoration addDecorationError(
-			final Control inControl) {
+	        final Control inControl) {
 		final ControlDecoration outDecoration = new ControlDecoration(
-				inControl, SWT.LEFT | SWT.BOTTOM);
+		        inControl, SWT.LEFT | SWT.BOTTOM);
 		outDecoration.setImage(IMG_ERROR);
 		outDecoration.hide();
 		return outDecoration;

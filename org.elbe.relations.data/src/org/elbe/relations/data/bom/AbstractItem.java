@@ -43,7 +43,7 @@ import org.hip.kernel.exc.VException;
 public abstract class AbstractItem extends DomainObjectImpl implements IItem {
 	public final static String TRUNCATION_STATE = "22001"; //$NON-NLS-1$
 	public final static String TRUNCATION_MSG = Messages
-			.getString("AbstractItem.error.truncation"); //$NON-NLS-1$
+	        .getString("AbstractItem.error.truncation"); //$NON-NLS-1$
 
 	/**
 	 * AbstractItem constructor
@@ -59,7 +59,7 @@ public abstract class AbstractItem extends DomainObjectImpl implements IItem {
 	@Override
 	public String getCreated() throws VException {
 		return Messages.getString("Item.created.modified", getLocale(), //$NON-NLS-1$
-				getCreatedModified());
+		        getCreatedModified());
 	}
 
 	/**
@@ -104,7 +104,7 @@ public abstract class AbstractItem extends DomainObjectImpl implements IItem {
 	 * @throws VException
 	 */
 	protected void refreshItemInIndex() throws IOException, BOMException,
-			VException {
+	        VException {
 		getIndexer().refreshItemInIndex(this);
 	}
 
@@ -137,51 +137,46 @@ public abstract class AbstractItem extends DomainObjectImpl implements IItem {
 	// indexing
 	protected IndexerField getFieldTitle(final String inTitle) {
 		return new IndexerField(AbstractSearching.TITLE, inTitle,
-				IndexerField.Store.YES, IndexerField.Index.ANALYZED);
+		        IndexerField.Store.YES, IndexerField.Index.ANALYZED);
 	}
 
 	protected IndexerField getFieldUniqueID(final String inItemID) {
-		return new IndexerField(AbstractSearching.ITEM_ID, inItemID,
-				IndexerField.Store.YES, IndexerField.Index.NOT_ANALYZED);
+		return new IndexerField(AbstractSearching.UNIQUE_ID, inItemID,
+		        IndexerField.Store.YES, IndexerField.Index.NOT_ANALYZED);
 	}
 
 	protected IndexerField getFieldItemType(final String inItemType) {
 		return new IndexerField(AbstractSearching.ITEM_TYPE, inItemType,
-				IndexerField.Store.YES, IndexerField.Index.NO);
+		        IndexerField.Store.YES, IndexerField.Index.NO);
 	}
 
 	protected IndexerField getFieldItemID(final String inItemID) {
 		return new IndexerField(AbstractSearching.ITEM_ID, inItemID,
-				IndexerField.Store.YES, IndexerField.Index.NO);
+		        IndexerField.Store.YES, IndexerField.Index.NO);
 	}
 
 	protected IndexerField getFieldText(final String inText) {
 		return new IndexerField(AbstractSearching.CONTENT_FULL, inText,
-				IndexerField.Store.NO, IndexerField.Index.ANALYZED);
+		        IndexerField.Store.NO, IndexerField.Index.ANALYZED);
 	}
 
 	protected void addCreatedModified(final IndexerDocument inDocument)
-			throws VException {
+	        throws VException {
 		final Timestamp[] lCreatedModified = getCreatedModified();
 
 		IndexerField lDate = new IndexerDateField(
-				AbstractSearching.DATE_CREATED, lCreatedModified[0].getTime(),
-				IndexerField.Store.YES, IndexerField.Index.NOT_ANALYZED,
-				IndexerDateField.TimeResolution.DAY);
+		        AbstractSearching.DATE_CREATED, lCreatedModified[0].getTime(),
+		        IndexerField.Store.YES, IndexerField.Index.NOT_ANALYZED,
+		        IndexerDateField.TimeResolution.DAY);
 		inDocument.addField(lDate);
 
 		lDate = new IndexerDateField(AbstractSearching.DATE_MODIFIED,
-				lCreatedModified[1].getTime(), IndexerField.Store.YES,
-				IndexerField.Index.NOT_ANALYZED,
-				IndexerDateField.TimeResolution.DAY);
+		        lCreatedModified[1].getTime(), IndexerField.Store.YES,
+		        IndexerField.Index.NOT_ANALYZED,
+		        IndexerDateField.TimeResolution.DAY);
 		inDocument.addField(lDate);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.hip.kernel.bom.impl.DomainObjectImpl#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int lPrime = 31;
@@ -210,7 +205,7 @@ public abstract class AbstractItem extends DomainObjectImpl implements IItem {
 			final IItem lItem = (IItem) inObject;
 			try {
 				return getItemType() == lItem.getItemType()
-						&& getID() == lItem.getID();
+				        && getID() == lItem.getID();
 			}
 			catch (final VException exc) {
 				return false;

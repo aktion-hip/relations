@@ -21,6 +21,7 @@ see http://www.eclipse.org/
    </aboutInfo>
 
    <configIni use="default">
+      <win32>/org.elbe.relations/config.ini</win32>
    </configIni>
 
    <launcherArgs>
@@ -37,7 +38,7 @@ see http://www.eclipse.org/
    <launcher name="Relations">
       <solaris/>
       <win useIco="true">
-         <ico path="/org.elbe.relations/icons/Relations.ico"/>
+         <ico path="/org.elbe.relations/icons/RelationsIcon.ico"/>
          <bmp/>
       </win>
    </launcher>
@@ -347,8 +348,8 @@ POSSIBILITY OF SUCH DAMAGES.
       <feature id="org.eclipse.emf.common" version="2.9.1.v20130827-0309"/>
       <feature id="org.eclipse.rcp" version="4.3.1.v20130911-1000"/>
       <feature id="org.eclipse.e4.rcp" version="1.2.1.v20130910-2014"/>
-      <feature id="org.eclipse.nebula.widgets.gallery.feature" version="1.0.0.201311081230"/>
-      <feature id="org.eclipse.equinox.p2.core.feature" version="1.2.1.v20130827-1605"/>
+      <feature id="org.eclipse.help" version="2.0.1.v20130911-1000"/>
+      <feature id="org.eclipse.platform" version="4.3.1.v20130911-1000"/>
    </features>
 
 

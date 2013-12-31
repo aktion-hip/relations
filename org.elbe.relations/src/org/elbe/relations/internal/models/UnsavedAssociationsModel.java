@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Vector;
 
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.swt.graphics.Image;
 import org.elbe.relations.data.bom.IItem;
@@ -35,17 +36,10 @@ import org.hip.kernel.exc.VException;
  * An implementation of <code>IAssociationsModel</code> that can be used if an
  * item is created but not yet saved.
  * 
- * @author Luthiger 
+ * @author Luthiger
  */
 public class UnsavedAssociationsModel extends AbstractAssociationsModel
-		implements IAssociationsModel {
-
-	/**
-	 * Private constructor, we want instances to be created through the factory
-	 * methods.
-	 */
-	private UnsavedAssociationsModel() {
-	}
+        implements IAssociationsModel {
 
 	/**
 	 * Factory method, creates an <code>UnsavedAssociationsModel</code>
@@ -61,9 +55,10 @@ public class UnsavedAssociationsModel extends AbstractAssociationsModel
 	 * @throws SQLException
 	 */
 	public static UnsavedAssociationsModel createModel(final IItem inItem,
-			final IEclipseContext inContext, final Image inImage)
-			throws VException, SQLException {
-		final UnsavedAssociationsModel outModel = new UnsavedAssociationsModel();
+	        final IEclipseContext inContext, final Image inImage)
+	        throws VException, SQLException {
+		final UnsavedAssociationsModel outModel = ContextInjectionFactory.make(
+		        UnsavedAssociationsModel.class, inContext);
 		final ItemAdapter lItem = new ItemAdapter(inItem, inImage, inContext);
 		outModel.setFocusedItem(lItem);
 		outModel.initialize(outModel.getFocusedItem());
@@ -85,10 +80,10 @@ public class UnsavedAssociationsModel extends AbstractAssociationsModel
 	 * @throws SQLException
 	 */
 	public static UnsavedAssociationsModel createModel(final IItem inItem,
-			final IEclipseContext inContext, final ItemAdapter inSelected)
-			throws VException, SQLException {
+	        final IEclipseContext inContext, final ItemAdapter inSelected)
+	        throws VException, SQLException {
 		final UnsavedAssociationsModel outModel = createModel(inItem,
-				inContext, inSelected.getImage());
+		        inContext, inSelected.getImage());
 		outModel.setSelected(inSelected);
 		return outModel;
 	}
@@ -103,7 +98,7 @@ public class UnsavedAssociationsModel extends AbstractAssociationsModel
 	 */
 	@Override
 	protected void initialize(final ItemAdapter inItem) throws VException,
-			SQLException {
+	        SQLException {
 		related = new Vector<ItemAdapter>();
 		uniqueIDs = new Vector<UniqueID>();
 
@@ -114,7 +109,7 @@ public class UnsavedAssociationsModel extends AbstractAssociationsModel
 	private void setSelected(final ItemAdapter inSelected) throws VException {
 		related.add(inSelected);
 		final UniqueID lID = new UniqueID(inSelected.getItemType(),
-				inSelected.getID());
+		        inSelected.getID());
 		uniqueIDs.add(lID);
 		added.add(lID);
 	}

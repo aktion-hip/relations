@@ -45,26 +45,12 @@ public class RelationsSerializer extends AbstractSerializer {
 
 	private final DecimalFormat decimalFormat = new DecimalFormat();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.hip.kernel.bom.impl.AbstractSerializer#startDomainObject(org.hip.
-	 * kernel.bom.GeneralDomainObject)
-	 */
 	@Override
 	protected void startDomainObject(final GeneralDomainObject inObject) {
 		emit_nl();
 		emitStartTag(String.format(TMPL_TAG, inObject.getObjectName()));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.hip.kernel.bom.impl.AbstractSerializer#endDomainObject(org.hip.kernel
-	 * .bom.GeneralDomainObject)
-	 */
 	@Override
 	protected void endDomainObject(final GeneralDomainObject inObject) {
 		emit_nl();
@@ -72,46 +58,25 @@ public class RelationsSerializer extends AbstractSerializer {
 		emitEndTag(String.format(TMPL_TAG, inObject.getObjectName()));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.hip.kernel.bom.impl.AbstractSerializer#startIterator(org.hip.kernel
-	 * .bom.DomainObjectIterator)
-	 */
 	@Override
 	protected void startIterator(final DomainObjectIterator inIterator) {
 		// intentionally left empty
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.hip.kernel.bom.impl.AbstractSerializer#endIterator(org.hip.kernel
-	 * .bom.DomainObjectIterator)
-	 */
 	@Override
 	protected void endIterator(final DomainObjectIterator inIterator) {
 		// intentionally left empty
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.hip.kernel.bom.impl.AbstractSerializer#startProperty(org.hip.kernel
-	 * .bom.Property)
-	 */
 	@Override
 	protected void startProperty(final Property inProperty) {
 		emit_nl();
 		final Object lValue = inProperty.getValue();
 		final PropertyDef lPropertyDef = inProperty.getPropertyDef();
 		emitStartTag(String.format(
-				"%s field=\"%s\" type=\"%s\"", inProperty.getName(), //$NON-NLS-1$
-				lPropertyDef.getMappingDef().getColumnName(),
-				lPropertyDef.getValueType()));
+		        "%s field=\"%s\" type=\"%s\"", inProperty.getName(), //$NON-NLS-1$
+		        lPropertyDef.getMappingDef().getColumnName(),
+		        lPropertyDef.getValueType()));
 
 		final String lFormatPattern = inProperty.getFormatPattern();
 
@@ -124,7 +89,7 @@ public class RelationsSerializer extends AbstractSerializer {
 		}
 
 		if ((lValue instanceof Timestamp) || (lValue instanceof Date)
-				|| (lValue instanceof Time)) {
+		        || (lValue instanceof Time)) {
 			emitText(lValue.toString());
 			return;
 		}
@@ -146,13 +111,6 @@ public class RelationsSerializer extends AbstractSerializer {
 		emitText(prepareForExport(lValue.toString()));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.hip.kernel.bom.impl.AbstractSerializer#endProperty(org.hip.kernel
-	 * .bom.Property)
-	 */
 	@Override
 	protected void endProperty(final Property inProperty) {
 		emit_nl();
@@ -160,49 +118,21 @@ public class RelationsSerializer extends AbstractSerializer {
 		emitEndTag(inProperty.getName());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.hip.kernel.bom.impl.AbstractSerializer#startPropertySet(org.hip.kernel
-	 * .bom.PropertySet)
-	 */
 	@Override
 	protected void startPropertySet(final PropertySet inSet) {
 		// intentionally left empty
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.hip.kernel.bom.impl.AbstractSerializer#endPropertySet(org.hip.kernel
-	 * .bom.PropertySet)
-	 */
 	@Override
 	protected void endPropertySet(final PropertySet inSet) {
 		// intentionally left empty
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.hip.kernel.bom.impl.AbstractDomainObjectVisitor#endSortedArray(org
-	 * .hip.kernel.bom.SortedArray)
-	 */
 	@Override
 	protected void endSortedArray(final SortedArray inSortedArray) {
 		// intentionally left empty
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.hip.kernel.bom.impl.AbstractDomainObjectVisitor#startSortedArray(
-	 * org.hip.kernel.bom.SortedArray)
-	 */
 	@Override
 	protected void startSortedArray(final SortedArray inSortedArray) {
 		// intentionally left empty
@@ -220,7 +150,7 @@ public class RelationsSerializer extends AbstractSerializer {
 		String outProcessed = inToProcess;
 		for (int i = 0; i < IN_EXPORTED_XML.length; i++) {
 			outProcessed = outProcessed.replace(IN_DATABASE[i],
-					IN_EXPORTED_XML[i]);
+			        IN_EXPORTED_XML[i]);
 		}
 		return outProcessed;
 	}
@@ -238,7 +168,7 @@ public class RelationsSerializer extends AbstractSerializer {
 		String outProcessed = inToProcess;
 		for (int i = 0; i < IN_EXPORTED_XML.length; i++) {
 			outProcessed = outProcessed.replace(IN_EXPORTED_XML[i],
-					IN_DATABASE[i]);
+			        IN_DATABASE[i]);
 		}
 		return outProcessed;
 	}

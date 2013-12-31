@@ -4,7 +4,7 @@
         <Field name="TermID" auto_increment="yes" type="biginteger" nullable="no" unsigned="yes"/>
         <Field name="sTitle" type="string" size="99" nullable="no"/>
         <Field name="sText" type="clob"/>
-        <Field name="dtCreation" type="timestamp" nullable="no"/>
+        <Field name="dtCreation" type="timestamp" default="0"/>
         <Field name="dtMutation" type="timestamp" nullable="no"/>
         <PrimaryKey>
             <Column name="TermID"/>
@@ -25,7 +25,7 @@
         <Field name="sPublisher" type="string" size="99"/>
         <Field name="sPlace" type="string" size="99"/>
         <Field name="nType" type="integer" />
-        <Field name="dtCreation" type="timestamp" nullable="no"/>
+        <Field name="dtCreation" type="timestamp" default="0"/>
         <Field name="dtMutation" type="timestamp" nullable="no"/>
         <PrimaryKey>
             <Column name="TextID"/>
@@ -38,7 +38,7 @@
         <Field name="sText" type="clob" />
         <Field name="sFrom" type="string" size="30"/>
         <Field name="sTo" type="string" size="30"/>
-        <Field name="dtCreation" type="timestamp" nullable="no"/>
+        <Field name="dtCreation" type="timestamp" default="0"/>
         <Field name="dtMutation" type="timestamp" nullable="no"/>
         <PrimaryKey>
             <Column name="PersonID"/>

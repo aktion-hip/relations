@@ -71,7 +71,7 @@ import org.elbe.relations.search.RetrievedItemWithIcon;
 @SuppressWarnings("restriction")
 public class SearchView extends AbstractToolPart {
 	private static final String QUERY_HINT = RelationsMessages
-			.getString("SearchView.tip.search"); //$NON-NLS-1$
+	        .getString("SearchView.tip.search"); //$NON-NLS-1$
 	private static final String DIALOG_TERM = "relations.search.memory"; //$NON-NLS-1$
 
 	@Inject
@@ -93,16 +93,14 @@ public class SearchView extends AbstractToolPart {
 	 * 
 	 * @param inParent
 	 *            {@link Composite}
-	 * @param inContext
-	 *            {@link IEclipseContext}
 	 */
 	@Inject
-	public SearchView(final Composite inParent, final IEclipseContext inContext) {
+	public SearchView(final Composite inParent) {
 		search = new Composite(inParent, SWT.NULL);
 
 		final int lIndent = createInputControl(search);
 		createButtonControl(search, lIndent);
-		createListControl(search, lIndent);
+		createListControl(lIndent);
 
 		final GridLayout lGrid = new GridLayout(1, true);
 		lGrid.marginWidth = 2;
@@ -114,8 +112,8 @@ public class SearchView extends AbstractToolPart {
 
 	@PostConstruct
 	void afterInit(final MApplication inApplication,
-			final EModelService inModelService, final MPart inPart,
-			final EMenuService inService, final IEclipseContext inContext) {
+	        final EModelService inModelService, final MPart inPart,
+	        final EMenuService inService, final IEclipseContext inContext) {
 		afterInit(inPart, inService);
 
 		settings = new DialogSettingHelper(inPart, DIALOG_TERM);
@@ -124,19 +122,19 @@ public class SearchView extends AbstractToolPart {
 
 	private int createInputControl(final Composite inSearch) {
 		input = new Combo(inSearch, SWT.BORDER | SWT.SINGLE | SWT.DROP_DOWN
-				| SWT.SEARCH);
+		        | SWT.SEARCH);
 		final ControlDecoration lDecoration = new ControlDecoration(input,
-				SWT.LEFT | SWT.TOP);
+		        SWT.LEFT | SWT.TOP);
 		final FieldDecoration lProposeDeco = FieldDecorationRegistry
-				.getDefault().getFieldDecoration(
-						FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
+		        .getDefault().getFieldDecoration(
+		                FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
 		lProposeDeco.setDescription(QUERY_HINT);
 		lDecoration.setImage(lProposeDeco.getImage());
 		lDecoration.setDescriptionText(lProposeDeco.getDescription());
 
 		final GridData lLayout = new GridData(GridData.FILL_HORIZONTAL);
 		final int outIndent = FieldDecorationRegistry.getDefault()
-				.getMaximumDecorationWidth();
+		        .getMaximumDecorationWidth();
 		lLayout.horizontalIndent = outIndent;
 		input.setLayoutData(lLayout);
 		input.addModifyListener(new ModifyListener() {
@@ -157,7 +155,7 @@ public class SearchView extends AbstractToolPart {
 			@Override
 			public void focusGained(final FocusEvent inEvent) {
 				final String lSelection = (String) selectionService
-						.getSelection(RelationsConstants.PART_INSPECTOR);
+				        .getSelection(RelationsConstants.PART_INSPECTOR);
 				if (lSelection != null && !lSelection.isEmpty()) {
 					input.setText(lSelection);
 				} else {
@@ -184,7 +182,7 @@ public class SearchView extends AbstractToolPart {
 	}
 
 	private void createButtonControl(final Composite inSearch,
-			final int inIndent) {
+	        final int inIndent) {
 		button = new Button(search, SWT.PUSH);
 		button.setText(RelationsMessages.getString("SearchView.lbl.search")); //$NON-NLS-1$
 		button.setEnabled(false);
@@ -202,7 +200,7 @@ public class SearchView extends AbstractToolPart {
 		});
 
 		final GridData lLayout = new GridData(SWT.BEGINNING, SWT.FILL, false,
-				false);
+		        false);
 		lLayout.horizontalIndent = inIndent;
 		lLayout.widthHint = 60;
 		button.setLayoutData(lLayout);
@@ -212,7 +210,7 @@ public class SearchView extends AbstractToolPart {
 	private void searchFor(final String inText) {
 		addUnique(inText);
 		final Collection<RetrievedItemWithIcon> lSearchResult = searchController
-				.search(inText);
+		        .search(inText);
 		if (lSearchResult.isEmpty()) {
 			return;
 		}
@@ -226,7 +224,7 @@ public class SearchView extends AbstractToolPart {
 
 	private void addUnique(final String inText) {
 		final Vector<String> lItems = new Vector<String>(Arrays.asList(input
-				.getItems()));
+		        .getItems()));
 		while (lItems.remove(inText)) {
 			// intentionally left empty
 		}
@@ -240,15 +238,15 @@ public class SearchView extends AbstractToolPart {
 		input.setText(inText);
 	}
 
-	private void createListControl(final Composite inSearch, final int inIndent) {
+	private void createListControl(final int inIndent) {
 		results = new TableViewer(search, SWT.H_SCROLL | SWT.V_SCROLL
-				| SWT.BORDER | SWT.MULTI);
+		        | SWT.BORDER | SWT.MULTI);
 		results.setContentProvider(new ObservableListContentProvider());
 		results.setLabelProvider(getLabelProvider());
 
 		results.addDoubleClickListener(getDoubleClickListener());
 		results.addDragSupport(DND.DROP_COPY, getDragTypes(),
-				getDragSourceAdapter(results));
+		        getDragSourceAdapter(results));
 		results.addSelectionChangedListener(getSelectionChangedListener());
 
 		final Control lControl = results.getControl();
@@ -257,11 +255,6 @@ public class SearchView extends AbstractToolPart {
 		lControl.setLayoutData(lLayout);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-	 */
 	@Focus
 	public void setFocus() {
 		input.setFocus();
@@ -274,7 +267,7 @@ public class SearchView extends AbstractToolPart {
 	 */
 	@Inject
 	void reset(
-			@Optional @EventTopic(value = RelationsConstants.TOPIC_DB_CHANGED_INITIALZED) final String inEvent) {
+	        @Optional @EventTopic(value = RelationsConstants.TOPIC_DB_CHANGED_INITIALZED) final String inEvent) {
 		final List<?> lInput = (List<?>) results.getInput();
 		if (lInput != null) {
 			lInput.clear();
@@ -282,33 +275,16 @@ public class SearchView extends AbstractToolPart {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.internal.controls.AbstractToolPart#getControl()
-	 */
 	@Override
 	protected Object getControl() {
 		return results.getControl();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.internal.controls.AbstractToolPart#getContextMenuID()
-	 */
 	@Override
 	protected String getContextMenuID() {
 		return RelationsConstants.POPUP_TOOLS_SEARCH;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.internal.controls.IPartWithSelection#hasSelection()
-	 */
 	@Override
 	public boolean hasSelection() {
 		return !results.getSelection().isEmpty();

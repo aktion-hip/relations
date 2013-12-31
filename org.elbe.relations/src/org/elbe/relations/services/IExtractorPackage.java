@@ -31,6 +31,6 @@ public interface IExtractorPackage {
 	 * @return IExtractorAdapter[] the array of <code>IExtractorAdapter</code>s
 	 *         this component can provide.
 	 */
-	public IExtractorAdapter[] getExtractorAdapters();
+	IExtractorAdapter[] getExtractorAdapters();
 
 }

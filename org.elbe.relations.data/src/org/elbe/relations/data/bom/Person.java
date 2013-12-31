@@ -52,13 +52,6 @@ public class Person extends AbstractPerson implements IIndexable {
 		return HOME_CLASS_NAME;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.search.Indexable#indexContent(org.elbe.relations.search
-	 * .Indexer)
-	 */
 	@Override
 	public void indexContent(final IndexerHelper inIndexer) throws VException {
 		final IndexerDocument lDocument = new IndexerDocument();

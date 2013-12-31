@@ -34,7 +34,7 @@ import org.elbe.relations.models.ILightWeightModel;
  * @author Luthiger
  */
 public class LightWeightTermWithIcon extends LightWeightTerm implements
-		ILightWeightModel {
+        ILightWeightModel {
 
 	/**
 	 * LightWeightTermWithIcon constructor.
@@ -46,8 +46,8 @@ public class LightWeightTermWithIcon extends LightWeightTerm implements
 	 * @param inModified
 	 */
 	public LightWeightTermWithIcon(final long inID, final String inTitle,
-			final String inText, final Timestamp inCreated,
-			final Timestamp inModified) {
+	        final String inText, final Timestamp inCreated,
+	        final Timestamp inModified) {
 		super(inID, inTitle, inText, inCreated, inModified);
 	}
 
@@ -59,24 +59,14 @@ public class LightWeightTermWithIcon extends LightWeightTerm implements
 	 */
 	public LightWeightTermWithIcon(final LightWeightTerm inTerm) {
 		super(inTerm.id, inTerm.title, inTerm.text, inTerm.created,
-				inTerm.modified);
+		        inTerm.modified);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.ILightWeightModel#getImage()
-	 */
 	@Override
 	public Image getImage() {
 		return RelationsImages.TERM.getImage();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.models.ILightWeightModel#getItemDeleteAction()
-	 */
 	@Override
 	public IAction getItemDeleteAction() {
 		return new IAction() {

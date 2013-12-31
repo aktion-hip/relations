@@ -29,25 +29,14 @@ import org.elbe.relations.services.IExtractorAdapter;
  * @author Luthiger Created on 26.01.2010
  */
 public class ExcelExtractor extends AbstractMSOfficeExtractor implements
-		IExtractorAdapter {
+        IExtractorAdapter {
 	private static final String XLS_SUFFIX = ".xls"; //$NON-NLS-1$
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.biblio.meta.internal.extract.AbstractExtractor#
-	 * getInputType()
-	 */
 	@Override
 	protected String getInputType() {
 		return "application/vnd.ms-excel"; //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.ds.IExtractorAdapter#acceptsFile(java.io.File)
-	 */
 	@Override
 	public boolean acceptsFile(final File inFile) {
 		if (isXlsFile(inFile)) {

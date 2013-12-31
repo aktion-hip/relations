@@ -12,3 +12,5 @@ Import-Package: com.mysql.jdbc,
  org.apache.derby.jdbc,
  org.hip.kernel.dbaccess;version="[1.0.0,2.0.0)",
  org.osgi.service.jdbc;version="[1.0.0,2.0.0)"
+Require-Bundle: org.mockito.mockito-all;bundle-version="1.9.5"
+Export-Package: org.elbe.relations.data.test;version="1.0.0"

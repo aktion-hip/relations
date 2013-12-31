@@ -42,6 +42,6 @@ public interface IHtmlExtractor {
 	 * @return {@link ExtractedData} the metadata extracted from the web page.
 	 * @throws XPatherException
 	 */
-	public ExtractedData extractData(XPathHelper inXPathHelper, String inTitle,
-			String inUrl) throws XPatherException;
+	ExtractedData extractData(XPathHelper inXPathHelper, String inTitle,
+	        String inUrl) throws XPatherException;
 }

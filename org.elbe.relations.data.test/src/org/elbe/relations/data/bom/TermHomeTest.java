@@ -24,10 +24,9 @@ import static org.junit.Assert.assertTrue;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-import org.elbe.relations.data.DataHouseKeeper;
+import org.elbe.relations.data.test.DataHouseKeeper;
 import org.hip.kernel.exc.VException;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -40,11 +39,6 @@ public class TermHomeTest {
 	@BeforeClass
 	public static void init() {
 		data = DataHouseKeeper.INSTANCE;
-	}
-
-	@Before
-	public void setUp() throws Exception {
-		// data.setUp();
 	}
 
 	@After
@@ -65,9 +59,9 @@ public class TermHomeTest {
 
 		final AbstractTerm lRetrieved = lHome.getTerm(lTerm.getID());
 		final long lCreated = ((Timestamp) lRetrieved.get(TermHome.KEY_CREATED))
-				.getTime();
+		        .getTime();
 		final long lModified = ((Timestamp) lRetrieved
-				.get(TermHome.KEY_MODIFIED)).getTime();
+		        .get(TermHome.KEY_MODIFIED)).getTime();
 		assertEquals("Created 1", lCreated, lModified);
 		assertTrue("Created 2", lCreated >= lNow);
 

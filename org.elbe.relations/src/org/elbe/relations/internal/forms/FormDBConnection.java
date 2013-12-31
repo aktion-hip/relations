@@ -82,10 +82,10 @@ public class FormDBConnection extends AbstractDBSettingsForm {
 	 * @return {@link FormDBConnection}
 	 */
 	public static FormDBConnection createFormDBConnection(
-			final Composite inParent, final int inColumns,
-			final IEclipseContext inContext) {
+	        final Composite inParent, final int inColumns,
+	        final IEclipseContext inContext) {
 		final FormDBConnection out = ContextInjectionFactory.make(
-				FormDBConnection.class, inContext);
+		        FormDBConnection.class, inContext);
 		out.initialize(inParent, inColumns);
 		return out;
 	}
@@ -96,16 +96,16 @@ public class FormDBConnection extends AbstractDBSettingsForm {
 		dbDirtySettings = new CheckDirtyServicePreferences();
 		langSettings = new CheckDirtyServicePreferences();
 		final int lIndent = FieldDecorationRegistry.getDefault()
-				.getMaximumDecorationWidth();
+		        .getMaximumDecorationWidth();
 
 		dbDbasesCombo = createDbasesCombo(inParent, inColumns, lIndent);
 		dbCatalogEmbeddedCombo = createEmbeddedCatalogCombo(inParent,
-				inColumns, lIndent);
+		        inColumns, lIndent);
 		hostField = createHostField(inParent, inColumns, lIndent);
 
 		catalogField = createCatalogField(inParent, inColumns, lIndent);
 		catalogField.getText().addModifyListener(
-				new FormModifyListener(catalogField));
+		        new FormModifyListener(catalogField));
 
 		usernameField = createUsernameField(inParent, inColumns, lIndent);
 		passwrdField = createPasswrdField(inParent, inColumns, lIndent);
@@ -114,9 +114,9 @@ public class FormDBConnection extends AbstractDBSettingsForm {
 
 		languages = indexer.getContentLanguages();
 		dbLanguageCombo = createLabelCombo(
-				inParent,
-				inColumns,
-				RelationsMessages.getString("FormDBConnection.lbl.language"), languages); //$NON-NLS-1$
+		        inParent,
+		        inColumns,
+		        RelationsMessages.getString("FormDBConnection.lbl.language"), languages); //$NON-NLS-1$
 		((GridData) dbLanguageCombo.getLayoutData()).horizontalIndent = lIndent;
 		langSettings.register(dbLanguageCombo);
 
@@ -142,29 +142,27 @@ public class FormDBConnection extends AbstractDBSettingsForm {
 	}
 
 	private IEclipsePreferences initPreferences() throws SQLException,
-			NamingException {
+	        NamingException {
 		final IEclipsePreferences outStore = getPreferences();
 		hostField.getText().setText(
-				outStore.get(RelationsConstants.KEY_DB_HOST, "")); //$NON-NLS-1$
+		        outStore.get(RelationsConstants.KEY_DB_HOST, "")); //$NON-NLS-1$
 		catalogField.getText().setText(
-				outStore.get(RelationsConstants.KEY_DB_CATALOG, "")); //$NON-NLS-1$
+		        outStore.get(RelationsConstants.KEY_DB_CATALOG, "")); //$NON-NLS-1$
 		usernameField.getText().setText(
-				outStore.get(RelationsConstants.KEY_DB_USER_NAME, "")); //$NON-NLS-1$
+		        outStore.get(RelationsConstants.KEY_DB_USER_NAME, "")); //$NON-NLS-1$
 		passwrdField.getText().setText(
-				outStore.get(RelationsConstants.KEY_DB_PASSWORD, "")); //$NON-NLS-1$
+		        outStore.get(RelationsConstants.KEY_DB_PASSWORD, "")); //$NON-NLS-1$
 		dbLanguageCombo.select(getLanguageIndex(outStore.get(
-				RelationsConstants.KEY_LANGUAGE_CONTENT,
-				RelationsConstants.DFT_LANGUAGE), languages));
-		initDBCombos(outStore.get(RelationsConstants.KEY_DB_PLUGIN_ID,
-				RelationsConstants.DFT_DBCONFIG_PLUGIN_ID), outStore.get(
-				RelationsConstants.KEY_DB_CATALOG,
-				RelationsConstants.DFT_DB_EMBEDDED));
+		        RelationsConstants.KEY_LANGUAGE_CONTENT,
+		        RelationsConstants.DFT_LANGUAGE), languages));
+		initDBCombos(outStore.get(RelationsConstants.KEY_DB_CATALOG,
+		        RelationsConstants.DFT_DB_EMBEDDED));
 
 		return outStore;
 	}
 
-	private void initDBCombos(final String inDBPluginName,
-			final String inDerbySchema) throws SQLException, NamingException {
+	private void initDBCombos(final String inDerbySchema) throws SQLException,
+	        NamingException {
 		// check existence of Derby catalogs
 		final String[] lDerbyCatalogs = EmbeddedCatalogHelper.getCatalogs();
 		dbCatalogEmbeddedCombo.setItems(lDerbyCatalogs);
@@ -176,7 +174,7 @@ public class FormDBConnection extends AbstractDBSettingsForm {
 	}
 
 	private int getIndex(final String inSelectedLabel,
-			final String[] inSelection) {
+	        final String[] inSelection) {
 		for (int i = 0; i < inSelection.length; i++) {
 			if (inSelection[i].equals(inSelectedLabel))
 				return i;
@@ -209,16 +207,16 @@ public class FormDBConnection extends AbstractDBSettingsForm {
 		if (dbDirtySettings.isDirty() || langSettings.isDirty()) {
 			if (dbDirtySettings.isDirty()) {
 				final IDBConnectionConfig lSelectedDB = getDBController()
-						.getConfiguration(dbDbasesCombo.getSelectionIndex());
+				        .getConfiguration(dbDbasesCombo.getSelectionIndex());
 				final IDBChange lChangeDB = ContextInjectionFactory.make(
-						ChangeDB.class, context);
+				        ChangeDB.class, context);
 
 				if (lSelectedDB.isEmbedded()) {
 					final String lCatalogName = dbCatalogEmbeddedCombo
-							.getItem(dbCatalogEmbeddedCombo.getSelectionIndex());
+					        .getItem(dbCatalogEmbeddedCombo.getSelectionIndex());
 					final IDBSettings lTempSettings = new TempSettings(
-							lSelectedDB.getName(), "", lCatalogName, "", "", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-							getDBController());
+					        lSelectedDB.getName(), "", lCatalogName, "", "", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					        getDBController());
 					lChangeDB.setTemporarySettings(lTempSettings);
 				} else {
 					final String lHost = hostField.getText().getText();
@@ -226,8 +224,8 @@ public class FormDBConnection extends AbstractDBSettingsForm {
 					final String lUser = usernameField.getText().getText();
 					final String lPasswrd = passwrdField.getText().getText();
 					final IDBSettings lTempSettings = new TempSettings(
-							lSelectedDB.getName(), lHost, lCatalog, lUser,
-							lPasswrd, getDBController());
+					        lSelectedDB.getName(), lHost, lCatalog, lUser,
+					        lPasswrd, getDBController());
 					lChangeDB.setTemporarySettings(lTempSettings);
 				}
 				lChangeDB.execute();
@@ -235,7 +233,7 @@ public class FormDBConnection extends AbstractDBSettingsForm {
 			if (langSettings.isDirty()) {
 				final IEclipsePreferences lStore = getPreferences();
 				lStore.put(RelationsConstants.KEY_LANGUAGE_CONTENT,
-						languages[dbLanguageCombo.getSelectionIndex()]);
+				        languages[dbLanguageCombo.getSelectionIndex()]);
 				return true;
 			}
 		}
@@ -279,7 +277,7 @@ public class FormDBConnection extends AbstractDBSettingsForm {
 			return true;
 		}
 		return catalogField.length() * hostField.length()
-				* usernameField.length() * passwrdField.length() != 0;
+		        * usernameField.length() * passwrdField.length() != 0;
 	}
 
 	@Override

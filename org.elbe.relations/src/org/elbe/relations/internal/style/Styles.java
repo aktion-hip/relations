@@ -49,26 +49,26 @@ public final class Styles {
 	 */
 	public static enum Style {
 		BOLD(RelationsConstants.STYLED_TEXT_ITEM_BOLD,
-				RelationsConstants.STYLED_TEXT_COMMAND_BOLD, SWT.BOLD, true,
-				false, false), ITALIC(
-				RelationsConstants.STYLED_TEXT_ITEM_ITALIC,
-				RelationsConstants.STYLED_TEXT_COMMAND_ITALIC, SWT.ITALIC,
-				true, false, false), UNDERLINE(
-				RelationsConstants.STYLED_TEXT_ITEM_UNDERLINE,
-				RelationsConstants.STYLED_TEXT_COMMAND_UNDERLINE, SWT.NORMAL,
-				true, true, false), UNORDERED(
-				RelationsConstants.STYLED_TEXT_ITEM_LIST_BULLET,
-				RelationsConstants.STYLED_TEXT_COMMAND_LIST_BULLET,
-				ST.BULLET_DOT, true, false, true), NUMBERED(
-				RelationsConstants.STYLED_TEXT_ITEM_LIST_NUMBERED,
-				RelationsConstants.STYLED_TEXT_COMMAND_LIST_NUMBERED,
-				ST.BULLET_CUSTOM, true, false, true), UPPERCASE(
-				RelationsConstants.STYLED_TEXT_ITEM_LIST_UPPER,
-				RelationsConstants.STYLED_TEXT_COMMAND_LIST_UPPER,
-				ST.BULLET_LETTER_UPPER, true, false, true), LOWERCASE(
-				RelationsConstants.STYLED_TEXT_ITEM_LIST_LOWER,
-				RelationsConstants.STYLED_TEXT_COMMAND_LIST_LOWER,
-				ST.BULLET_LETTER_LOWER, true, false, true);
+		        RelationsConstants.STYLED_TEXT_COMMAND_BOLD, SWT.BOLD, true,
+		        false, false), ITALIC(
+		        RelationsConstants.STYLED_TEXT_ITEM_ITALIC,
+		        RelationsConstants.STYLED_TEXT_COMMAND_ITALIC, SWT.ITALIC,
+		        true, false, false), UNDERLINE(
+		        RelationsConstants.STYLED_TEXT_ITEM_UNDERLINE,
+		        RelationsConstants.STYLED_TEXT_COMMAND_UNDERLINE, SWT.NORMAL,
+		        true, true, false), UNORDERED(
+		        RelationsConstants.STYLED_TEXT_ITEM_LIST_BULLET,
+		        RelationsConstants.STYLED_TEXT_COMMAND_LIST_BULLET,
+		        ST.BULLET_DOT, true, false, true), NUMBERED(
+		        RelationsConstants.STYLED_TEXT_ITEM_LIST_NUMBERED,
+		        RelationsConstants.STYLED_TEXT_COMMAND_LIST_NUMBERED,
+		        ST.BULLET_CUSTOM, true, false, true), UPPERCASE(
+		        RelationsConstants.STYLED_TEXT_ITEM_LIST_UPPER,
+		        RelationsConstants.STYLED_TEXT_COMMAND_LIST_UPPER,
+		        ST.BULLET_LETTER_UPPER, true, false, true), LOWERCASE(
+		        RelationsConstants.STYLED_TEXT_ITEM_LIST_LOWER,
+		        RelationsConstants.STYLED_TEXT_COMMAND_LIST_LOWER,
+		        ST.BULLET_LETTER_LOWER, true, false, true);
 
 		private final String itemID;
 		private final String cmdID;
@@ -78,8 +78,8 @@ public final class Styles {
 		public boolean isBlock;
 
 		Style(final String inItemID, final String inCmdID, final int inBit,
-				final boolean inToggleStyle, final boolean inUnderline,
-				final boolean inBlockStyle) {
+		        final boolean inToggleStyle, final boolean inUnderline,
+		        final boolean inBlockStyle) {
 			itemID = inItemID;
 			cmdID = inCmdID;
 			styleBit = inBit;
@@ -146,7 +146,7 @@ public final class Styles {
 	 *         cursor position are active
 	 */
 	public static StyleParameter createStyleParameter(
-			final StyleRange inStyleRange, final Bullet inBullet) {
+	        final StyleRange inStyleRange, final Bullet inBullet) {
 		return new StyleParameter(inStyleRange, inBullet);
 	}
 
@@ -167,7 +167,7 @@ public final class Styles {
 	 * @return {@link StyleEvent}
 	 */
 	public static StyleEvent createStyleEvent(final Style inStyle,
-			final boolean inFormStyle, final boolean inFormatApply) {
+	        final boolean inFormStyle, final boolean inFormatApply) {
 		return new StyleEvent(inStyle, inFormStyle, inFormatApply);
 	}
 
@@ -189,7 +189,7 @@ public final class Styles {
 			lBulletText = ")"; //$NON-NLS-1$
 		}
 		final Bullet outBullet = new Bullet(inBulletStyle | lOr,
-				getDefaultRange(inWidth));
+		        getDefaultRange(inWidth));
 		outBullet.text = lBulletText;
 		return outBullet;
 	}
@@ -218,14 +218,14 @@ public final class Styles {
 	 * @return {@link PaintObjectListener}
 	 */
 	public static PaintObjectListener getPaintObjectListener(
-			final StyledText inWidget) {
+	        final StyledText inWidget) {
 		return new PaintObjectListener() {
 			@Override
 			public void paintObject(final PaintObjectEvent inEvent) {
 				final Display lDisplay = inEvent.display;
 				final StyleRange lStyle = inEvent.style;
 				final int lPosition = inEvent.x + lStyle.metrics.width
-						- BULLET_WIDTH + 2;
+				        - BULLET_WIDTH + 2;
 				Font lFont = lStyle.font;
 				if (lFont == null)
 					lFont = inWidget.getFont();
@@ -257,7 +257,7 @@ public final class Styles {
 		 * @param inBullet
 		 */
 		private StyleParameter(final StyleRange inStyleRange,
-				final Bullet inBullet) {
+		        final Bullet inBullet) {
 			toggleStates = new HashMap<Styles.Style, Boolean>(7);
 
 			// font styles
@@ -266,12 +266,12 @@ public final class Styles {
 				toggleStates.put(Style.ITALIC, Boolean.FALSE);
 				toggleStates.put(Style.UNDERLINE, Boolean.FALSE);
 			} else {
-				toggleStates.put(Style.BOLD, new Boolean(
-						(inStyleRange.fontStyle & SWT.BOLD) != 0));
-				toggleStates.put(Style.ITALIC, new Boolean(
-						(inStyleRange.fontStyle & SWT.ITALIC) != 0));
-				toggleStates.put(Style.UNDERLINE, new Boolean(
-						inStyleRange.underline));
+				toggleStates.put(Style.BOLD, Boolean
+				        .valueOf((inStyleRange.fontStyle & SWT.BOLD) != 0));
+				toggleStates.put(Style.ITALIC, Boolean
+				        .valueOf((inStyleRange.fontStyle & SWT.ITALIC) != 0));
+				toggleStates.put(Style.UNDERLINE,
+				        Boolean.valueOf(inStyleRange.underline));
 			}
 
 			// list styles
@@ -281,14 +281,16 @@ public final class Styles {
 				toggleStates.put(Style.UPPERCASE, Boolean.FALSE);
 				toggleStates.put(Style.LOWERCASE, Boolean.FALSE);
 			} else {
-				toggleStates.put(Style.UNORDERED, new Boolean(
-						(inBullet.type & ST.BULLET_DOT) != 0));
-				toggleStates.put(Style.NUMBERED, new Boolean(
-						(inBullet.type & ST.BULLET_CUSTOM) != 0));
-				toggleStates.put(Style.UPPERCASE, new Boolean(
-						(inBullet.type & ST.BULLET_LETTER_UPPER) != 0));
-				toggleStates.put(Style.LOWERCASE, new Boolean(
-						(inBullet.type & ST.BULLET_LETTER_LOWER) != 0));
+				toggleStates.put(Style.UNORDERED,
+				        Boolean.valueOf((inBullet.type & ST.BULLET_DOT) != 0));
+				toggleStates.put(Style.NUMBERED, Boolean
+				        .valueOf((inBullet.type & ST.BULLET_CUSTOM) != 0));
+				toggleStates
+				        .put(Style.UPPERCASE,
+				                Boolean.valueOf((inBullet.type & ST.BULLET_LETTER_UPPER) != 0));
+				toggleStates
+				        .put(Style.LOWERCASE,
+				                Boolean.valueOf((inBullet.type & ST.BULLET_LETTER_LOWER) != 0));
 			}
 		}
 
@@ -315,7 +317,7 @@ public final class Styles {
 		public final boolean isFormatNew;
 
 		private StyleEvent(final Style inStyle, final boolean inFormStyle,
-				final boolean inFormatNew) {
+		        final boolean inFormatNew) {
 			style = inStyle;
 			isFormStyle = inFormStyle;
 			isFormatNew = inFormatNew;
