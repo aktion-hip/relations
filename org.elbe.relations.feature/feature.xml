@@ -320,92 +320,99 @@ POSSIBILITY OF SUCH DAMAGES.
 
    <plugin
          id="org.elbe.relations.biblio.dft"
-         download-size="0"
-         install-size="0"
+         download-size="6"
+         install-size="6"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.elbe.relations.biblio.meta"
-         download-size="0"
-         install-size="0"
+         download-size="931"
+         install-size="931"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.elbe.relations.data"
-         download-size="0"
-         install-size="0"
+         download-size="96"
+         install-size="96"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.elbe.relations.defaultBrowser"
-         download-size="0"
-         install-size="0"
+         download-size="48"
+         install-size="48"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.elbe.relations.derby"
-         download-size="0"
-         install-size="0"
+         download-size="4"
+         install-size="4"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.elbe.relations.indexer.lucene"
-         download-size="0"
-         install-size="0"
+         download-size="870"
+         install-size="870"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.elbe.relations.mysql"
-         download-size="0"
-         install-size="0"
+         download-size="4"
+         install-size="4"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.elbe.relations.print.dft"
-         download-size="0"
-         install-size="0"
+         download-size="6"
+         install-size="6"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.elbe.relations.print.odt"
-         download-size="0"
-         install-size="0"
+         download-size="18"
+         install-size="18"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.hip.vif.dbaccess.derby"
-         download-size="0"
-         install-size="0"
+         download-size="6"
+         install-size="6"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.hip.vif.dbaccess.mysql"
-         download-size="0"
-         install-size="0"
+         download-size="4"
+         install-size="4"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.hip.viffw"
-         download-size="0"
-         install-size="0"
+         download-size="353"
+         install-size="353"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.elbe.relations.browser.finder"
-         download-size="0"
-         install-size="0"
+         download-size="32"
+         install-size="32"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.elbe.relations.help"
+         download-size="699"
+         install-size="699"
          version="0.0.0"
          unpack="false"/>
 
