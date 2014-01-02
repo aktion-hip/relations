@@ -182,7 +182,7 @@ public abstract class RelationsIndexer extends AbstractSearching {
 	 * @throws IOException
 	 */
 	public void deleteItemInIndex(final String inUniqueID) throws IOException {
-		getIndexer().deleteItemInIndex(inUniqueID, AbstractSearching.ITEM_ID,
+		getIndexer().deleteItemInIndex(inUniqueID, AbstractSearching.UNIQUE_ID,
 		        getIndexDir());
 	}
 

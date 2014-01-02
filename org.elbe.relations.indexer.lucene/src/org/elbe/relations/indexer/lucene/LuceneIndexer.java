@@ -282,7 +282,7 @@ public class LuceneIndexer implements IIndexer {
 			final int lDocID = lDocs[i].doc;
 			final Document lDocument = inSearcher.doc(lDocID);
 			out.add(new RetrievedItemWithIcon(new UniqueID(lDocument
-			        .get(AbstractSearching.ITEM_ID)), lDocument
+			        .get(AbstractSearching.UNIQUE_ID)), lDocument
 			        .get(AbstractSearching.TITLE)));
 		}
 		return out;
