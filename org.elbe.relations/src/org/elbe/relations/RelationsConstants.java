@@ -122,6 +122,14 @@ public final class RelationsConstants {
 	public static final String STYLED_TEXT_ITEM_LIST_UPPER = "relations.toolbar:text.styling.list.chars.upper"; //$NON-NLS-1$
 	public static final String STYLED_TEXT_ITEM_LIST_LOWER = "relations.toolbar:text.styling.list.chars.lower"; //$NON-NLS-1$
 
+	public static final String STYLED_TEXT_POPUP_BOLD = "inspector.popup:text.styling.bold"; //$NON-NLS-1$
+	public static final String STYLED_TEXT_POPUP_ITALIC = "inspector.popup:text.styling.italic"; //$NON-NLS-1$
+	public static final String STYLED_TEXT_POPUP_UNDERLINE = "inspector.popup:text.styling.underline"; //$NON-NLS-1$
+	public static final String STYLED_TEXT_POPUP_LIST_BULLET = "inspector.popup:text.styling.list.bullet"; //$NON-NLS-1$
+	public static final String STYLED_TEXT_POPUP_LIST_NUMBERED = "inspector.popup:text.styling.list.number"; //$NON-NLS-1$
+	public static final String STYLED_TEXT_POPUP_LIST_UPPER = "inspector.popup:text.styling.list.chars.upper"; //$NON-NLS-1$
+	public static final String STYLED_TEXT_POPUP_LIST_LOWER = "inspector.popup:text.styling.list.chars.lower"; //$NON-NLS-1$
+
 	public static final String STYLED_TEXT_COMMAND_BOLD = "org.elbe.relations.command.text.style.bold"; //$NON-NLS-1$
 	public static final String STYLED_TEXT_COMMAND_ITALIC = "org.elbe.relations.command.text.style.italic"; //$NON-NLS-1$
 	public static final String STYLED_TEXT_COMMAND_UNDERLINE = "org.elbe.relations.command.text.style.underline"; //$NON-NLS-1$

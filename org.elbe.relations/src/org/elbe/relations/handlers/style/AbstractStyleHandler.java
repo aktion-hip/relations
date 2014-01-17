@@ -44,6 +44,9 @@ import org.elbe.relations.internal.style.Styles.StyleParameter;
 public abstract class AbstractStyleHandler {
 	private static final String SELECTION_STATE = "selection.state"; //$NON-NLS-1$
 
+	private MHandledToolItem toolItem;
+	private final PopupHelper popupHelper = new PopupHelper();
+
 	@Inject
 	private IEventBroker eventBroker;
 
@@ -59,12 +62,15 @@ public abstract class AbstractStyleHandler {
 	@Inject
 	@Optional
 	void setButtonState(
-			@EventTopic(RelationsConstants.TOPIC_STYLE_CHANGED_INSPECTOR) final StyleParameter inStyleParameter,
-			final MApplication inApplication, final EModelService inModel) {
+	        @EventTopic(RelationsConstants.TOPIC_STYLE_CHANGED_INSPECTOR) final StyleParameter inStyleParameter,
+	        final MApplication inApplication, final EModelService inModel) {
 		final Boolean lState = inStyleParameter.getIsToggeled(getStyle());
 		final MHandledToolItem lItem = getToolItem(inApplication, inModel);
 		lItem.setSelected(lState);
 		lItem.getTransientData().put(SELECTION_STATE, lState);
+		// set the popup menu item's toggle state
+		popupHelper.setSelected(getStyle().getPopupID(), lState, inApplication,
+		        inModel);
 	}
 
 	/**
@@ -82,8 +88,8 @@ public abstract class AbstractStyleHandler {
 	 */
 	@Execute
 	public void execute(
-			@Optional @Named(RelationsConstants.PN_COMMAND_STYLE_SELECTION) final String inApplyStyleFlag,
-			final MApplication inApplication, final EModelService inModel) {
+	        @Optional @Named(RelationsConstants.PN_COMMAND_STYLE_SELECTION) final String inApplyStyleFlag,
+	        final MApplication inApplication, final EModelService inModel) {
 		boolean lApply = true;
 		if (inApplyStyleFlag == null) {
 			// inspector
@@ -93,9 +99,9 @@ public abstract class AbstractStyleHandler {
 			lApply = Boolean.parseBoolean(inApplyStyleFlag);
 		}
 		eventBroker
-				.post(RelationsConstants.TOPIC_STYLE_CHANGE_FORM, Styles
-						.createStyleEvent(getStyle(), inApplyStyleFlag != null,
-								lApply));
+		        .post(RelationsConstants.TOPIC_STYLE_CHANGE_FORM, Styles
+		                .createStyleEvent(getStyle(), inApplyStyleFlag != null,
+		                        lApply));
 	}
 
 	@CanExecute
@@ -104,18 +110,21 @@ public abstract class AbstractStyleHandler {
 	}
 
 	private boolean getStyleApplyForInspector(final MApplication inApplication,
-			final EModelService inModel) {
+	        final EModelService inModel) {
 		final MHandledToolItem lItem = getToolItem(inApplication, inModel);
 		final Boolean outOldState = (Boolean) lItem.getTransientData().get(
-				SELECTION_STATE);
+		        SELECTION_STATE);
 		lItem.getTransientData().put(SELECTION_STATE, !outOldState);
 		return !outOldState;
 	}
 
 	private MHandledToolItem getToolItem(final MApplication inApplication,
-			final EModelService inModel) {
-		return inModel.findElements(inApplication, getStyle().getItemID(),
-				MHandledToolItem.class, null).get(0);
+	        final EModelService inModel) {
+		if (toolItem == null) {
+			toolItem = (MHandledToolItem) inModel.find(getStyle().getItemID(),
+			        inApplication);
+		}
+		return toolItem;
 	}
 
 	abstract protected Style getStyle();

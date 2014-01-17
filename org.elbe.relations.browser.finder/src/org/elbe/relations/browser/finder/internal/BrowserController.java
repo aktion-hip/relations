@@ -29,11 +29,6 @@ import org.elbe.relations.services.IRelationsBrowser;
  */
 public class BrowserController implements IBrowserController {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IBrowserController#getBrowserClass()
-	 */
 	@Override
 	public Class<? extends IRelationsBrowser> getBrowserClass() {
 		return FinderBrowserPart.class;

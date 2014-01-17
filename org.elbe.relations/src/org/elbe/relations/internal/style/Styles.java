@@ -49,38 +49,48 @@ public final class Styles {
 	 */
 	public static enum Style {
 		BOLD(RelationsConstants.STYLED_TEXT_ITEM_BOLD,
+		        RelationsConstants.STYLED_TEXT_POPUP_BOLD,
 		        RelationsConstants.STYLED_TEXT_COMMAND_BOLD, SWT.BOLD, true,
 		        false, false), ITALIC(
 		        RelationsConstants.STYLED_TEXT_ITEM_ITALIC,
+		        RelationsConstants.STYLED_TEXT_POPUP_ITALIC,
 		        RelationsConstants.STYLED_TEXT_COMMAND_ITALIC, SWT.ITALIC,
 		        true, false, false), UNDERLINE(
 		        RelationsConstants.STYLED_TEXT_ITEM_UNDERLINE,
+		        RelationsConstants.STYLED_TEXT_POPUP_UNDERLINE,
 		        RelationsConstants.STYLED_TEXT_COMMAND_UNDERLINE, SWT.NORMAL,
 		        true, true, false), UNORDERED(
 		        RelationsConstants.STYLED_TEXT_ITEM_LIST_BULLET,
+		        RelationsConstants.STYLED_TEXT_POPUP_LIST_BULLET,
 		        RelationsConstants.STYLED_TEXT_COMMAND_LIST_BULLET,
 		        ST.BULLET_DOT, true, false, true), NUMBERED(
 		        RelationsConstants.STYLED_TEXT_ITEM_LIST_NUMBERED,
+		        RelationsConstants.STYLED_TEXT_POPUP_LIST_NUMBERED,
 		        RelationsConstants.STYLED_TEXT_COMMAND_LIST_NUMBERED,
 		        ST.BULLET_CUSTOM, true, false, true), UPPERCASE(
 		        RelationsConstants.STYLED_TEXT_ITEM_LIST_UPPER,
+		        RelationsConstants.STYLED_TEXT_POPUP_LIST_UPPER,
 		        RelationsConstants.STYLED_TEXT_COMMAND_LIST_UPPER,
 		        ST.BULLET_LETTER_UPPER, true, false, true), LOWERCASE(
 		        RelationsConstants.STYLED_TEXT_ITEM_LIST_LOWER,
+		        RelationsConstants.STYLED_TEXT_POPUP_LIST_LOWER,
 		        RelationsConstants.STYLED_TEXT_COMMAND_LIST_LOWER,
 		        ST.BULLET_LETTER_LOWER, true, false, true);
 
 		private final String itemID;
+		private final String popupID;
 		private final String cmdID;
 		private final int styleBit;
 		private final boolean toggleStyle;
 		public boolean underline;
 		public boolean isBlock;
 
-		Style(final String inItemID, final String inCmdID, final int inBit,
+		Style(final String inItemID, final String inPopupID,
+		        final String inCmdID, final int inBit,
 		        final boolean inToggleStyle, final boolean inUnderline,
 		        final boolean inBlockStyle) {
 			itemID = inItemID;
+			popupID = inPopupID;
 			cmdID = inCmdID;
 			styleBit = inBit;
 			toggleStyle = inToggleStyle;
@@ -101,6 +111,13 @@ public final class Styles {
 		 */
 		public String getItemID() {
 			return itemID;
+		}
+
+		/**
+		 * @return String the style's associated popup item's ID
+		 */
+		public String getPopupID() {
+			return popupID;
 		}
 
 		/**

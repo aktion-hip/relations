@@ -27,7 +27,11 @@ import javax.inject.Inject;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.CommandManager;
+import org.eclipse.core.commands.IParameter;
+import org.eclipse.core.commands.IParameterValues;
+import org.eclipse.core.commands.ParameterValuesException;
 import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
@@ -511,7 +515,7 @@ public abstract class AbstractEditForm {
 
 	/**
 	 * A special contribution item for the form's style bar and the styled
-	 * text's context menu.
+	 * text's context/popup menu.
 	 */
 	private static class StyleContributionItem extends ContributionItem {
 		private final ImageDescriptor icon;
@@ -528,7 +532,7 @@ public abstract class AbstractEditForm {
 		@Optional
 		private IEclipseContext context;
 
-		StyleContributionItem(final MHandledToolItem inElement,
+		protected StyleContributionItem(final MHandledToolItem inElement,
 		        final ISWTResourceUtilities inUtility,
 		        final EBindingService inBindingService,
 		        final CommandManager inCommandManager,
@@ -585,6 +589,9 @@ public abstract class AbstractEditForm {
 			widgetMenu.setImage(icon.createImage());
 			widgetMenu.addListener(SWT.Dispose, getItemListener());
 			widgetMenu.addListener(SWT.Selection, getItemListener());
+			if (widgetToolBar != null) {
+				widgetMenu.setSelection(widgetToolBar.getSelection());
+			}
 
 			if (sequence == null) {
 				widgetMenu.setText(tooltip);
@@ -632,7 +639,22 @@ public abstract class AbstractEditForm {
 				        widgetToolBar.getSelection() ? "false" : "true"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			handlerService.executeHandler(ParameterizedCommand.generateCommand(
-			        command.getCommand(), lParameters));
+			        adaptCommand(command), lParameters));
+		}
+
+		private Command adaptCommand(final ParameterizedCommand inCommand) {
+			final Command out = inCommand.getCommand();
+			try {
+				if (out.getParameters() == null) {
+					out.define(out.getName(), out.getDescription(),
+					        out.getCategory(),
+					        new IParameter[] { new ToolBarParameter() });
+				}
+			}
+			catch (final NotDefinedException exc) {
+				// intentionally left empty
+			}
+			return out;
 		}
 
 		protected void handleWidgetDispose(final Event inEvent) {
@@ -660,9 +682,10 @@ public abstract class AbstractEditForm {
 				if (inEnable) {
 					context.set(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE,
 					        "active"); //$NON-NLS-1$
-				} else {
-					context.remove(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE);
 				}
+			}
+			if (!inEnable && context != null) {
+				context.remove(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE);
 			}
 		}
 
@@ -848,4 +871,28 @@ public abstract class AbstractEditForm {
 			return out;
 		}
 	}
+
+	private static class ToolBarParameter implements IParameter {
+
+		@Override
+		public String getId() {
+			return RelationsConstants.PN_COMMAND_STYLE_SELECTION;
+		}
+
+		@Override
+		public String getName() {
+			return "style.parameter";
+		}
+
+		@Override
+		public IParameterValues getValues() throws ParameterValuesException {
+			return null;
+		}
+
+		@Override
+		public boolean isOptional() {
+			return true;
+		}
+	}
+
 }

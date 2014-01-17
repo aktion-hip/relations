@@ -169,7 +169,7 @@ public class InspectorView implements ISelectedTextProvider {
 		title.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(final FocusEvent inEvent) {
-				handleFocusGained();
+				handleFocusGained(false);
 			}
 
 			@Override
@@ -184,7 +184,7 @@ public class InspectorView implements ISelectedTextProvider {
 		styledText.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(final FocusEvent inEvent) {
-				handleFocusGained();
+				handleFocusGained(true);
 			}
 
 			@Override
@@ -205,8 +205,10 @@ public class InspectorView implements ISelectedTextProvider {
 		styledText.setDisabled();
 	}
 
-	private void handleFocusGained() {
-		context.set(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE, "active"); //$NON-NLS-1$
+	private void handleFocusGained(final boolean inIsTextField) {
+		if (inIsTextField) {
+			context.set(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE, "active"); //$NON-NLS-1$
+		}
 		eventBroker.post(RelationsConstants.TOPIC_STYLE_ITEMS_FORM,
 		        Boolean.TRUE);
 	}
@@ -264,8 +266,6 @@ public class InspectorView implements ISelectedTextProvider {
 	        final EMenuService inService,
 	        final EPartService inPartService,
 	        @Preference(value = RelationsConstants.ACTIVE_BROWSER_ID) @Optional final String inBrowserId) {
-		inService
-		        .registerContextMenu(title, RelationsConstants.POPUP_INSPECTOR);
 		inService.registerContextMenu(styledText.getControl(),
 		        RelationsConstants.POPUP_INSPECTOR);
 

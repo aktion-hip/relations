@@ -442,10 +442,12 @@ public class XMLImport {
 		}
 
 		public boolean testEndField(final String inName) throws SAXException {
-			if (field == null)
+			if (field == null) {
 				return false;
-			if (!field.getFieldName().equals(inName))
+			}
+			if (!field.getFieldName().equals(inName)) {
 				return false;
+			}
 
 			// e.g. "</ID>"
 			try {
@@ -489,6 +491,10 @@ public class XMLImport {
 		public boolean isListening() {
 			return field != null;
 		}
+
+		protected void setField(final IInsertField inField) {
+			field = inField;
+		}
 	}
 
 	private class TermInserter extends Inserter implements IEntryInserter {
@@ -513,9 +519,30 @@ public class XMLImport {
 	}
 
 	private class RelationInserter extends Inserter implements IEntryInserter {
+		private static final String ATT_NAME = "field";
+		private static final String FIELD_NAME1 = "NTYPE1";
+		private static final String FIELD_NAME2 = "NTYPE2";
+
 		public RelationInserter(final DomainObject inModel,
 		        final IInsertBehaviour inBehaviour) {
 			super(inModel, inBehaviour, 0);
+		}
+
+		@Override
+		public void initializeField(final String inName,
+		        final Attributes inAttributes,
+		        final boolean inCanSetIdentityField) {
+			// this is a workaround needed by the type change:
+			// old <Type1 field="NTYPE1" type="Number"> ->
+			// new <Type1 field="NTYPE1" type="Integer">
+			final String lFieldName = inAttributes.getValue(ATT_NAME);
+			if (FIELD_NAME1.equals(lFieldName)
+			        || FIELD_NAME2.equals(lFieldName)) {
+				setField(new IntegerField(inName));
+			} else {
+				super.initializeField(inName, inAttributes,
+				        inCanSetIdentityField);
+			}
 		}
 	}
 

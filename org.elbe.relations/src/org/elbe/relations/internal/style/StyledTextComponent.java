@@ -498,11 +498,6 @@ public class StyledTextComponent {
 			}
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.elbe.relations.style.StyleProvider#notifyPositionChange()
-		 */
 		public void notifyPositionChange(int inOffset) {
 			final int lLength = textWidget.getCharCount();
 
