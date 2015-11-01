@@ -109,7 +109,7 @@ public class XMLSerializerSpecial extends XMLSerializer {
 	private void processValue(final String inName, final String inValue) {
 		emit_nl();
 		emitStartTag(inName);
-		getBuffer().append(inValue);
+		getBuffer2().append(inValue);
 	}
 
 	/**

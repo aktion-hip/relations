@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.workbench.swt.modeling.EMenuService;
+import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.nebula.widgets.gallery.AbstractGalleryGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.AbstractGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.AbstractGridGroupRenderer;
@@ -61,7 +61,6 @@ import org.hip.kernel.exc.VException;
  * 
  * @author Luthiger
  */
-@SuppressWarnings("restriction")
 public class FinderPane {
 	private static final long TIME_LONG = 0xFFFFFFFFL;
 	private static final int ITEM_WIDTH_MIN = 170;

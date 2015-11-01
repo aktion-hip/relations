@@ -39,7 +39,7 @@ import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.PersistState;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.workbench.swt.modeling.EMenuService;
+import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;

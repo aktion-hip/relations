@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="org.elbe.relations" uid="Relations" id="org.elbe.relations.product" application="org.elbe.relations.RelationsApplication" version="2.0.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="org.elbe.relations" uid="Relations" id="org.elbe.relations.product" application="org.elbe.relations.RelationsApplication" version="2.1.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/org.elbe.relations/icons/aboutRelations.gif"/>
@@ -25,7 +25,8 @@ see http://www.eclipse.org/
    </configIni>
 
    <launcherArgs>
-      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
+      </vmArgsMac>
    </launcherArgs>
 
    <windowImages i16="icons/relations.gif" i32="icons/relations32.gif" i48="icons/relations48.gif"/>
@@ -344,13 +345,20 @@ POSSIBILITY OF SUCH DAMAGES.
    <features>
       <feature id="org.elbe.relations.feature" version="2.0.0.qualifier"/>
       <feature id="org.elbe.relations.add.feature" version="2.0.0.qualifier"/>
-      <feature id="org.eclipse.emf.ecore" version="2.9.1.v20130827-0309"/>
-      <feature id="org.eclipse.emf.common" version="2.9.1.v20130827-0309"/>
-      <feature id="org.eclipse.rcp" version="4.3.1.v20130911-1000"/>
-      <feature id="org.eclipse.e4.rcp" version="1.2.1.v20130910-2014"/>
-      <feature id="org.eclipse.help" version="2.0.1.v20130911-1000"/>
-      <feature id="org.eclipse.platform" version="4.3.1.v20130911-1000"/>
+      <feature id="org.eclipse.emf.ecore" version="2.11.1.v20150805-0538"/>
+      <feature id="org.eclipse.emf.common" version="2.11.0.v20150805-0538"/>
+      <feature id="org.eclipse.rcp" version="4.5.1.v20150904-0015"/>
+      <feature id="org.eclipse.e4.rcp" version="1.4.0.v20150903-1804"/>
+      <feature id="org.eclipse.help" version="2.1.1.v20150904-0015"/>
+      <feature id="org.eclipse.platform" version="4.5.1.v20150904-0015"/>
    </features>
 
+
+   <preferencesInfo>
+      <targetfile overwrite="false"/>
+   </preferencesInfo>
+
+   <cssInfo>
+   </cssInfo>
 
 </product>

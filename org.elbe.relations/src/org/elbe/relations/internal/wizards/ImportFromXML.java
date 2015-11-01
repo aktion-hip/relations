@@ -343,7 +343,7 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 
 				// update in chunks to improve performance
 				if (lUpdates.size() >= CHUNK_LEN) {
-					lStatement = new UpdateStatement(lHome);
+					lStatement = new UpdateStatement();
 					lStatement.setUpdates(lUpdates);
 					lStatement.executeUpdate();
 					lUpdates.clear();
@@ -356,7 +356,7 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 			}
 			// update the last chunk
 			if (lUpdates.size() > 0) {
-				lStatement = new UpdateStatement(lHome);
+				lStatement = new UpdateStatement();
 				lStatement.setUpdates(lUpdates);
 				lStatement.executeUpdate();
 			}

@@ -31,7 +31,7 @@ import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.workbench.swt.modeling.EMenuService;
+import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;

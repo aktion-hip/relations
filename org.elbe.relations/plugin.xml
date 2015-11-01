@@ -37,10 +37,6 @@
                value="3,275,449,15">
          </property>
          <property
-               name="preferenceCustomization"
-               value="plugin_customization.ini">
-         </property>
-         <property
                name="lifeCycleURI"
                value="bundleclass://org.elbe.relations/org.elbe.relations.internal.RelationsLifeCycle">
          </property>
@@ -55,6 +51,10 @@
          <property
                name="introBrandingImage"
                value="product:icons/RelationWare.png">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
          </property>
       </product>
    </extension>
@@ -311,25 +311,6 @@
             label="HPUX"
             os="hpux">
       </theme>
-   </extension>
-   <extension
-         point="org.eclipse.ui.intro">
-      <introProductBinding
-            introId="org.eclipse.ui.intro.universal"
-            productId="org.elbe.relations.product">
-      </introProductBinding>
-   </extension>
-   <extension
-         point="org.eclipse.ui.intro.configExtension">
-      <configExtension
-            configId="org.eclipse.ui.intro.universalConfig"
-            content="intro/introOverview.xml"/>
-      <configExtension
-            configId="org.eclipse.ui.intro.universalConfig"
-            content="intro/introFirststeps.xml"/>
-      <configExtension
-            configId="org.eclipse.ui.intro.universalConfig"
-            content="intro/introWhatsNew.xml"/>
    </extension>
    <extension
          point="org.eclipse.ui.contexts">
@@ -733,5 +714,27 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+DEL">
       </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro">
+      <introProductBinding
+            introId="org.eclipse.ui.intro.universal"
+            productId="org.elbe.relations.product">
+      </introProductBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.configExtension">
+      <configExtension
+            configId="org.eclipse.ui.intro.universalConfig"
+            content="intro/introOverview.xml">
+      </configExtension>
+      <configExtension
+            configId="org.eclipse.ui.intro.universalConfig"
+            content="intro/introFirststeps.xml">
+      </configExtension>
+      <configExtension
+            configId="org.eclipse.ui.intro.universalConfig"
+            content="intro/introWhatsNew.xml">
+      </configExtension>
    </extension>
 </plugin>
