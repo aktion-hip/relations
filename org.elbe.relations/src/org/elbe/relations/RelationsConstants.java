@@ -62,7 +62,8 @@ public final class RelationsConstants {
 	public static final String PREFERENCE_NODE_DIALOG = "org.elbe.relations.dialogsettings"; //$NON-NLS-1$
 	public final static String DFT_LANGUAGE = Locale.ENGLISH.getLanguage();
 	public final static String DFT_DB_EMBEDDED = "default_db"; //$NON-NLS-1$
-	public static final String DFT_DBCONFIG_PLUGIN_ID = "org.apache.derby.jdbc.EmbeddedDriver/Derby (embedded)/10.5.1.1"; //$NON-NLS-1$
+	// TODO: adjust for new version
+	public static final String DFT_DBCONFIG_PLUGIN_ID = "org.apache.derby.jdbc.EmbeddedDriver/Derby (embedded)/10.9.1.0_1"; //$NON-NLS-1$
 	public static final String DFT_BIBLIO_SCHEMA_ID = "relations.bibliography.standard.en"; //$NON-NLS-1$
 	public static final String DFT_PRINT_OUT_PLUGIN_ID = "org.elbe.relations.print.dft"; //$NON-NLS-1$
 	public static final int DFT_MAX_SEARCH_HITS = 100;

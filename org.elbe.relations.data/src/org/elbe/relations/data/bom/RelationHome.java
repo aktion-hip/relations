@@ -62,7 +62,7 @@ public class RelationHome extends DomainObjectHomeImpl implements
 	        + "		</propertyDef>	"
 	        + "		<propertyDef propertyName='"
 	        + KEY_TYPE1
-	        + "' valueType='Integer' propertyType='simple'>	"
+	        + "' valueType='Number' propertyType='simple'>	"
 	        + "			<mappingDef tableName='tblRelation' columnName='NTYPE1'/>	"
 	        + "		</propertyDef>	"
 	        + "		<propertyDef propertyName='"
@@ -72,7 +72,7 @@ public class RelationHome extends DomainObjectHomeImpl implements
 	        + "		</propertyDef>	"
 	        + "		<propertyDef propertyName='"
 	        + KEY_TYPE2
-	        + "' valueType='Integer' propertyType='simple'>	"
+	        + "' valueType='Number' propertyType='simple'>	"
 	        + "			<mappingDef tableName='tblRelation' columnName='NTYPE2'/>	"
 	        + "		</propertyDef>	"
 	        + "		<propertyDef propertyName='"

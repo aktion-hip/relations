@@ -38,6 +38,7 @@ import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.PersistState;
 import org.eclipse.e4.ui.di.UIEventTopic;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.gef.EditDomain;
@@ -102,6 +103,9 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 
 	@Inject
 	private Logger log;
+	
+	@Inject
+	private UISynchronize sync;
 
 	private IEclipseContext context;
 	private MApplication application;
@@ -256,7 +260,12 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 		if (viewer == null) {
 			return;
 		}
-		viewer.setContents(model);
+		sync.syncExec(new Runnable() {			
+			@Override
+			public void run() {
+				viewer.setContents(model);
+			}
+		});
 		if (model == null)
 			return;
 

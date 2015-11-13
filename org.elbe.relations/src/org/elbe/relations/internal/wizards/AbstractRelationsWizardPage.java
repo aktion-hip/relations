@@ -90,7 +90,9 @@ public abstract class AbstractRelationsWizardPage extends WizardPage {
 
 	@Override
 	public void dispose() {
-		getForm().dispose();
+		if (getForm() != null) {			
+			getForm().dispose();
+		}
 		super.dispose();
 	}
 

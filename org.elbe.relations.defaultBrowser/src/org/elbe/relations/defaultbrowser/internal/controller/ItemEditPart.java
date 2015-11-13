@@ -35,6 +35,7 @@ import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.core.services.log.Logger;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.NodeEditPart;
@@ -73,6 +74,9 @@ public class ItemEditPart extends AbstractGraphicalEditPart implements
 
 	@Inject
 	private IEventBroker eventBroker;
+	
+	@Inject
+	private UISynchronize sync;
 
 	/**
 	 * Factory method to create an instance of <code>ItemEditPart</code>.
@@ -185,12 +189,22 @@ public class ItemEditPart extends AbstractGraphicalEditPart implements
 		        new SelectionEditPolicy() {
 			        @Override
 			        protected void showSelection() {
-				        ((ItemFigure) getHostFigure()).changeColor(true);
+			        	sync.syncExec(new Runnable() {							
+							@Override
+							public void run() {
+								((ItemFigure) getHostFigure()).changeColor(true);
+							}
+						});
 			        }
 
 			        @Override
 			        protected void hideSelection() {
-				        ((ItemFigure) getHostFigure()).changeColor(false);
+			        	sync.syncExec(new Runnable() {							
+			        		@Override
+			        		public void run() {
+			        			((ItemFigure) getHostFigure()).changeColor(false);
+			        		}
+			        	});
 			        }
 		        });
 	}

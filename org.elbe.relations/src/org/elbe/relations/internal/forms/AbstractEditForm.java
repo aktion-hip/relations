@@ -728,6 +728,7 @@ public abstract class AbstractEditForm {
 			context.set(Composite.class, inParent);
 			final ResizeFontControl control = ContextInjectionFactory.make(
 			        ResizeFontControl.class, context);
+			control.createWidget(inParent);
 			toolItem.setWidth(control.getControl().computeSize(SWT.DEFAULT,
 			        SWT.DEFAULT, true).x);
 			toolItem.setControl(control.getControl());

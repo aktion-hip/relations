@@ -46,7 +46,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         lConfigurer.setShowCoolBar(true);
         lConfigurer.setShowStatusLine(true);
         lConfigurer.setShowProgressIndicator(true);
-        lConfigurer.setShowFastViewBars(true);
+//        lConfigurer.setShowFastViewBars(true);
         lConfigurer.setShowMenuBar(true);
 		lConfigurer.setTitle(RelationsMessages.getString("RelationsWorkbenchWindowAdvisor.main.title"));		 //$NON-NLS-1$
     }
