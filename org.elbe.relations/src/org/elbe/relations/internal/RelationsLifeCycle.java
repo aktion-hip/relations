@@ -47,6 +47,7 @@ import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.db.IDataService;
 import org.elbe.relations.handlers.DbEmbeddedCreateHandler;
+import org.elbe.relations.handlers.ShowTextItemForm;
 import org.elbe.relations.internal.controller.RelationsBrowserManager;
 import org.elbe.relations.internal.data.DBSettings;
 import org.elbe.relations.internal.data.DataService;
@@ -94,10 +95,11 @@ public class RelationsLifeCycle {
 	        final IEventBroker inEventBroker) {
 
 		// set db settings and controller to workspace context
-		if (dbSettings != null && inContext.get(DBSettings.class) == null) {
-			inContext.set(DBSettings.class, dbSettings);
+		if (this.dbSettings != null
+		        && inContext.get(DBSettings.class) == null) {
+			inContext.set(DBSettings.class, this.dbSettings);
 		}
-		ContextInjectionFactory.inject(dbController, inContext);
+		ContextInjectionFactory.inject(this.dbController, inContext);
 
 		// set DataSourceRegistry to eclipse context to make instance available
 		// in application
@@ -112,52 +114,54 @@ public class RelationsLifeCycle {
 		        ContextInjectionFactory.make(LanguageService.class, inContext));
 
 		// set a suitable implementation of the IDataService to the context
-		final DataService lDataService = ContextInjectionFactory.make(
-		        DataService.class, inContext);
+		final DataService lDataService = ContextInjectionFactory
+		        .make(DataService.class, inContext);
 		inContext.set(IDataService.class, lDataService);
 
 		// set a suitable implementation of the IBrowserManager to the context
-		browserManager = ContextInjectionFactory.make(
-		        RelationsBrowserManager.class, inContext);
-		inContext.set(IBrowserManager.class, browserManager);
+		this.browserManager = ContextInjectionFactory
+		        .make(RelationsBrowserManager.class, inContext);
+		inContext.set(IBrowserManager.class, this.browserManager);
+
+		// register a special event handler
+		inEventBroker.subscribe(ShowTextItemForm.TOPIC, new ShowTextItemForm());
 
 		boolean lDBConfigured = false;
-		if (dbSettings.getDBConnectionConfig().isEmbedded()
-		        && RelationsConstants.DFT_DBCONFIG_PLUGIN_ID.equals(dbSettings
-		                .getDBConnectionConfig().getName())) {
+		if (this.dbSettings.getDBConnectionConfig().isEmbedded()
+		        && RelationsConstants.DFT_DBCONFIG_PLUGIN_ID.equals(
+		                this.dbSettings.getDBConnectionConfig().getName())) {
 			// check existence of default database and create one, if needed
 			if (!EmbeddedCatalogHelper.hasDefaultEmbedded()) { // NOPMD
-				if (dbController.checkEmbedded()) {
-					lDbAccess
-					        .setActiveConfiguration(createDftDBAccessConfiguration());
+				if (this.dbController.checkEmbedded()) {
+					lDbAccess.setActiveConfiguration(
+					        createDftDBAccessConfiguration());
 					lDBConfigured = true;
 					final DbEmbeddedCreateHandler lDBCreate = ContextInjectionFactory
 					        .make(DbEmbeddedCreateHandler.class, inContext);
-					lDBCreate.execute(dbSettings, inContext);
+					lDBCreate.execute(this.dbSettings, inContext);
 
 				} else {
-					MessageDialog
-					        .openError(
-					                new Shell(Display.getDefault()),
-					                RelationsMessages
-					                        .getString("relations.life.cycle.db.open.error.title"), //$NON-NLS-1$
-					                RelationsMessages
-					                        .getString("relations.life.cycle.db.open.error.msg")); //$NON-NLS-1$
+					MessageDialog.openError(new Shell(Display.getDefault()),
+					        RelationsMessages.getString(
+					                "relations.life.cycle.db.open.error.title"), //$NON-NLS-1$
+					        RelationsMessages.getString(
+					                "relations.life.cycle.db.open.error.msg")); //$NON-NLS-1$
 				}
 			}
 		}
 		if (!lDBConfigured) {
-			lDbAccess.setActiveConfiguration(ActionHelper
-			        .createDBConfiguration(dbSettings));
+			lDbAccess.setActiveConfiguration(
+			        ActionHelper.createDBConfiguration(this.dbSettings));
 		}
 		lDataService.loadData(RelationsConstants.TOPIC_DB_CHANGED_RELOAD);
 
-		EmbeddedCatalogHelper.reindexChecked(dbSettings, inContext);
+		EmbeddedCatalogHelper.reindexChecked(this.dbSettings, inContext);
 	}
 
 	private DBAccessConfiguration createDftDBAccessConfiguration() {
 		return new DBAccessConfiguration(
-		        RelationsConstants.DFT_DBCONFIG_PLUGIN_ID, "./" //$NON-NLS-1$
+		        RelationsConstants.DFT_DBCONFIG_PLUGIN_ID,
+		        "./" //$NON-NLS-1$
 		                + RelationsConstants.DERBY_STORE + "/" //$NON-NLS-1$
 		                + RelationsConstants.DFT_DB_EMBEDDED,
 		        EmbeddedCatalogHelper.getEmbeddedDftDBChecked(), "", ""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -165,7 +169,7 @@ public class RelationsLifeCycle {
 
 	@ProcessAdditions
 	void doRestore() {
-		browserManager.restoreState(preferences);
+		this.browserManager.restoreState(this.preferences);
 	}
 
 	@ProcessRemovals
@@ -179,7 +183,7 @@ public class RelationsLifeCycle {
 		final IArtifactRepositoryManager lArtifactManager = (IArtifactRepositoryManager) inAgent
 		        .getService(IArtifactRepositoryManager.SERVICE_NAME);
 		if (lMetadataManager == null || lArtifactManager == null) {
-			log.warn("P2 metadata/artifact manager is null!"); //$NON-NLS-1$
+			this.log.warn("P2 metadata/artifact manager is null!"); //$NON-NLS-1$
 			return;
 		}
 
@@ -189,7 +193,7 @@ public class RelationsLifeCycle {
 			lArtifactManager.addRepository(lURI);
 		}
 		catch (final URISyntaxException exc) {
-			log.error(exc, exc.getMessage());
+			this.log.error(exc, exc.getMessage());
 		}
 	}
 
@@ -207,17 +211,17 @@ public class RelationsLifeCycle {
 		final MElementContainer<MUIElement> lBrowserStack = (MElementContainer<MUIElement>) inModelService
 		        .find(RelationsConstants.PART_STACK_BROWSERS, inApplication);
 		final MUIElement lBrowser = lBrowserStack.getSelectedElement();
-		preferences.put(RelationsConstants.ACTIVE_BROWSER_ID,
+		this.preferences.put(RelationsConstants.ACTIVE_BROWSER_ID,
 		        lBrowser.getElementId());
 
 		// save browser model
-		browserManager.saveState(preferences);
+		this.browserManager.saveState(this.preferences);
 		// flush preferences
 		try {
-			preferences.flush();
+			this.preferences.flush();
 		}
 		catch (final BackingStoreException exc) {
-			log.error(exc, exc.getMessage());
+			this.log.error(exc, exc.getMessage());
 		}
 	}
 

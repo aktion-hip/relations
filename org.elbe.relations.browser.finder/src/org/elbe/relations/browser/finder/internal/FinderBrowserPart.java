@@ -81,139 +81,134 @@ public class FinderBrowserPart implements IRelationsBrowser {
 	private Logger log;
 
 	@PostConstruct
-	void createControls(final Composite inParent,
-	        final IEclipseContext inContext, final EMenuService inService,
-	        final MApplication inApplication,
-	        final IBrowserManager inBrowserManager) {
-		context = inContext;
-		browserManager = inBrowserManager;
+	void createControls(final Composite inParent, final IEclipseContext inContext, final EMenuService inService,
+			final MApplication inApplication, final IBrowserManager inBrowserManager) {
+		this.context = inContext;
+		this.browserManager = inBrowserManager;
 
 		createForm(inParent, inService, inApplication);
 
-		visible = true;
-		setModel(browserManager.getCenterModel());
+		this.visible = true;
+		setModelToFinder(this.browserManager.getCenterModel());
+		setFocus();
 	}
 
-	private void createForm(final Composite inParent,
-	        final EMenuService inService, final MApplication inApplication) {
-		form = new SashForm(inParent, SWT.HORIZONTAL | SWT.SMOOTH);
-		finderCenter = new FinderPane(form, inService, inApplication,
-		        new BrowserCallback(), context, false);
-		finderRelated = new FinderPane(form, inService, inApplication,
-		        new BrowserCallback(), context, true);
-		focusPane = finderCenter;
-		form.setWeights(new int[] { 1, 3 });
+	private void createForm(final Composite inParent, final EMenuService inService, final MApplication inApplication) {
+		this.form = new SashForm(inParent, SWT.HORIZONTAL | SWT.SMOOTH);
+		this.finderCenter = new FinderPane(this.form, inService, inApplication, new BrowserCallback(), this.context,
+				false);
+		this.finderRelated = new FinderPane(this.form, inService, inApplication, new BrowserCallback(), this.context,
+				true);
+		this.focusPane = this.finderCenter;
+		this.form.setWeights(new int[] { 1, 3 });
 	}
 
 	@Focus
 	public void setFocus() {
-		if (model == null) {
+		if (this.model == null) {
 			return;
 		}
-		if (!initialized) {
-			initialized = true;
-			setModel(browserManager.getCenterModel());
+		if (!this.initialized) {
+			this.initialized = true;
+			setModelToFinder(this.browserManager.getCenterModel());
 			try {
-				selected = finderCenter.getSelected(model.getCenter());
-			}
-			catch (final VException exc) {
-				log.error(exc, exc.getMessage());
+				this.selected = this.finderCenter.getSelected(this.model.getCenter());
+			} catch (final VException exc) {
+				this.log.error(exc, exc.getMessage());
 			}
 		}
-		focusPane.setFocus();
+		this.focusPane.setFocus();
 	}
 
-	@Override
 	@Inject
 	@Optional
+	@Override
 	public void setModel(
-	        @UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SEND_CENTER_MODEL) final CentralAssociationsModel inModel) {
-		if (!visible) {
+			@UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SEND_CENTER_MODEL) final CentralAssociationsModel inModel) {
+		setModelToFinder(inModel);
+		setFocus();
+	}
+
+	private void setModelToFinder(final CentralAssociationsModel inModel) {
+		if (!this.visible) {
 			return;
 		}
-		model = inModel;
+		this.model = inModel;
 		if (inModel == null) {
 			clearView();
 		} else {
 			try {
 				updatePanes();
-				setFocus();
-			}
-			catch (final VException exc) {
-				log.error(exc, exc.getMessage());
+			} catch (final VException exc) {
+				this.log.error(exc, exc.getMessage());
 			}
 		}
 	}
 
 	private void updatePanes() throws VException {
-		finderCenter.update(model.getCenter());
-		finderRelated.update(model.getRelatedItems());
+		this.finderCenter.update(this.model.getCenter());
+		this.finderRelated.update(this.model.getRelatedItems());
 	}
 
 	private void clearView() {
-		finderCenter.clear();
-		finderRelated.clear();
-		form.redraw();
+		this.finderCenter.clear();
+		this.finderRelated.clear();
+		this.form.redraw();
 	}
 
 	@Override
 	@Inject
 	@Optional
 	public void syncSelected(
-	        @UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_SELECTED) final SelectedItemChangeEvent inEvent) {
-		// leave, if this browser is the source of the event
-		if (inEvent.checkSource(this)) {
-			return;
-		}
-		if (!visible) {
+			@UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_SELECTED) final SelectedItemChangeEvent inEvent) {
+		if (!this.visible) {
 			return;
 		}
 
 		final ItemAdapter lItem = inEvent.getItem();
-		if (model == null || lItem == null) {
+		if (this.model == null || lItem == null) {
 			clearView();
 			return;
 		}
 		try {
-			final FinderPane.GalleryItemAdapter lSelectedItem = finderCenter
-			        .getSelected(lItem);
+			final FinderPane.GalleryItemAdapter lSelectedItem = this.finderCenter.getSelected(lItem);
 			if (lSelectedItem == null) {
-				selected = finderRelated.getSelected(lItem);
-				focusPane = finderRelated;
+				this.selected = this.finderRelated.getSelected(lItem);
+				this.focusPane = this.finderRelated;
 			} else {
-				selected = lSelectedItem;
-				focusPane = finderCenter;
+				this.selected = lSelectedItem;
+				this.focusPane = this.finderCenter;
 			}
-			setFocus();
-		}
-		catch (final VException exc) {
-			log.error(exc, exc.getMessage());
+			if (!inEvent.checkSource(this)) {
+				setFocus();
+			}
+		} catch (final VException exc) {
+			this.log.error(exc, exc.getMessage());
 		}
 	}
 
 	@Inject
 	@Optional
-	void syncWithManager(
-	        @UIEventTopic(RelationsConstants.TOPIC_DB_CHANGED_RELOAD) final String inEvent) {
-		setModel(browserManager.getCenterModel());
+	void syncWithManager(@UIEventTopic(RelationsConstants.TOPIC_DB_CHANGED_RELOAD) final String inEvent) {
+		setModelToFinder(this.browserManager.getCenterModel());
+		setFocus();
 	}
 
 	@Override
 	@Inject
 	@Optional
 	public void syncContent(
-	        @UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_CONTENT) final ItemAdapter inItem) {
-		if (!visible) {
+			@UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_CONTENT) final ItemAdapter inItem) {
+		if (!this.visible) {
 			return;
 		}
-		if (selected == null || selected.isDisposed()) {
+		if (this.selected == null || this.selected.isDisposed()) {
 			return;
 		}
 		try {
-			selected.setText(inItem.getTitle());
-		}
-		catch (final VException exc) {
-			log.error(exc, exc.getMessage());
+			this.selected.setText(inItem.getTitle());
+		} catch (final VException exc) {
+			this.log.error(exc, exc.getMessage());
 		}
 	}
 
@@ -221,10 +216,10 @@ public class FinderBrowserPart implements IRelationsBrowser {
 	@Inject
 	@Optional
 	public void trackFontSize(
-	        @UIEventTopic("org_elbe_relations_browser_finder_internal_FinderBrowserPart") final int inFontSize) {
+			@UIEventTopic("org_elbe_relations_browser_finder_internal_FinderBrowserPart") final int inFontSize) {
 		if (inFontSize != 0) {
-			finderCenter.setFontSize(inFontSize);
-			finderRelated.setFontSize(inFontSize);
+			this.finderCenter.setFontSize(inFontSize);
+			this.finderRelated.setFontSize(inFontSize);
 		}
 	}
 
@@ -278,63 +273,51 @@ public class FinderBrowserPart implements IRelationsBrowser {
 	private class BrowserCallback implements IBrowserCallback {
 		@Override
 		public void focusPassOver(final FinderPane inPane) {
-			if (inPane != focusPane) {
+			if (inPane != FinderBrowserPart.this.focusPane) {
 				return;
 			}
-			focusPane = inPane == finderCenter ? finderRelated : finderCenter;
-			focusPane.setFocus();
+			FinderBrowserPart.this.focusPane = inPane == FinderBrowserPart.this.finderCenter
+					? FinderBrowserPart.this.finderRelated : FinderBrowserPart.this.finderCenter;
+			FinderBrowserPart.this.focusPane.setFocus();
 		}
 
 		@Override
 		public void focusRequest(final FinderPane inPane) {
-			if (inPane == focusPane) {
+			if (inPane == FinderBrowserPart.this.focusPane) {
 				return;
 			}
-			focusPane = inPane;
-			focusPane.setFocus();
+			FinderBrowserPart.this.focusPane = inPane;
+			FinderBrowserPart.this.focusPane.setFocus();
 		}
 
 		@Override
 		public void centerSelected(final FinderPane inPane) {
-			if (inPane == finderCenter) {
-				focusPane = finderRelated;
-				focusPane.setFocus();
+			if (inPane == FinderBrowserPart.this.finderCenter) {
+				FinderBrowserPart.this.focusPane = FinderBrowserPart.this.finderRelated;
+				FinderBrowserPart.this.focusPane.setFocus();
 			} else {
-				focusPane = finderCenter;
-
-				// first, we have to make sure that the item is selected
-				eventBroker
-				        .send(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED,
-				                new SelectedItemChangeEvent(inPane
-				                        .getSelected().getRelationsItem(),
-				                        FinderBrowserPart.this));
-				handlerService.executeHandler(new ParameterizedCommand(
-				        commandManager.getCommand(ICommandIds.CMD_ITEM_CENTER),
-				        null));
+				FinderBrowserPart.this.focusPane = FinderBrowserPart.this.finderCenter;
+				FinderBrowserPart.this.handlerService.executeHandler(new ParameterizedCommand(
+						FinderBrowserPart.this.commandManager.getCommand(ICommandIds.CMD_ITEM_CENTER), null));
 			}
 		}
 
 		@Override
 		public void selectionChange(final ItemAdapter inItem) {
-			final FinderPane lPreviousFocus = focusPane;
-			eventBroker
-			        .send(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED,
-			                new SelectedItemChangeEvent(inItem,
-			                        FinderBrowserPart.this));
-			if (focusPane != lPreviousFocus) {
-				focusPane.setFocusEnforced();
+			final FinderPane lPreviousFocus = FinderBrowserPart.this.focusPane;
+			FinderBrowserPart.this.eventBroker.send(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED,
+					new SelectedItemChangeEvent(inItem, FinderBrowserPart.this));
+			if (FinderBrowserPart.this.focusPane != lPreviousFocus) {
+				FinderBrowserPart.this.focusPane.setFocusEnforced();
 			}
 		}
 
 		@Override
 		public void editSelected(final FinderPane inPane) {
-			eventBroker.send(
-			        RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED,
-			        new SelectedItemChangeEvent(inPane.getSelected()
-			                .getRelationsItem(), FinderBrowserPart.this));
-			handlerService
-			        .executeHandler(new ParameterizedCommand(commandManager
-			                .getCommand(ICommandIds.CMD_ITEM_EDIT), null));
+			FinderBrowserPart.this.eventBroker.send(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED,
+					new SelectedItemChangeEvent(inPane.getSelected().getRelationsItem(), FinderBrowserPart.this));
+			FinderBrowserPart.this.handlerService.executeHandler(new ParameterizedCommand(
+					FinderBrowserPart.this.commandManager.getCommand(ICommandIds.CMD_ITEM_EDIT), null));
 		}
 	}
 

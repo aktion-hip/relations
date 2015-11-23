@@ -40,8 +40,7 @@ import org.elbe.relations.services.IBrowserManager;
  * @author Luthiger Created on 14.11.2009
  */
 @SuppressWarnings("restriction")
-public class WebTransferDropTargetListener extends
-		AbstractTransferDropTargetListener {
+public class WebTransferDropTargetListener extends AbstractTransferDropTargetListener {
 	private EditPart editPart;
 
 	@Inject
@@ -62,8 +61,7 @@ public class WebTransferDropTargetListener extends
 	 * @param inTransfer
 	 *            Transfer
 	 */
-	public WebTransferDropTargetListener(final EditPartViewer inViewer,
-			final Transfer inTransfer) {
+	public WebTransferDropTargetListener(final EditPartViewer inViewer, final Transfer inTransfer) {
 		super(inViewer, inTransfer);
 	}
 
@@ -83,11 +81,9 @@ public class WebTransferDropTargetListener extends
 	 * @param inContext
 	 * @return {@link WebTransferDropTargetListener}
 	 */
-	public static WebTransferDropTargetListener create(
-			final EditPartViewer inViewer, final Transfer inTransfer,
+	public static WebTransferDropTargetListener create(final EditPartViewer inViewer, final Transfer inTransfer,
 			final IEclipseContext inContext) {
-		final WebTransferDropTargetListener out = new WebTransferDropTargetListener(
-				inViewer, inTransfer);
+		final WebTransferDropTargetListener out = new WebTransferDropTargetListener(inViewer, inTransfer);
 		ContextInjectionFactory.inject(out, inContext);
 		return out;
 	}
@@ -100,28 +96,19 @@ public class WebTransferDropTargetListener extends
 
 	@Override
 	protected void handleDrop() {
-		if (editPart != null) {
-			final IDropHandler lHandler = DropDataHelper.TransferDropHandler.URL_TRANSFER
-					.getHandler();
+		if (this.editPart != null) {
+			final IDropHandler lHandler = DropDataHelper.TransferDropHandler.URL_TRANSFER.getHandler();
 			try {
-				lHandler.handleDrop(getCurrentEvent().data, DropHelper
-						.getModel((ItemAdapter) editPart.getModel(),
-								browserManager, context), context);
-			}
-			catch (final Exception exc) {
-				log.error(exc, exc.getMessage());
+				lHandler.handleDrop(getCurrentEvent().data,
+						DropHelper.getModel((ItemAdapter) this.editPart.getModel(), this.browserManager, this.context),
+						this.context);
+			} catch (final Exception exc) {
+				this.log.error(exc, exc.getMessage());
 			}
 		}
 		super.handleDrop();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.gef.dnd.AbstractTransferDropTargetListener#updateTargetRequest
-	 * ()
-	 */
 	@Override
 	protected void updateTargetRequest() {
 		// nothing to do
@@ -130,13 +117,13 @@ public class WebTransferDropTargetListener extends
 	@Override
 	protected void handleEnteredEditPart() {
 		super.handleEnteredEditPart();
-		editPart = getTargetEditPart();
+		this.editPart = getTargetEditPart();
 	}
 
 	@Override
 	protected void handleExitingEditPart() {
 		super.handleExitingEditPart();
-		editPart = getTargetEditPart();
+		this.editPart = getTargetEditPart();
 	}
 
 }

@@ -65,19 +65,19 @@ public class XPathHelper {
 		SIMPLE(new ISerializerFactory() {
 			@Override
 			public org.htmlcleaner.XmlSerializer createSerializer(
-			        final CleanerProperties inProperties) {
+		            final CleanerProperties inProperties) {
 				return new SimpleXmlSerializer(inProperties);
 			}
 		}), PRETTY(new ISerializerFactory() {
 			@Override
 			public org.htmlcleaner.XmlSerializer createSerializer(
-			        final CleanerProperties inProperties) {
+		            final CleanerProperties inProperties) {
 				return new PrettyXmlSerializer(inProperties);
 			}
 		}), COMPACT(new ISerializerFactory() {
 			@Override
 			public org.htmlcleaner.XmlSerializer createSerializer(
-			        final CleanerProperties inProperties) {
+		            final CleanerProperties inProperties) {
 				return new CompactXmlSerializer(inProperties);
 			}
 		});
@@ -85,12 +85,12 @@ public class XPathHelper {
 		private ISerializerFactory factory;
 
 		XmlSerializer(final ISerializerFactory inFactory) {
-			factory = inFactory;
+			this.factory = inFactory;
 		}
 
 		public org.htmlcleaner.XmlSerializer getSerializer(
 		        final CleanerProperties inProperties) {
-			return factory.createSerializer(inProperties);
+			return this.factory.createSerializer(inProperties);
 		}
 	}
 
@@ -103,7 +103,7 @@ public class XPathHelper {
 	 */
 	private XPathHelper(final URL inUrl) throws IOException {
 		final HtmlCleaner lCleaner = new HtmlCleaner();
-		docNode = lCleaner.clean(inUrl, DEFAULT_CHARSET);
+		this.docNode = lCleaner.clean(inUrl, DEFAULT_CHARSET);
 	}
 
 	/**
@@ -176,11 +176,11 @@ public class XPathHelper {
 	 * @throws XPatherException
 	 */
 	public String getElement(final String inXPath) throws XPatherException {
-		if (docNode == null)
+		if (this.docNode == null)
 			return null;
-		final Object[] lResult = docNode.evaluateXPath(inXPath);
-		return lResult.length == 0 ? null : ((TagNode) lResult[0]).getText()
-		        .toString();
+		final Object[] lResult = this.docNode.evaluateXPath(inXPath);
+		return lResult.length == 0 ? null
+		        : ((TagNode) lResult[0]).getText().toString();
 	}
 
 	/**
@@ -212,11 +212,11 @@ public class XPathHelper {
 	 */
 	public String getAttribute(final String inXPath, final String inAttribute)
 	        throws XPatherException {
-		if (docNode == null)
+		if (this.docNode == null)
 			return null;
-		final Object[] lResult = docNode.evaluateXPath(inXPath);
-		return (lResult.length == 0) ? null : ((TagNode) lResult[0])
-		        .getAttributeByName(inAttribute);
+		final Object[] lResult = this.docNode.evaluateXPath(inXPath);
+		return (lResult.length == 0) ? null
+		        : ((TagNode) lResult[0]).getAttributeByName(inAttribute);
 	}
 
 	/**
@@ -234,7 +234,7 @@ public class XPathHelper {
 	 */
 	public static String getAttribute(final Document inDocument,
 	        final String inXPath, final String inAttribute)
-	        throws XPathExpressionException {
+	                throws XPathExpressionException {
 		final Element lElement = createElement(inDocument, inXPath);
 		return lElement == null ? null : lElement.getAttribute(inAttribute);
 	}
@@ -244,8 +244,8 @@ public class XPathHelper {
 		final XPathFactory lFactory = XPathFactory.newInstance();
 		final XPath lXPath = lFactory.newXPath();
 		final XPathExpression lXExpression = lXPath.compile(inXPath);
-		final Element lElement = (Element) lXExpression.evaluate(
-		        inDocument.getDocumentElement(), XPathConstants.NODE);
+		final Element lElement = (Element) lXExpression
+		        .evaluate(inDocument.getDocumentElement(), XPathConstants.NODE);
 		return lElement;
 	}
 
@@ -259,7 +259,7 @@ public class XPathHelper {
 	 */
 	public String getSerialized(final XmlSerializer inSerializer)
 	        throws IOException {
-		if (docNode == null)
+		if (this.docNode == null)
 			return ""; //$NON-NLS-1$
 
 		final CleanerProperties lProps = new HtmlCleaner().getProperties();
@@ -274,18 +274,19 @@ public class XPathHelper {
 		lProps.setOmitDoctypeDeclaration(true);
 		lProps.setOmitHtmlEnvelope(false);
 
-		docNode.getAttributes().remove(NS_XML);
+		this.docNode.getAttributes().remove(NS_XML);
 
-		return inSerializer.getSerializer(lProps).getXmlAsString(docNode);
+		return inSerializer.getSerializer(lProps).getXmlAsString(this.docNode);
 	}
 
 	/**
 	 * @return String the cleaned document's doctype
 	 */
 	public String getDocType() {
-		if (docNode == null)
+		if (this.docNode == null)
 			return ""; //$NON-NLS-1$
-		return docNode.getDocType() == null ? "" : docNode.getDocType().getContent(); //$NON-NLS-1$
+		return this.docNode.getDocType() == null ? "" //$NON-NLS-1$
+		        : this.docNode.getDocType().getContent();
 	}
 
 	private interface ISerializerFactory {
@@ -303,10 +304,10 @@ public class XPathHelper {
 	 * </pre>
 	 */
 	public void removeUnqualifiedLinks() {
-		if (docNode == null)
+		if (this.docNode == null)
 			return;
 
-		final TagNode[] lLinks = docNode.getElementsByName("link", true); //$NON-NLS-1$
+		final TagNode[] lLinks = this.docNode.getElementsByName("link", true); //$NON-NLS-1$
 		for (final TagNode lLink : lLinks) {
 			final String lRel = lLink.getAttributeByName("rel"); //$NON-NLS-1$
 			if (lRel.contains(" ")) { //$NON-NLS-1$

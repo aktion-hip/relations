@@ -46,30 +46,26 @@ public class TermEditWizard extends AbstractEditWizard {
 
 	@Override
 	public void addPages() {
-		page = ContextInjectionFactory.make(TermEditWizardPage.class, context);
-		page.setModel(getModel());
-		addPage(page);
+		this.page = ContextInjectionFactory.make(TermEditWizardPage.class,
+		        this.context);
+		this.page.setModel(getModel());
+		addPage(this.page);
 		addPages(getModel());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
-	 */
 	@Override
 	public boolean performFinish() {
 		try {
-			((IItemWizardPage) page).save();
+			((IItemWizardPage) this.page).save();
 			return super.performFinish();
 		}
 		catch (final BOMTruncationException exc) {
 			MessageDialog.openError(Display.getCurrent().getActiveShell(),
-					ERROR_DIALOG, exc.getMessage());
+			        ERROR_DIALOG, exc.getMessage());
 			return false;
 		}
 		catch (final BOMException exc) {
-			log.error(exc, exc.getMessage());
+			this.log.error(exc, exc.getMessage());
 			return false;
 		}
 	}
