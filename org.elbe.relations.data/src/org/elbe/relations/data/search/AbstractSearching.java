@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -27,7 +27,7 @@ import org.elbe.relations.data.internal.search.IndexerRegistration;
 
 /**
  * Provides basic functionality for full text search using lucene.
- * 
+ *
  * @author Luthiger Created on 14.11.2006
  */
 public abstract class AbstractSearching {
@@ -46,7 +46,7 @@ public abstract class AbstractSearching {
 
 	/**
 	 * AbstractSearching constructor.
-	 * 
+	 *
 	 * @param inIndexDir
 	 *            String the name of the index, i.e. the directory where the
 	 *            index is stored.
@@ -67,8 +67,7 @@ public abstract class AbstractSearching {
 		if (cDirectoryFactory == null) {
 			try {
 				cDirectoryFactory = new FileSystemDirectoryFactory();
-			}
-			catch (final IllegalStateException exc) {
+			} catch (final IllegalStateException exc) {
 				// For testing purpose, we use an index stored in the temporary
 				// directory.
 				cDirectoryFactory = new TempDirectoryFactory();
@@ -79,7 +78,7 @@ public abstract class AbstractSearching {
 
 	/**
 	 * Returns the number of documents actually indexed.
-	 * 
+	 *
 	 * @return int Number of documents in the index.
 	 * @throws IOException
 	 */
@@ -111,8 +110,7 @@ public abstract class AbstractSearching {
 
 		@Override
 		public File getDirectory(final String inIndexName) throws IOException {
-			final File lIndexContainer = checkDir(new File(root,
-			        Constants.LUCENE_STORE));
+			final File lIndexContainer = checkDir(new File(root, Constants.LUCENE_STORE));
 			return checkDir(new File(lIndexContainer, inIndexName));
 		}
 
@@ -124,14 +122,12 @@ public abstract class AbstractSearching {
 		}
 
 		protected File getRoot() {
-			return ResourcesPlugin.getWorkspace().getRoot().getLocation()
-			        .toFile();
+			return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
 		}
 
 		@Override
 		public File getIndexContainer(final String inIndexName) {
-			final File lIndexContainer = checkDir(new File(root,
-			        Constants.LUCENE_STORE));
+			final File lIndexContainer = checkDir(new File(root, Constants.LUCENE_STORE));
 			return checkDir(new File(lIndexContainer, inIndexName));
 		}
 	}

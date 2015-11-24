@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -21,25 +21,26 @@ package org.elbe.relations.indexer.lucene;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import org.elbe.relations.data.Constants;
 
 /**
  * Utility class for testing purpose, provides helper methods for managing the
  * search index.
- * 
+ *
  * @author lbenno
  */
 public class IndexHouseKeeper {
-	public final static File ROOT = new File(
-	        System.getProperty("java.io.tmpdir"));
+	public final static File ROOT = new File(System.getProperty("java.io.tmpdir"));
 	public final static String INDEX_DIR = "rel_test";
+	public static final String LANGUAGE = Locale.ENGLISH.getLanguage();
 
 	private LuceneIndexer index;
 
 	public void setUp() throws IOException {
 		index = new LuceneIndexer();
-		index.initializeIndex(getDirectory());
+		index.initializeIndex(getDirectory(), LANGUAGE);
 		// IndexerRegistration.getInstance().register(index);
 	}
 
@@ -52,8 +53,7 @@ public class IndexHouseKeeper {
 	// ---
 
 	public static File getDirectory() throws IOException {
-		final File lIndexContainer = checkDir(new File(ROOT,
-		        Constants.LUCENE_STORE));
+		final File lIndexContainer = checkDir(new File(ROOT, Constants.LUCENE_STORE));
 		return checkDir(new File(lIndexContainer, INDEX_DIR));
 	}
 

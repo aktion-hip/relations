@@ -1,6 +1,6 @@
-/*
+/**
 This package is part of Relations project.
-Copyright (C) 2006, Benno Luthiger
+Copyright (C) 2006-2016, Benno Luthiger
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public
@@ -38,7 +38,7 @@ import org.hip.kernel.exc.VException;
 /**
  * Class to be used to (re-) create the search index on the current database
  * items.
- * 
+ *
  * @author Luthiger Created on 14.11.2006
  */
 public abstract class RelationsIndexer extends AbstractSearching {
@@ -47,7 +47,7 @@ public abstract class RelationsIndexer extends AbstractSearching {
 
 	/**
 	 * RelationsIndexer constructor
-	 * 
+	 *
 	 * @param String
 	 *            The name of the index (i.e. the database name)
 	 */
@@ -57,7 +57,7 @@ public abstract class RelationsIndexer extends AbstractSearching {
 
 	/**
 	 * Refreshes the search index for the current database.
-	 * 
+	 *
 	 * @param inMonitor
 	 *            IProgressMonitor
 	 * @return int number of indexed items
@@ -65,67 +65,55 @@ public abstract class RelationsIndexer extends AbstractSearching {
 	 * @throws VException
 	 * @throws SQLException
 	 */
-	public int refreshIndex(final IProgressMonitor inMonitor)
-	        throws IOException, VException, SQLException {
+	public int refreshIndex(final IProgressMonitor inMonitor) throws IOException, VException, SQLException {
 		return doIndex(new IndexerHelper(), inMonitor, getIndexer());
 	}
 
-	protected int doIndex(final IndexerHelper inIndexHelper,
-	        final IProgressMonitor inMonitor, final IIndexer inIndexer)
-	        throws VException, SQLException, IOException {
+	protected int doIndex(final IndexerHelper inIndexHelper, final IProgressMonitor inMonitor, final IIndexer inIndexer)
+			throws VException, SQLException, IOException {
 		final SubMonitor lProgress = SubMonitor.convert(inMonitor, 100);
 		int outIndexed = 0;
-		inIndexer.initializeIndex(getIndexDir());
+		inIndexer.initializeIndex(getIndexDir(), getLanguage());
 
 		inMonitor.subTask(Messages.getString("RelationsIndexer.task.term")); //$NON-NLS-1$
-		outIndexed += indexTerms(inIndexHelper, lProgress.newChild(34),
-		        inIndexer);
-		if (inMonitor.isCanceled())
+		outIndexed += indexTerms(inIndexHelper, lProgress.newChild(34), inIndexer);
+		if (inMonitor.isCanceled()) {
 			return outIndexed;
+		}
 
 		inMonitor.subTask(Messages.getString("RelationsIndexer.task.text")); //$NON-NLS-1$
-		outIndexed += indexTexts(inIndexHelper, lProgress.newChild(33),
-		        inIndexer);
-		if (inMonitor.isCanceled())
+		outIndexed += indexTexts(inIndexHelper, lProgress.newChild(33), inIndexer);
+		if (inMonitor.isCanceled()) {
 			return outIndexed;
+		}
 
 		inMonitor.subTask(Messages.getString("RelationsIndexer.task.person")); //$NON-NLS-1$
-		outIndexed += indexPersons(inIndexHelper, lProgress.newChild(33),
-		        inIndexer);
+		outIndexed += indexPersons(inIndexHelper, lProgress.newChild(33), inIndexer);
 		return outIndexed;
 	}
 
-	private int indexTerms(final IndexerHelper inIndexHelper,
-	        final IProgressMonitor inMonitor, final IIndexer inIndexer)
-	        throws VException, SQLException, IOException {
-		return processSelection(inIndexHelper, BOMHelper.getTermHome(),
-		        inMonitor, inIndexer);
+	private int indexTerms(final IndexerHelper inIndexHelper, final IProgressMonitor inMonitor,
+			final IIndexer inIndexer) throws VException, SQLException, IOException {
+		return processSelection(inIndexHelper, BOMHelper.getTermHome(), inMonitor, inIndexer);
 	}
 
-	private int indexTexts(final IndexerHelper inIndexHelper,
-	        final IProgressMonitor inMonitor, final IIndexer inIndexer)
-	        throws VException, SQLException, IOException {
-		return processSelection(inIndexHelper, BOMHelper.getTextHome(),
-		        inMonitor, inIndexer);
+	private int indexTexts(final IndexerHelper inIndexHelper, final IProgressMonitor inMonitor,
+			final IIndexer inIndexer) throws VException, SQLException, IOException {
+		return processSelection(inIndexHelper, BOMHelper.getTextHome(), inMonitor, inIndexer);
 	}
 
-	private int indexPersons(final IndexerHelper inIndexHelper,
-	        final IProgressMonitor inMonitor, final IIndexer inIndexer)
-	        throws VException, SQLException, IOException {
-		return processSelection(inIndexHelper, BOMHelper.getPersonHome(),
-		        inMonitor, inIndexer);
+	private int indexPersons(final IndexerHelper inIndexHelper, final IProgressMonitor inMonitor,
+			final IIndexer inIndexer) throws VException, SQLException, IOException {
+		return processSelection(inIndexHelper, BOMHelper.getPersonHome(), inMonitor, inIndexer);
 	}
 
-	protected int processSelection(final IndexerHelper inIndexHelper,
-	        final GeneralDomainObjectHome inHome,
-	        final IProgressMonitor inMonitor, final IIndexer inIndexer)
-	        throws VException, SQLException, IOException {
+	protected int processSelection(final IndexerHelper inIndexHelper, final GeneralDomainObjectHome inHome,
+			final IProgressMonitor inMonitor, final IIndexer inIndexer) throws VException, SQLException, IOException {
 		final SubMonitor lProgress = SubMonitor.convert(inMonitor, 100);
 		int outNumberOfIndexed = 0;
 		final QueryResult lResult = inHome.select();
 		while (lResult.hasMoreElements()) {
-			final IIndexable lIndexable = (IIndexable) lResult
-			        .nextAsDomainObject();
+			final IIndexable lIndexable = (IIndexable) lResult.nextAsDomainObject();
 			lIndexable.indexContent(inIndexHelper);
 			((DomainObject) lIndexable).release();
 
@@ -144,8 +132,7 @@ public abstract class RelationsIndexer extends AbstractSearching {
 		return outNumberOfIndexed;
 	}
 
-	private void processIndexer(final IIndexer inIndexer,
-	        final IndexerHelper inIndexHelper) throws IOException {
+	private void processIndexer(final IIndexer inIndexer, final IndexerHelper inIndexHelper) throws IOException {
 		inIndexer.processIndexer(inIndexHelper, getIndexDir(), getLanguage());
 		inIndexHelper.reset();
 	}
@@ -154,7 +141,7 @@ public abstract class RelationsIndexer extends AbstractSearching {
 	 * Adds an <code>Indexable</code> to this search index. This method has to
 	 * be called when a new instance of an Indexable object is created, i.e.
 	 * stored in the database.
-	 * 
+	 *
 	 * @param inIndexable
 	 *            {@link IIndexable}
 	 * @throws BOMException
@@ -162,43 +149,38 @@ public abstract class RelationsIndexer extends AbstractSearching {
 	 * @throws BOMException
 	 * @throws IOException
 	 */
-	public void addToIndex(final IIndexable inIndexable) throws BOMException,
-	        IOException {
+	public void addToIndex(final IIndexable inIndexable) throws BOMException, IOException {
 		final IndexerHelper lIndexer = new IndexerHelper();
 		try {
 			inIndexable.indexContent(lIndexer);
 			getIndexer().processIndexer(lIndexer, getIndexDir(), getLanguage());
-		}
-		catch (final VException exc) {
+		} catch (final VException exc) {
 			throw new BOMException(exc);
 		}
 	}
 
 	/**
 	 * Deletes the item with the specified unique ID from this search index.
-	 * 
+	 *
 	 * @param inUniqueID
 	 *            String of form <code>ItemType:ItemID</code>
 	 * @throws IOException
 	 */
 	public void deleteItemInIndex(final String inUniqueID) throws IOException {
-		getIndexer().deleteItemInIndex(inUniqueID, AbstractSearching.UNIQUE_ID,
-		        getIndexDir());
+		getIndexer().deleteItemInIndex(inUniqueID, AbstractSearching.UNIQUE_ID, getIndexDir(), getLanguage());
 	}
 
 	/**
 	 * Refreshes the item's search term in the search index.
-	 * 
+	 *
 	 * @param inItem
 	 *            IItem
 	 * @throws IOException
 	 * @throws BOMException
 	 * @throws VException
 	 */
-	public void refreshItemInIndex(final IItem inItem) throws IOException,
-	        BOMException, VException {
-		final String lUniqueID = UniqueID.getStringOf(inItem.getItemType(),
-		        inItem.getID());
+	public void refreshItemInIndex(final IItem inItem) throws IOException, BOMException, VException {
+		final String lUniqueID = UniqueID.getStringOf(inItem.getItemType(), inItem.getID());
 		deleteItemInIndex(lUniqueID);
 		addToIndex((IIndexable) inItem);
 	}
@@ -206,17 +188,17 @@ public abstract class RelationsIndexer extends AbstractSearching {
 	/**
 	 * Convenience method: initialize the index directory for newly created
 	 * databases.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public void initializeIndex() throws IOException {
-		getIndexer().initializeIndex(getIndexDir());
+		getIndexer().initializeIndex(getIndexDir(), getLanguage());
 	}
 
 	/**
 	 * Convenience method: checks whether there's yet an index with the
 	 * specified indexDir.
-	 * 
+	 *
 	 * @return <code>true</code> if a search index for the specified indexDir
 	 *         exists yet.
 	 */

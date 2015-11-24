@@ -1,6 +1,6 @@
-/*
+/**
 This package is part of Relations project.
-Copyright (C) 2007, Benno Luthiger
+Copyright (C) 2007-2016, Benno Luthiger
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public
@@ -19,29 +19,31 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 package org.elbe.relations.data.search;
 
-
 /**
  * Wrapper for lucene Field with special date functionality.
  *
- * @author Luthiger
- * Created on 21.11.2008
+ * @author Luthiger Created on 21.11.2008
  */
 public class IndexerDateField extends IndexerField {
-	public enum TimeResolution {YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND}
+	public enum TimeResolution {
+		YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND
+	}
 
-	private long time;
-	private TimeResolution resolution;
+	private final long time;
+	private final TimeResolution resolution;
 
 	/**
-	 * 
-	 * @param inFieldName String
-	 * @param inValue Time as long value
+	 *
+	 * @param inFieldName
+	 *            String
+	 * @param inValue
+	 *            Time as long value
 	 * @param inStore
-	 * @param inIndex
+	 * @param inType
 	 * @param inResolution
 	 */
-	public IndexerDateField(String inFieldName, long inValue, Store inStore, Index inIndex, TimeResolution inResolution) {
-		super(inFieldName, "", inStore, inIndex); //$NON-NLS-1$
+	public IndexerDateField(String inFieldName, long inValue, Store inStore, Type inType, TimeResolution inResolution) {
+		super(inFieldName, "", inStore, inType, 1.0f); //$NON-NLS-1$
 		time = inValue;
 		resolution = inResolution;
 	}

@@ -95,7 +95,7 @@
         </children>
       </children>
     </children>
-    <mainMenu xmi:id="_-axcGBYwEeKaY4i-iZlKSg" elementId="menu:org.eclipse.ui.main.menu">
+    <mainMenu xmi:id="_-axcGBYwEeKaY4i-iZlKSg" elementId="org.eclipse.ui.main.menu">
       <children xsi:type="menu:Menu" xmi:id="_-axcGRYwEeKaY4i-iZlKSg" elementId="org.elbe.relations.menu.data.init" label="%menu.label.data">
         <children xsi:type="menu:HandledMenuItem" xmi:id="_E9Cn8B69EeK3tP7nd1gQtA" elementId="org.elbe.relations.menu.data.new" label="%handledmenuitem.label.2" mnemonics="" command="_VwNHcCIQEeKXqtgJGiogfQ"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_Q-DiwB69EeK3tP7nd1gQtA" elementId="org.elbe.relations.menu.data.opendb" label="%command.open.db" iconURI="platform:/plugin/org.elbe.relations/icons/data_open.gif" tooltip="%handledmenuitem.tooltip.1" mnemonics="%handled.item.mnemonics.d" command="_1FAmcBb0EeKNFaEs4feK6A"/>
