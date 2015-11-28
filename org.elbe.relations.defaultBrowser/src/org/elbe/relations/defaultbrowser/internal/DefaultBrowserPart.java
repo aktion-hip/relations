@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -88,22 +88,21 @@ import org.hip.kernel.exc.VException;
  * View to display the relations between the items for that they can be browsed.
  * The related items are placed in circles around the focus item. Every item
  * displayed can be selected and, thus, be activated.
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
 public class DefaultBrowserPart implements IRelationsBrowser {
 	private static final String INITIAL_SIZE = "dft.browser.initial.size"; //$NON-NLS-1$
 	private static final String SIZE_SEP = "/"; //$NON-NLS-1$
-	private static final org.eclipse.swt.graphics.Point NO_SIZE = new org.eclipse.swt.graphics.Point(
-	        0, 0);
+	private static final org.eclipse.swt.graphics.Point NO_SIZE = new org.eclipse.swt.graphics.Point(0, 0);
 
 	@Inject
 	private IEventBroker eventBroker;
 
 	@Inject
 	private Logger log;
-	
+
 	@Inject
 	private UISynchronize sync;
 
@@ -123,20 +122,16 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 	private org.eclipse.swt.graphics.Point oldSize;
 
 	@PostConstruct
-	void createControls(
-	        final Composite inParent,
-	        final IEclipseContext inContext,
-	        final EMenuService inService,
-	        final MApplication inApplication,
-	        @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = INITIAL_SIZE) final String inInitialSize,
-	        final IBrowserManager inBrowserManager) {
+	void createControls(final Composite inParent, final IEclipseContext inContext, final EMenuService inService,
+			final MApplication inApplication,
+			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = INITIAL_SIZE) final String inInitialSize,
+			final IBrowserManager inBrowserManager) {
 		context = inContext;
 		application = inApplication;
 		browserManager = inBrowserManager;
 
 		createGraphicalViewer(inParent, inContext);
-		inService.registerContextMenu(viewer.getControl(),
-		        Constants.BROWSER_POPUP);
+		inService.registerContextMenu(viewer.getControl(), Constants.BROWSER_POPUP);
 
 		visible = true;
 		initialSize = getInitialSize(inInitialSize);
@@ -152,9 +147,9 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 			return Constants.DEFAULT_SIZE;
 		}
 		final String[] lSize = inInitial.split(SIZE_SEP);
-		return lSize.length == 2 ? new org.eclipse.swt.graphics.Point(
-		        Integer.parseInt(lSize[0]), Integer.parseInt(lSize[1]))
-		        : Constants.DEFAULT_SIZE;
+		return lSize.length == 2
+				? new org.eclipse.swt.graphics.Point(Integer.parseInt(lSize[0]), Integer.parseInt(lSize[1]))
+				: Constants.DEFAULT_SIZE;
 	}
 
 	/**
@@ -162,18 +157,14 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 	 * can't load persisted values of an MPart in case of a fragment.
 	 */
 	@PersistState
-	void saveSize(
-	        @Preference(nodePath = RelationsConstants.PREFERENCE_NODE) final IEclipsePreferences inPreferences) {
-		final org.eclipse.swt.graphics.Point lSize = viewer.getControl()
-		        .getSize();
-		inPreferences.put(INITIAL_SIZE,
-		        String.format("%s%s%s", lSize.x, SIZE_SEP, lSize.y)); //$NON-NLS-1$
+	void saveSize(@Preference(nodePath = RelationsConstants.PREFERENCE_NODE) final IEclipsePreferences inPreferences) {
+		final org.eclipse.swt.graphics.Point lSize = viewer.getControl().getSize();
+		inPreferences.put(INITIAL_SIZE, String.format("%s%s%s", lSize.x, SIZE_SEP, lSize.y)); //$NON-NLS-1$
 	}
 
-	private void createGraphicalViewer(final Composite inParent,
-	        final IEclipseContext inContext) {
-		final GraphicalViewerCreator lViewerCreator = ContextInjectionFactory
-		        .make(GraphicalViewerCreator.class, inContext);
+	private void createGraphicalViewer(final Composite inParent, final IEclipseContext inContext) {
+		final GraphicalViewerCreator lViewerCreator = ContextInjectionFactory.make(GraphicalViewerCreator.class,
+				inContext);
 		viewer = lViewerCreator.createViewer(inParent);
 		editDomain.addViewer(viewer);
 
@@ -187,18 +178,13 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 				viewer.setRouteEventsToEditDomain(false);
 
 				if (inEvent.button == 3) {
-					final EditPart lPart = viewer.findObjectAt(new Point(
-					        inEvent.x, inEvent.y));
+					final EditPart lPart = viewer.findObjectAt(new Point(inEvent.x, inEvent.y));
 					if (lPart instanceof RelationEditPart) {
-						BrowserPopupStateController.setState(
-						        BrowserPopupStateController.State.CONNECTION,
-						        application);
+						BrowserPopupStateController.setState(BrowserPopupStateController.State.CONNECTION, application);
 					} else if (lPart instanceof ItemEditPart) {
 						// item's popup is handled in RelationsBrowserManager
 					} else {
-						BrowserPopupStateController.setState(
-						        BrowserPopupStateController.State.DISABLED,
-						        application);
+						BrowserPopupStateController.setState(BrowserPopupStateController.State.DISABLED, application);
 					}
 				}
 			}
@@ -206,31 +192,28 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 		lControl.addListener(SWT.Resize, new Listener() {
 			@Override
 			public void handleEvent(final Event inEvent) {
-				final org.eclipse.swt.graphics.Point lNewSize = lControl
-				        .getSize();
+				final org.eclipse.swt.graphics.Point lNewSize = lControl.getSize();
 				if (oldSize != null) {
-					recenter(new PrecisionPoint((lNewSize.x - oldSize.x) / 2,
-					        (lNewSize.y - oldSize.y) / 2));
+					recenter(new PrecisionPoint((lNewSize.x - oldSize.x) / 2, (lNewSize.y - oldSize.y) / 2));
 				}
 				oldSize = lNewSize;
 			}
 		});
 
-		viewer.addDropTargetListener(ItemTransferDropTargetListener.create(
-		        viewer, ItemTransfer.getInstance(log), context));
-		viewer.addDropTargetListener(FileTransferDropTargetListener.create(
-		        viewer, FileTransfer.getInstance(), context));
-		viewer.addDropTargetListener(WebTransferDropTargetListener.create(
-		        viewer, URLTransfer.getInstance(), context));
-		viewer.addDragSourceListener(ItemTransferDragSourceListener.create(
-		        viewer, ItemTransfer.getInstance(log), context));
+		viewer.addDropTargetListener(
+				ItemTransferDropTargetListener.create(viewer, ItemTransfer.getInstance(log), context));
+		viewer.addDropTargetListener(
+				FileTransferDropTargetListener.create(viewer, FileTransfer.getInstance(), context));
+		viewer.addDropTargetListener(WebTransferDropTargetListener.create(viewer, URLTransfer.getInstance(), context));
+		viewer.addDragSourceListener(
+				ItemTransferDragSourceListener.create(viewer, ItemTransfer.getInstance(log), context));
 	}
 
 	@Override
 	@Inject
 	@Optional
 	public void setModel(
-	        @UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SEND_CENTER_MODEL) final CentralAssociationsModel inModel) {
+			@UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SEND_CENTER_MODEL) final CentralAssociationsModel inModel) {
 		if (!visible) {
 			return;
 		}
@@ -247,8 +230,7 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 	}
 
 	public void reveal(final Object inObject) {
-		final EditPart lEditPart = (EditPart) viewer.getEditPartRegistry().get(
-		        inObject);
+		final EditPart lEditPart = (EditPart) viewer.getEditPartRegistry().get(inObject);
 		if (lEditPart != null) {
 			// arrangement of children is controlled here
 			setAroundCenter();
@@ -260,14 +242,15 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 		if (viewer == null) {
 			return;
 		}
-		sync.syncExec(new Runnable() {			
+		sync.syncExec(new Runnable() {
 			@Override
 			public void run() {
 				viewer.setContents(model);
 			}
 		});
-		if (model == null)
+		if (model == null) {
 			return;
+		}
 
 		setSelectedDefault();
 	}
@@ -277,10 +260,8 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 		if (model == null) {
 			lSelectionManager.setSelection(StructuredSelection.EMPTY);
 		} else {
-			selectedObject = (ItemEditPart) viewer.getEditPartRegistry().get(
-			        model.getCenter());
-			lSelectionManager.setSelection(new StructuredSelection(
-			        selectedObject));
+			selectedObject = (ItemEditPart) viewer.getEditPartRegistry().get(model.getCenter());
+			lSelectionManager.setSelection(new StructuredSelection(selectedObject));
 		}
 	}
 
@@ -288,7 +269,7 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 	@Inject
 	@Optional
 	public void syncSelected(
-	        @UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_SELECTED) final SelectedItemChangeEvent inEvent) {
+			@UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_SELECTED) final SelectedItemChangeEvent inEvent) {
 		// leave, if this browser is the source of the event
 		if (inEvent.checkSource(this)) {
 			return;
@@ -313,8 +294,7 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 
 		selectionChangeHandling = true;
 		selectedObject = (ItemEditPart) lSelected;
-		viewer.getSelectionManager().setSelection(
-		        new StructuredSelection(selectedObject));
+		viewer.getSelectionManager().setSelection(new StructuredSelection(selectedObject));
 	}
 
 	protected boolean isSelectionChangeHandling() {
@@ -337,8 +317,7 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 
 	@Inject
 	@Optional
-	void syncWithManager(
-	        @UIEventTopic(RelationsConstants.TOPIC_DB_CHANGED_RELOAD) final String inEvent) {
+	void syncWithManager(@UIEventTopic(RelationsConstants.TOPIC_DB_CHANGED_RELOAD) final String inEvent) {
 		setModel(browserManager.getCenterModel());
 	}
 
@@ -346,15 +325,14 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 	@Inject
 	@Optional
 	public void syncContent(
-	        @UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_CONTENT) final ItemAdapter inItem) {
+			@UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_CONTENT) final ItemAdapter inItem) {
 		if (!visible) {
 			return;
 		}
 
 		try {
 			selectedObject.refreshView(inItem.getTitle());
-		}
-		catch (final VException exc) {
+		} catch (final VException exc) {
 			log.error(exc, exc.getMessage());
 		}
 	}
@@ -362,7 +340,7 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 	@Inject
 	@Optional
 	public void clear(
-	        @EventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_CLEAR) final IEclipseContext inContext) {
+			@EventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_CLEAR) final IEclipseContext inContext) {
 		setInput(null);
 	}
 
@@ -371,11 +349,10 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 	@Inject
 	@Optional
 	public void trackFontSize(
-	        @UIEventTopic("org_elbe_relations_defaultbrowser_internal_DefaultBrowserPart") final int inFontSize) {
+			@UIEventTopic("org_elbe_relations_defaultbrowser_internal_DefaultBrowserPart") final int inFontSize) {
 		if (inFontSize != 0) {
 			Font lFont = null;
-			final Map<IItemModel, GraphicalEditPart> lRegistry = viewer
-			        .getEditPartRegistry();
+			final Map<IItemModel, GraphicalEditPart> lRegistry = viewer.getEditPartRegistry();
 			for (final GraphicalEditPart lPart : lRegistry.values()) {
 				final IFigure lFigure = lPart.getFigure();
 				if (lFigure instanceof ItemFigure) {
@@ -401,30 +378,24 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 	 */
 	@SuppressWarnings("unchecked")
 	private void setAroundCenter() {
-		final Map<IItemModel, GraphicalEditPart> lRegistry = viewer
-		        .getEditPartRegistry();
+		final Map<IItemModel, GraphicalEditPart> lRegistry = viewer.getEditPartRegistry();
 		final org.eclipse.swt.graphics.Point lSize = getSize();
-		final PrecisionPoint lTranslate = new PrecisionPoint(lSize.x / 2
-		        - (RelationsConstants.ITEM_WIDTH / 2), (lSize.y / 2)
-		        - RelationsConstants.ITEM_HEIGHT);
-		moveFigure(lRegistry, model.getCenter(), new PrecisionPoint(0, 0),
-		        lTranslate);
+		final PrecisionPoint lTranslate = new PrecisionPoint(lSize.x / 2 - (RelationsConstants.ITEM_WIDTH / 2),
+				(lSize.y / 2) - RelationsConstants.ITEM_HEIGHT);
+		moveFigure(lRegistry, model.getCenter(), new PrecisionPoint(0, 0), lTranslate);
 
 		final List<ItemAdapter> lRelated = model.getRelatedItems();
 		int lNumber = lRelated.size();
 		int lCount = 0;
 		int lOffset = 0;
-		final ItemPositionCalculator lCalculator = new ItemPositionCalculator(
-		        RelationsConstants.ITEM_WIDTH, RelationsConstants.ITEM_HEIGHT,
-		        getRadius(++lCount), lNumber);
+		final ItemPositionCalculator lCalculator = new ItemPositionCalculator(RelationsConstants.ITEM_WIDTH,
+				RelationsConstants.ITEM_HEIGHT, getRadius(++lCount), lNumber);
 		while (lCalculator.hasMore()) {
-			lOffset = setPositions(lRegistry, lCalculator.getPositions(),
-			        lOffset, lRelated, lTranslate);
+			lOffset = setPositions(lRegistry, lCalculator.getPositions(), lOffset, lRelated, lTranslate);
 			lNumber -= lCalculator.getCount();
 			lCalculator.recalculate(getRadius(++lCount), lNumber);
 		}
-		setPositions(lRegistry, lCalculator.getPositions(), lOffset, lRelated,
-		        lTranslate);
+		setPositions(lRegistry, lCalculator.getPositions(), lOffset, lRelated, lTranslate);
 		oldSize = lSize;
 	}
 
@@ -444,27 +415,22 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 		return RelationsConstants.RADIUS * inCount;
 	}
 
-	private int setPositions(
-	        final Map<IItemModel, GraphicalEditPart> inRegistry,
-	        final List<PrecisionPoint> inPositions, final int inOffset,
-	        final List<ItemAdapter> inRelated, final PrecisionPoint inTranslate) {
+	private int setPositions(final Map<IItemModel, GraphicalEditPart> inRegistry,
+			final List<PrecisionPoint> inPositions, final int inOffset, final List<ItemAdapter> inRelated,
+			final PrecisionPoint inTranslate) {
 		int outOffset = inOffset;
 		for (final PrecisionPoint lPoint : inPositions) {
-			moveFigure(inRegistry, inRelated.get(outOffset), lPoint,
-			        inTranslate);
+			moveFigure(inRegistry, inRelated.get(outOffset), lPoint, inTranslate);
 			++outOffset;
 		}
 		return outOffset;
 	}
 
-	private void moveFigure(
-	        final Map<IItemModel, GraphicalEditPart> inRegistry,
-	        final ItemAdapter inModel, final PrecisionPoint inFrom,
-	        final PrecisionPoint inTranslate) {
+	private void moveFigure(final Map<IItemModel, GraphicalEditPart> inRegistry, final ItemAdapter inModel,
+			final PrecisionPoint inFrom, final PrecisionPoint inTranslate) {
 		final GraphicalEditPart lEditPart = inRegistry.get(inModel);
 		if (lEditPart != null) {
-			lEditPart.getFigure()
-			        .setLocation(inFrom.getTranslated(inTranslate));
+			lEditPart.getFigure().setLocation(inFrom.getTranslated(inTranslate));
 		}
 	}
 
@@ -473,8 +439,7 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 	 */
 	@SuppressWarnings("unchecked")
 	private void recenter(final PrecisionPoint inTranslate) {
-		final Map<IItemModel, GraphicalEditPart> lRegistry = viewer
-		        .getEditPartRegistry();
+		final Map<IItemModel, GraphicalEditPart> lRegistry = viewer.getEditPartRegistry();
 		for (final GraphicalEditPart lEditPart : lRegistry.values()) {
 			final Point lFrom = lEditPart.getFigure().getBounds().getLocation();
 			lEditPart.getFigure().setLocation(lFrom.getTranslated(inTranslate));
@@ -484,8 +449,7 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 
 	// --- private classes ---
 
-	private class PartSelectionChangedListener implements
-	        ISelectionChangedListener {
+	private class PartSelectionChangedListener implements ISelectionChangedListener {
 		@Override
 		public void selectionChanged(final SelectionChangedEvent inEvent) {
 			if (isSelectionChangeHandling()) {
@@ -499,8 +463,7 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 			// prevent multi selection by deselecting all selected items except
 			// the last
 			final SelectionManager lManager = viewer.getSelectionManager();
-			final Object[] lSelections = ((IStructuredSelection) inEvent
-			        .getSelection()).toArray();
+			final Object[] lSelections = ((IStructuredSelection) inEvent.getSelection()).toArray();
 			for (int i = 0; i < lSelections.length - 1; i++) {
 				if (lSelections[i] instanceof EditPart) {
 					lManager.deselect((EditPart) lSelections[i]);
@@ -511,18 +474,14 @@ public class DefaultBrowserPart implements IRelationsBrowser {
 			if (lSelection instanceof ItemEditPart) {
 				if (model != null) {
 					selectedObject = (ItemEditPart) lSelection;
-					eventBroker
-					        .post(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED,
-					                new SelectedItemChangeEvent(
-					                        (ItemAdapter) selectedObject
-					                                .getModel(),
-					                        DefaultBrowserPart.this));
+					eventBroker.post(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED,
+							new SelectedItemChangeEvent((ItemAdapter) selectedObject.getModel(),
+									DefaultBrowserPart.this));
 				}
 			}
 			if (lSelection instanceof RelationEditPart) {
-				eventBroker
-				        .post(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED,
-				                ((RelationEditPart) lSelection).getModel());
+				eventBroker.post(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED,
+						((RelationEditPart) lSelection).getModel());
 			}
 
 			if (lSelection instanceof RelationsEditPart) {

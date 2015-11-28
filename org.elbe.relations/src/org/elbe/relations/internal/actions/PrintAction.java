@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -39,7 +39,6 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.data.bom.IItem;
 import org.elbe.relations.internal.controller.PrintOutManager;
@@ -48,7 +47,7 @@ import org.elbe.relations.services.IBrowserManager;
 
 /**
  * Action to start the print out of selected content.
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
@@ -72,8 +71,8 @@ public class PrintAction implements ICommand {
 
 	@Override
 	public void execute() {
-		final PrintOutWizard lWizard = ContextInjectionFactory.make(
-		        PrintOutWizard.class, context);
+		final PrintOutWizard lWizard = ContextInjectionFactory
+		        .make(PrintOutWizard.class, context);
 		final WizardDialog lDialog = new WizardDialog(shell, lWizard);
 		if (lDialog.open() == Window.OK) {
 			if (lWizard.isInitNew()) {
@@ -82,17 +81,18 @@ public class PrintAction implements ICommand {
 					return;
 				}
 			} else {
-				if (!printOutManager.initFurther(lWizard.getPrintOutFileName())) {
+				if (!printOutManager
+				        .initFurther(lWizard.getPrintOutFileName())) {
 					return;
 				}
 			}
 			printOutManager.setContentScope(lWizard.getPrintOutScope());
-			printOutManager.setPrintOutReferences(lWizard
-			        .getPrintOutReferences());
+			printOutManager
+			        .setPrintOutReferences(lWizard.getPrintOutReferences());
 
 			final PrintJob lJob = new PrintJob(printOutManager,
 			        browserManager.getSelectedModel());
-			final ProgressMonitorDialog lMonitor = new ProgressMonitorJobsDialog(
+			final ProgressMonitorDialog lMonitor = new ProgressMonitorDialog(
 			        shell);
 			lMonitor.open();
 			try {
@@ -116,7 +116,8 @@ public class PrintAction implements ICommand {
 		private final PrintOutManager printManager;
 		private final IItem selectedItem;
 
-		public PrintJob(final PrintOutManager inManager, final IItem inSelected) {
+		public PrintJob(final PrintOutManager inManager,
+		        final IItem inSelected) {
 			printManager = inManager;
 			selectedItem = inSelected;
 		}
@@ -128,10 +129,9 @@ public class PrintAction implements ICommand {
 				lItems = printManager.getItemSet(selectedItem);
 				final SubMonitor lProgress = SubMonitor.convert(inMonitor,
 				        lItems.size());
-				lProgress
-				        .beginTask(
-				                RelationsMessages
-				                        .getString("PrintAction.job.start"), lItems.size()); //$NON-NLS-1$
+				lProgress.beginTask(
+				        RelationsMessages.getString("PrintAction.job.start"), //$NON-NLS-1$
+				        lItems.size());
 				int lNumberOfPrinted = 0;
 				for (final IItem lItem : lItems) {
 					lNumberOfPrinted += printManager.printItem(lItem);
@@ -167,14 +167,16 @@ public class PrintAction implements ICommand {
 	}
 
 	private Action getPrintCompleteAction(final int inNumberOfProcessed) {
-		return new Action(RelationsMessages.getString("PrintAction.job.status")) { //$NON-NLS-1$
+		return new Action(
+		        RelationsMessages.getString("PrintAction.job.status")) { //$NON-NLS-1$
 			@Override
 			public void run() {
-				MessageDialog
-				        .openInformation(
-				                shell,
-				                RelationsMessages
-				                        .getString("PrintAction.job.completed"), RelationsMessages.getString("PrintAction.job.completed.msg", new Object[] { new Integer(inNumberOfProcessed) })); //$NON-NLS-1$ //$NON-NLS-2$
+				MessageDialog.openInformation(shell,
+		                RelationsMessages
+		                        .getString("PrintAction.job.completed"), //$NON-NLS-1$
+		                RelationsMessages.getString(
+		                        "PrintAction.job.completed.msg", new Object[] { //$NON-NLS-1$
+		                                new Integer(inNumberOfProcessed) }));
 			}
 		};
 	}
@@ -184,9 +186,9 @@ public class PrintAction implements ICommand {
 		        RelationsMessages.getString("PrintAction.error.title")) { //$NON-NLS-1$
 			@Override
 			public void run() {
-				MessageDialog
-				        .openError(shell, RelationsMessages
-				                .getString("PrintAction.error.msg"), inErrorMsg); //$NON-NLS-1$
+				MessageDialog.openError(shell,
+		                RelationsMessages.getString("PrintAction.error.msg"), //$NON-NLS-1$
+		                inErrorMsg);
 			}
 		};
 	}

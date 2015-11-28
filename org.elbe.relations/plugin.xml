@@ -5,7 +5,7 @@
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            application="org.elbe.relations.RelationsApplication"
+            application="org.eclipse.e4.ui.workbench.swt.E4Application"
             description="%product.description"
             name="org.elbe.relations">
          <property
@@ -91,7 +91,7 @@
       </definition>
    </extension>
    <extension
-         point="org.eclipse.ui.preferencePages">
+         point="com.opcoach.e4.preferences.e4PreferencePages">
       <page
             class="org.elbe.relations.internal.preferences.RelationsPreferencePage"
             id="org.elbe.relations.prefs"
@@ -104,9 +104,12 @@
             name="%page.prefs.name.db.connect">
       </page>
       <page
-            class="org.eclipse.ui.ExtensionFactory:newKeysPreferencePage"
+            class="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.ExtensionFactory:newKeysPreferencePage"
             id="newKeysPreferencePage"
             name="%page.prefs.name.keys">
+         <keywordReference
+               id="org.eclipse.ui.ide.keys">
+         </keywordReference>
       </page>
       <page
             class="org.elbe.relations.internal.preferences.AppearancePage"
@@ -239,15 +242,6 @@
             %import.xmlimport.desc
          </description>
       </wizard>
-   </extension>
-   <extension
-         id="RelationsApplication"
-         point="org.eclipse.core.runtime.applications">
-      <application>
-         <run
-               class="org.elbe.relations.app.RelationsApplication">
-         </run>
-      </application>
    </extension>
    <extension
          point="org.eclipse.e4.ui.css.swt.theme">
@@ -513,6 +507,11 @@
             id="org.elbe.relations.command.open.url"
             name="%command.open.browser">
       </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.part.maximize"
+            name="%command.maximize.restore">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
@@ -713,6 +712,12 @@
             contextId="org.elbe.relations.context.browser"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+DEL">
+      </key>
+      <key
+            commandId="org.elbe.relations.command.part.maximize"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M">
       </key>
    </extension>
    <extension

@@ -1,24 +1,22 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ***************************************************************************/
 package org.elbe.relations.internal.forms;
-
-import java.net.MalformedURLException;
 
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.jface.fieldassist.ControlDecoration;
@@ -37,7 +35,6 @@ import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PartInitException;
 import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.internal.utility.BrowserUtil;
 import org.elbe.relations.internal.utility.FormUtility;
@@ -45,7 +42,7 @@ import org.elbe.relations.internal.utility.FormUtility;
 /**
  * Helper class to handle listeners for <code>StyledText</code> widget used for
  * the journal text field.
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
@@ -68,15 +65,7 @@ class StyledFieldHelper {
 				return;
 			}
 			if ((inEvent.stateMask & CTRL) != 0) {
-				try {
-					BrowserUtil.startBrowser(getTextWidget().getText());
-				}
-				catch (final PartInitException exc) {
-					log.error(exc, exc.getMessage());
-				}
-				catch (final MalformedURLException exc) {
-					log.error(exc, exc.getMessage());
-				}
+				BrowserUtil.startBrowser(getTextWidget().getText());
 			}
 		}
 	};
@@ -145,11 +134,10 @@ class StyledFieldHelper {
 	private final StyledText journalText;
 	private final Cursor oldCursor;
 	private final ControlDecoration decoration;
-	private final Logger log;
 
 	/**
 	 * Friendly constructor
-	 * 
+	 *
 	 * @param inText
 	 *            {@link StyledText} the widget this class is handling.
 	 * @param inLog
@@ -157,7 +145,6 @@ class StyledFieldHelper {
 	 */
 	StyledFieldHelper(final StyledText inText, final Logger inLog) {
 		journalText = inText;
-		log = inLog;
 		decoration = FormUtility.addDecorationInfo(inText,
 		        RelationsMessages.getString("StyledFieldHelper.info")); //$NON-NLS-1$
 		oldCursor = journalText.getCursor();

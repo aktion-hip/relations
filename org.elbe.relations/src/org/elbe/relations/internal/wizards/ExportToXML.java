@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -35,7 +35,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.internal.progress.ProgressMonitorJobsDialog;
 import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.db.IDataService;
 import org.elbe.relations.internal.backup.XMLExport;
@@ -50,7 +49,7 @@ import org.hip.kernel.exc.VException;
  * Wizard to export/backup the actual database.<br />
  * Note: this is an Eclipse 3 wizard. To make it e4, let the values for the
  * annotated field be injected (instead of using the method init()).
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
@@ -82,13 +81,12 @@ public class ExportToXML extends Wizard implements IExportWizard {
 	@Override
 	public void init(final IWorkbench inWorkbench,
 	        final IStructuredSelection inSelection) {
-		log = (Logger) inWorkbench.getAdapter(Logger.class);
-		dbSettings = (DBSettings) inWorkbench.getAdapter(DBSettings.class);
-		dataService = (IDataService) inWorkbench.getAdapter(IDataService.class);
+		log = inWorkbench.getAdapter(Logger.class);
+		dbSettings = inWorkbench.getAdapter(DBSettings.class);
+		dataService = inWorkbench.getAdapter(IDataService.class);
 		statusLine = WizardHelper.getFromWorkbench(
 		        RelationsStatusLineManager.class, inWorkbench);
-		languageService = (LanguageService) inWorkbench
-		        .getAdapter(LanguageService.class);
+		languageService = inWorkbench.getAdapter(LanguageService.class);
 		shell = inWorkbench.getDisplay().getActiveShell();
 
 		setWindowTitle(RelationsMessages.getString("ExportToXML.window.title")); //$NON-NLS-1$
@@ -104,11 +102,10 @@ public class ExportToXML extends Wizard implements IExportWizard {
 	public boolean performFinish() {
 		final String lCatalog = dbSettings.getCatalog();
 		final String lBackupFile = page.getFileName();
-		statusLine.showStatusLineMessage(String.format(STATUS_MSG, lCatalog,
-		        lBackupFile));
+		statusLine.showStatusLineMessage(
+		        String.format(STATUS_MSG, lCatalog, lBackupFile));
 
-		final ProgressMonitorDialog lDialog = new ProgressMonitorJobsDialog(
-		        shell);
+		final ProgressMonitorDialog lDialog = new ProgressMonitorDialog(shell);
 		lDialog.open();
 
 		final ExporterJob lJob = new ExporterJob(page.getFileName());
@@ -129,8 +126,9 @@ public class ExportToXML extends Wizard implements IExportWizard {
 
 	@Override
 	public void dispose() {
-		if (page != null)
+		if (page != null) {
 			page.dispose();
+		}
 		super.dispose();
 	}
 
@@ -145,14 +143,17 @@ public class ExportToXML extends Wizard implements IExportWizard {
 
 		@Override
 		public void run(final IProgressMonitor inMonitor) {
-			inMonitor
-			        .beginTask(
-			                RelationsMessages
-			                        .getString("ExportToXML.msg.job.start"), dataService.getNumberOfItems()); //$NON-NLS-1$
+			inMonitor.beginTask(
+			        RelationsMessages.getString("ExportToXML.msg.job.start"), //$NON-NLS-1$
+			        dataService.getNumberOfItems());
 
 			XMLExport lExport = null;
 			try {
-				lExport = fileName.endsWith(".zip") ? new ZippedXMLExport(fileName, languageService.getAppLocale()) : new XMLExport(fileName, languageService.getAppLocale()); //$NON-NLS-1$
+				lExport = fileName.endsWith(".zip") //$NON-NLS-1$
+				        ? new ZippedXMLExport(fileName,
+				                languageService.getAppLocale())
+				        : new XMLExport(fileName,
+				                languageService.getAppLocale());
 				lExport.export(inMonitor);
 			}
 			catch (final IOException exc) {
