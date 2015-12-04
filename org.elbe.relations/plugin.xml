@@ -372,6 +372,18 @@
       </command>
       <command
             categoryId="org.elbe.relations.category"
+            description="%command.import.desc"
+            id="org.eclipse.ui.importWizards"
+            name="%command.import">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            description="%command.export.desc"
+            id="org.eclipse.ui.exportWizards"
+            name="%command.export">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
             id="org.elbe.relations.command.db.open"
             name="%command.open.db">
       </command>

@@ -18,8 +18,6 @@
  ***************************************************************************/
 package org.elbe.relations.internal.e4.wizards;
 
-import org.eclipse.ui.PlatformUI;
-
 /**
  * Registry that contains wizards contributed via the <code>newWizards</code>
  * extension point.
@@ -33,11 +31,6 @@ public class NewWizardRegistry extends AbstractExtensionWizardRegistry {
 	@Override
 	protected String getExtensionPoint() {
 		return PL_NEW;
-	}
-
-	@Override
-	protected String getPlugin() {
-		return PlatformUI.PLUGIN_ID;
 	}
 
 }

@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Vector;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -34,12 +35,9 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IImportWizard;
-import org.eclipse.ui.IWorkbench;
 import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.data.bom.BOMHelper;
@@ -55,16 +53,14 @@ import org.elbe.relations.internal.controls.RelationsStatusLineManager;
 import org.elbe.relations.internal.data.DBSettings;
 import org.elbe.relations.internal.utility.AbstractRunnableWithProgress;
 import org.elbe.relations.internal.utility.DBPreconditionException;
-import org.elbe.relations.internal.utility.WizardHelper;
+import org.elbe.relations.internal.wizards.interfaces.IImportWizard;
 import org.hip.kernel.bom.KeyObject;
 import org.hip.kernel.bom.impl.KeyObjectImpl;
 import org.hip.kernel.bom.impl.UpdateStatement;
 import org.hip.kernel.exc.VException;
 
 /**
- * Wizard to import the database content from a (zipped) XML file.<br />
- * Note: this is an Eclipse 3 wizard. To make it e4, let the values for the
- * annotated field be injected (instead of using the method init()).
+ * Wizard to import the database content from a (zipped) XML file.
  *
  * @author Luthiger Created on 13.10.2008
  */
@@ -94,18 +90,8 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 	@Inject
 	private RelationsStatusLineManager statusLine;
 
-	@Override
-	public void init(final IWorkbench inWorkbench,
-	        final IStructuredSelection inSelection) {
-		context = inWorkbench.getAdapter(IEclipseContext.class);
-		log = inWorkbench.getAdapter(Logger.class);
-		shell = inWorkbench.getDisplay().getActiveShell();
-		sync = inWorkbench.getAdapter(UISynchronize.class);
-		dataService = inWorkbench.getAdapter(IDataService.class);
-		dbSettings = inWorkbench.getAdapter(DBSettings.class);
-		statusLine = WizardHelper.getFromWorkbench(
-		        RelationsStatusLineManager.class, inWorkbench);
-
+	@PostConstruct
+	public void init() {
 		setWindowTitle(
 		        RelationsMessages.getString("ImportFromXML.window.title")); //$NON-NLS-1$
 	}

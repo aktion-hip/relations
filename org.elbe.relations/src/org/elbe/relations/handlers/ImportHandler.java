@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2016, Benno Luthiger
+ * Copyright (C) 2011-2016, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -18,8 +18,6 @@
  ***************************************************************************/
 package org.elbe.relations.handlers;
 
-import java.lang.reflect.InvocationTargetException;
-
 import javax.inject.Named;
 
 import org.eclipse.e4.core.contexts.ContextFunction;
@@ -30,39 +28,37 @@ import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.elbe.relations.internal.e4.wizards.AbstractExtensionWizard;
-import org.elbe.relations.internal.e4.wizards.NewWizard;
-import org.elbe.relations.internal.e4.wizards.NewWizardRegistry;
+import org.elbe.relations.internal.e4.wizards.ImportWizard;
+import org.elbe.relations.internal.e4.wizards.ImportWizardRegistry;
 
 /**
- * The handler for the <code>New...</code> wizard.
+ * The handler for the <code>Import...</code> wizard.
  *
- * @author Luthiger
+ *
+ * @author lbenno
  */
-public class NewHandler extends AbstractExtensionHandler {
+public class ImportHandler extends AbstractExtensionHandler {
 
 	@Execute
 	public void execute(
 	        @Named(IServiceConstants.ACTIVE_SHELL) final Shell inShell,
-	        final IEclipseContext inContext)
-	                throws InvocationTargetException, InterruptedException {
-
+	        final IEclipseContext inContext) {
 		executeHandler(inShell, inContext);
 	}
 
 	private void executeHandler(final Shell inShell,
 	        final IEclipseContext inContext) {
 		// prepare context
-		inContext.set(AbstractExtensionWizard.NEW_WIZARD_REGISTRY,
+		inContext.set(AbstractExtensionWizard.IMPORT_WIZARD_REGISTRY,
 		        new ContextFunction() {
 			        @Override
 			        public Object compute(final IEclipseContext inContext) {
 				        return ContextInjectionFactory
-		                        .make(NewWizardRegistry.class, inContext);
+		                        .make(ImportWizardRegistry.class, inContext);
 			        }
 		        });
-
-		final NewWizard lWizard = ContextInjectionFactory.make(NewWizard.class,
-		        inContext);
+		final ImportWizard lWizard = ContextInjectionFactory
+		        .make(ImportWizard.class, inContext);
 		lWizard.setCategoryId(null);
 		lWizard.init(StructuredSelection.EMPTY);
 

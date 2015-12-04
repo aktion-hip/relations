@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
+import org.elbe.relations.RelationsImages;
 import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.internal.utility.WizardHelper;
 import org.elbe.relations.utility.DialogSettingHandler;
@@ -31,7 +32,7 @@ import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * Page for exporting the content of all text items to a file in BibTEX format.
- * 
+ *
  * @author Luthiger Created on 03.05.2007
  */
 public class ExportBibtexPage extends ExportWizardPage {
@@ -44,33 +45,28 @@ public class ExportBibtexPage extends ExportWizardPage {
 	public ExportBibtexPage(final String inPageName) {
 		super(inPageName);
 		setTitle(RelationsMessages.getString("ExportBibtexPage.page.title")); //$NON-NLS-1$
-		setInfoMessage(RelationsMessages.getString("ExportBibtexPage.page.msg")); //$NON-NLS-1$
-		settings = new DialogSettingHandler(
-				"ExportBibtex", "RecentExportBibtex"); //$NON-NLS-1$ //$NON-NLS-2$
+		setInfoMessage(
+		        RelationsMessages.getString("ExportBibtexPage.page.msg")); //$NON-NLS-1$
+		setImageDescriptor(RelationsImages.WIZARD_EXPORT.getDescriptor());
+		settings = new DialogSettingHandler("ExportBibtex", //$NON-NLS-1$
+		        "RecentExportBibtex"); //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-	 * .Composite)
-	 */
 	@Override
 	public void createControl(final Composite inParent) {
 		final int lColumns = 3;
 		final Composite lComposite = WizardHelper.createComposite(inParent,
-				lColumns);
+		        lColumns);
 
-		createLabel(
-				lComposite,
-				RelationsMessages.getString("ExportBibtexPage.lbl.messag"), lColumns); //$NON-NLS-1$
+		createLabel(lComposite,
+		        RelationsMessages.getString("ExportBibtexPage.lbl.messag"), //$NON-NLS-1$
+		        lColumns);
 
-		exportFileName = createLabelCombo(
-				lComposite,
-				RelationsMessages.getString("ExportBibtexPage.lbl.input"), SWT.DROP_DOWN); //$NON-NLS-1$
+		exportFileName = createLabelCombo(lComposite,
+		        RelationsMessages.getString("ExportBibtexPage.lbl.input"), //$NON-NLS-1$
+		        SWT.DROP_DOWN);
 		createButtonFileDialog(lComposite,
-				RelationsMessages.getString("PrintOutWizardPage.lbl.browse")); //$NON-NLS-1$
+		        RelationsMessages.getString("PrintOutWizardPage.lbl.browse")); //$NON-NLS-1$
 
 		setControl(lComposite);
 		initializeValues();
@@ -79,13 +75,13 @@ public class ExportBibtexPage extends ExportWizardPage {
 	@Override
 	protected void openFileDialog() {
 		fileNameStatus = Status.OK_STATUS;
-		final FileDialog lDialog = new FileDialog(Display.getCurrent()
-				.getActiveShell(), SWT.SAVE);
-		lDialog.setText(RelationsMessages
-				.getString("ExportBibtexPage.filedlg.msg")); //$NON-NLS-1$
+		final FileDialog lDialog = new FileDialog(
+		        Display.getCurrent().getActiveShell(), SWT.SAVE);
+		lDialog.setText(
+		        RelationsMessages.getString("ExportBibtexPage.filedlg.msg")); //$NON-NLS-1$
 		lDialog.setFilterExtensions(new String[] { "*.bib" }); //$NON-NLS-1$
 		lDialog.setFilterNames(new String[] { RelationsMessages
-				.getString("ExportBibtexPage.filedlg.names") }); //$NON-NLS-1$
+		        .getString("ExportBibtexPage.filedlg.names") }); //$NON-NLS-1$
 		final String lFileName = lDialog.open();
 		if (lFileName == null) {
 			fileNameStatus = nameEmpty;
@@ -114,7 +110,7 @@ public class ExportBibtexPage extends ExportWizardPage {
 	/**
 	 * Friendly method to save the value entered in <code>exportFileName</code>
 	 * to the dialog's history.
-	 * 
+	 *
 	 * @throws BackingStoreException
 	 */
 	void saveToHistory() throws BackingStoreException {

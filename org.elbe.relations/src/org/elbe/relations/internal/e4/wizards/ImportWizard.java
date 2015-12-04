@@ -28,16 +28,17 @@ import org.elbe.relations.internal.e4.wizards.util.IWizardCategory;
 import org.elbe.relations.internal.e4.wizards.util.IWizardDescriptor;
 
 /**
- * The new wizard is responsible for allowing the user to choose which new
- * (nested) wizard to run. The set of available new wizards comes from the new
- * extension point.
+ * The import wizard allows the user to choose which nested import wizard to
+ * run. The set of available wizards comes from the import wizard extension
+ * point.
  *
  * @author Luthiger
  */
-public class NewWizard extends AbstractExtensionWizard {
+public class ImportWizard extends AbstractExtensionWizard {
+
 	@Inject
-	@Named(AbstractExtensionWizard.NEW_WIZARD_REGISTRY)
-	private NewWizardRegistry newWizardRegistry;
+	@Named(AbstractExtensionWizard.IMPORT_WIZARD_REGISTRY)
+	private ImportWizardRegistry importWizardRegistry;
 
 	private AbstractExtensionWizardSelectionPage mainPage;
 
@@ -45,14 +46,15 @@ public class NewWizard extends AbstractExtensionWizard {
 
 	@Override
 	public void addPages() {
-		IWizardCategory lRoot = newWizardRegistry.getRootCategory();
-		final IWizardDescriptor[] lPrimary = newWizardRegistry
+		IWizardCategory lRoot = importWizardRegistry.getRootCategory();
+		final IWizardDescriptor[] lPrimary = importWizardRegistry
 		        .getPrimaryWizards();
 
 		if (categoryId != null) {
 			lRoot = processCategories(lRoot);
 		}
-		mainPage = new NewWizardSelectionPage(selection, getContext(), lRoot,
+
+		mainPage = new ImportWizardSelectionPage(selection, getContext(), lRoot,
 		        lPrimary);
 		addPage(mainPage);
 	}
@@ -65,10 +67,11 @@ public class NewWizard extends AbstractExtensionWizard {
 		selection = inSelection;
 
 		if (getWindowTitle() == null) {
-			setWindowTitle(RelationsMessages.getString("New.wizard.title"));
+			setWindowTitle(RelationsMessages.getString("Import.wizard.title"));
+
 		}
 		setDefaultPageImageDescriptor(
-		        RelationsImages.WIZARD_NEW.getDescriptor());
+		        RelationsImages.WIZARD_IMPORT.getDescriptor());
 		setNeedsProgressMonitor(true);
 	}
 

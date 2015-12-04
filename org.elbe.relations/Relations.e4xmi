@@ -215,8 +215,10 @@
   <handlers xmi:id="_hX28EExjEeOnfLACFZUbew" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.activate.ActivateViewLastChanges" command="_r4NHoExeEeOnfLACFZUbew"/>
   <handlers xmi:id="_ae0hkFCeEeOBt4dmztEOKA" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.OpenURLHandler" command="_zJHGgFCdEeOBt4dmztEOKA"/>
   <handlers xmi:id="_zCq3MJMBEeWMid98Ku-x5A" elementId="" contributionURI="bundleclass://com.opcoach.e4.preferences/com.opcoach.e4.preferences.handlers.E4PreferencesHandler" command="_-6q8MB7EEeK3tP7nd1gQtA"/>
-  <handlers xmi:id="_dJNbkJT5EeWdFYAq2aQ5FQ" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.NewHandler" command="_VwNHcCIQEeKXqtgJGiogfQ"/>
   <handlers xmi:id="_jk_q0JXLEeWpfK4H-ptl-Q" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.MaximizeHandler" command="_2DSdAJXJEeWpfK4H-ptl-Q"/>
+  <handlers xmi:id="_dJNbkJT5EeWdFYAq2aQ5FQ" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.NewHandler" command="_VwNHcCIQEeKXqtgJGiogfQ"/>
+  <handlers xmi:id="_zRVKsJblEeWlE9-mdxQ18Q" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.ImportHandler" command="_Ndix0GmaEeKne9c4TFA2rw"/>
+  <handlers xmi:id="_5EZVgJblEeWlE9-mdxQ18Q" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.ExportHandler" command="_Efm2cGGXEeKGesEp5yb--A"/>
   <bindingTables xmi:id="_gRRkADyfEeKc_uS-EtsnSg" elementId="org.elbe.relations.bindingtable.app" bindingContext="_vLHKgDv5EeKA7_T_MYQC0Q"/>
   <bindingTables xmi:id="_8u67EDx4EeKc_uS-EtsnSg" elementId="org.elbe.relations.bindingtable.main" bindingContext="_2rKewDv9EeKA7_T_MYQC0Q">
     <bindings xmi:id="_-axcDRYwEeKaY4i-iZlKSg" keySequence="M1+Q" command="_-axcChYwEeKaY4i-iZlKSg">
@@ -370,8 +372,8 @@
   <commands xmi:id="_h9_rIB68EeK3tP7nd1gQtA" elementId="org.elbe.relations.command.reindex" commandName="%command.commandname.19" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <commands xmi:id="_-6q8MB7EEeK3tP7nd1gQtA" elementId="org.eclipse.ui.window.preferences" commandName="%command.show.prefs" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <commands xmi:id="_VwNHcCIQEeKXqtgJGiogfQ" elementId="org.eclipse.ui.newWizards" commandName="%command.new" description="%command.description.5" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
-  <commands xmi:id="_Efm2cGGXEeKGesEp5yb--A" elementId="org.eclipse.ui.file.export" commandName="%command.commandname.22" description="%command.description.6" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
-  <commands xmi:id="_Ndix0GmaEeKne9c4TFA2rw" elementId="org.eclipse.ui.file.import" commandName="%command.commandname.23" description="%command.description.7" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
+  <commands xmi:id="_Efm2cGGXEeKGesEp5yb--A" elementId="org.eclipse.ui.exportWizards" commandName="%command.export" description="%command.export.desc" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
+  <commands xmi:id="_Ndix0GmaEeKne9c4TFA2rw" elementId="org.eclipse.ui.importWizards" commandName="%command.import" description="%command.import.desc" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <commands xmi:id="_FRBqMDm0EeK6U-bl-Eeouw" elementId="org.elbe.relations.command.item.center" commandName="%command.center" description="%command.description.8" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <commands xmi:id="_JLN_gDoPEeKujv83JopdLA" elementId="org.elbe.relations.command.item.edit" commandName="%command.item.edit" description="%command.show.item.edit" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <commands xmi:id="_ppYbQD-yEeKpJeHGhTdrNA" elementId="org.elbe.relations.command.item.browse" commandName="%command.commandname.26" description="%command.description.10" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>

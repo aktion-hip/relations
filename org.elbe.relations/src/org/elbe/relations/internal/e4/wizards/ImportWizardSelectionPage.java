@@ -27,25 +27,21 @@ import org.elbe.relations.internal.e4.wizards.util.IWizardDescriptor;
 
 /**
  * New wizard selection tab that allows the user to either select a registered
- * 'New' wizard to be launched, or to select a solution or projects to be
+ * 'Import' wizard to be launched, or to select a solution or projects to be
  * retrieved from an available server. This page contains two visual tabs that
  * allow the user to perform these tasks.
  *
- * Temporarily has two inner pages. The new format page is used if the system is
- * currently aware of activity categories.
- *
- * @author Luthiger <br />
- *         see org.eclipse.ui.internal.dialogs.NewWizardSelectionPage
+ * @author Luthiger
  */
-public class NewWizardSelectionPage
+public class ImportWizardSelectionPage
         extends AbstractExtensionWizardSelectionPage {
 
 	private final IWizardCategory wizardCategories;
 	private final IWizardDescriptor[] primaryWizards;
-	private NewWizardNewPage newResourcePage;
+	private ImportWizardNewPage importResourcePage;
 
 	/**
-	 * NewWizardSelectionPage constructor
+	 * ImportWizardSelectionPage constructor.
 	 *
 	 * @param inSelection
 	 *            {@link IStructuredSelection}
@@ -56,10 +52,10 @@ public class NewWizardSelectionPage
 	 * @param inPrimary
 	 *            IWizardDescriptor[]
 	 */
-	protected NewWizardSelectionPage(final IStructuredSelection inSelection,
+	protected ImportWizardSelectionPage(final IStructuredSelection inSelection,
 	        final IEclipseContext inContext, final IWizardCategory inCategories,
 	        final IWizardDescriptor[] inPrimary) {
-		super("newWizardSelectionPage");
+		super("importWizardSelectionPage");
 
 		setPageComplete(false);
 		setTitle("Select a wizard");
@@ -71,11 +67,12 @@ public class NewWizardSelectionPage
 
 	@Override
 	public void createControl(final Composite inParent) {
-		newResourcePage = new NewWizardNewPage(this, getContext(),
+		importResourcePage = new ImportWizardNewPage(this, getContext(),
 		        wizardCategories, primaryWizards);
-		newResourcePage.setDialogSettings(getDialogSettings());
+		importResourcePage.setDialogSettings(getDialogSettings());
 
-		final Control lControl = newResourcePage.createControl(inParent);
+		final Control lControl = importResourcePage.createControl(inParent);
 		setControl(lControl);
 	}
+
 }

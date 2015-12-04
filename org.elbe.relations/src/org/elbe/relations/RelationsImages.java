@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -25,7 +25,7 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * Helper class to access the application's icons.
- * 
+ *
  * @author Luthiger
  */
 public enum RelationsImages {
@@ -55,7 +55,12 @@ public enum RelationsImages {
 	WIZARD_NEW_TEXT("wiz_new_text.png"), //$NON-NLS-1$
 	WIZARD_NEW_PERSON("wiz_new_person.png"), //$NON-NLS-1$
 	WIZARD_NEW_DB("wiz_new_db.png"), //$NON-NLS-1$
-	WIZARD_EDIT_DB("wiz_edit_db.png"); //$NON-NLS-1$
+	WIZARD_EDIT_DB("wiz_edit_db.png"), //$NON-NLS-1$
+	WIZARD_NEW("new_wizban.png"), //$NON-NLS-1$
+	WIZARD_IMPORT("import_wizban.png"), //$NON-NLS-1$
+	WIZARD_EXPORT("export_wizban.png"), // $NON-NLS-2$
+	WIZARD_IMPORT_XML("importzip_wiz.png"), //$NON-NLS-1$
+	WIZARD_EXPORT_XML("exportzip_wiz.png"); // $NON-NLS-2$
 
 	private static String ICONS_DIR = "icons/"; //$NON-NLS-1$
 	private final String name;
@@ -68,8 +73,8 @@ public enum RelationsImages {
 	 * @return {@link ImageDescriptor} this item's image descriptor
 	 */
 	public ImageDescriptor getDescriptor() {
-		return ImageDescriptor.createFromURL(Activator.getEntry(ICONS_DIR
-				+ name));
+		return ImageDescriptor
+		        .createFromURL(Activator.getEntry(ICONS_DIR + name));
 	}
 
 	/**
@@ -92,11 +97,11 @@ public enum RelationsImages {
 	}
 
 	private static Image createImage(final String inName,
-			final ImageDescriptor inDescriptor) {
+	        final ImageDescriptor inDescriptor) {
 		ImageDescriptor lDescriptor = null;
 		try {
-			lDescriptor = ImageDescriptor.createFromURL(Activator
-					.getEntry(ICONS_DIR + inName));
+			lDescriptor = ImageDescriptor
+			        .createFromURL(Activator.getEntry(ICONS_DIR + inName));
 		}
 		catch (final Exception exc) {
 			lDescriptor = ImageDescriptor.getMissingImageDescriptor();

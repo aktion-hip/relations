@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.elbe.relations.Activator;
+import org.elbe.relations.RelationsImages;
 import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.internal.actions.IDBChange;
 import org.elbe.relations.internal.forms.FieldStatusManager;
@@ -52,12 +53,12 @@ import org.osgi.service.prefs.BackingStoreException;
 /**
  * Page displaying the fields to enter the name of the XML file to import and
  * the database catalog to create.
- * 
- * @author Luthiger Created on 13.10.2008
+ *
+ * @author Luthiger
  */
 @SuppressWarnings("restriction")
-public class ImportFromXMLPage extends ExportWizardPage implements
-        IUpdateListener {
+public class ImportFromXMLPage extends ExportWizardPage
+        implements IUpdateListener {
 	private static final String[] FILTER_EXTENSIONS = { "*.xml", "*.zip" }; //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String DIALOG_SECTION = "RelationsXMLImport"; //$NON-NLS-1$
 	private static final String DIALOG_TERM = "RecentRelationsXMLImport"; //$NON-NLS-1$
@@ -68,18 +69,18 @@ public class ImportFromXMLPage extends ExportWizardPage implements
 	private Button fileOpen;
 	private final FieldStatusManager statusManager = new FieldStatusManager();
 
-	final private IStatus importEmpty = FormUtility
-	        .createErrorStatus(RelationsMessages
-	                .getString("ImportFromXMLPage.error.name.empty"), BUNDLE_ID); //$NON-NLS-1$
-	final private IStatus importInexistent = FormUtility
-	        .createErrorStatus(RelationsMessages
-	                .getString("ImportFromXMLPage.error.file.exist"), BUNDLE_ID); //$NON-NLS-1$
-	final private IStatus importZipEmpty = FormUtility
-	        .createErrorStatus(RelationsMessages
-	                .getString("ImportFromXMLPage.error.file.empty"), BUNDLE_ID); //$NON-NLS-1$
-	final private IStatus importZipNoArchive = FormUtility
-	        .createErrorStatus(
-	                RelationsMessages.getString("ImportFromXMLPage.msg.error"), BUNDLE_ID); //$NON-NLS-1$
+	final private IStatus importEmpty = FormUtility.createErrorStatus(
+	        RelationsMessages.getString("ImportFromXMLPage.error.name.empty"), //$NON-NLS-1$
+	        BUNDLE_ID);
+	final private IStatus importInexistent = FormUtility.createErrorStatus(
+	        RelationsMessages.getString("ImportFromXMLPage.error.file.exist"), //$NON-NLS-1$
+	        BUNDLE_ID);
+	final private IStatus importZipEmpty = FormUtility.createErrorStatus(
+	        RelationsMessages.getString("ImportFromXMLPage.error.file.empty"), //$NON-NLS-1$
+	        BUNDLE_ID);
+	final private IStatus importZipNoArchive = FormUtility.createErrorStatus(
+	        RelationsMessages.getString("ImportFromXMLPage.msg.error"), //$NON-NLS-1$
+	        BUNDLE_ID);
 	private final DialogSettingHandler settings;
 	private final IEclipseContext context;
 	private final Logger log;
@@ -94,6 +95,7 @@ public class ImportFromXMLPage extends ExportWizardPage implements
 		context = inContext;
 		log = inLog;
 		setTitle(RelationsMessages.getString("ImportFromXMLPage.page.title")); //$NON-NLS-1$
+		setImageDescriptor(RelationsImages.WIZARD_IMPORT_XML.getDescriptor());
 		setMessage(RelationsMessages.getString("ImportFromXMLPage.page.msg")); //$NON-NLS-1$
 		settings = new DialogSettingHandler(DIALOG_SECTION, DIALOG_TERM);
 	}
@@ -104,9 +106,9 @@ public class ImportFromXMLPage extends ExportWizardPage implements
 		final Composite lComposite = WizardHelper.createComposite(inParent,
 		        lColumns);
 
-		importFileName = createRequiredLabelCombo(
-		        lComposite,
-		        RelationsMessages.getString("ImportFromXMLPage.lbl.input.file"), SWT.DROP_DOWN); //$NON-NLS-1$
+		importFileName = createRequiredLabelCombo(lComposite,
+		        RelationsMessages.getString("ImportFromXMLPage.lbl.input.file"), //$NON-NLS-1$
+		        SWT.DROP_DOWN);
 		FormUtility.addDecorationHint(importFileName,
 		        RelationsMessages.getString("ImportPage.hint.drop")); //$NON-NLS-1$
 		statusManager.initialize(importFileName);
@@ -147,11 +149,12 @@ public class ImportFromXMLPage extends ExportWizardPage implements
 		importFileName.setItems(lRecentValues);
 	}
 
-	private void createSeparator(final Composite inParent, final int inColumns) {
-		final Label lSeparator = new Label(inParent, SWT.SEPARATOR
-		        | SWT.HORIZONTAL);
-		lSeparator.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false,
-		        inColumns, 1));
+	private void createSeparator(final Composite inParent,
+	        final int inColumns) {
+		final Label lSeparator = new Label(inParent,
+		        SWT.SEPARATOR | SWT.HORIZONTAL);
+		lSeparator.setLayoutData(
+		        new GridData(SWT.FILL, SWT.NONE, true, false, inColumns, 1));
 	}
 
 	@Override
@@ -170,14 +173,16 @@ public class ImportFromXMLPage extends ExportWizardPage implements
 			statusManager.set(importFileName, importInexistent);
 			return false;
 		}
-		if (!inFileName.endsWith(".zip") && !inFileName.endsWith(".xml"))return false; //$NON-NLS-1$ //$NON-NLS-2$
+		if (!inFileName.endsWith(".zip") && !inFileName.endsWith(".xml")) {
+			return false; // $NON-NLS-1$ //$NON-NLS-2$
+		}
 		if (inFileName.endsWith(".zip")) { //$NON-NLS-1$
 			try {
 				final ZipFile lZipToCheck = new ZipFile(lFileToCheck);
 				final boolean outOk = (lZipToCheck.size() != 0);
 				lZipToCheck.close();
-				statusManager.set(importFileName, outOk ? Status.OK_STATUS
-				        : importZipEmpty);
+				statusManager.set(importFileName,
+				        outOk ? Status.OK_STATUS : importZipEmpty);
 				return outOk;
 			}
 			catch (final IOException exc) {
@@ -194,14 +199,16 @@ public class ImportFromXMLPage extends ExportWizardPage implements
 		notifyAboutUpdate(statusManager.getStati());
 
 		fileNameStatus = Status.OK_STATUS;
-		final FileDialog lDialog = new FileDialog(Display.getCurrent()
-		        .getActiveShell(), SWT.OPEN);
-		lDialog.setText(RelationsMessages
-		        .getString("ImportFromXMLPage.dialog.text")); //$NON-NLS-1$
+		final FileDialog lDialog = new FileDialog(
+		        Display.getCurrent().getActiveShell(), SWT.OPEN);
+		lDialog.setText(
+		        RelationsMessages.getString("ImportFromXMLPage.dialog.text")); //$NON-NLS-1$
 		lDialog.setFilterExtensions(FILTER_EXTENSIONS);
 		lDialog.setFilterNames(new String[] {
 		        RelationsMessages
-		                .getString("ImportFromXMLPage.dialog.filter.plain"), RelationsMessages.getString("ImportFromXMLPage.dialog.filter.zipped") }); //$NON-NLS-1$ //$NON-NLS-2$
+		                .getString("ImportFromXMLPage.dialog.filter.plain"), //$NON-NLS-1$
+		        RelationsMessages
+		                .getString("ImportFromXMLPage.dialog.filter.zipped") }); //$NON-NLS-1$
 		final String lFileName = lDialog.open();
 		if (lFileName == null) {
 			fileNameStatus = nameEmpty;

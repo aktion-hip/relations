@@ -35,6 +35,8 @@ import org.elbe.relations.internal.e4.wizards.util.WizardsRegistryReader;
 public abstract class AbstractExtensionWizardRegistry
         extends AbstractWizardRegistry {
 
+	private static final String PLUGIN_ID = "org.eclipse.ui";
+
 	@Inject
 	private IExtensionRegistry extensionRegistry; // NOPMD
 
@@ -67,6 +69,8 @@ public abstract class AbstractExtensionWizardRegistry
 	 *
 	 * @return the plugin id
 	 */
-	protected abstract String getPlugin();
+	protected String getPlugin() {
+		return PLUGIN_ID;
+	}
 
 }

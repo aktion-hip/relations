@@ -28,16 +28,18 @@ import org.elbe.relations.internal.e4.wizards.util.IWizardCategory;
 import org.elbe.relations.internal.e4.wizards.util.IWizardDescriptor;
 
 /**
- * The new wizard is responsible for allowing the user to choose which new
- * (nested) wizard to run. The set of available new wizards comes from the new
- * extension point.
+ * The export wizard allows the user to choose which nested export wizard to
+ * run. The set of available wizards comes from the export wizard extension
+ * point.
  *
- * @author Luthiger
+ * @author Luthiger <br />
+ *         see org.eclipse.ui.internal.dialogs.ExportWizard
  */
-public class NewWizard extends AbstractExtensionWizard {
+public class ExportWizard extends AbstractExtensionWizard {
+
 	@Inject
-	@Named(AbstractExtensionWizard.NEW_WIZARD_REGISTRY)
-	private NewWizardRegistry newWizardRegistry;
+	@Named(AbstractExtensionWizard.EXPORT_WIZARD_REGISTRY)
+	private ExportWizardRegistry exportWizardRegistry;
 
 	private AbstractExtensionWizardSelectionPage mainPage;
 
@@ -45,14 +47,15 @@ public class NewWizard extends AbstractExtensionWizard {
 
 	@Override
 	public void addPages() {
-		IWizardCategory lRoot = newWizardRegistry.getRootCategory();
-		final IWizardDescriptor[] lPrimary = newWizardRegistry
+		IWizardCategory lRoot = exportWizardRegistry.getRootCategory();
+		final IWizardDescriptor[] lPrimary = exportWizardRegistry
 		        .getPrimaryWizards();
 
 		if (categoryId != null) {
 			lRoot = processCategories(lRoot);
 		}
-		mainPage = new NewWizardSelectionPage(selection, getContext(), lRoot,
+
+		mainPage = new ExportWizardSelectionPage(selection, getContext(), lRoot,
 		        lPrimary);
 		addPage(mainPage);
 	}
@@ -65,10 +68,10 @@ public class NewWizard extends AbstractExtensionWizard {
 		selection = inSelection;
 
 		if (getWindowTitle() == null) {
-			setWindowTitle(RelationsMessages.getString("New.wizard.title"));
+			setWindowTitle(RelationsMessages.getString("Export.wizard.title"));
 		}
 		setDefaultPageImageDescriptor(
-		        RelationsImages.WIZARD_NEW.getDescriptor());
+		        RelationsImages.WIZARD_EXPORT.getDescriptor());
 		setNeedsProgressMonitor(true);
 	}
 

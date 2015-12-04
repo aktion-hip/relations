@@ -21,6 +21,7 @@ package org.elbe.relations.internal.wizards;
 import java.io.File;
 import java.io.IOException;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.core.runtime.preferences.DefaultScope;
@@ -31,11 +32,8 @@ import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IImportWizard;
-import org.eclipse.ui.IWorkbench;
 import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.internal.actions.ChangeDB;
@@ -46,14 +44,12 @@ import org.elbe.relations.internal.data.DBSettings;
 import org.elbe.relations.internal.data.IDBSettings;
 import org.elbe.relations.internal.data.TempSettings;
 import org.elbe.relations.internal.utility.EmbeddedCatalogHelper;
-import org.elbe.relations.internal.utility.WizardHelper;
 import org.elbe.relations.internal.utility.ZipImport;
+import org.elbe.relations.internal.wizards.interfaces.IImportWizard;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**
- * Wizard to import a Relations database stored to a Zip file.<br />
- * Note: this is an Eclipse 3 wizard. To make it e4, let the values for the
- * annotated field be injected (instead of using the method init()).
+ * Wizard to import a Relations database stored to a Zip file.
  *
  * @author Luthiger Created on 15.10.2007
  */
@@ -84,18 +80,8 @@ public class ImportEmbedded extends Wizard implements IImportWizard {
 
 	private ImportEmbeddedPage page;
 
-	@Override
-	public void init(final IWorkbench inWorkbench,
-	        final IStructuredSelection inSelection) {
-		log = inWorkbench.getAdapter(Logger.class);
-		statusLine = WizardHelper.getFromWorkbench(
-		        RelationsStatusLineManager.class, inWorkbench);
-		workbench = inWorkbench
-		        .getAdapter(org.eclipse.e4.ui.workbench.IWorkbench.class);
-		appContext = inWorkbench.getAdapter(IApplicationContext.class);
-		context = inWorkbench.getAdapter(IEclipseContext.class);
-		dbSettings = inWorkbench.getAdapter(DBSettings.class);
-
+	@PostConstruct
+	public void init() {
 		setWindowTitle(
 		        RelationsMessages.getString("ImportEmbedded.window.title")); //$NON-NLS-1$
 	}

@@ -22,29 +22,25 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IImportWizard;
-import org.eclipse.ui.IWorkbench;
 import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.internal.controls.RelationsStatusLineManager;
 import org.elbe.relations.internal.data.DBSettings;
 import org.elbe.relations.internal.utility.EmbeddedCatalogHelper;
-import org.elbe.relations.internal.utility.WizardHelper;
 import org.elbe.relations.internal.utility.ZipRestore;
+import org.elbe.relations.internal.wizards.interfaces.IImportWizard;
 
 /**
- * Wizard to restore the state of an embedded database.<br />
- * Note: this is an Eclipse 3 wizard. To make it e4, let the values for the
- * annotated field be injected (instead of using the method init()).
+ * Wizard to restore the state of an embedded database.
  *
  * @author Luthiger Created on 10.05.2007
  */
@@ -74,17 +70,8 @@ public class RestoreEmbedded extends Wizard implements IImportWizard {
 
 	private RestoreEmbeddedPage page;
 
-	@Override
-	public void init(final IWorkbench inWorkbench,
-	        final IStructuredSelection inSelection) {
-		dbSettings = inWorkbench.getAdapter(DBSettings.class);
-		statusLineManager = WizardHelper.getFromWorkbench(
-		        RelationsStatusLineManager.class, inWorkbench);
-		log = inWorkbench.getAdapter(Logger.class);
-		workbench = inWorkbench
-		        .getAdapter(org.eclipse.e4.ui.workbench.IWorkbench.class);
-		appContext = inWorkbench.getAdapter(IApplicationContext.class);
-
+	@PostConstruct
+	public void init() {
 		setWindowTitle(
 		        RelationsMessages.getString("RestoreEmbedded.window.title")); //$NON-NLS-1$
 	}

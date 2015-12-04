@@ -24,17 +24,18 @@ import org.eclipse.jface.wizard.IWizard;
 import org.elbe.relations.internal.e4.wizards.util.IWizardCategory;
 import org.elbe.relations.internal.e4.wizards.util.IWizardDescriptor;
 import org.elbe.relations.internal.e4.wizards.util.WorkbenchWizardNode;
-import org.elbe.relations.internal.wizards.interfaces.INewWizard;
+import org.elbe.relations.internal.wizards.interfaces.IImportWizard;
 
 /**
- * New wizard selection tab that allows the user to select a registered 'New'
+ * New wizard selection tab that allows the user to select a registered 'Import'
  * wizard to be launched.
  *
  * @author Luthiger
  */
-public class NewWizardNewPage extends AbstractWizardNewPage {
+public class ImportWizardNewPage extends AbstractWizardNewPage {
+
 	/**
-	 * NewWizardNewPage constructor.
+	 * ImportWizardNewPage constructor.
 	 *
 	 * @param inMainPage
 	 *            {@link AbstractExtensionWizardSelectionPage}
@@ -45,7 +46,7 @@ public class NewWizardNewPage extends AbstractWizardNewPage {
 	 * @param inPrimaryWizards
 	 *            IWizardDescriptor[]
 	 */
-	public NewWizardNewPage(
+	public ImportWizardNewPage(
 	        final AbstractExtensionWizardSelectionPage inMainPage,
 	        final IEclipseContext inContext,
 	        final IWizardCategory inWizardCategories,
@@ -60,10 +61,10 @@ public class NewWizardNewPage extends AbstractWizardNewPage {
 	        final IEclipseContext inContext) {
 		return new WorkbenchWizardNode(inWizardPage, inElement, inContext) {
 			@Override
-			public INewWizard createWizard() throws CoreException {
+			public IImportWizard createWizard() throws CoreException {
 				final IWizard outWizard = wizardElement.createWizard();
-				return (outWizard instanceof INewWizard)
-		                ? (INewWizard) outWizard : null;
+				return (outWizard instanceof IImportWizard)
+		                ? (IImportWizard) outWizard : null;
 			}
 		};
 	}

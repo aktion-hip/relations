@@ -16,24 +16,33 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ***************************************************************************/
-package org.elbe.relations.internal.services;
+package org.elbe.relations.internal.wizards.interfaces;
 
 import org.eclipse.jface.wizard.IWizard;
-import org.elbe.relations.models.ItemAdapter;
 
 /**
- * Interface for wizards to edit a Relations item.
+ * Interface for export wizards.
+ * <p>
+ * Clients should implement this interface and include the name of their class
+ * in a wizard contributed to the workbench's export wizard extension point
+ * (named <code>"org.eclipse.ui.exportWizards"</code>). For example, the
+ * plug-in's XML markup might contain:
  *
- * @author Luthiger
+ * <pre>
+ * &LT;extension point="org.eclipse.ui.exportWizards"&GT;
+ *   &LT;wizard
+ *       id="com.example.myplugin.blob"
+ *       name="Blob File"
+ *       class="com.example.myplugin.BlobFileExporter"
+ *       icon="icons/export_blob_wiz.gif"&GT;
+ *     &LT;description&GT;Export resources to a BLOB file&LT;/description&GT;
+ *     &LT;selection class="org.eclipse.core.resources.IResource" /&GT;
+ *   &LT;/wizard&GT;
+ * &LT;/extension&GT;
+ * </pre>
+ * </p>
+ *
+ * @see org.eclipse.jface.wizard.IWizard
  */
-public interface IItemEditWizard extends IWizard {
-
-	/**
-	 * Set the model to the edit wizard.
-	 *
-	 * @param inModel
-	 *            {@link ItemAdapter} the model to edit
-	 */
-	void setModel(ItemAdapter inModel);
-
+public interface IExportWizard extends IWizard {
 }

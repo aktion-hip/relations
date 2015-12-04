@@ -16,24 +16,21 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ***************************************************************************/
-package org.elbe.relations.internal.services;
-
-import org.eclipse.jface.wizard.IWizard;
-import org.elbe.relations.models.ItemAdapter;
+package org.elbe.relations.internal.e4.wizards;
 
 /**
- * Interface for wizards to edit a Relations item.
+ * Registry that contains wizards contributed via the <code>importWizards</code>
+ * extension point.
  *
- * @author Luthiger
+ * @author Luthiger <br />
+ *         see org.eclipse.ui.internal.wizards.ImportWizardRegistry
  */
-public interface IItemEditWizard extends IWizard {
+public class ImportWizardRegistry extends AbstractExtensionWizardRegistry {
+	private static final String PL_NEW = "importWizards";
 
-	/**
-	 * Set the model to the edit wizard.
-	 *
-	 * @param inModel
-	 *            {@link ItemAdapter} the model to edit
-	 */
-	void setModel(ItemAdapter inModel);
+	@Override
+	protected String getExtensionPoint() {
+		return PL_NEW;
+	}
 
 }
