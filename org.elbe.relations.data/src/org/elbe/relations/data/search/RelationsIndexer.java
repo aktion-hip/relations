@@ -203,16 +203,16 @@ public abstract class RelationsIndexer extends AbstractSearching {
 	 *         exists yet.
 	 */
 	public boolean isIndexAvailable() {
-		final File lIndexContainer = getIndexContainer();
-		if (!lIndexContainer.exists()) {
+		final File indexContainer = getIndexContainer();
+		if (!indexContainer.exists()) {
 			return false;
 		}
-		final String[] lContent = lIndexContainer.list();
-		if (lContent.length == 0) {
+		final String[] content = indexContainer.list();
+		if (content == null || content.length == 0) {
 			return false;
 		}
-		for (int i = 0; i < lContent.length; i++) {
-			if (lContent[i].startsWith(INDEX_INDICATOR)) {
+		for (int i = 0; i < content.length; i++) {
+			if (content[i].startsWith(INDEX_INDICATOR)) {
 				return true;
 			}
 		}

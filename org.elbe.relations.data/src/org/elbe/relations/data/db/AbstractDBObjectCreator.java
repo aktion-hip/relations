@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -75,15 +76,24 @@ public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
 	public Collection<String> getCreateStatemens(final String inXMLName)
 			throws IOException, TransformerFactoryConfigurationError, TransformerException {
 		final XMLHandler lHandler = new XMLHandler();
-		InputStream lXML = null;
-		InputStream lXSL = null;
+		InputStream xml = null;
+		InputStream xsl = null;
+
+		if (bundle == null) {
+			return Collections.emptyList();
+		}
 
 		try {
+			final URL entry = bundle.getEntry(RESOURCES_DIR + inXMLName);
+			if (entry == null) {
+				return Collections.emptyList();
+			}
+
 			// get xml and xsl
-			lXML = bundle.getEntry(RESOURCES_DIR + inXMLName).openStream();
-			final Source lXMLSource = new StreamSource(lXML);
-			lXSL = getXSL().openStream();
-			final Source lXSLSource = new StreamSource(lXSL);
+			xml = entry.openStream();
+			final Source lXMLSource = new StreamSource(xml);
+			xsl = getXSL().openStream();
+			final Source lXSLSource = new StreamSource(xsl);
 
 			// transform xml
 			final Templates lTemplates = TransformerFactory.newInstance().newTemplates(lXSLSource);
@@ -91,11 +101,11 @@ public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
 			final Result lResult = new SAXResult(lHandler);
 			lTransformer.transform(lXMLSource, lResult);
 		} finally {
-			if (lXSL != null) {
-				lXSL.close();
+			if (xsl != null) {
+				xsl.close();
 			}
-			if (lXML != null) {
-				lXML.close();
+			if (xml != null) {
+				xml.close();
 			}
 		}
 		return lHandler.getStatements();
