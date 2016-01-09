@@ -1,6 +1,6 @@
-/*
+/**
 This package is part of Relations application.
-Copyright (C) 2010, Benno Luthiger
+Copyright (C) 2010-2016, Benno Luthiger
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public
@@ -145,7 +145,7 @@ public class MetadataFormatDC extends AbstractMetadataFormat {
 
 		if (listener == null) {
 			for (final DCElements lElement : DCElements.values()) {
-				if (lName == lElement.getElementName()) {
+				if (lName.equals(lElement.getElementName())) {
 					final ElementListener lListener = lElement.getListener(inAttributes);
 					if (lListener != null) {
 						listener = lListener;

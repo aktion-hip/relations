@@ -3,8 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Bibliographical Metadata
 Bundle-SymbolicName: org.elbe.relations.biblio.meta
 Bundle-Version: 1.1.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7,
- JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8,
+ JavaSE-1.7
 Bundle-Vendor: RelationWare
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.core.runtime;version="3.4.0",

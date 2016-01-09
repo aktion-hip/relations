@@ -1,6 +1,6 @@
-/*
+/**
 This package is part of Relations application.
-Copyright (C) 2009, Benno Luthiger
+Copyright (C) 2009-2016, Benno Luthiger
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public
@@ -35,7 +35,7 @@ import org.xml.sax.helpers.DefaultHandler;
 /**
  * <p>
  * Parser for XML documents like:
- * 
+ *
  * <pre>
  * &lt;formats>
  * &lt;format name="endnote" type="text/plain"/>
@@ -96,7 +96,7 @@ public class XMLFormatsParser extends DefaultHandler {
 	@Override
 	public void startElement(String inUri, String inLocalName, String inName, Attributes inAttributes)
 			throws SAXException {
-		if (inName == TAG_FORMAT) {
+		if (TAG_FORMAT.equals(inName)) {
 			metadataFormats.add(inAttributes.getValue(ATTRIBUTE_NAME));
 		}
 	}
