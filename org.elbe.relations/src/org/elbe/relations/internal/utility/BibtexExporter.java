@@ -22,8 +22,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Vector;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -101,7 +101,7 @@ public class BibtexExporter {
 		public void run(final IProgressMonitor inMonitor) {
 			final File lBibtex = new File(fileName);
 			final int lNumberOf = dataService.getTexts().size();
-			final Collection<String> lUnique = new Vector<String>(lNumberOf);
+			final Collection<String> lUnique = new ArrayList<String>(lNumberOf);
 
 			FileWriter lWriter = null;
 			final SubMonitor lProgress = SubMonitor.convert(inMonitor,

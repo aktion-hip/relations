@@ -18,12 +18,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package org.elbe.relations.biblio.meta.internal.unapi;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-import java.util.Vector;
 
 import org.elbe.relations.biblio.meta.internal.utility.ListenerParameterObject;
 import org.elbe.relations.biblio.meta.internal.utility.ListenerParameterObject.ListenerParameter;
@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
 /**
  * Parser class for <em>Metadata Object Description Schema (mods)</em> metadata
  * information.
- * 
+ *
  * @author Luthiger Created on 29.12.2009
  */
 public class MetadataFormatMods extends AbstractMetadataFormat {
@@ -43,24 +43,20 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 	private static final String ROOT_NODE = "mods".intern(); //$NON-NLS-1$
 
 	private enum ModsElements {
-		TITLE(
-				"titleInfo".intern(), new GenericElementHelper("title".intern()), ROOT_NODE), //$NON-NLS-1$ //$NON-NLS-2$
+		TITLE("titleInfo".intern(), new GenericElementHelper("title".intern()), ROOT_NODE), //$NON-NLS-1$ //$NON-NLS-2$
 		NAME("name".intern(), new NameElementHelper(), ROOT_NODE), //$NON-NLS-1$
 		ABSTRACT("abstract".intern(), new GenericFlatElementHelper(), ROOT_NODE), //$NON-NLS-1$
 		NOTE("note".intern(), new GenericFlatElementHelper(), null), //$NON-NLS-1$
-		PUBLISHER_PLACE(
-				"originInfo".intern(), new OriginElementHelper(), ROOT_NODE), //$NON-NLS-1$
+		PUBLISHER_PLACE("originInfo".intern(), new OriginElementHelper(), ROOT_NODE), //$NON-NLS-1$
 		GENRE("genre".intern(), new GenericFlatElementHelper(), ROOT_NODE), //$NON-NLS-1$
-		RESOURCE_TYPE(
-				"typeOfResource".intern(), new GenericFlatElementHelper(), ROOT_NODE), //$NON-NLS-1$
+		RESOURCE_TYPE("typeOfResource".intern(), new GenericFlatElementHelper(), ROOT_NODE), //$NON-NLS-1$
 		ISSUE_INFO("relatedItem".intern(), new IssueElementHelper(), ROOT_NODE); //$NON-NLS-1$
 
 		private final String elementName;
 		private final IElementHelper helper;
 		private final String requestedParent;
 
-		ModsElements(final String inElementName, final IElementHelper inHelper,
-				final String inRequestedParent) {
+		ModsElements(final String inElementName, final IElementHelper inHelper, final String inRequestedParent) {
 			elementName = inElementName;
 			helper = inHelper;
 			requestedParent = inRequestedParent;
@@ -70,10 +66,10 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 			return elementName;
 		}
 
-		ElementListener getListener(final String inParentNode,
-				final Attributes inAttributes) {
-			if (requestedParent != null && requestedParent != inParentNode)
+		ElementListener getListener(final String inParentNode, final Attributes inAttributes) {
+			if (requestedParent != null && requestedParent != inParentNode) {
 				return null;
+			}
 			return helper.getListener(elementName, inAttributes);
 		}
 	}
@@ -87,7 +83,7 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.elbe.relations.biblio.meta.internal.unapi.AbstractMetadataFormat#
 	 * canHandle(java.lang.String)
@@ -122,24 +118,20 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 		String lAdditional = getChecked(ModsElements.ABSTRACT.getElementName());
 		final String lNote = getChecked(ModsElements.NOTE.getElementName());
 		if (lNote != null) {
-			lAdditional = lAdditional == null ? lNote : lAdditional
-					+ "\n" + lNote; //$NON-NLS-1$
+			lAdditional = lAdditional == null ? lNote : lAdditional + "\n" + lNote; //$NON-NLS-1$
 		}
 		if (lAdditional != null) {
 			lActionBuilder.text(lAdditional);
 		}
-		handleOrigin(lActionBuilder,
-				elements.get(ModsElements.PUBLISHER_PLACE.getElementName()));
-		handlerIssueInfo(lActionBuilder,
-				elements.get(ModsElements.ISSUE_INFO.getElementName()));
+		handleOrigin(lActionBuilder, elements.get(ModsElements.PUBLISHER_PLACE.getElementName()));
+		handlerIssueInfo(lActionBuilder, elements.get(ModsElements.ISSUE_INFO.getElementName()));
 
 		// create the action
 		action = lActionBuilder.type(getType()).build(getContext());
 	}
 
 	private int getType() {
-		final String lResourceType = getChecked(ModsElements.RESOURCE_TYPE
-				.getElementName());
+		final String lResourceType = getChecked(ModsElements.RESOURCE_TYPE.getElementName());
 		final String lGenre = getChecked(ModsElements.GENRE.getElementName());
 		if (lGenre != null && lGenre.length() > 0) {
 			if ("journal article".equalsIgnoreCase(lGenre)) { //$NON-NLS-1$
@@ -158,17 +150,18 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 	}
 
 	private String[] handelAuthors() {
-		Collection<String> lAuthorSet = new Vector<String>();
-		Collection<String> lCoAuthorsSet = new Vector<String>();
-		final Collection<IContent> lNames = elements.get(ModsElements.NAME
-				.getElementName());
-		if (lNames == null)
+		Collection<String> lAuthorSet = new ArrayList<String>();
+		Collection<String> lCoAuthorsSet = new ArrayList<String>();
+		final Collection<IContent> lNames = elements.get(ModsElements.NAME.getElementName());
+		if (lNames == null) {
 			return new String[] { "", null }; //$NON-NLS-1$
+		}
 
 		for (final IContent lName : lNames) {
 			final String lContent = lName.getContent();
-			if (lContent == null)
+			if (lContent == null) {
 				continue;
+			}
 			if ("creator".equals(((NameParameterObject) lName).getRoleType())) { //$NON-NLS-1$
 				lAuthorSet.add(lName.getContent());
 			} else {
@@ -180,19 +173,21 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 			lCoAuthorsSet = null;
 		}
 		final Joiner lJoiner = new Joiner(", "); //$NON-NLS-1$
-		return new String[] { lJoiner.join(lAuthorSet),
-				lCoAuthorsSet == null ? null : lJoiner.join(lCoAuthorsSet) };
+		return new String[] { lJoiner.join(lAuthorSet), lCoAuthorsSet == null ? null : lJoiner.join(lCoAuthorsSet) };
 	}
 
 	private void handlerIssueInfo(final NewTextAction.Builder inActionBuilder,
 			final Collection<IContent> inCollection) {
-		if (inCollection == null)
+		if (inCollection == null) {
 			return;
-		if (inCollection.size() == 0)
+		}
+		if (inCollection.size() == 0) {
 			return;
+		}
 		final IContent lIssues = inCollection.iterator().next();
-		if (!(lIssues instanceof IssueParameterObject))
+		if (!(lIssues instanceof IssueParameterObject)) {
 			return;
+		}
 		final IssueParameterObject lIssueInfo = (IssueParameterObject) lIssues;
 
 		String lAdditional = lIssueInfo.getIssueTitle();
@@ -217,15 +212,17 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 		}
 	}
 
-	private void handleOrigin(final NewTextAction.Builder inActionBuilder,
-			final Collection<IContent> inCollection) {
-		if (inCollection == null)
+	private void handleOrigin(final NewTextAction.Builder inActionBuilder, final Collection<IContent> inCollection) {
+		if (inCollection == null) {
 			return;
-		if (inCollection.size() == 0)
+		}
+		if (inCollection.size() == 0) {
 			return;
+		}
 		final IContent lOrigin = inCollection.iterator().next();
-		if (!(lOrigin instanceof OriginParameterObject))
+		if (!(lOrigin instanceof OriginParameterObject)) {
 			return;
+		}
 		final OriginParameterObject lPlacePublisher = (OriginParameterObject) lOrigin;
 
 		String lAdditional = lPlacePublisher.getPlace();
@@ -253,12 +250,12 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 	}
 
 	@Override
-	public void startElement(final String inUri, final String inLocalName,
-			final String inName, final Attributes inAttributes)
-			throws SAXException {
+	public void startElement(final String inUri, final String inLocalName, final String inName,
+			final Attributes inAttributes) throws SAXException {
 		final String lName = checkNameSpace(inName);
-		if (lName == null)
+		if (lName == null) {
 			return;
+		}
 
 		parentNode = ancestors.empty() ? "" : ancestors.peek(); //$NON-NLS-1$
 		ancestors.push(lName);
@@ -266,8 +263,7 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 		if (listener == null) {
 			for (final ModsElements lElement : ModsElements.values()) {
 				if (lName == lElement.getElementName()) {
-					final ElementListener lListener = lElement.getListener(
-							parentNode, inAttributes);
+					final ElementListener lListener = lElement.getListener(parentNode, inAttributes);
 					if (lListener != null) {
 						listener = lListener;
 						if (listener.isFlat) {
@@ -285,11 +281,11 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 	}
 
 	@Override
-	public void endElement(final String inUri, final String inLocalName,
-			final String inName) throws SAXException {
+	public void endElement(final String inUri, final String inLocalName, final String inName) throws SAXException {
 		final String lName = checkNameSpace(inName);
-		if (lName == null)
+		if (lName == null) {
 			return;
+		}
 
 		ancestors.pop();
 
@@ -302,7 +298,7 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 				final String lElementID = listener.getElementID();
 				Collection<IContent> lElements = elements.get(lElementID);
 				if (lElements == null) {
-					lElements = new Vector<IContent>();
+					lElements = new ArrayList<IContent>();
 					elements.put(lElementID, lElements);
 				}
 				lElements.add(listener.getContent());
@@ -313,8 +309,7 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 	}
 
 	@Override
-	public void characters(final char[] inCharacters, final int inStart,
-			final int inLength) throws SAXException {
+	public void characters(final char[] inCharacters, final int inStart, final int inLength) throws SAXException {
 		if (listener != null && listener.isActive()) {
 			listener.addCharacters(inCharacters, inStart, inLength);
 		}
@@ -322,10 +317,8 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 
 	// --- private classes ---
 
-	abstract private static class ExendedElementListener extends
-			ElementListener {
-		ExendedElementListener(final String inElementName,
-				final String inTextNodeName) {
+	abstract private static class ExendedElementListener extends ElementListener {
+		ExendedElementListener(final String inElementName, final String inTextNodeName) {
 			super(inElementName, inTextNodeName);
 		}
 
@@ -346,8 +339,7 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 		}
 
 		@Override
-		void addCharacters(final char[] inCharacters, final int inStart,
-				final int inLength) {
+		void addCharacters(final char[] inCharacters, final int inStart, final int inLength) {
 			getParameterObject().addCharacters(inCharacters, inStart, inLength);
 		}
 
@@ -426,8 +418,7 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 
 	private static class NameElementHelper implements IElementHelper {
 		@Override
-		public ElementListener getListener(final String inElementName,
-				final Attributes inAttributes) {
+		public ElementListener getListener(final String inElementName, final Attributes inAttributes) {
 			if ("personal".equalsIgnoreCase(inAttributes.getValue("type"))) { //$NON-NLS-1$ //$NON-NLS-2$
 				return new NameListener(inElementName);
 			}
@@ -437,16 +428,14 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 
 	private static class OriginElementHelper implements IElementHelper {
 		@Override
-		public ElementListener getListener(final String inElementName,
-				final Attributes inAttributes) {
+		public ElementListener getListener(final String inElementName, final Attributes inAttributes) {
 			return new OriginListener(inElementName);
 		};
 	}
 
 	private static class IssueElementHelper implements IElementHelper {
 		@Override
-		public ElementListener getListener(final String inElementName,
-				final Attributes inAttributes) {
+		public ElementListener getListener(final String inElementName, final Attributes inAttributes) {
 			if ("host".equalsIgnoreCase(inAttributes.getValue("type"))) { //$NON-NLS-1$ //$NON-NLS-2$
 				return new IssueInfoListener(inElementName);
 			}
@@ -468,8 +457,7 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 			getParameterObject().unprepare(inName);
 		}
 
-		void addCharacters(final char[] inCharacters, final int inStart,
-				final int inLength) {
+		void addCharacters(final char[] inCharacters, final int inStart, final int inLength) {
 			getParameterObject().addCharacters(inCharacters, inStart, inLength);
 		}
 	}
@@ -478,8 +466,7 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 		private static final String ELEMENT_NAME_PART = "namePart"; //$NON-NLS-1$
 		private static final String ELEMENT_ROLE = "role"; //$NON-NLS-1$
 		private static final String ELEMENT_ROLE_TERM = "roleTerm"; //$NON-NLS-1$
-		static final String[] NAMES = { ELEMENT_NAME_PART, ELEMENT_ROLE,
-				ELEMENT_ROLE_TERM };
+		static final String[] NAMES = { ELEMENT_NAME_PART, ELEMENT_ROLE, ELEMENT_ROLE_TERM };
 
 		private static final String NAME_DEFAULT = "defaultName"; //$NON-NLS-1$
 		private static final String NAME_FAMILY = "familyName"; //$NON-NLS-1$
@@ -510,23 +497,22 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 		@Override
 		public String getContent() {
 			final String lFamilyName = name.getContent(NAME_FAMILY);
-			if (lFamilyName == null)
+			if (lFamilyName == null) {
 				return name.getContent(NAME_DEFAULT);
+			}
 			final String lFirstName = name.getContent(NAME_FIRST);
-			return lFirstName == null ? lFamilyName : String.format(
-					"%s, %s", lFamilyName, lFirstName); //$NON-NLS-1$
+			return lFirstName == null ? lFamilyName : String.format("%s, %s", lFamilyName, lFirstName); //$NON-NLS-1$
 		}
 	}
 
-	private static class OriginParameterObject extends AbstractParameterObject
-			implements IContent {
+	private static class OriginParameterObject extends AbstractParameterObject implements IContent {
 		private static final String ELEMENT_PLACE = "place"; //$NON-NLS-1$
 		private static final String ELEMENT_PLACE_TEXT = "text"; //$NON-NLS-1$
 		private static final String ELEMENT_PLACE_TERM = "placeTerm"; //$NON-NLS-1$
 		private static final String ELEMENT_PUBLISHER = "publisher"; //$NON-NLS-1$
 		private static final String ELEMENT_DATE_ISSUED = "dateIssued"; //$NON-NLS-1$
-		static final String[] NAMES = { ELEMENT_PLACE, ELEMENT_PLACE_TEXT,
-				ELEMENT_PLACE_TERM, ELEMENT_PUBLISHER, ELEMENT_DATE_ISSUED };
+		static final String[] NAMES = { ELEMENT_PLACE, ELEMENT_PLACE_TEXT, ELEMENT_PLACE_TERM, ELEMENT_PUBLISHER,
+				ELEMENT_DATE_ISSUED };
 
 		private static final String NAME_PLACE = "place"; //$NON-NLS-1$
 		private static final String NAME_PLACE_ALTERNATE = "placeText"; //$NON-NLS-1$
@@ -550,8 +536,7 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 
 		String getPlace() {
 			final String outPlace = origin.getContent(NAME_PLACE);
-			return outPlace == null ? origin.getContent(NAME_PLACE_ALTERNATE)
-					: outPlace;
+			return outPlace == null ? origin.getContent(NAME_PLACE_ALTERNATE) : outPlace;
 		}
 
 		String getPublisher() {
@@ -568,8 +553,7 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 		}
 	}
 
-	private static class IssueParameterObject extends AbstractParameterObject
-			implements IContent {
+	private static class IssueParameterObject extends AbstractParameterObject implements IContent {
 		private static final String ELEMENT_TITLE_INFO = "titleInfo"; //$NON-NLS-1$
 		private static final String ELEMENT_TITLE = "title"; //$NON-NLS-1$
 		private static final String ELEMENT_PART = "part"; //$NON-NLS-1$
@@ -579,9 +563,8 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 		private static final String ELEMENT_START = "start"; //$NON-NLS-1$
 		private static final String ELEMENT_END = "end"; //$NON-NLS-1$
 		private static final String ELEMENT_DATE = "date"; //$NON-NLS-1$
-		static final String[] NAMES = { ELEMENT_TITLE_INFO, ELEMENT_TITLE,
-				ELEMENT_PART, ELEMENT_DETAIL, ELEMENT_NUMBER, ELEMENT_EXTENT,
-				ELEMENT_START, ELEMENT_END, ELEMENT_DATE };
+		static final String[] NAMES = { ELEMENT_TITLE_INFO, ELEMENT_TITLE, ELEMENT_PART, ELEMENT_DETAIL, ELEMENT_NUMBER,
+				ELEMENT_EXTENT, ELEMENT_START, ELEMENT_END, ELEMENT_DATE };
 
 		private static final String NAME_ISSUE_TITLE = "issueTitle"; //$NON-NLS-1$
 		private static final String NAME_ISSUE_VOLUME = "volume"; //$NON-NLS-1$
@@ -598,26 +581,20 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 
 		IssueParameterObject() {
 			issueInfo = new ListenerParameterObject();
-			final ListenerParameter lTitle = issueInfo.addParameter(
-					NAME_ISSUE_TITLE, ELEMENT_TITLE_INFO, null);
+			final ListenerParameter lTitle = issueInfo.addParameter(NAME_ISSUE_TITLE, ELEMENT_TITLE_INFO, null);
 			lTitle.addChild(NAME_VALUE, ELEMENT_TITLE, null);
 
-			final ListenerParameter lPart = issueInfo.addParameter(NAME_PART,
-					ELEMENT_PART, null);
-			final ListenerParameter lVolume = lPart.addChild(NAME_ISSUE_VOLUME,
-					ELEMENT_DETAIL, "volume"); //$NON-NLS-1$
+			final ListenerParameter lPart = issueInfo.addParameter(NAME_PART, ELEMENT_PART, null);
+			final ListenerParameter lVolume = lPart.addChild(NAME_ISSUE_VOLUME, ELEMENT_DETAIL, "volume"); //$NON-NLS-1$
 			lVolume.addChild(NAME_VALUE, ELEMENT_NUMBER, null);
 
-			final ListenerParameter lNumberIssue = lPart.addChild(
-					NAME_ISSUE_NUMBER1, ELEMENT_DETAIL, "issue"); //$NON-NLS-1$
+			final ListenerParameter lNumberIssue = lPart.addChild(NAME_ISSUE_NUMBER1, ELEMENT_DETAIL, "issue"); //$NON-NLS-1$
 			lNumberIssue.addChild(NAME_VALUE, ELEMENT_NUMBER, null);
 
-			final ListenerParameter lNumberNumber = lPart.addChild(
-					NAME_ISSUE_NUMBER2, ELEMENT_DETAIL, "number"); //$NON-NLS-1$
+			final ListenerParameter lNumberNumber = lPart.addChild(NAME_ISSUE_NUMBER2, ELEMENT_DETAIL, "number"); //$NON-NLS-1$
 			lNumberNumber.addChild(NAME_VALUE, ELEMENT_NUMBER, null);
 
-			final ListenerParameter lPages = lPart.addChild(NAME_ISSUE_PAGES,
-					ELEMENT_EXTENT, null);
+			final ListenerParameter lPages = lPart.addChild(NAME_ISSUE_PAGES, ELEMENT_EXTENT, null);
 			lPages.addChild(NAME_ISSUE_PAGE_START, ELEMENT_START, null);
 			lPages.addChild(NAME_ISSUE_PAGE_END, ELEMENT_END, null);
 
@@ -630,46 +607,34 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 		}
 
 		String getIssueTitle() {
-			return issueInfo.getContent(NAME_ISSUE_TITLE
-					+ ListenerParameterObject.PATH_DELIMITER + NAME_VALUE);
+			return issueInfo.getContent(NAME_ISSUE_TITLE + ListenerParameterObject.PATH_DELIMITER + NAME_VALUE);
 		}
 
 		String getIssueVolume() {
-			return issueInfo.getContent(NAME_PART
-					+ ListenerParameterObject.PATH_DELIMITER
-					+ NAME_ISSUE_VOLUME
+			return issueInfo.getContent(NAME_PART + ListenerParameterObject.PATH_DELIMITER + NAME_ISSUE_VOLUME
 					+ ListenerParameterObject.PATH_DELIMITER + NAME_VALUE);
 		}
 
 		String getIssueNumber() {
-			final String outNumber = issueInfo.getContent(NAME_PART
-					+ ListenerParameterObject.PATH_DELIMITER
-					+ NAME_ISSUE_NUMBER1
-					+ ListenerParameterObject.PATH_DELIMITER + NAME_VALUE);
-			return outNumber == null ? issueInfo.getContent(NAME_PART
-					+ ListenerParameterObject.PATH_DELIMITER
-					+ NAME_ISSUE_NUMBER2
-					+ ListenerParameterObject.PATH_DELIMITER + NAME_VALUE)
-					: outNumber;
+			final String outNumber = issueInfo.getContent(NAME_PART + ListenerParameterObject.PATH_DELIMITER
+					+ NAME_ISSUE_NUMBER1 + ListenerParameterObject.PATH_DELIMITER + NAME_VALUE);
+			return outNumber == null ? issueInfo.getContent(NAME_PART + ListenerParameterObject.PATH_DELIMITER
+					+ NAME_ISSUE_NUMBER2 + ListenerParameterObject.PATH_DELIMITER + NAME_VALUE) : outNumber;
 		}
 
 		String getPages() {
-			final String outStart = issueInfo.getContent(NAME_PART
-					+ ListenerParameterObject.PATH_DELIMITER + NAME_ISSUE_PAGES
-					+ ListenerParameterObject.PATH_DELIMITER
-					+ NAME_ISSUE_PAGE_START);
-			if (outStart == null)
+			final String outStart = issueInfo.getContent(NAME_PART + ListenerParameterObject.PATH_DELIMITER
+					+ NAME_ISSUE_PAGES + ListenerParameterObject.PATH_DELIMITER + NAME_ISSUE_PAGE_START);
+			if (outStart == null) {
 				return null;
-			final String outEnd = issueInfo.getContent(NAME_PART
-					+ ListenerParameterObject.PATH_DELIMITER + NAME_ISSUE_PAGES
-					+ ListenerParameterObject.PATH_DELIMITER
-					+ NAME_ISSUE_PAGE_END);
+			}
+			final String outEnd = issueInfo.getContent(NAME_PART + ListenerParameterObject.PATH_DELIMITER
+					+ NAME_ISSUE_PAGES + ListenerParameterObject.PATH_DELIMITER + NAME_ISSUE_PAGE_END);
 			return outEnd == null ? outStart : outStart + "-" + outEnd; //$NON-NLS-1$
 		}
 
 		String getIssueDate() {
-			return issueInfo.getContent(NAME_PART
-					+ ListenerParameterObject.PATH_DELIMITER + NAME_ISSUE_DATE);
+			return issueInfo.getContent(NAME_PART + ListenerParameterObject.PATH_DELIMITER + NAME_ISSUE_DATE);
 		}
 
 		@Override
@@ -691,8 +656,9 @@ public class MetadataFormatMods extends AbstractMetadataFormat {
 			final StringBuilder out = new StringBuilder();
 			boolean lFirst = true;
 			for (final String lElement : inSet) {
-				if (!lFirst)
+				if (!lFirst) {
 					out.append(delimiter);
+				}
 				lFirst = false;
 				out.append(lElement);
 			}

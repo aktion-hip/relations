@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -45,7 +45,7 @@ import org.hip.kernel.exc.VException;
 /**
  * Adapts instances of <code>IItem</code> or <code>IItemModel</code> and
  * decorates the created object with additional behavior.
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
@@ -60,7 +60,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 
 	/**
 	 * ItemAdapter constructor, adapting an <code>IItem</code>.
-	 * 
+	 *
 	 * @param inItem
 	 *            {@link IItem} adaptee
 	 * @param inImage
@@ -77,13 +77,14 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 
 	/**
 	 * ItemAdapter constructor, adapting an <code>IItemModel</code>.
-	 * 
+	 *
 	 * @param inItem
 	 *            {@link IItemModel} adaptee
 	 * @param inContext
 	 *            {@link IEclipseContext}
 	 */
-	public ItemAdapter(final IItemModel inItem, final IEclipseContext inContext) {
+	public ItemAdapter(final IItemModel inItem,
+	        final IEclipseContext inContext) {
 		item = inItem;
 		hasDelegate = false;
 		initialize(inContext);
@@ -100,7 +101,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 
 	/**
 	 * Returns the original (i.e. unadapted) item.
-	 * 
+	 *
 	 * @return {@link IItem} the adaptee
 	 */
 	public IItem getItem() {
@@ -203,7 +204,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 
 	/**
 	 * Returns the wizard class to edit this item.
-	 * 
+	 *
 	 * @return Class&lt;? extends IItemEditWizard>
 	 * @see IItemModel#getItemEditWizard()
 	 */
@@ -222,7 +223,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 
 	/**
 	 * The item's icon.
-	 * 
+	 *
 	 * @return Image
 	 */
 	@Override
@@ -232,7 +233,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 
 	/**
 	 * Returns the light weight version of this item.
-	 * 
+	 *
 	 * @return ILightWeightItem
 	 * @throws BOMException
 	 */
@@ -243,7 +244,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 
 	/**
 	 * Returns this item's unique ID.
-	 * 
+	 *
 	 * @return UniqueID
 	 */
 	public UniqueID getUniqueID() {
@@ -258,7 +259,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 
 	/**
 	 * Saves the values of the title and text.
-	 * 
+	 *
 	 * @param inTitle
 	 *            String
 	 * @param inText
@@ -298,18 +299,23 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 	 */
 	@Override
 	public boolean equals(final Object inObj) {
-		if (this == inObj)
+		if (this == inObj) {
 			return true;
-		if (inObj == null)
+		}
+		if (inObj == null) {
 			return false;
-		if (getClass() != inObj.getClass())
+		}
+		if (getClass() != inObj.getClass()) {
 			return false;
+		}
 		final ItemAdapter lOther = (ItemAdapter) inObj;
 		if (getItem() == null) {
-			if (lOther.getItem() != null)
+			if (lOther.getItem() != null) {
 				return false;
-		} else if (!getItem().equals(lOther.getItem()))
+			}
+		} else if (!getItem().equals(lOther.getItem())) {
 			return false;
+		}
 		return true;
 	}
 
@@ -421,7 +427,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 				@Override
 				public void run() throws BOMException {
 					try {
-						IItemFactory lHome = null;
+						IItemFactory lHome = BOMHelper.getTermHome(); // default
 						switch (getItemType()) {
 						case IItem.TERM:
 							lHome = BOMHelper.getTermHome();
@@ -436,7 +442,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 						lHome.deleteItem(getID());
 					}
 					catch (final VException exc) {
-						new BOMException(exc);
+						throw new BOMException(exc);
 					}
 				}
 			};
@@ -447,7 +453,7 @@ public class ItemAdapter implements IItemModel, Comparable<Object> {
 
 	/**
 	 * Text item wrapper used for inspector visitor.
-	 * 
+	 *
 	 * @author Luthiger
 	 */
 	@SuppressWarnings("serial")

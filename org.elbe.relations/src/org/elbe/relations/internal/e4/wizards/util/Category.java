@@ -38,6 +38,7 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
  * A category may specify its parent category in order to achieve hierarchy.
  * </p>
  */
+@SuppressWarnings("restriction")
 public class Category
         implements IWorkbenchAdapter, IPluginContribution, IAdaptable {
 
@@ -62,9 +63,9 @@ public class Category
 	 * Creates an instance of <code>Category</code> as a miscellaneous category.
 	 */
 	public Category() {
-		this.id = MISC_ID;
-		this.name = "other";
-		this.pluginId = MISC_ID; // TODO: remove hack for bug 55172
+		id = MISC_ID;
+		name = "other";
+		pluginId = MISC_ID; // TODO: remove hack for bug 55172
 	}
 
 	/**
@@ -77,7 +78,7 @@ public class Category
 	 */
 	public Category(final String id, final String label) {
 		this.id = id;
-		this.name = label;
+		name = label;
 	}
 
 	/**
@@ -259,7 +260,7 @@ public class Category
 	@Override
 	public String getPluginId() {
 		return configurationElement == null ? pluginId
-		        : configurationElement.getNamespace();
+		        : configurationElement.getNamespaceIdentifier();
 	}
 
 	/**

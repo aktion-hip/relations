@@ -333,15 +333,16 @@ public class WizardsRegistryReader {
 			}
 		}
 
-		// If another category already exists with the same id ignore this one.
-		final Object lTest = getChildWithID(lParent, inCategory.getId());
-		if (lTest != null) {
-			return;
-		}
-
 		if (lParent != null) {
-			createCollectionElement(lParent, (IConfigurationElement) Util
-			        .getAdapter(inCategory, IConfigurationElement.class));
+			// If another category already exists with the same id ignore this
+			// one.
+			final Object lTest = getChildWithID(lParent, inCategory.getId());
+			if (lTest != null) {
+				return;
+			}
+
+			createCollectionElement(lParent,
+			        Util.getAdapter(inCategory, IConfigurationElement.class));
 		}
 	}
 

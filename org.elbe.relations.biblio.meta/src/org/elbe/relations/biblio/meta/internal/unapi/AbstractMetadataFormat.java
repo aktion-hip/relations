@@ -21,9 +21,9 @@ package org.elbe.relations.biblio.meta.internal.unapi;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Stack;
-import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -37,18 +37,17 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Base class for metadata format parsers.
- * 
+ *
  * @author Luthiger Created on 29.12.2009
  */
-public abstract class AbstractMetadataFormat extends DefaultHandler implements
-        IUnAPIHandler {
+public abstract class AbstractMetadataFormat extends DefaultHandler implements IUnAPIHandler {
 
 	private IEclipseContext context;
 
 	/**
 	 * Tests whether format handler instance can handle the specified metadata
 	 * format.
-	 * 
+	 *
 	 * @param inFormat
 	 *            String the metadata format id.
 	 * @return boolean <code>true</code> if the format handler instance can
@@ -60,7 +59,7 @@ public abstract class AbstractMetadataFormat extends DefaultHandler implements
 	/**
 	 * This method parses the specified resource and creates a
 	 * <code>NewTextAction</code> with the extracted metadata.
-	 * 
+	 *
 	 * @param inUrl
 	 *            URL the source providing the metadata to handle.
 	 * @return NewTextAction the action that can create a new text item with the
@@ -70,19 +69,16 @@ public abstract class AbstractMetadataFormat extends DefaultHandler implements
 	 * @throws IOException
 	 */
 	@Override
-	public NewTextAction createAction(final URL inUrl,
-	        final IEclipseContext inContext)
-	        throws ParserConfigurationException, SAXException, IOException {
+	public NewTextAction createAction(final URL inUrl, final IEclipseContext inContext)
+			throws ParserConfigurationException, SAXException, IOException {
 		context = inContext;
 		InputStream lInput = null;
 		try {
 			lInput = inUrl.openStream();
-			final SAXParser lParser = SAXParserFactory.newInstance()
-			        .newSAXParser();
+			final SAXParser lParser = SAXParserFactory.newInstance().newSAXParser();
 			lParser.parse(lInput, this);
 			return getAction();
-		}
-		finally {
+		} finally {
 			if (lInput != null) {
 				lInput.close();
 			}
@@ -95,7 +91,7 @@ public abstract class AbstractMetadataFormat extends DefaultHandler implements
 
 	/**
 	 * Subclasses must provide the <code>NewTextAction</code> after parsing.
-	 * 
+	 *
 	 * @return NewTextAction
 	 */
 	protected abstract NewTextAction getAction();
@@ -103,7 +99,7 @@ public abstract class AbstractMetadataFormat extends DefaultHandler implements
 	// --- private classes ---
 
 	protected static class ElementListener {
-		protected Collection<String> textNodeNames = new Vector<String>();
+		protected Collection<String> textNodeNames = new ArrayList<String>();
 		private StringBuilder content;
 		private final String elementID;
 		boolean isFlat = false;
@@ -140,8 +136,7 @@ public abstract class AbstractMetadataFormat extends DefaultHandler implements
 			return !trail.isEmpty();
 		}
 
-		void addCharacters(final char[] inCharacters, final int inStart,
-		        final int inLength) {
+		void addCharacters(final char[] inCharacters, final int inStart, final int inLength) {
 			for (int i = inStart; i < inStart + inLength; i++) {
 				content.append(inCharacters[i]);
 			}
@@ -157,15 +152,15 @@ public abstract class AbstractMetadataFormat extends DefaultHandler implements
 		}
 
 		boolean isEndTag(final String inNodeName) {
-			if (inNodeName != elementID)
+			if (inNodeName != elementID) {
 				return false;
+			}
 			return isFlat ? true : trail.isEmpty();
 		}
 	}
 
 	protected static interface IElementHelper {
-		ElementListener getListener(String inElementName,
-		        Attributes inAttributes);
+		ElementListener getListener(String inElementName, Attributes inAttributes);
 	}
 
 	protected static class GenericElementHelper implements IElementHelper {
@@ -176,18 +171,15 @@ public abstract class AbstractMetadataFormat extends DefaultHandler implements
 		}
 
 		@Override
-		public ElementListener getListener(final String inElementName,
-		        final Attributes inAttributes) {
+		public ElementListener getListener(final String inElementName, final Attributes inAttributes) {
 			return new ElementListener(inElementName, textNodeName);
 		};
 	}
 
 	protected static class GenericFlatElementHelper implements IElementHelper {
 		@Override
-		public ElementListener getListener(final String inElementName,
-		        final Attributes inAttributes) {
-			final ElementListener outListener = new ElementListener(
-			        inElementName, ""); //$NON-NLS-1$
+		public ElementListener getListener(final String inElementName, final Attributes inAttributes) {
+			final ElementListener outListener = new ElementListener(inElementName, ""); //$NON-NLS-1$
 			outListener.isFlat = true;
 			return outListener;
 		}
@@ -200,8 +192,9 @@ public abstract class AbstractMetadataFormat extends DefaultHandler implements
 
 	protected String checkNameSpace(final String inName) {
 		final String[] lParts = inName.split(":"); //$NON-NLS-1$
-		if (lParts.length == 1)
+		if (lParts.length == 1) {
 			return inName;
+		}
 		return getNameSpace().equals(lParts[0]) ? lParts[1].intern() : null;
 	}
 
@@ -212,13 +205,15 @@ public abstract class AbstractMetadataFormat extends DefaultHandler implements
 	protected String getChecked(final String inElementName) {
 		final StringBuilder outContent = new StringBuilder();
 		final Collection<IContent> lContents = getElement(inElementName);
-		if (lContents == null)
+		if (lContents == null) {
 			return null;
+		}
 
 		for (final IContent lContent : lContents) {
 			final String lText = lContent.getContent();
-			if (lText == null)
+			if (lText == null) {
 				continue;
+			}
 			outContent.append(lContent.getContent()).append(" "); //$NON-NLS-1$
 		}
 		return new String(outContent).trim();

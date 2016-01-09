@@ -18,10 +18,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package org.elbe.relations.biblio.meta.internal.unapi;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 
 import org.elbe.relations.data.bom.AbstractText;
 import org.elbe.relations.utility.NewTextAction;
@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Parser class for <em>Dublin Core</em> metadata information.
- * 
+ *
  * @author Luthiger Created on 02.01.2010
  */
 public class MetadataFormatDC extends AbstractMetadataFormat {
@@ -87,18 +87,15 @@ public class MetadataFormatDC extends AbstractMetadataFormat {
 
 	@Override
 	public void endDocument() throws SAXException {
-		final String lAuthor = getCollection(
-		        elements.get(DCElements.CREATOR.getElementName()), ", "); //$NON-NLS-1$
+		final String lAuthor = getCollection(elements.get(DCElements.CREATOR.getElementName()), ", "); //$NON-NLS-1$
 		final NewTextAction.Builder lActionBuilder = new NewTextAction.Builder(
-		        getChecked(DCElements.TITLE.getElementName()),
-		        lAuthor == null ? "-" : lAuthor); //$NON-NLS-1$
+				getChecked(DCElements.TITLE.getElementName()), lAuthor == null ? "-" : lAuthor); //$NON-NLS-1$
 
 		String lAdditional = getChecked(DCElements.PUBLISHER.getElementName());
 		if (lAdditional != null) {
 			lActionBuilder.publisher(lAdditional);
 		}
-		lAdditional = getCollection(
-		        elements.get(DCElements.CONTRIBUTOR.getElementName()), ", "); //$NON-NLS-1$
+		lAdditional = getCollection(elements.get(DCElements.CONTRIBUTOR.getElementName()), ", "); //$NON-NLS-1$
 		if (lAdditional != null) {
 			lActionBuilder.coAuthor(lAdditional);
 		}
@@ -108,8 +105,7 @@ public class MetadataFormatDC extends AbstractMetadataFormat {
 		}
 
 		final String lSubject = getChecked(DCElements.SUBJECT.getElementName());
-		final String lDescription = getChecked(DCElements.DESCRIPTION
-		        .getElementName());
+		final String lDescription = getChecked(DCElements.DESCRIPTION.getElementName());
 		if (lSubject != null && lDescription != null) {
 			lActionBuilder.text(lSubject + NL + lDescription);
 		} else {
@@ -119,14 +115,13 @@ public class MetadataFormatDC extends AbstractMetadataFormat {
 			lActionBuilder.text(lAdditional);
 		}
 
-		action = lActionBuilder.type(AbstractText.TYPE_BOOK)
-		        .build(getContext());
+		action = lActionBuilder.type(AbstractText.TYPE_BOOK).build(getContext());
 	}
 
-	private String getCollection(final Collection<IContent> inContents,
-	        final String inDelimiter) {
-		if (inContents == null)
+	private String getCollection(final Collection<IContent> inContents, final String inDelimiter) {
+		if (inContents == null) {
 			return null;
+		}
 
 		final StringBuilder outContent = new StringBuilder();
 		boolean lFirst = true;
@@ -141,18 +136,17 @@ public class MetadataFormatDC extends AbstractMetadataFormat {
 	}
 
 	@Override
-	public void startElement(final String inUri, final String inLocalName,
-	        final String inName, final Attributes inAttributes)
-	        throws SAXException {
+	public void startElement(final String inUri, final String inLocalName, final String inName,
+			final Attributes inAttributes) throws SAXException {
 		final String lName = checkNameSpace(inName);
-		if (lName == null)
+		if (lName == null) {
 			return;
+		}
 
 		if (listener == null) {
 			for (final DCElements lElement : DCElements.values()) {
 				if (lName == lElement.getElementName()) {
-					final ElementListener lListener = lElement
-					        .getListener(inAttributes);
+					final ElementListener lListener = lElement.getListener(inAttributes);
 					if (lListener != null) {
 						listener = lListener;
 						listener.activate(lName, inAttributes);
@@ -164,11 +158,11 @@ public class MetadataFormatDC extends AbstractMetadataFormat {
 	}
 
 	@Override
-	public void endElement(final String inUri, final String inLocalName,
-	        final String inName) throws SAXException {
+	public void endElement(final String inUri, final String inLocalName, final String inName) throws SAXException {
 		final String lName = checkNameSpace(inName);
-		if (lName == null)
+		if (lName == null) {
 			return;
+		}
 
 		if (listener != null) {
 			if (listener.canListenTo(lName)) {
@@ -179,7 +173,7 @@ public class MetadataFormatDC extends AbstractMetadataFormat {
 				final String lElementID = listener.getElementID();
 				Collection<IContent> lElements = elements.get(lElementID);
 				if (lElements == null) {
-					lElements = new Vector<IContent>();
+					lElements = new ArrayList<IContent>();
 					elements.put(lElementID, lElements);
 				}
 				lElements.add(listener.getContent());
@@ -190,8 +184,7 @@ public class MetadataFormatDC extends AbstractMetadataFormat {
 	}
 
 	@Override
-	public void characters(final char[] inCharacters, final int inStart,
-	        final int inLength) throws SAXException {
+	public void characters(final char[] inCharacters, final int inStart, final int inLength) throws SAXException {
 		if (listener != null && listener.isActive()) {
 			listener.addCharacters(inCharacters, inStart, inLength);
 		}

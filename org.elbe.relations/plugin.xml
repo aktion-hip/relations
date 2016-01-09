@@ -104,12 +104,9 @@
             name="%page.prefs.name.db.connect">
       </page>
       <page
-            class="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.ExtensionFactory:newKeysPreferencePage"
+            class="org.elbe.relations.internal.e4.keys.RelationsKeysPreferencePage"
             id="newKeysPreferencePage"
             name="%page.prefs.name.keys">
-         <keywordReference
-               id="org.eclipse.ui.ide.keys">
-         </keywordReference>
       </page>
       <page
             class="org.elbe.relations.internal.preferences.AppearancePage"

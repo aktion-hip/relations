@@ -290,44 +290,21 @@ public class WizardCollectionElement extends AdaptableList
 		        WizardCollectionElement.class);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.elbe.relations.internal.wizards.util.IWizardDescriptor#getLabel()
-	 */
 	@Override
 	public String getLabel() {
 		return getLabel(this);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.elbe.relations.internal.wizards.util.IWizardDescriptor#
-	 * getImageDescriptor ()
-	 */
 	@Override
 	public ImageDescriptor getImageDescriptor(final Object inElement) {
 		return getImageDescriptor();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.elbe.relations.internal.wizards.util.IWizardDescriptor#
-	 * getImageDescriptor ()
-	 */
 	@Override
 	public ImageDescriptor getImageDescriptor() {
 		return WorkbenchImages.getImageDescriptor(ISharedImages.IMG_OBJ_FOLDER);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.ui.model.AdaptableList#getAdapter(java.lang.Class)
-	 */
 	@Override
 	public Object getAdapter(final Class inAdapter) {
 		if (inAdapter == IWorkbenchAdapter.class) {
@@ -336,59 +313,26 @@ public class WizardCollectionElement extends AdaptableList
 		return Platform.getAdapterManager().getAdapter(this, inAdapter);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.elbe.relations.internal.wizards.util.IWizardDescriptor#getDescription
-	 * ()
-	 */
 	@Override
 	public String getDescription() {
 		return Util.getDescription(configElement);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.elbe.relations.internal.wizards.util.IWizardDescriptor#
-	 * getDescriptionImage()
-	 */
 	@Override
 	public ImageDescriptor getDescriptionImage() {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.elbe.relations.internal.wizards.util.IWizardDescriptor#canFinishEarly
-	 * ()
-	 */
 	@Override
 	public boolean canFinishEarly() {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.elbe.relations.internal.wizards.util.IWizardDescriptor#hasPages()
-	 */
 	@Override
 	public boolean hasPages() {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.eclipse.ui.wizards.IWizardDescriptor#adaptedSelection(org.eclipse
-	 * .jface.viewers.IStructuredSelection)
-	 */
 	@Override
 	public IStructuredSelection adaptedSelection(
 	        final IStructuredSelection inSelection) {
@@ -396,22 +340,12 @@ public class WizardCollectionElement extends AdaptableList
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.ui.wizards.IWizardDescriptor#getTags()
-	 */
 	@Override
 	public String[] getTags() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.ui.wizards.IWizardDescriptor#createWizard()
-	 */
 	@Override
 	public IWorkbenchWizard createWizard() throws CoreException {
 		// TODO Auto-generated method stub

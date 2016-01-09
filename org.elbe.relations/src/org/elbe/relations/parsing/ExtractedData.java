@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -27,7 +27,7 @@ import org.elbe.relations.RelationsMessages;
 
 /**
  * Parameter object that contains the extracted metadata.
- * 
+ *
  * @author Luthiger Created on 14.01.2010
  */
 public class ExtractedData {
@@ -35,11 +35,7 @@ public class ExtractedData {
 	private static final String ITEM_SEPARATOR = ";"; //$NON-NLS-1$
 	private static final int KB = 1024;
 	private static final DecimalFormat FORMAT_DECIMAL = new DecimalFormat(
-			"###,##0.00 kB"); //$NON-NLS-1$
-	private static final DateFormat FORMAT_DATE = DateFormat
-			.getDateInstance(DateFormat.LONG);
-	private static final DateFormat FORMAT_TIME = DateFormat
-			.getTimeInstance(DateFormat.LONG);
+	        "###,##0.00 kB"); //$NON-NLS-1$
 
 	private static final String RESOURCE_FILE = "File"; //$NON-NLS-1$
 	private static final String RESOURCE_URL = "URL"; //$NON-NLS-1$
@@ -87,40 +83,36 @@ public class ExtractedData {
 		final StringBuilder outText = new StringBuilder();
 
 		boolean lFirst = true;
-		lFirst = addPart(
-				outText,
-				author,
-				RelationsMessages.getString("ExtractedData.lbl.author") + ": ", lFirst); //$NON-NLS-1$ //$NON-NLS-2$
-		lFirst = addPart(
-				outText,
-				publisher,
-				RelationsMessages.getString("ExtractedData.lbl.publisher") + ": ", lFirst); //$NON-NLS-1$ //$NON-NLS-2$
-		lFirst = addPart(
-				outText,
-				contributor,
-				RelationsMessages.getString("ExtractedData.lbl.contributor") + ": ", lFirst); //$NON-NLS-1$ //$NON-NLS-2$
+		lFirst = addPart(outText, author,
+		        RelationsMessages.getString("ExtractedData.lbl.author") + ": ", //$NON-NLS-1$ //$NON-NLS-2$
+		        lFirst);
+		lFirst = addPart(outText, publisher,
+		        RelationsMessages.getString("ExtractedData.lbl.publisher") //$NON-NLS-1$
+		                + ": ", //$NON-NLS-1$
+		        lFirst);
+		lFirst = addPart(outText, contributor,
+		        RelationsMessages.getString("ExtractedData.lbl.contributor") //$NON-NLS-1$
+		                + ": ", //$NON-NLS-1$
+		        lFirst);
 		lFirst = addPart(outText, filePath, resourceType + ": ", lFirst); //$NON-NLS-1$
-		lFirst = addPart(
-				outText,
-				fileSize,
-				RelationsMessages.getString("ExtractedData.lbl.size") + ": ", lFirst); //$NON-NLS-1$ //$NON-NLS-2$
-		lFirst = addPart(
-				outText,
-				fileType,
-				RelationsMessages.getString("ExtractedData.lbl.type") + ": ", lFirst); //$NON-NLS-1$ //$NON-NLS-2$
-		lFirst = addPart(
-				outText,
-				dateCrated,
-				RelationsMessages.getString("ExtractedData.lbl.created") + ": ", lFirst); //$NON-NLS-1$ //$NON-NLS-2$
-		lFirst = addPart(
-				outText,
-				dateModified,
-				RelationsMessages.getString("ExtractedData.lbl.modified") + ": ", lFirst); //$NON-NLS-1$ //$NON-NLS-2$
+		lFirst = addPart(outText, fileSize,
+		        RelationsMessages.getString("ExtractedData.lbl.size") + ": ", //$NON-NLS-1$ //$NON-NLS-2$
+		        lFirst);
+		lFirst = addPart(outText, fileType,
+		        RelationsMessages.getString("ExtractedData.lbl.type") + ": ", //$NON-NLS-1$ //$NON-NLS-2$
+		        lFirst);
+		lFirst = addPart(outText, dateCrated,
+		        RelationsMessages.getString("ExtractedData.lbl.created") + ": ", //$NON-NLS-1$ //$NON-NLS-2$
+		        lFirst);
+		lFirst = addPart(outText, dateModified,
+		        RelationsMessages.getString("ExtractedData.lbl.modified") //$NON-NLS-1$
+		                + ": ", //$NON-NLS-1$
+		        lFirst);
 		return outText;
 	}
 
 	private boolean addPart(final StringBuilder inText, final String inField,
-			final String inLabel, boolean inFirst) {
+	        final String inLabel, boolean inFirst) {
 		if (hasContent(inField)) {
 			if (!inFirst) {
 				inText.append(ITEM_SEPARATOR).append(NL);
@@ -136,8 +128,9 @@ public class ExtractedData {
 	}
 
 	public void setFileSize(final long inLength) {
-		if (inLength == 0)
+		if (inLength == 0) {
 			return;
+		}
 		fileSize = FORMAT_DECIMAL.format((double) inLength / KB);
 	}
 
@@ -159,36 +152,41 @@ public class ExtractedData {
 	}
 
 	public void setDateModified(final long inModified) {
-		if (inModified == 0)
+		if (inModified == 0) {
 			return;
+		}
 		final Date lDate = new Date(inModified);
-		dateModified = String.format(
-				"%s, %s", FORMAT_DATE.format(lDate), FORMAT_TIME.format(lDate)); //$NON-NLS-1$
+		dateModified = String.format("%s, %s", //$NON-NLS-1$
+		        DateFormat.getDateInstance(DateFormat.LONG).format(lDate),
+		        DateFormat.getTimeInstance(DateFormat.LONG).format(lDate));
 	}
 
 	/**
 	 * The item's creation date.
-	 * 
+	 *
 	 * @param inCreated
 	 *            long the milliseconds since January 1, 1970, 00:00:00 GMT.
 	 */
 	public void setDateCreated(final long inCreated) {
-		if (inCreated == 0)
+		if (inCreated == 0) {
 			return;
+		}
 		setDateCreated(new Date(inCreated));
 	}
 
 	/**
 	 * The item's creation date.
-	 * 
+	 *
 	 * @param inDate
 	 *            Date
 	 */
 	public void setDateCreated(final Date inDate) {
-		if (inDate == null)
+		if (inDate == null) {
 			return;
-		dateCrated = String
-				.format("%s, %s", FORMAT_DATE.format(inDate), FORMAT_TIME.format(inDate)); //$NON-NLS-1$
+		}
+		dateCrated = String.format("%s, %s",
+		        DateFormat.getDateInstance(DateFormat.LONG).format(inDate),
+		        DateFormat.getTimeInstance(DateFormat.LONG).format(inDate)); // $NON-NLS-1$
 		final Calendar lDate = Calendar.getInstance();
 		lDate.setTime(inDate);
 		year = String.valueOf(lDate.get(Calendar.YEAR));
@@ -196,7 +194,7 @@ public class ExtractedData {
 
 	/**
 	 * The item's creation date.
-	 * 
+	 *
 	 * @param inDate
 	 *            String the date in plain string format. (Not checked.)
 	 */
@@ -209,8 +207,9 @@ public class ExtractedData {
 	}
 
 	public void setAuthor(final String inAuthor) {
-		if (inAuthor == null)
+		if (inAuthor == null) {
 			return;
+		}
 		author = inAuthor;
 	}
 
@@ -219,8 +218,9 @@ public class ExtractedData {
 	}
 
 	public void setPublisher(final String inPublisher) {
-		if (inPublisher == null)
+		if (inPublisher == null) {
 			return;
+		}
 		publisher = inPublisher;
 	}
 
@@ -229,8 +229,9 @@ public class ExtractedData {
 	}
 
 	public void setContributor(final String inContributor) {
-		if (inContributor == null)
+		if (inContributor == null) {
 			return;
+		}
 		contributor = inContributor;
 	}
 

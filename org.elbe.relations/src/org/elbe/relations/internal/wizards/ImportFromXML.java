@@ -19,8 +19,8 @@
 package org.elbe.relations.internal.wizards;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Vector;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -320,7 +320,8 @@ public class ImportFromXML extends Wizard implements IImportWizard {
 		UpdateStatement lStatement;
 
 		try {
-			final Collection<String> lUpdates = new Vector<String>(CHUNK_LEN);
+			final Collection<String> lUpdates = new ArrayList<String>(
+			        CHUNK_LEN);
 			for (final RelationReplaceHelper lRelationToRebind : inRelationsToRebind) {
 				createUpdates(lHome, lRelationToRebind, lUpdates);
 

@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -54,7 +54,7 @@ import org.hip.kernel.exc.VException;
 /**
  * Helper class to provide consistent handler functionality for data drops in
  * relations browsers.
- * 
+ *
  * @author Luthiger Created on 20.12.2009
  */
 @SuppressWarnings("restriction")
@@ -78,16 +78,16 @@ public final class DropDataHelper {
 
 		TransferDropHandler(final Transfer inTransfer,
 		        final IDropHandler inHandler) {
-			this.transfer = inTransfer;
-			this.handler = inHandler;
+			transfer = inTransfer;
+			handler = inHandler;
 		}
 
 		public boolean isSupportedType(final TransferData inCurrentDataType) {
-			return this.transfer.isSupportedType(inCurrentDataType);
+			return transfer.isSupportedType(inCurrentDataType);
 		}
 
 		public IDropHandler getHandler() {
-			return this.handler;
+			return handler;
 		}
 	}
 
@@ -98,7 +98,7 @@ public final class DropDataHelper {
 	/**
 	 * Factory method: returns the appropriate drop handler to process the
 	 * <code>TransferData</code>.
-	 * 
+	 *
 	 * @param inEvent
 	 *            {@link DropTargetEvent}
 	 * @return IDropHandler
@@ -115,8 +115,9 @@ public final class DropDataHelper {
 
 	private static void addAsRelations(final UniqueID[] inItemIDs,
 	        final IAssociationsModel inModel, final IEclipseContext inContext) {
-		if (inItemIDs.length == 0)
+		if (inItemIDs.length == 0) {
 			return;
+		}
 		final RelateCommand lCommand = RelateCommand
 		        .createRelateCommand(inModel, inItemIDs, inContext);
 		lCommand.execute();
@@ -131,7 +132,7 @@ public final class DropDataHelper {
 	public interface IDropHandler {
 		/**
 		 * Handle the drop event, i.e. add the adequate relation.
-		 * 
+		 *
 		 * @param inEventData
 		 *            Object the <code>DropTargetEvent</code>s data
 		 * @param inModel
@@ -237,12 +238,12 @@ public final class DropDataHelper {
 					                        "Dialog.msg.title.problem"),
 					        RelationsMessages.getString(
 					                "DropDataHelper.msg.response.403"))) {
-						UniqueID textId = createMinText(inModel, inContext,
-						        lURL, lLog);
+						final UniqueID textId = createMinText(inModel,
+						        inContext, lURL, lLog);
 						if (textId != null) {
-							IEventBroker broker = inContext
+							final IEventBroker broker = inContext
 							        .get(IEventBroker.class);
-							Map<String, Object> data = new HashMap<String, Object>();
+							final Map<String, Object> data = new HashMap<String, Object>();
 							data.put(IEventBroker.DATA, textId);
 							data.put(ShowTextItemForm.PARAM_CONTEXT, inContext);
 							broker.post(ShowTextItemForm.TOPIC, data);
@@ -259,17 +260,18 @@ public final class DropDataHelper {
 		private UniqueID createMinText(IAssociationsModel model,
 		        IEclipseContext context, String url, Logger log) {
 			try {
-				String undefined = RelationsMessages
+				final String undefined = RelationsMessages
 				        .getString("TextEditWizardPage.uncomplete.data");
-				NewTextAction action = new NewTextAction.Builder(undefined,
-				        undefined).type(AbstractText.TYPE_WEBPAGE)
+				final NewTextAction action = new NewTextAction.Builder(
+				        undefined, undefined).type(AbstractText.TYPE_WEBPAGE)
 				                .publication(url).build(context);
-				IItem item = createText(action);
-				UniqueID id = new UniqueID(item.getItemType(), item.getID());
+				final IItem item = createText(action);
+				final UniqueID id = new UniqueID(item.getItemType(),
+				        item.getID());
 				addAsRelations(new UniqueID[] { id }, model, context);
 				return id;
 			}
-			catch (VException exc) {
+			catch (final VException exc) {
 				log.error(exc);
 			}
 			return null;
@@ -283,7 +285,7 @@ public final class DropDataHelper {
 		/**
 		 * Shows the dialog where the user can select the type of item to
 		 * create.
-		 * 
+		 *
 		 * @param inWebResult
 		 *            WebDropResult
 		 * @return int the item type, or 4 for extended bibliography, or -1 if
@@ -314,7 +316,7 @@ public final class DropDataHelper {
 
 		/**
 		 * Create the requested item.
-		 * 
+		 *
 		 * @param inItemType
 		 *            int
 		 * @param inWebResult
@@ -341,7 +343,8 @@ public final class DropDataHelper {
 				lItem = createText(inWebResult.getNewBiblioAction());
 				break;
 			}
-			return new UniqueID(lItem.getItemType(), lItem.getID());
+			return lItem == null ? UniqueID.createUniqueID(null)
+			        : new UniqueID(lItem.getItemType(), lItem.getID());
 		}
 
 		private IItem createPerson(final WebDropResult inWebResult,

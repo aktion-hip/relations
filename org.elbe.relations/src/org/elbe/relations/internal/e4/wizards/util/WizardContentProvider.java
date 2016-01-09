@@ -19,6 +19,7 @@
 package org.elbe.relations.internal.e4.wizards.util;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -42,7 +43,7 @@ public class WizardContentProvider implements ITreeContentProvider {
 	@Override
 	public Object[] getChildren(final Object parentElement) {
 		if (parentElement instanceof WizardCollectionElement) {
-			final ArrayList list = new ArrayList();
+			final List<Object> list = new ArrayList<Object>();
 			final WizardCollectionElement element = (WizardCollectionElement) parentElement;
 
 			final Object[] childCollections = element.getChildren();
@@ -65,7 +66,7 @@ public class WizardContentProvider implements ITreeContentProvider {
 		} else if (parentElement instanceof AdaptableList) {
 			final AdaptableList aList = (AdaptableList) parentElement;
 			final Object[] children = aList.getChildren();
-			final ArrayList list = new ArrayList(children.length);
+			final List<Object> list = new ArrayList<Object>(children.length);
 			for (int i = 0; i < children.length; i++) {
 				handleChild(children[i], list);
 			}
@@ -111,7 +112,7 @@ public class WizardContentProvider implements ITreeContentProvider {
 	 *            the <code>Collection</code> to add to.
 	 * @since 3.0
 	 */
-	private void handleChild(final Object element, final ArrayList list) {
+	private void handleChild(final Object element, final List<Object> list) {
 		if (element instanceof WizardCollectionElement) {
 			if (hasChildren(element)) {
 				list.add(element);

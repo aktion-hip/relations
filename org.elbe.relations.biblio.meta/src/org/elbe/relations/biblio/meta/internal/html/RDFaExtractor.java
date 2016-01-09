@@ -21,11 +21,11 @@ package org.elbe.relations.biblio.meta.internal.html;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -50,7 +50,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Extractor for metadata formatted with RDFa.
- * 
+ *
  * @author Luthiger Created on 09.02.2010
  */
 public class RDFaExtractor {
@@ -64,53 +64,40 @@ public class RDFaExtractor {
 
 	enum ParserListener {
 		RDFA_SUBJECT("rdf:Description", "rdf:about", new IListenerProcessor() { //$NON-NLS-1$ //$NON-NLS-2$
-			        @Override
-			        public void process(
-			                final String inPageUrl,
-			                final String inNodeAbout,
-			                final String inTagName,
-			                final String inChildTagName,
-			                final StringBuilder inContent,
-			                final TypedString inTypedContent,
-			                final Map<String, Map<String, Collection<TypedString>>> inExtracted,
-			                final ParserListener inParent) {
-				        if (inNodeAbout.startsWith(inPageUrl))
-					        return;
-				        Map<String, Collection<TypedString>> lContainer = inExtracted
-				                .get(inNodeAbout);
-				        if (lContainer == null) {
-					        lContainer = new HashMap<String, Collection<TypedString>>();
-					        inExtracted.put(inNodeAbout, lContainer);
-				        }
-				        Collection<TypedString> lValues = lContainer
-				                .get(inChildTagName);
-				        if (lValues == null) {
-					        lValues = new Vector<TypedString>();
-					        lContainer.put(inChildTagName, lValues);
-				        }
-				        lValues.add(inTypedContent);
-			        }
-		        }), PREDICATE_DC_TITLE(
-		        "dc:title", "rdf:resource", new DefaultProcessor()), //$NON-NLS-1$ //$NON-NLS-2$
-		PREDICATE_DC_CREATOR(
-		        "dc:creator", "rdf:resource", new DefaultProcessor()), //$NON-NLS-1$ //$NON-NLS-2$
-		PREDICATE_DC_CONTRIBUTOR(
-		        "dc:contributor", "rdf:resource", new DefaultProcessor()), //$NON-NLS-1$ //$NON-NLS-2$
-		PREDICATE_DC_PUBLISHER(
-		        "dc:publisher", "rdf:resource", new DefaultProcessor()), //$NON-NLS-1$ //$NON-NLS-2$
-		PREDICATE_DC_SUBJECT(
-		        "dc:subject", "rdf:resource", new DefaultProcessor()), //$NON-NLS-1$ //$NON-NLS-2$
-		PREDICATE_DC_DESCRIPTION(
-		        "dc:description", "rdf:resource", new DefaultProcessor()), //$NON-NLS-1$ //$NON-NLS-2$
+			@Override
+			public void process(final String inPageUrl, final String inNodeAbout, final String inTagName,
+					final String inChildTagName, final StringBuilder inContent, final TypedString inTypedContent,
+					final Map<String, Map<String, Collection<TypedString>>> inExtracted,
+					final ParserListener inParent) {
+				if (inNodeAbout.startsWith(inPageUrl)) {
+					return;
+				}
+				Map<String, Collection<TypedString>> lContainer = inExtracted.get(inNodeAbout);
+				if (lContainer == null) {
+					lContainer = new HashMap<String, Collection<TypedString>>();
+					inExtracted.put(inNodeAbout, lContainer);
+				}
+				Collection<TypedString> lValues = lContainer.get(inChildTagName);
+				if (lValues == null) {
+					lValues = new ArrayList<TypedString>();
+					lContainer.put(inChildTagName, lValues);
+				}
+				lValues.add(inTypedContent);
+			}
+		}),
+		PREDICATE_DC_TITLE("dc:title", "rdf:resource", new DefaultProcessor()), //$NON-NLS-1$ //$NON-NLS-2$
+		PREDICATE_DC_CREATOR("dc:creator", "rdf:resource", new DefaultProcessor()), //$NON-NLS-1$ //$NON-NLS-2$
+		PREDICATE_DC_CONTRIBUTOR("dc:contributor", "rdf:resource", new DefaultProcessor()), //$NON-NLS-1$ //$NON-NLS-2$
+		PREDICATE_DC_PUBLISHER("dc:publisher", "rdf:resource", new DefaultProcessor()), //$NON-NLS-1$ //$NON-NLS-2$
+		PREDICATE_DC_SUBJECT("dc:subject", "rdf:resource", new DefaultProcessor()), //$NON-NLS-1$ //$NON-NLS-2$
+		PREDICATE_DC_DESCRIPTION("dc:description", "rdf:resource", new DefaultProcessor()), //$NON-NLS-1$ //$NON-NLS-2$
 		PREDICATE_DC_DATE("dc:date", null, new DefaultProcessor()), //$NON-NLS-1$
 		PREDICATE_DC_TYPE("dc:type", null, new DefaultProcessor()), //$NON-NLS-1$
-		PREDICATE_DC_ISPARTOF(
-		        "dc:isPartOf", "rdf:resource", new DefaultProcessor()), //$NON-NLS-1$ //$NON-NLS-2$
+		PREDICATE_DC_ISPARTOF("dc:isPartOf", "rdf:resource", new DefaultProcessor()), //$NON-NLS-1$ //$NON-NLS-2$
 		PREDICATE_BIBO_DOI("bibo:doi", "rdf:resource", new DefaultProcessor()), //$NON-NLS-1$ //$NON-NLS-2$
 		PREDICATE_BIBO_VOLUME("bibo:volume", null, new DefaultProcessor()), //$NON-NLS-1$
 		PREDICATE_BIBO_ISSUE("bibo:issue", null, new DefaultProcessor()), //$NON-NLS-1$
-		PREDICATE_BIBO_PAGE_START(
-		        "bibo:pageStart", null, new DefaultProcessor()), //$NON-NLS-1$
+		PREDICATE_BIBO_PAGE_START("bibo:pageStart", null, new DefaultProcessor()), //$NON-NLS-1$
 		PREDICATE_BIBO_PAGE_END("bibo:pageEnd", null, new DefaultProcessor()), //$NON-NLS-1$
 		NOOP_LISTENER("", null, new DefaultProcessor()); //$NON-NLS-1$
 
@@ -123,8 +110,7 @@ public class RDFaExtractor {
 		private String attributeValue;
 		private final IListenerProcessor processor;
 
-		ParserListener(final String inTagName, final String inAttributeName,
-		        final IListenerProcessor inProcessor) {
+		ParserListener(final String inTagName, final String inAttributeName, final IListenerProcessor inProcessor) {
 			tagName = inTagName;
 			attributeName = inAttributeName;
 			processor = inProcessor;
@@ -169,18 +155,17 @@ public class RDFaExtractor {
 			return attributeValue;
 		}
 
-		public void process(
-		        final String inPageUrl,
-		        final Map<String, Map<String, Collection<TypedString>>> inExtracted) {
-			processor.process(inPageUrl, attributeValue, tagName, childTagName,
-			        content, typedContent, inExtracted, parent);
+		public void process(final String inPageUrl,
+				final Map<String, Map<String, Collection<TypedString>>> inExtracted) {
+			processor.process(inPageUrl, attributeValue, tagName, childTagName, content, typedContent, inExtracted,
+					parent);
 		}
 
 	}
 
 	/**
 	 * Extracts metadata formatted using RDFa to be used as text item.
-	 * 
+	 *
 	 * @param inXPathHelper
 	 *            {@link XPathHelper} the parsed and cleaned web page.
 	 * @param inUrl
@@ -195,18 +180,18 @@ public class RDFaExtractor {
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 */
-	public static NewTextAction process(final XPathHelper inXPathHelper,
-	        final String inUrl, final IEclipseContext inContext)
-	        throws IOException, TransformerException,
-	        ParserConfigurationException, SAXException {
+	public static NewTextAction process(final XPathHelper inXPathHelper, final String inUrl,
+			final IEclipseContext inContext)
+					throws IOException, TransformerException, ParserConfigurationException, SAXException {
 		// first, we make a plausibility test for the existence of RDFa
-		if (!DOCTYPE_RDFA.equalsIgnoreCase(inXPathHelper.getDocType()))
+		if (!DOCTYPE_RDFA.equalsIgnoreCase(inXPathHelper.getDocType())) {
 			return null;
+		}
 
 		// extract RDF triples
 		inXPathHelper.removeUnqualifiedLinks();
-		final StreamSource lSource = new StreamSource(new StringReader(
-		        inXPathHelper.getSerialized(XmlSerializer.COMPACT)));
+		final StreamSource lSource = new StreamSource(
+				new StringReader(inXPathHelper.getSerialized(XmlSerializer.COMPACT)));
 		final Transformer lTransformer = getTemplate().newTransformer();
 		lTransformer.setParameter("this", inUrl); //$NON-NLS-1$
 
@@ -219,11 +204,10 @@ public class RDFaExtractor {
 		return lParser.getNewTextAction();
 	}
 
-	private static Templates getTemplate() throws TransformerException,
-	        IOException {
+	private static Templates getTemplate() throws TransformerException, IOException {
 		if (template == null) {
-			final StreamSource lSource = new StreamSource(RDFaExtractor.class
-			        .getClassLoader().getResource(XSLT).openStream());
+			final StreamSource lSource = new StreamSource(
+					RDFaExtractor.class.getClassLoader().getResource(XSLT).openStream());
 			template = TransformerFactory.newInstance().newTemplates(lSource);
 		}
 		return template;
@@ -244,10 +228,8 @@ public class RDFaExtractor {
 			context = inContext;
 		}
 
-		void parse(final String inRDFa) throws ParserConfigurationException,
-		        SAXException, IOException {
-			final SAXParser lParser = SAXParserFactory.newInstance()
-			        .newSAXParser();
+		void parse(final String inRDFa) throws ParserConfigurationException, SAXException, IOException {
+			final SAXParser lParser = SAXParserFactory.newInstance().newSAXParser();
 			lParser.parse(new InputSource(new StringReader(inRDFa)), this);
 		}
 
@@ -256,9 +238,8 @@ public class RDFaExtractor {
 		}
 
 		@Override
-		public void startElement(final String inUri, final String inTag,
-		        final String inFullTag, final Attributes inAttributes)
-		        throws SAXException {
+		public void startElement(final String inUri, final String inTag, final String inFullTag,
+				final Attributes inAttributes) throws SAXException {
 			for (final ParserListener lListener : ParserListener.values()) {
 				if (lListener.canListen(inFullTag)) {
 					lListener.setParent(currentListener);
@@ -270,28 +251,27 @@ public class RDFaExtractor {
 		}
 
 		@Override
-		public void endElement(final String inUri, final String inTag,
-		        final String inFullTag) throws SAXException {
-			if (currentListener == null)
+		public void endElement(final String inUri, final String inTag, final String inFullTag) throws SAXException {
+			if (currentListener == null) {
 				return;
+			}
 
 			currentListener.process(webPageUrl, extracted);
 			currentListener = currentListener.getParent();
 		}
 
 		@Override
-		public void characters(final char[] inCharacters, final int inStart,
-		        final int inLength) throws SAXException {
+		public void characters(final char[] inCharacters, final int inStart, final int inLength) throws SAXException {
 			if (currentListener != null) {
-				currentListener.addContent(new String(inCharacters, inStart,
-				        inLength));
+				currentListener.addContent(new String(inCharacters, inStart, inLength));
 			}
 		}
 
 		@Override
 		public void endDocument() throws SAXException {
-			if (extracted.isEmpty())
+			if (extracted.isEmpty()) {
 				return;
+			}
 
 			if (extracted.size() == 1) {
 				evaluate(extracted.values().iterator().next());
@@ -299,23 +279,18 @@ public class RDFaExtractor {
 				// We have to choose one out of several available RDFa entries.
 				// We take the first containing bibliographical information:
 				// either the about URI indicates bibliographical information
-				for (final Entry<String, Map<String, Collection<TypedString>>> lEntry : extracted
-				        .entrySet()) {
-					if (lEntry.getKey().toLowerCase()
-					        .contains(INDICATOR_ABOUT_ISBN)) {
+				for (final Entry<String, Map<String, Collection<TypedString>>> lEntry : extracted.entrySet()) {
+					if (lEntry.getKey().toLowerCase().contains(INDICATOR_ABOUT_ISBN)) {
 						evaluate(lEntry.getValue());
 						return;
 					}
 				}
 				// or at least one of the extracted RDFa predicates is from the
 				// bibo namespace
-				for (final Entry<String, Map<String, Collection<TypedString>>> lEntry : extracted
-				        .entrySet()) {
-					final Map<String, Collection<TypedString>> lRDFaEntry = lEntry
-					        .getValue();
+				for (final Entry<String, Map<String, Collection<TypedString>>> lEntry : extracted.entrySet()) {
+					final Map<String, Collection<TypedString>> lRDFaEntry = lEntry.getValue();
 					for (final String lPredicate : lRDFaEntry.keySet()) {
-						if (lPredicate.toLowerCase().startsWith(
-						        INDICATOR_NAMESPACE_BIBO)) {
+						if (lPredicate.toLowerCase().startsWith(INDICATOR_NAMESPACE_BIBO)) {
 							evaluate(lRDFaEntry);
 						}
 					}
@@ -323,95 +298,70 @@ public class RDFaExtractor {
 			}
 		}
 
-		private void evaluate(
-		        final Map<String, Collection<TypedString>> inExtracted) {
+		private void evaluate(final Map<String, Collection<TypedString>> inExtracted) {
 			boolean isArticle = false;
-			final String lAuthor = getValueChecked(
-			        inExtracted.get(ParserListener.PREDICATE_DC_CREATOR
-			                .getTagName()), ", "); //$NON-NLS-1$
-			final String lTitle = getValueChecked(
-			        inExtracted.get(ParserListener.PREDICATE_DC_TITLE
-			                .getTagName()), ", "); //$NON-NLS-1$
-			final NewTextAction.Builder lActionBuilder = new NewTextAction.Builder(
-			        lTitle.length() == 0 ? "-" : lTitle, lAuthor.length() == 0 ? "-" : lAuthor); //$NON-NLS-1$ //$NON-NLS-2$
+			final String lAuthor = getValueChecked(inExtracted.get(ParserListener.PREDICATE_DC_CREATOR.getTagName()),
+					", "); //$NON-NLS-1$
+			final String lTitle = getValueChecked(inExtracted.get(ParserListener.PREDICATE_DC_TITLE.getTagName()),
+					", "); //$NON-NLS-1$
+			final NewTextAction.Builder lActionBuilder = new NewTextAction.Builder(lTitle.length() == 0 ? "-" : lTitle, //$NON-NLS-1$
+					lAuthor.length() == 0 ? "-" : lAuthor); //$NON-NLS-1$
 
-			String lAdditional = getValueChecked(
-			        inExtracted.get(ParserListener.PREDICATE_DC_PUBLISHER
-			                .getTagName()), ", "); //$NON-NLS-1$
+			String lAdditional = getValueChecked(inExtracted.get(ParserListener.PREDICATE_DC_PUBLISHER.getTagName()),
+					", "); //$NON-NLS-1$
 			if (lAdditional.length() != 0) {
 				lActionBuilder.publisher(lAdditional);
 			}
-			lAdditional = getValueChecked(
-			        inExtracted.get(ParserListener.PREDICATE_DC_CONTRIBUTOR
-			                .getTagName()), ", "); //$NON-NLS-1$
+			lAdditional = getValueChecked(inExtracted.get(ParserListener.PREDICATE_DC_CONTRIBUTOR.getTagName()), ", "); //$NON-NLS-1$
 			if (lAdditional.length() != 0) {
 				lActionBuilder.coAuthor(lAdditional);
 			}
-			lAdditional = getValueChecked(
-			        inExtracted.get(ParserListener.PREDICATE_DC_DATE
-			                .getTagName()), " "); //$NON-NLS-1$
+			lAdditional = getValueChecked(inExtracted.get(ParserListener.PREDICATE_DC_DATE.getTagName()), " "); //$NON-NLS-1$
 			if (lAdditional.length() != 0) {
 				lActionBuilder.year(lAdditional);
 			}
-			lAdditional = getValueChecked(
-			        inExtracted.get(ParserListener.PREDICATE_DC_ISPARTOF
-			                .getTagName()), " "); //$NON-NLS-1$
+			lAdditional = getValueChecked(inExtracted.get(ParserListener.PREDICATE_DC_ISPARTOF.getTagName()), " "); //$NON-NLS-1$
 			if (lAdditional.length() != 0) {
 				lActionBuilder.publication(lAdditional);
 			}
 
-			lAdditional = getValueChecked(
-			        inExtracted.get(ParserListener.PREDICATE_BIBO_VOLUME
-			                .getTagName()), " "); //$NON-NLS-1$
+			lAdditional = getValueChecked(inExtracted.get(ParserListener.PREDICATE_BIBO_VOLUME.getTagName()), " "); //$NON-NLS-1$
 			if (lAdditional.length() != 0) {
 				isArticle = true;
 				lActionBuilder.volume(toInt(lAdditional));
 			}
-			lAdditional = getValueChecked(
-			        inExtracted.get(ParserListener.PREDICATE_BIBO_ISSUE
-			                .getTagName()), " "); //$NON-NLS-1$
+			lAdditional = getValueChecked(inExtracted.get(ParserListener.PREDICATE_BIBO_ISSUE.getTagName()), " "); //$NON-NLS-1$
 			if (lAdditional.length() != 0) {
 				isArticle = true;
 				lActionBuilder.number(toInt(lAdditional));
 			}
 			final String lPageStart = getValueChecked(
-			        inExtracted.get(ParserListener.PREDICATE_BIBO_PAGE_START
-			                .getTagName()), " "); //$NON-NLS-1$
+					inExtracted.get(ParserListener.PREDICATE_BIBO_PAGE_START.getTagName()), " "); //$NON-NLS-1$
 			final String lPageEnd = getValueChecked(
-			        inExtracted.get(ParserListener.PREDICATE_BIBO_PAGE_END
-			                .getTagName()), " "); //$NON-NLS-1$
+					inExtracted.get(ParserListener.PREDICATE_BIBO_PAGE_END.getTagName()), " "); //$NON-NLS-1$
 			if (lPageStart.length() + lPageEnd.length() != 0) {
 				isArticle = true;
-				lActionBuilder.pages(String.format(
-				        "%s - %s", lPageStart, lPageEnd)); //$NON-NLS-1$
+				lActionBuilder.pages(String.format("%s - %s", lPageStart, lPageEnd)); //$NON-NLS-1$
 			}
 
 			// information for text field: subject, description
-			String lTextValue = getValueChecked(
-			        inExtracted.get(ParserListener.PREDICATE_DC_SUBJECT
-			                .getTagName()), ", "); //$NON-NLS-1$
+			String lTextValue = getValueChecked(inExtracted.get(ParserListener.PREDICATE_DC_SUBJECT.getTagName()),
+					", "); //$NON-NLS-1$
 			final StringBuilder lText = new StringBuilder();
 			if (lTextValue.length() != 0) {
 				lText.append(lTextValue).append(NL);
 			}
-			lTextValue = getValueChecked(
-			        inExtracted.get(ParserListener.PREDICATE_DC_DESCRIPTION
-			                .getTagName()), ", "); //$NON-NLS-1$
+			lTextValue = getValueChecked(inExtracted.get(ParserListener.PREDICATE_DC_DESCRIPTION.getTagName()), ", "); //$NON-NLS-1$
 			if (lTextValue.length() != 0) {
 				lText.append(lTextValue).append(NL);
 			}
 			// additional text (more technical)
 			final StringBuilder lAdditionalText = new StringBuilder();
-			lTextValue = getValueChecked(
-			        inExtracted.get(ParserListener.PREDICATE_DC_TYPE
-			                .getTagName()), " "); //$NON-NLS-1$
+			lTextValue = getValueChecked(inExtracted.get(ParserListener.PREDICATE_DC_TYPE.getTagName()), " "); //$NON-NLS-1$
 			if (lTextValue.length() != 0) {
-				lAdditionalText.append(Messages.RDFaExtractor_lbl_type)
-				        .append(": ").append(lTextValue).append(NL); //$NON-NLS-1$
+				lAdditionalText.append(Messages.RDFaExtractor_lbl_type).append(": ").append(lTextValue).append(NL); //$NON-NLS-1$
 			}
-			lTextValue = getValueChecked(
-			        inExtracted.get(ParserListener.PREDICATE_BIBO_DOI
-			                .getTagName()), " "); //$NON-NLS-1$
+			lTextValue = getValueChecked(inExtracted.get(ParserListener.PREDICATE_BIBO_DOI.getTagName()), " "); //$NON-NLS-1$
 			if (lTextValue.length() != 0) {
 				lAdditionalText.append("DOI: ").append(lTextValue).append(NL); //$NON-NLS-1$
 			}
@@ -423,24 +373,22 @@ public class RDFaExtractor {
 				lActionBuilder.text(new String(lText).trim());
 			}
 
-			lActionBuilder.type(isArticle ? AbstractText.TYPE_ARTICLE
-			        : AbstractText.TYPE_BOOK);
+			lActionBuilder.type(isArticle ? AbstractText.TYPE_ARTICLE : AbstractText.TYPE_BOOK);
 			textAction = lActionBuilder.build(context);
 		}
 
 		private int toInt(final String inAdditional) {
 			try {
 				return Integer.parseInt(inAdditional);
-			}
-			catch (final NumberFormatException exc) {
+			} catch (final NumberFormatException exc) {
 				return 0;
 			}
 		}
 
-		private String getValueChecked(final Collection<TypedString> inValues,
-		        final String inJoin) {
-			if (inValues == null)
+		private String getValueChecked(final Collection<TypedString> inValues, final String inJoin) {
+			if (inValues == null) {
 				return ""; //$NON-NLS-1$
+			}
 
 			final StringBuilder lRel = new StringBuilder();
 			boolean lFirstRel = true;
@@ -461,36 +409,25 @@ public class RDFaExtractor {
 					lRel.append(lValue.getContent());
 				}
 			}
-			return lText.length() == 0 ? new String(lRel).trim() : new String(
-			        lText).trim();
+			return lText.length() == 0 ? new String(lRel).trim() : new String(lText).trim();
 		}
 	}
 
 	private static interface IListenerProcessor {
-		void process(String inPageUrl, String inNodeAbout, String inTagName,
-		        String inChildTagName, StringBuilder inContent,
-		        TypedString inTypedContent,
-		        Map<String, Map<String, Collection<TypedString>>> inExtracted,
-		        ParserListener inParent);
+		void process(String inPageUrl, String inNodeAbout, String inTagName, String inChildTagName,
+				StringBuilder inContent, TypedString inTypedContent,
+				Map<String, Map<String, Collection<TypedString>>> inExtracted, ParserListener inParent);
 	}
 
 	private static class DefaultProcessor implements IListenerProcessor {
 		@Override
-		public void process(
-		        final String inPageUrl,
-		        final String inAttributeValue,
-		        final String inTagName,
-		        final String inChildTagName,
-		        final StringBuilder inContent,
-		        final TypedString inTypedContent,
-		        final Map<String, Map<String, Collection<TypedString>>> inExtracted,
-		        final ParserListener inParent) {
+		public void process(final String inPageUrl, final String inAttributeValue, final String inTagName,
+				final String inChildTagName, final StringBuilder inContent, final TypedString inTypedContent,
+				final Map<String, Map<String, Collection<TypedString>>> inExtracted, final ParserListener inParent) {
 			if (inParent != null) {
 				final String lContentText = new String(inContent).trim();
-				final TypedString lContent = (inAttributeValue != null)
-				        && inAttributeValue.trim().length() != 0 ? new TypedString(
-				        inAttributeValue.trim(), false) : new TypedString(
-				        lContentText);
+				final TypedString lContent = (inAttributeValue != null) && inAttributeValue.trim().length() != 0
+						? new TypedString(inAttributeValue.trim(), false) : new TypedString(lContentText);
 				inParent.setContent(lContent);
 				inParent.setChildTagName(inTagName);
 			}

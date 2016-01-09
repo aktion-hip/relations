@@ -101,8 +101,9 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 		setLayout(outComposite, lColumns);
 		outComposite.setFont(inParent.getFont());
 
-		biblioCombo = createLabelCombo(outComposite, RelationsMessages
-		        .getString("RelationsPreferencePage.lbl.biblio"), //$NON-NLS-1$
+		biblioCombo = createLabelCombo(outComposite,
+		        RelationsMessages
+		                .getString("RelationsPreferencePage.lbl.biblio"), //$NON-NLS-1$
 		        new String[] {});
 		createSeparator(outComposite, lColumns);
 
@@ -390,10 +391,10 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 			int lSelectionIndex = 0;
 			for (final Class<IRelationsBrowser> lId : browserIds) {
 				if (lFirst) {
-					lSelectionIndex = browserCombos.get(lId.getName())
+					lSelectionIndex = browserCombos.get(lId)
 					        .getSelectionIndex();
 				} else {
-					final Combo lCombo = browserCombos.get(lId.getName());
+					final Combo lCombo = browserCombos.get(lId);
 					lCombo.select(lSelectionIndex);
 					lCombo.setEnabled(false);
 				}

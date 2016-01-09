@@ -1,27 +1,27 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ***************************************************************************/
 package org.elbe.relations.internal.controls;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -33,9 +33,9 @@ import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.PersistState;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
-import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecoration;
@@ -65,7 +65,7 @@ import org.elbe.relations.search.RetrievedItemWithIcon;
 /**
  * View to search items. By default, this view is configured as fast view (i.e.
  * is displayed minimized).
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
@@ -90,7 +90,7 @@ public class SearchView extends AbstractToolPart {
 
 	/**
 	 * SearchView constructor, called through DI.
-	 * 
+	 *
 	 * @param inParent
 	 *            {@link Composite}
 	 */
@@ -121,8 +121,8 @@ public class SearchView extends AbstractToolPart {
 	}
 
 	private int createInputControl(final Composite inSearch) {
-		input = new Combo(inSearch, SWT.BORDER | SWT.SINGLE | SWT.DROP_DOWN
-		        | SWT.SEARCH);
+		input = new Combo(inSearch,
+		        SWT.BORDER | SWT.SINGLE | SWT.DROP_DOWN | SWT.SEARCH);
 		final ControlDecoration lDecoration = new ControlDecoration(input,
 		        SWT.LEFT | SWT.TOP);
 		final FieldDecoration lProposeDeco = FieldDecorationRegistry
@@ -155,7 +155,7 @@ public class SearchView extends AbstractToolPart {
 			@Override
 			public void focusGained(final FocusEvent inEvent) {
 				final String lSelection = (String) selectionService
-				        .getSelection(RelationsConstants.PART_INSPECTOR);
+		                .getSelection(RelationsConstants.PART_INSPECTOR);
 				if (lSelection != null && !lSelection.isEmpty()) {
 					input.setText(lSelection);
 				} else {
@@ -223,15 +223,15 @@ public class SearchView extends AbstractToolPart {
 	}
 
 	private void addUnique(final String inText) {
-		final Vector<String> lItems = new Vector<String>(Arrays.asList(input
-		        .getItems()));
+		final List<String> lItems = new ArrayList<String>(
+		        Arrays.asList(input.getItems()));
 		while (lItems.remove(inText)) {
 			// intentionally left empty
 		}
-		if (lItems.size() > RelationsConstants.DIALOG_HISTORY_LENGTH - 1) {
-			lItems.setSize(RelationsConstants.DIALOG_HISTORY_LENGTH - 1);
+		while (lItems.size() > RelationsConstants.DIALOG_HISTORY_LENGTH - 1) {
+			lItems.remove(lItems.size() - 1);
 		}
-		lItems.insertElementAt(inText, 0);
+		lItems.add(0, inText);
 		final String[] lNew = new String[lItems.size()];
 		System.arraycopy(lItems.toArray(), 0, lNew, 0, lNew.length);
 		input.setItems(lNew);
@@ -239,8 +239,8 @@ public class SearchView extends AbstractToolPart {
 	}
 
 	private void createListControl(final int inIndent) {
-		results = new TableViewer(search, SWT.H_SCROLL | SWT.V_SCROLL
-		        | SWT.BORDER | SWT.MULTI);
+		results = new TableViewer(search,
+		        SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.MULTI);
 		results.setContentProvider(new ObservableListContentProvider());
 		results.setLabelProvider(getLabelProvider());
 
@@ -262,7 +262,7 @@ public class SearchView extends AbstractToolPart {
 
 	/**
 	 * Reset result list after a DB change.
-	 * 
+	 *
 	 * @param inEvent
 	 */
 	@Inject

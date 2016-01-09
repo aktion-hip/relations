@@ -95,11 +95,10 @@ public class RelationsLifeCycle {
 	        final IEventBroker inEventBroker) {
 
 		// set db settings and controller to workspace context
-		if (this.dbSettings != null
-		        && inContext.get(DBSettings.class) == null) {
-			inContext.set(DBSettings.class, this.dbSettings);
+		if (dbSettings != null && inContext.get(DBSettings.class) == null) {
+			inContext.set(DBSettings.class, dbSettings);
 		}
-		ContextInjectionFactory.inject(this.dbController, inContext);
+		ContextInjectionFactory.inject(dbController, inContext);
 
 		// set DataSourceRegistry to eclipse context to make instance available
 		// in application
@@ -119,26 +118,27 @@ public class RelationsLifeCycle {
 		inContext.set(IDataService.class, lDataService);
 
 		// set a suitable implementation of the IBrowserManager to the context
-		this.browserManager = ContextInjectionFactory
+		browserManager = ContextInjectionFactory
 		        .make(RelationsBrowserManager.class, inContext);
-		inContext.set(IBrowserManager.class, this.browserManager);
+		inContext.set(IBrowserManager.class, browserManager);
 
 		// register a special event handler
 		inEventBroker.subscribe(ShowTextItemForm.TOPIC, new ShowTextItemForm());
 
 		boolean lDBConfigured = false;
-		if (this.dbSettings.getDBConnectionConfig().isEmbedded()
-		        && RelationsConstants.DFT_DBCONFIG_PLUGIN_ID.equals(
-		                this.dbSettings.getDBConnectionConfig().getName())) {
+		if (dbSettings != null && dbSettings.getDBConnectionConfig() != null
+		        && dbSettings.getDBConnectionConfig().isEmbedded()
+		        && RelationsConstants.DFT_DBCONFIG_PLUGIN_ID
+		                .equals(dbSettings.getDBConnectionConfig().getName())) {
 			// check existence of default database and create one, if needed
 			if (!EmbeddedCatalogHelper.hasDefaultEmbedded()) { // NOPMD
-				if (this.dbController.checkEmbedded()) {
+				if (dbController.checkEmbedded()) {
 					lDbAccess.setActiveConfiguration(
 					        createDftDBAccessConfiguration());
 					lDBConfigured = true;
 					final DbEmbeddedCreateHandler lDBCreate = ContextInjectionFactory
 					        .make(DbEmbeddedCreateHandler.class, inContext);
-					lDBCreate.execute(this.dbSettings, inContext);
+					lDBCreate.execute(dbSettings, inContext);
 
 				} else {
 					MessageDialog.openError(new Shell(Display.getDefault()),
@@ -151,11 +151,13 @@ public class RelationsLifeCycle {
 		}
 		if (!lDBConfigured) {
 			lDbAccess.setActiveConfiguration(
-			        ActionHelper.createDBConfiguration(this.dbSettings));
+			        ActionHelper.createDBConfiguration(dbSettings));
 		}
 		lDataService.loadData(RelationsConstants.TOPIC_DB_CHANGED_RELOAD);
 
-		EmbeddedCatalogHelper.reindexChecked(this.dbSettings, inContext);
+		if (dbSettings != null) {
+			EmbeddedCatalogHelper.reindexChecked(dbSettings, inContext);
+		}
 	}
 
 	private DBAccessConfiguration createDftDBAccessConfiguration() {
@@ -169,7 +171,7 @@ public class RelationsLifeCycle {
 
 	@ProcessAdditions
 	void doRestore() {
-		this.browserManager.restoreState(this.preferences);
+		browserManager.restoreState(preferences);
 	}
 
 	@ProcessRemovals
@@ -183,7 +185,7 @@ public class RelationsLifeCycle {
 		final IArtifactRepositoryManager lArtifactManager = (IArtifactRepositoryManager) inAgent
 		        .getService(IArtifactRepositoryManager.SERVICE_NAME);
 		if (lMetadataManager == null || lArtifactManager == null) {
-			this.log.warn("P2 metadata/artifact manager is null!"); //$NON-NLS-1$
+			log.warn("P2 metadata/artifact manager is null!"); //$NON-NLS-1$
 			return;
 		}
 
@@ -193,7 +195,7 @@ public class RelationsLifeCycle {
 			lArtifactManager.addRepository(lURI);
 		}
 		catch (final URISyntaxException exc) {
-			this.log.error(exc, exc.getMessage());
+			log.error(exc, exc.getMessage());
 		}
 	}
 
@@ -211,17 +213,17 @@ public class RelationsLifeCycle {
 		final MElementContainer<MUIElement> lBrowserStack = (MElementContainer<MUIElement>) inModelService
 		        .find(RelationsConstants.PART_STACK_BROWSERS, inApplication);
 		final MUIElement lBrowser = lBrowserStack.getSelectedElement();
-		this.preferences.put(RelationsConstants.ACTIVE_BROWSER_ID,
+		preferences.put(RelationsConstants.ACTIVE_BROWSER_ID,
 		        lBrowser.getElementId());
 
 		// save browser model
-		this.browserManager.saveState(this.preferences);
+		browserManager.saveState(preferences);
 		// flush preferences
 		try {
-			this.preferences.flush();
+			preferences.flush();
 		}
 		catch (final BackingStoreException exc) {
-			this.log.error(exc, exc.getMessage());
+			log.error(exc, exc.getMessage());
 		}
 	}
 

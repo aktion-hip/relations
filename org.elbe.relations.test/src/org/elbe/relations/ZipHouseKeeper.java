@@ -23,12 +23,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Vector;
 
 /**
  * Helper class for Zip file tests
- * 
+ *
  * @author Luthiger
  */
 public class ZipHouseKeeper {
@@ -41,19 +41,18 @@ public class ZipHouseKeeper {
 	public final static String FILE4 = "child4.txt";
 	public final static String ZIP_FILE = "backup_test.zip";
 
-	public final static String[] EXPECTED_NAMES = new String[] {
-	        "data\\child1.txt", "data\\parent\\child2.txt",
-	        "data\\parent\\child\\child3.txt", "data\\parent\\child4.txt" };
+	public final static String[] EXPECTED_NAMES = new String[] { "data\\child1.txt", "data\\parent\\child2.txt",
+			"data\\parent\\child\\child3.txt", "data\\parent\\child4.txt" };
 
 	public final static String[] EXPECTED_CONTENT = new String[] {
-	        FILE1 + " is contained in the test's root directory.",
-	        FILE2 + " is contained in the test's first sub-directory.",
-	        FILE3 + " is contained in the test's last sub-directory.",
-	        FILE4 + " is contained in the test's first sub-directory too." };
+			FILE1 + " is contained in the test's root directory.",
+			FILE2 + " is contained in the test's first sub-directory.",
+			FILE3 + " is contained in the test's last sub-directory.",
+			FILE4 + " is contained in the test's first sub-directory too." };
 
 	/**
 	 * Creates directory structure for testing purpose
-	 * 
+	 *
 	 * @return File the root directory
 	 * @throws IOException
 	 */
@@ -75,20 +74,17 @@ public class ZipHouseKeeper {
 		return outRoot;
 	}
 
-	private static void createFile(final File inFile, final String inContent)
-	        throws IOException {
+	private static void createFile(final File inFile, final String inContent) throws IOException {
 		inFile.createNewFile();
 		fillFile(inFile, inContent);
 	}
 
-	private static void fillFile(final File inFile, final String inContent)
-	        throws IOException {
+	private static void fillFile(final File inFile, final String inContent) throws IOException {
 		final FileWriter lWriter = new FileWriter(inFile);
 		final BufferedWriter lBuffer = new BufferedWriter(lWriter);
 		try {
 			lBuffer.write(inContent);
-		}
-		finally {
+		} finally {
 			lBuffer.close();
 			lWriter.close();
 		}
@@ -96,7 +92,7 @@ public class ZipHouseKeeper {
 
 	/**
 	 * Deletes the specified directory structure.
-	 * 
+	 *
 	 * @param inRootName
 	 *            String Path of root directory to delete with whole content.
 	 */
@@ -122,7 +118,7 @@ public class ZipHouseKeeper {
 
 	/**
 	 * Make sure that the specified file is deleted, at least on exit.
-	 * 
+	 *
 	 * @param inFile
 	 *            File to delete.
 	 */
@@ -135,14 +131,13 @@ public class ZipHouseKeeper {
 	/**
 	 * Converts the specified array of files to a collection containing the file
 	 * names.
-	 * 
+	 *
 	 * @param inChilds
 	 *            File[]
 	 * @return Collection<String> of file names
 	 */
 	public static Collection<String> getChildNames(final File[] inChilds) {
-		final Collection<String> outChildNames = new Vector<String>(
-		        inChilds.length);
+		final Collection<String> outChildNames = new ArrayList<String>(inChilds.length);
 		for (int i = 0; i < inChilds.length; i++) {
 			outChildNames.add(inChilds[i].getName());
 		}
@@ -151,7 +146,7 @@ public class ZipHouseKeeper {
 
 	/**
 	 * Asserts the specified file containing the specified text.
-	 * 
+	 *
 	 * @param inMessage
 	 *            String Message
 	 * @param inFile
@@ -160,15 +155,14 @@ public class ZipHouseKeeper {
 	 *            String Test to compare with file content.
 	 * @throws IOException
 	 */
-	public static void assertFileContent(final String inMessage,
-	        final File inFile, final String inText) throws IOException {
+	public static void assertFileContent(final String inMessage, final File inFile, final String inText)
+			throws IOException {
 		final FileReader lReader = new FileReader(inFile);
 		final BufferedReader lBuffer = new BufferedReader(lReader);
 		String lRead = "";
 		try {
 			lRead = lBuffer.readLine();
-		}
-		finally {
+		} finally {
 			lBuffer.close();
 			lReader.close();
 		}
@@ -177,7 +171,7 @@ public class ZipHouseKeeper {
 
 	/**
 	 * Returns the file with the specified name or <code>null</code>.
-	 * 
+	 *
 	 * @param inChilds
 	 *            File[] array to look up the file with the specified name.
 	 * @param inName

@@ -80,7 +80,6 @@ public abstract class AbstractWizardNewPage
 
 	private IWizardCategory wizardCategories;
 	private IWizardDescriptor[] primaryWizards;
-	private boolean needShowAll;
 	private final WizardActivityFilter filter = new WizardActivityFilter();
 	private FilteredTree filteredTree;
 	private WizardPatternFilter filteredTreeFilter;
@@ -117,17 +116,16 @@ public abstract class AbstractWizardNewPage
 
 		trimPrimaryWizards();
 
-		if (this.primaryWizards.length > 0) {
+		if (primaryWizards.length > 0) {
 			if (allPrimary(inWizardCategories)) {
 				wizardCategories = null; // dont bother considering the
 				                         // categories as all wizards are
 				                         // primary
-				needShowAll = false;
 			} else {
-				needShowAll = !allActivityEnabled(inWizardCategories);
+				allActivityEnabled(inWizardCategories);
 			}
 		} else {
-			needShowAll = !allActivityEnabled(inWizardCategories);
+			allActivityEnabled(inWizardCategories);
 		}
 	}
 
@@ -332,7 +330,7 @@ public abstract class AbstractWizardNewPage
 		filteredTreeFilter = new WizardPatternFilter();
 		final FilteredTree outFilterTree = new FilteredTree(lComposite,
 		        SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER,
-		        filteredTreeFilter, true);
+		        filteredTreeFilter);
 
 		final TreeViewer lTreeViewer = outFilterTree.getViewer();
 		lTreeViewer.setContentProvider(new WizardContentProvider());

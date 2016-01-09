@@ -1,0 +1,34 @@
+Fehler Relations:
+- Wenn in Finder aufgestartet wird, dann ist beim Wechsel auf den RelationsBrowser immer das Zentrums-Item aktiviert, 
+  auch wenn im Finder ein zugeordnetes Item aktiv ist. Dieses Verhalten gilt nur, bis der RelationsBrowser das erste Mal
+  den Fokus bekommen hat.
+- Eingabe Suche: Widget, um Text schnell zu löschen?
+- Export zu docx.
+
+http://www.opcoach.com/en/managing-preference-pages-with-eclipse-4/
+
+=== ok
+- Drop von Webseiten. Beisp:
+  http://www.economist.com/news/briefing/21677228-technology-behind-bitcoin-lets-people-who-do-not-know-or-trust-each-other-build-dependable
+
+- Änderung von Titel in Inspector oder Editor ändert Title von Zentrums-Item, auch wenn aktives Item nicht im Zentrum ist.
+- Wird ein Item (nicht zentral) geändert, so wird sein Item in Finder nicht nachgeführt.
+- Lucene: neue als Bundle einbauen
+
+===
+plugin.xml:
+   <extension
+         id="RelationsApplication"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="org.elbe.relations.app.RelationsCompatApp">
+         </run>
+      </application>
+   </extension>
+   
+org.elbe.relations.product
+   

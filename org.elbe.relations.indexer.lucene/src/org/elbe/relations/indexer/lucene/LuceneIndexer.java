@@ -20,9 +20,9 @@ package org.elbe.relations.indexer.lucene;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.ar.ArabicAnalyzer;
@@ -234,7 +234,7 @@ public class LuceneIndexer implements IIndexer {
 
 	@Override
 	public Collection<String> getAnalyzerLanguages() {
-		final Collection<String> outLanguages = new Vector<String>();
+		final Collection<String> outLanguages = new ArrayList<String>();
 		for (final LanguageAnalyzer lAnalyzer : LanguageAnalyzer.values()) {
 			outLanguages.add(lAnalyzer.isoLanguage);
 		}
@@ -277,7 +277,7 @@ public class LuceneIndexer implements IIndexer {
 	private List<RetrievedItem> createResults(final TopDocs inDocs, final IndexSearcher inSearcher)
 			throws CorruptIndexException, IOException {
 		final ScoreDoc[] lDocs = inDocs.scoreDocs;
-		final List<RetrievedItem> out = new Vector<RetrievedItem>(lDocs.length);
+		final List<RetrievedItem> out = new ArrayList<RetrievedItem>(lDocs.length);
 		for (int i = 0; i < lDocs.length; i++) {
 			final int lDocID = lDocs[i].doc;
 			final Document lDocument = inSearcher.doc(lDocID);
