@@ -123,7 +123,7 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_8T40IEozEeOlq5sfE9Wmlw" label="%command.show.welcome" iconURI="platform:/plugin/org.eclipse.ui.intro/icons/welcome16.gif" command="_HGMgIEo0EeOlq5sfE9Wmlw"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_2KM7gEcyEeOLY8H4-5VcYg" elementId="" label="%handledmenuitem.label.18" command="_AKmocEc-EeOLY8H4-5VcYg"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_GlSN4EczEeOLY8H4-5VcYg" elementId="org.elbe.relations.menuseparator.help.help"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_n0Q6IHuyEeKuqp0Z70q4AA" elementId="" label="%handledmenuitem.label.19" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/help_contents.gif" command="_0MLSAHuyEeKuqp0Z70q4AA"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_n0Q6IHuyEeKuqp0Z70q4AA" elementId="" label="%handledmenuitem.label.help" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/help_contents.gif" command="_0MLSAHuyEeKuqp0Z70q4AA"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_dIsOoKU7EeKgdtHsUDGjpQ" elementId="additions"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_ryPyoHuyEeKuqp0Z70q4AA" elementId="org.elbe.relations.menuseparator.help.about"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_-axcHhYwEeKaY4i-iZlKSg" label="%menu.item.about" command="_-axcFBYwEeKaY4i-iZlKSg"/>
@@ -219,6 +219,7 @@
   <handlers xmi:id="_dJNbkJT5EeWdFYAq2aQ5FQ" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.NewHandler" command="_VwNHcCIQEeKXqtgJGiogfQ"/>
   <handlers xmi:id="_zRVKsJblEeWlE9-mdxQ18Q" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.ImportHandler" command="_Ndix0GmaEeKne9c4TFA2rw"/>
   <handlers xmi:id="_5EZVgJblEeWlE9-mdxQ18Q" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.ExportHandler" command="_Efm2cGGXEeKGesEp5yb--A"/>
+  <handlers xmi:id="_X0lLwLbQEeWBmrIyjRz8VA" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.HelpContentHandler" command="_0MLSAHuyEeKuqp0Z70q4AA"/>
   <bindingTables xmi:id="_gRRkADyfEeKc_uS-EtsnSg" elementId="org.elbe.relations.bindingtable.app" bindingContext="_vLHKgDv5EeKA7_T_MYQC0Q"/>
   <bindingTables xmi:id="_8u67EDx4EeKc_uS-EtsnSg" elementId="org.elbe.relations.bindingtable.main" bindingContext="_2rKewDv9EeKA7_T_MYQC0Q">
     <bindings xmi:id="_-axcDRYwEeKaY4i-iZlKSg" keySequence="M1+Q" command="_-axcChYwEeKaY4i-iZlKSg">
@@ -400,7 +401,7 @@
   <commands xmi:id="_-EzBIE1IEeKO0Y8uQ_sqGg" elementId="org.elbe.relations.command.inspector.view.content" commandName="%command.commandname.41" description="%command.description.25" category="_U-K2AFNyEeKu5ZyUiHaoHg">
     <parameters xmi:id="_QglnAE1JEeKO0Y8uQ_sqGg" elementId="org.elbe.relations.inspector.text.switch.parameter" name="switch"/>
   </commands>
-  <commands xmi:id="_0MLSAHuyEeKuqp0Z70q4AA" elementId="org.eclipse.ui.help.helpContents" commandName="%command.commandname.42" description="%command.description.26" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
+  <commands xmi:id="_0MLSAHuyEeKuqp0Z70q4AA" elementId="org.eclipse.ui.help.helpContents" commandName="%command.help" description="%command.description.help" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <commands xmi:id="_F7qZQKU5EeKgdtHsUDGjpQ" elementId="org.elbe.relations.cmd.software.install" commandName="%command.commandname.43" description="%command.description.27" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <commands xmi:id="_AKmocEc-EeOLY8H4-5VcYg" elementId="org.elbe.relations.show.view" commandName="%command.commandname.44" description="%command.description.28" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <commands xmi:id="_HGMgIEo0EeOlq5sfE9Wmlw" elementId="org.eclipse.ui.help.quickStartAction" commandName="%command.show.welcome" description="%command.welcome.desc" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>

@@ -349,7 +349,6 @@ POSSIBILITY OF SUCH DAMAGES.
       <feature id="org.eclipse.emf.common" version="2.11.0.v20150805-0538"/>
       <feature id="org.eclipse.rcp" version="4.5.1.v20150904-0015"/>
       <feature id="org.eclipse.e4.rcp" version="1.4.0.v20150903-1804"/>
-      <feature id="org.eclipse.help" version="2.1.1.v20150904-0015"/>
       <feature id="org.eclipse.platform" version="4.5.1.v20150904-0015"/>
    </features>
 

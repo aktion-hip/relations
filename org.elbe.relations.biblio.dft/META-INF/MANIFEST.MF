@@ -4,7 +4,8 @@ Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.elbe.relations.biblio.dft
 Bundle-Version: 1.1.0.qualifier
 Bundle-Vendor: RelationWare
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8,
+ JavaSE-1.7
 Import-Package: org.elbe.relations.data.bom;version="[1.0.0,2.0.0)",
  org.elbe.relations.data.utility;version="[1.0.0,2.0.0)",
  org.elbe.relations.services;version="[2.0.0,3.0.0)",
