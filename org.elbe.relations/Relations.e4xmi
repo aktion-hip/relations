@@ -126,7 +126,7 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_n0Q6IHuyEeKuqp0Z70q4AA" elementId="" label="%handledmenuitem.label.help" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/help_contents.gif" command="_0MLSAHuyEeKuqp0Z70q4AA"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_dIsOoKU7EeKgdtHsUDGjpQ" elementId="additions"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_ryPyoHuyEeKuqp0Z70q4AA" elementId="org.elbe.relations.menuseparator.help.about"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_-axcHhYwEeKaY4i-iZlKSg" label="%menu.item.about" command="_-axcFBYwEeKaY4i-iZlKSg"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_-axcHhYwEeKaY4i-iZlKSg" label="%menu.item.about" command="_IpzNALuZEeWV0esgnY2lLg"/>
       </children>
     </mainMenu>
     <sharedElements xsi:type="basic:Part" xmi:id="_c43GwEoqEeOlq5sfE9Wmlw" elementId="org.eclipse.ui.internal.introview" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView" label="%command.show.welcome"/>
@@ -220,6 +220,7 @@
   <handlers xmi:id="_zRVKsJblEeWlE9-mdxQ18Q" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.ImportHandler" command="_Ndix0GmaEeKne9c4TFA2rw"/>
   <handlers xmi:id="_5EZVgJblEeWlE9-mdxQ18Q" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.ExportHandler" command="_Efm2cGGXEeKGesEp5yb--A"/>
   <handlers xmi:id="_X0lLwLbQEeWBmrIyjRz8VA" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.HelpContentHandler" command="_0MLSAHuyEeKuqp0Z70q4AA"/>
+  <handlers xmi:id="_0cUxoLuZEeWV0esgnY2lLg" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.AboutHandler" command="_IpzNALuZEeWV0esgnY2lLg"/>
   <bindingTables xmi:id="_gRRkADyfEeKc_uS-EtsnSg" elementId="org.elbe.relations.bindingtable.app" bindingContext="_vLHKgDv5EeKA7_T_MYQC0Q"/>
   <bindingTables xmi:id="_8u67EDx4EeKc_uS-EtsnSg" elementId="org.elbe.relations.bindingtable.main" bindingContext="_2rKewDv9EeKA7_T_MYQC0Q">
     <bindings xmi:id="_-axcDRYwEeKaY4i-iZlKSg" keySequence="M1+Q" command="_-axcChYwEeKaY4i-iZlKSg">
@@ -414,6 +415,7 @@
   <commands xmi:id="_q6neAExeEeOnfLACFZUbew" elementId="org.elbe.relations.command.activate.bookmarks" commandName="%command.activate.bookmarks" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <commands xmi:id="_r4NHoExeEeOnfLACFZUbew" elementId="org.elbe.relations.command.activate.changes" commandName="%command.activate.last.changes" description="" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <commands xmi:id="_2DSdAJXJEeWpfK4H-ptl-Q" elementId="org.elbe.relations.command.part.maximize" commandName="%command.maximize.restore" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
+  <commands xmi:id="_IpzNALuZEeWV0esgnY2lLg" elementId="org.elbe.relations.show.about" commandName="%command.about" description="%command.about.desc" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <addons xmi:id="_-axcBBYwEeKaY4i-iZlKSg" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_-axcBRYwEeKaY4i-iZlKSg" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_-axcBhYwEeKaY4i-iZlKSg" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

@@ -4,6 +4,8 @@ Fehler Relations:
   den Fokus bekommen hat.
 - Eingabe Suche: Widget, um Text schnell zu löschen?
 - Export zu docx.
+- Update Site: http://www.vogella.com/tutorials/EclipseP2Update/article.html
+- About: org.eclipse.ui.internal.dialogs.AboutDialog
 
 http://www.opcoach.com/en/managing-preference-pages-with-eclipse-4/
 
