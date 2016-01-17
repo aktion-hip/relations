@@ -22,7 +22,7 @@
          </property>
          <property
                name="aboutImage"
-               value="icons/aboutRelations.gif">
+               value="icons/aboutRelations.png">
          </property>
          <property
                name="startupForegroundColor"

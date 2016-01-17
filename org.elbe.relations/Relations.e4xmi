@@ -126,7 +126,7 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_n0Q6IHuyEeKuqp0Z70q4AA" elementId="" label="%handledmenuitem.label.help" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/help_contents.gif" command="_0MLSAHuyEeKuqp0Z70q4AA"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_dIsOoKU7EeKgdtHsUDGjpQ" elementId="additions"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_ryPyoHuyEeKuqp0Z70q4AA" elementId="org.elbe.relations.menuseparator.help.about"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_-axcHhYwEeKaY4i-iZlKSg" label="%menu.item.about" command="_IpzNALuZEeWV0esgnY2lLg"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_-axcHhYwEeKaY4i-iZlKSg" label="%menu.item.about" iconURI="platform:/plugin/org.elbe.relations/icons/relations.gif" command="_IpzNALuZEeWV0esgnY2lLg"/>
       </children>
     </mainMenu>
     <sharedElements xsi:type="basic:Part" xmi:id="_c43GwEoqEeOlq5sfE9Wmlw" elementId="org.eclipse.ui.internal.introview" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView" label="%command.show.welcome"/>
