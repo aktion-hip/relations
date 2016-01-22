@@ -18,7 +18,7 @@
          </property>
          <property
                name="aboutText"
-               value="Relations Rich Client Application&#x0A;&#x0A;The Relations application is a tool for knowledge management.&#x0A;&#x0A;Version: 2.0.0&#x0A;&#x0A;(c) Copyright: RelationWare, B. Luthiger.&#x0A;Visit http://relations-rcp.sourceforge.net/&#x0A;&#x0A;This product is built on Eclipse RCP,&#x0A;see http://www.eclipse.org/">
+               value="Relations Rich Client Application&#x0A;&#x0A;The Relations application is a tool for knowledge management.&#x0A;&#x0A;Version: 2.1.0&#x0A;&#x0A;(c) Copyright: RelationWare, B. Luthiger.&#x0A;Visit http://relations-rcp.sourceforge.net/&#x0A;&#x0A;This product is built on Eclipse RCP,&#x0A;see http://www.eclipse.org/">
          </property>
          <property
                name="aboutImage"

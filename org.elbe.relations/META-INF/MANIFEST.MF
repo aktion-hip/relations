@@ -7,7 +7,7 @@ Bundle-ClassPath: lib/htmlcleaner2_1.jar,
  .
 Bundle-Activator: org.elbe.relations.Activator
 Bundle-Vendor: RelationWare
-Export-Package: org.elbe.relations;version="2.0.0",
+Export-Package: org.elbe.relations;version="2.1.0",
  org.elbe.relations.db;version="2.0.0",
  org.elbe.relations.dnd;version="2.0.0",
  org.elbe.relations.models;version="2.0.0",
@@ -37,7 +37,6 @@ Require-Bundle: org.eclipse.jface;bundle-version="[3.11.0,4.0.0)",
  org.eclipse.core.databinding.observable;bundle-version="[1.5.0,2.0.0)",
  org.eclipse.e4.ui.css.swt.theme;bundle-version="[0.10.0,1.0.0)",
  org.eclipse.core.resources;bundle-version="[3.10.1,4.0.0)",
- org.eclipse.ui.workbench;bundle-version="[3.107.0,4.0.0)",
  org.eclipse.core.runtime;bundle-version="[3.11.1,4.0.0)",
  org.eclipse.ui;bundle-version="[3.107.0,4.0.0)",
  com.opcoach.e4.preferences;bundle-version="[1.0.0,1.1.0)"

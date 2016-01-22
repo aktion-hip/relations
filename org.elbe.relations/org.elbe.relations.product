@@ -10,7 +10,7 @@
 
 The Relations application is a tool for knowledge management.
 
-Version: 2.0.0
+Version: 2.1.0
 
 (c) Copyright: RelationWare, B. Luthiger.
 Visit http://relations-rcp.sourceforge.net/
@@ -25,7 +25,9 @@ see http://www.eclipse.org/
    </configIni>
 
    <launcherArgs>
-      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
+      <vmArgs>-Xmx386M -Dosgi.parentClassloader=ext
+      </vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -Djava.awt.headless=true
       </vmArgsMac>
    </launcherArgs>
 
@@ -47,6 +49,9 @@ see http://www.eclipse.org/
    <intro introId="org.eclipse.ui.intro.universal"/>
 
    <vm>
+      <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</linux>
+      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</macos>
+      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</windows>
    </vm>
 
    <license>
@@ -345,22 +350,21 @@ POSSIBILITY OF SUCH DAMAGES.
    <features>
       <feature id="org.elbe.relations.feature" version="2.1.0.qualifier"/>
       <feature id="org.elbe.relations.add.feature" version="2.1.0.qualifier"/>
-      <feature id="org.eclipse.emf.ecore" version="2.11.1.v20150805-0538"/>
       <feature id="org.eclipse.emf.common" version="2.11.0.v20150805-0538"/>
+      <feature id="org.eclipse.emf.ecore" version="2.11.1.v20150805-0538"/>
       <feature id="org.eclipse.rcp" version="4.5.1.v20150904-0015"/>
-      <feature id="org.eclipse.e4.rcp" version="1.4.0.v20150903-1804"/>
-      <feature id="org.eclipse.platform" version="4.5.1.v20150904-0015"/>
-      <feature id="org.eclipse.equinox.p2.user.ui"/>
-      <feature id="org.eclipse.help"/>
-      <feature id="org.eclipse.equinox.p2.extras.feature"/>
-      <feature id="org.eclipse.equinox.p2.core.feature"/>
-      <feature id="org.eclipse.equinox.p2.rcp.feature"/>
+      <feature id="org.eclipse.e4.rcp"/>
+      <feature id="org.eclipse.equinox.p2.user.ui" version="2.2.101.v20150826-1318"/>
       <feature id="org.eclipse.ecf.filetransfer.httpclient4.feature"/>
       <feature id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature"/>
+      <feature id="org.eclipse.equinox.p2.extras.feature"/>
+      <feature id="org.eclipse.equinox.p2.core.feature"/>
       <feature id="org.eclipse.ecf.core.feature"/>
+      <feature id="org.eclipse.equinox.p2.rcp.feature"/>
       <feature id="org.eclipse.ecf.filetransfer.feature"/>
       <feature id="org.eclipse.ecf.core.ssl.feature"/>
       <feature id="org.eclipse.ecf.filetransfer.ssl.feature"/>
+      <feature id="org.eclipse.platform" version="4.5.1.v20150904-0015"/>
    </features>
 
 
