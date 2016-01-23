@@ -252,23 +252,6 @@ POSSIBILITY OF SUCH DAMAGES.
    </url>
 
    <requires>
-      <import plugin="javax.annotation"/>
-      <import plugin="javax.inject" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.osgi"/>
-      <import plugin="org.eclipse.equinox.preferences"/>
-      <import plugin="org.eclipse.e4.ui.workbench.addons.swt"/>
-      <import plugin="org.eclipse.jface.databinding" version="1.6.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.osgi.services"/>
-      <import plugin="org.eclipse.core.expressions" version="3.4.401" match="greaterOrEqual"/>
-      <import plugin="slf4j.api"/>
-      <import plugin="com.mysql.jdbc"/>
-      <import plugin="osgi.enterprise"/>
-      <import plugin="org.eclipse.core.commands"/>
-      <import plugin="org.eclipse.draw2d"/>
-      <import plugin="org.eclipse.gef"/>
-      <import plugin="org.eclipse.swt" version="3.102.1" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.nebula.widgets.gallery"/>
-      <import plugin="org.eclipse.help" version="3.6.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.jface" version="3.11.0" match="compatible"/>
       <import plugin="org.eclipse.e4.core.contexts" version="1.4.0" match="compatible"/>
       <import plugin="org.eclipse.e4.core.di" version="1.5.0" match="compatible"/>
@@ -290,16 +273,39 @@ POSSIBILITY OF SUCH DAMAGES.
       <import plugin="org.eclipse.core.databinding.observable" version="1.5.0" match="compatible"/>
       <import plugin="org.eclipse.e4.ui.css.swt.theme" version="0.10.0" match="compatible"/>
       <import plugin="org.eclipse.core.resources" version="3.10.1" match="compatible"/>
-      <import plugin="org.eclipse.ui.workbench" version="3.107.0" match="compatible"/>
       <import plugin="org.eclipse.core.runtime" version="3.11.1" match="compatible"/>
       <import plugin="org.eclipse.ui" version="3.107.0" match="compatible"/>
       <import plugin="com.opcoach.e4.preferences" version="1.0.0" match="equivalent"/>
+      <import plugin="javax.annotation"/>
+      <import plugin="javax.inject" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.osgi"/>
+      <import plugin="org.eclipse.equinox.preferences"/>
+      <import plugin="org.eclipse.e4.ui.workbench.addons.swt"/>
       <import plugin="org.eclipse.equinox.app"/>
       <import plugin="org.eclipse.help.base"/>
+      <import plugin="org.eclipse.jface.databinding" version="1.6.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.osgi.services"/>
+      <import plugin="org.eclipse.core.expressions" version="3.4.401" match="greaterOrEqual"/>
+      <import plugin="slf4j.api"/>
+      <import plugin="com.mysql.jdbc"/>
       <import plugin="org.apache.servicemix.bundles.derby"/>
+      <import plugin="osgi.enterprise"/>
+      <import plugin="org.eclipse.core.commands"/>
+      <import plugin="org.eclipse.draw2d"/>
+      <import plugin="org.eclipse.gef"/>
+      <import plugin="org.eclipse.swt" version="3.102.1" match="greaterOrEqual"/>
       <import plugin="org.apache.servicemix.bundles.lucene"/>
       <import plugin="org.apache.servicemix.bundles.lucene-analyzers-common"/>
       <import plugin="org.apache.servicemix.bundles.lucene-queryparser"/>
+      <import plugin="org.eclipse.nebula.widgets.gallery"/>
+      <import plugin="org.eclipse.help" version="3.6.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.runtime" version="3.9.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jface" version="3.9.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.e4.core.di" version="1.3.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.e4.ui.model.workbench" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.e4.core.services" version="1.1.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.e4.core.contexts" version="1.3.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.e4.ui.services" version="1.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -409,6 +415,13 @@ POSSIBILITY OF SUCH DAMAGES.
 
    <plugin
          id="com.opcoach.e4.preferences"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.elbe.relations.print.doc"
          download-size="0"
          install-size="0"
          version="0.0.0"

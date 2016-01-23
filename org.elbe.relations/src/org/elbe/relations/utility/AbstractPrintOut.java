@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -32,7 +32,7 @@ import org.elbe.relations.services.IPrintOut;
 /**
  * Super class for all classes implementing the
  * <code>org.elbe.relations.print.IPrintOut</code> interface.
- * 
+ *
  * @author Luthiger Created on 19.01.2007
  * @see org.elbe.relations.print.IPrintOut
  */
@@ -42,7 +42,7 @@ public abstract class AbstractPrintOut implements IPrintOut {
 	private static final String XML_TEMPLATE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><docBody><docTitle>%s</docTitle><docSubTitle>%s</docSubTitle></docBody>"; //$NON-NLS-1$
 
 	private static final String MSG_RELATED_WITH = RelationsMessages
-			.getString("AbstractPrintOut.section.intro"); //$NON-NLS-1$
+	        .getString("AbstractPrintOut.section.intro"); //$NON-NLS-1$
 
 	private String docTitle = ""; //$NON-NLS-1$
 	private String docSubTitle = ""; //$NON-NLS-1$
@@ -59,8 +59,8 @@ public abstract class AbstractPrintOut implements IPrintOut {
 	 * @see IPrintOut#openNew(String)
 	 */
 	@Override
-	public void openNew(final String inFileName) throws IOException,
-			TransformerException {
+	public void openNew(final String inFileName)
+	        throws IOException, TransformerException {
 		final File lFile = new File(inFileName);
 
 		deleteExisting(lFile);
@@ -74,11 +74,6 @@ public abstract class AbstractPrintOut implements IPrintOut {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.print.IPrintOut#close()
-	 */
 	@Override
 	public void close() throws IOException {
 		if (outputFile != null) {
@@ -86,11 +81,6 @@ public abstract class AbstractPrintOut implements IPrintOut {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.print.IPrintOut#openAppend(java.lang.String)
-	 */
 	@Override
 	public void openAppend(final String inFileName) throws IOException {
 		final File lFile = new File(inFileName);
@@ -99,10 +89,10 @@ public abstract class AbstractPrintOut implements IPrintOut {
 		}
 	}
 
-	private void printDocBody(final String inXML) throws TransformerException,
-			IOException {
+	private void printDocBody(final String inXML)
+	        throws TransformerException, IOException {
 		final TransformerProxy lTransformer = new TransformerProxy(
-				openURL(getXSLNameBody()), inXML, getStylesheetParameters());
+		        openURL(getXSLNameBody()), inXML, getStylesheetParameters());
 		final StringWriter lResult = new StringWriter();
 		lTransformer.renderToStream(lResult);
 		insertDocBody(lResult.toString());
@@ -112,11 +102,6 @@ public abstract class AbstractPrintOut implements IPrintOut {
 		return String.format(XML_TEMPLATE, docTitle, docSubTitle);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.print.IPrintOut#setDocTitle(java.lang.String)
-	 */
 	@Override
 	public void setDocTitle(final String inDocTitle) throws IOException {
 		docTitle = inDocTitle;
@@ -126,11 +111,6 @@ public abstract class AbstractPrintOut implements IPrintOut {
 		return docTitle;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.print.IPrintOut#setDocSubTitle(java.lang.String)
-	 */
 	@Override
 	public void setDocSubTitle(final String inDocSubtitle) throws IOException {
 		docSubTitle = inDocSubtitle;
@@ -138,7 +118,7 @@ public abstract class AbstractPrintOut implements IPrintOut {
 
 	/**
 	 * Ensures that the specified file is deleted.
-	 * 
+	 *
 	 * @param inFile
 	 *            the File to delete if it exists.
 	 * @return boolean <code>true</code> if the specified file doesn't exist
@@ -154,29 +134,24 @@ public abstract class AbstractPrintOut implements IPrintOut {
 	/**
 	 * Creates a <code>IOException</code> out of the provided
 	 * <code>Throwable</code> passing the exception cause.
-	 * 
+	 *
 	 * @param inThrowable
 	 *            Throwable
 	 * @return IOException
 	 */
 	protected IOException createIOException(final Throwable inThrowable) {
 		final IOException outException = new IOException(
-				inThrowable.getMessage());
+		        inThrowable.getMessage());
 		outException.initCause(inThrowable);
 		return outException;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.print.IPrintOut#printItem(java.lang.String)
-	 */
 	@Override
-	public void printItem(final String inXML) throws TransformerException,
-			IOException {
+	public void printItem(final String inXML)
+	        throws TransformerException, IOException {
 		final TransformerProxy lTransformer = new TransformerProxy(
-				openURL(getXSLNameContent()),
-				inXML.replace(NL, ""), getStylesheetParameters()); //$NON-NLS-1$
+		        openURL(getXSLNameContent()), inXML.replace(NL, ""), //$NON-NLS-1$
+		        getStylesheetParameters());
 		final StringWriter lResult = new StringWriter();
 		lTransformer.renderToStream(lResult);
 		insertSection(lResult.toString());
@@ -209,25 +184,25 @@ public abstract class AbstractPrintOut implements IPrintOut {
 	 * the specified file is ready to be created, i.e. there does not exist a
 	 * file with the same name in the file system. It's the duty of the subclass
 	 * to create and open the print out file.
-	 * 
+	 *
 	 * @param inPrintOut
 	 *            File to print out the content.
 	 * @throws IOException
 	 */
 	abstract protected void manageAfterOpenNew(File inPrintOut)
-			throws IOException;
+	        throws IOException;
 
 	abstract protected void manageAfterReopen(File inPrintOut)
-			throws IOException;
+	        throws IOException;
 
 	abstract protected void manageBeforeClose(File inPrintOut)
-			throws IOException;
+	        throws IOException;
 
 	/**
 	 * Hook for subclasses: Insert the formatted section. It's the duty of the
 	 * subclasses to insert the passed section of formated content into the open
 	 * print out file.
-	 * 
+	 *
 	 * @param inSection
 	 *            String
 	 * @throws IOException
@@ -237,7 +212,7 @@ public abstract class AbstractPrintOut implements IPrintOut {
 	/**
 	 * Hook for subclasses: Insert the formatted document body. It's the duty of
 	 * the subclasses to insert the passed text into the open print out file.
-	 * 
+	 *
 	 * @param inXML
 	 *            String
 	 * @throws IOException

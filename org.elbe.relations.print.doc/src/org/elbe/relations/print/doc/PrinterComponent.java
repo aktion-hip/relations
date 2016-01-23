@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
+ * Copyright (C) 2004-2016, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -16,36 +16,37 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ***************************************************************************/
-package org.elbe.relations.print.dft;
+package org.elbe.relations.print.doc;
 
 import org.elbe.relations.services.IPrintOut;
 import org.elbe.relations.services.IPrintService;
 
 /**
- * This bundle's provider for the OSGi <code>IPrintService</code>.
+ * The component to output to <code>docs</code> files.
  *
- * @author Luthiger
+ * @author lbenno
  */
 public class PrinterComponent implements IPrintService {
 
 	@Override
 	public String getName() {
-		return "Simple text file"; //$NON-NLS-1$
+		return "MSWord document"; //$NON-NLS-1$
 	}
 
 	@Override
 	public String getFileType() {
-		return "*.txt"; //$NON-NLS-1$
+		return "*.docx"; //$NON-NLS-1$
 	}
 
 	@Override
 	public String getFileTypeName() {
-		return "Text file (.txt)"; //$NON-NLS-1$
+		return "Microsoft Word (.docx)"; //$NON-NLS-1$
 	}
 
 	@Override
 	public IPrintOut getPrinter() {
-		return new PrintOut();
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

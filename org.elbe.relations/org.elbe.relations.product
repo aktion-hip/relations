@@ -367,6 +367,11 @@ POSSIBILITY OF SUCH DAMAGES.
       <feature id="org.eclipse.platform" version="4.5.1.v20150904-0015"/>
    </features>
 
+   <configurations>
+      <plugin id="org.elbe.relations.print.dft" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.print.doc" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.print.odt" autoStart="true" startLevel="0" />
+   </configurations>
 
    <preferencesInfo>
       <targetfile overwrite="false"/>

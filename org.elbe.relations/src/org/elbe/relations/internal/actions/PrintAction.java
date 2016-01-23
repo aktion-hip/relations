@@ -74,6 +74,7 @@ public class PrintAction implements ICommand {
 		final PrintOutWizard lWizard = ContextInjectionFactory
 		        .make(PrintOutWizard.class, context);
 		final WizardDialog lDialog = new WizardDialog(shell, lWizard);
+		lDialog.setMinimumPageSize(530, 270);
 		if (lDialog.open() == Window.OK) {
 			if (lWizard.isInitNew()) {
 				if (!printOutManager.initNew(lWizard.getPrintOutFileName(),

@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
+ * Copyright (C) 2004-2016, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -117,15 +117,10 @@ public class PrintOutWizardPage extends ExportWizardPage {
 		settings = new DialogSettingHandler(DIALOG_SECTION, DIALOG_TERM);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
-	 * widgets .Composite)
-	 */
 	@Override
 	public void createControl(final Composite inParent) {
 		final int lColumns = 3;
+		// inParent.setLayout(new GridLayout());
 		final Composite lComposite = WizardHelper.createComposite(inParent,
 		        lColumns);
 
