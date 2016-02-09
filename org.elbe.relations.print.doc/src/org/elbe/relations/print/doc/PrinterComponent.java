@@ -45,8 +45,7 @@ public class PrinterComponent implements IPrintService {
 
 	@Override
 	public IPrintOut getPrinter() {
-		// TODO Auto-generated method stub
-		return null;
+		return new PrintOut();
 	}
 
 }

@@ -38,11 +38,14 @@ import org.elbe.relations.services.IPrintOut;
  */
 public abstract class AbstractPrintOut implements IPrintOut {
 	private static final String NL = System.getProperty("line.separator"); //$NON-NLS-1$
-	private static final String KEY_XSL_PARAMETER = "RelatedWithLbl"; //$NON-NLS-1$
+	private static final String KEY_XSL_PARAMETER_1 = "RelatedWithLbl"; //$NON-NLS-1$
+	private static final String KEY_XSL_PARAMETER_2 = "TocLbl"; //$NON-NLS-1$
 	private static final String XML_TEMPLATE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><docBody><docTitle>%s</docTitle><docSubTitle>%s</docSubTitle></docBody>"; //$NON-NLS-1$
 
 	private static final String MSG_RELATED_WITH = RelationsMessages
 	        .getString("AbstractPrintOut.section.intro"); //$NON-NLS-1$
+	private static final String MSG_TOC_LBL = RelationsMessages
+	        .getString("AbstractPrintOut.toc"); //$NON-NLS-1$
 
 	private String docTitle = ""; //$NON-NLS-1$
 	private String docSubTitle = ""; //$NON-NLS-1$
@@ -52,10 +55,8 @@ public abstract class AbstractPrintOut implements IPrintOut {
 	 * @param inFileName
 	 *            String the name of the document created to print out the
 	 *            selected content.
-	 * @param inOverwrite
-	 *            boolean <code>true</code> if an existing file should bo
-	 *            overwritten.
 	 * @throws TransformerException
+	 * @throws IOException
 	 * @see IPrintOut#openNew(String)
 	 */
 	@Override
@@ -149,20 +150,28 @@ public abstract class AbstractPrintOut implements IPrintOut {
 	@Override
 	public void printItem(final String inXML)
 	        throws TransformerException, IOException {
-		final TransformerProxy lTransformer = new TransformerProxy(
+		final TransformerProxy transformer = new TransformerProxy(
 		        openURL(getXSLNameContent()), inXML.replace(NL, ""), //$NON-NLS-1$
 		        getStylesheetParameters());
-		final StringWriter lResult = new StringWriter();
-		lTransformer.renderToStream(lResult);
-		insertSection(lResult.toString());
+		final StringWriter result = new StringWriter();
+		transformer.renderToStream(result);
+		insertSection(result.toString());
 	}
 
 	private HashMap<String, Object> getStylesheetParameters() {
 		final HashMap<String, Object> outParameters = new HashMap<String, Object>();
-		outParameters.put(KEY_XSL_PARAMETER, MSG_RELATED_WITH);
+		outParameters.put(KEY_XSL_PARAMETER_1, MSG_RELATED_WITH);
+		outParameters.put(KEY_XSL_PARAMETER_2, MSG_TOC_LBL);
 		return outParameters;
 	}
 
+	/**
+	 * Gets the file with the specified name as URL.
+	 *
+	 * @param inFileName
+	 *            String
+	 * @return {@link URL}
+	 */
 	private URL openURL(final String inFileName) {
 		return getClass().getResource(inFileName);
 	}

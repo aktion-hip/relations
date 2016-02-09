@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-
+    
+    <!-- global parameter -->
+    <xsl:param name="TocLbl" />
+    
     <xsl:template match="/">
         <office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
             xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0"
@@ -174,7 +177,7 @@
                         </text:table-of-content-source>
                         <text:index-body>
                             <text:index-title text:style-name="Sect2" text:name="Table of Contents1_Head">
-                                <text:p text:style-name="Contents_20_Heading">Content</text:p>
+                                <text:p text:style-name="Contents_20_Heading"><xsl:value-of select="$TocLbl"/></text:p>
                             </text:index-title>
                         </text:index-body>
                     </text:table-of-content>  

@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -41,19 +41,19 @@ import org.xml.sax.InputSource;
 /**
  * Proxy object for xsl transformation. An instance of this class holds the
  * information needed to process a transformation.
- * 
+ *
  * @author Luthiger Created on 12.08.2007
  */
 public class TransformerProxy {
 	protected static Hashtable<String, Templates> cTemplates = new Hashtable<String, Templates>(
-			53);
+	        53);
 
 	protected URL xslFile;
 	protected String xmlToTransform;
 	protected HashMap<String, Object> stylesheetParameters;
 
 	/**
-	 * 
+	 *
 	 * @param inXSLFile
 	 *            File
 	 * @param inXML
@@ -62,64 +62,65 @@ public class TransformerProxy {
 	 *            HashMap<String, Object>
 	 */
 	public TransformerProxy(final URL inXSLFile, final String inXML,
-			final HashMap<String, Object> inStylesheetParameters) {
+	        final HashMap<String, Object> inStylesheetParameters) {
 		xslFile = inXSLFile;
 		xmlToTransform = inXML;
 		stylesheetParameters = inStylesheetParameters;
 	}
 
 	private synchronized Transformer getTransformer()
-			throws TransformerConfigurationException, IOException {
+	        throws TransformerConfigurationException, IOException {
 		if (xslFile == null) {
 			throw new Error(
-					RelationsMessages.getString("TransformerProxy.error.msg")); //$NON-NLS-1$
+			        RelationsMessages.getString("TransformerProxy.error.msg")); //$NON-NLS-1$
 		}
 
 		Transformer outTransformer;
-		Templates lTemplates;
-		if ((lTemplates = cTemplates.get(xslFile.getFile())) == null) {
+		Templates templates;
+		if ((templates = cTemplates.get(xslFile.getFile())) == null) {
 			final StreamSource lSource = new StreamSource(xslFile.openStream());
-			lTemplates = TransformerFactory.newInstance().newTemplates(lSource);
-			cTemplates.put(xslFile.getFile(), lTemplates);
+			templates = TransformerFactory.newInstance().newTemplates(lSource);
+			cTemplates.put(xslFile.getFile(), templates);
 		}
-		outTransformer = lTemplates.newTransformer();
+		outTransformer = templates.newTransformer();
 		return outTransformer;
 
 	}
 
 	/**
-	 * Performes the transformation to the specified output stream.
-	 * 
+	 * Performs the transformation to the specified output stream.
+	 *
 	 * @param inWriter
 	 *            Writer
 	 * @throws TransformerException
 	 * @throws IOException
 	 */
 	public void renderToStream(final Writer inWriter)
-			throws TransformerException, IOException {
-		final Source lXMLSource = new SAXSource(new InputSource(
-				new StringReader(xmlToTransform)));
-		final StreamResult lResult = new StreamResult(inWriter);
-		final Transformer lTransformer = getTransformer();
-		setStylesheetParameters(lTransformer, stylesheetParameters);
-		lTransformer.transform(lXMLSource, lResult);
+	        throws TransformerException, IOException {
+		final Source xmlSource = new SAXSource(
+		        new InputSource(new StringReader(xmlToTransform)));
+		final StreamResult result = new StreamResult(inWriter);
+		final Transformer transformer = getTransformer();
+		setStylesheetParameters(transformer, stylesheetParameters);
+		transformer.transform(xmlSource, result);
 	}
 
 	/**
 	 * Sets the stylesheet parameters to the specified <code>Transformer</code>.
-	 * 
+	 *
 	 * @param inTransformer
 	 *            Transformer
 	 * @param inStylesheetParameters
 	 *            HashMap<String, Object>
 	 */
 	protected void setStylesheetParameters(final Transformer inTransformer,
-			final HashMap<String, Object> inStylesheetParameters) {
-		if (inStylesheetParameters == null)
+	        final HashMap<String, Object> inStylesheetParameters) {
+		if (inStylesheetParameters == null) {
 			return;
+		}
 
-		for (final String lKey : inStylesheetParameters.keySet()) {
-			inTransformer.setParameter(lKey, inStylesheetParameters.get(lKey));
+		for (final String key : inStylesheetParameters.keySet()) {
+			inTransformer.setParameter(key, inStylesheetParameters.get(key));
 		}
 	}
 
