@@ -368,9 +368,24 @@ POSSIBILITY OF SUCH DAMAGES.
    </features>
 
    <configurations>
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.e4.ui.css.swt.theme" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.equinox.util" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.biblio.dft" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.data" autoStart="true" startLevel="3" />
+      <plugin id="org.elbe.relations.defaultBrowser" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.indexer.lucene" autoStart="true" startLevel="0" />
       <plugin id="org.elbe.relations.print.dft" autoStart="true" startLevel="0" />
       <plugin id="org.elbe.relations.print.doc" autoStart="true" startLevel="0" />
       <plugin id="org.elbe.relations.print.odt" autoStart="true" startLevel="0" />
+      <plugin id="org.hip.vif.dbaccess.derby" autoStart="true" startLevel="0" />
+      <plugin id="org.hip.vif.dbaccess.mysql" autoStart="true" startLevel="0" />
+      <plugin id="org.hip.viffw" autoStart="true" startLevel="3" />
    </configurations>
 
    <preferencesInfo>
@@ -378,6 +393,7 @@ POSSIBILITY OF SUCH DAMAGES.
    </preferencesInfo>
 
    <cssInfo>
+      <file path="/org.elbe.relations/css/default.css"/>
    </cssInfo>
 
 </product>

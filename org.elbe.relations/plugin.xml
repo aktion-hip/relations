@@ -29,20 +29,12 @@
                value="FFFFFF">
          </property>
          <property
-               name="startupMessageRect"
-               value="5,250,449,23">
-         </property>
-         <property
-               name="startupProgressRect"
-               value="3,275,449,15">
-         </property>
-         <property
                name="lifeCycleURI"
                value="bundleclass://org.elbe.relations/org.elbe.relations.internal.RelationsLifeCycle">
          </property>
          <property
                name="cssTheme"
-               value="org.eclipse.e4.ui.css.theme.e4_default">
+               value="org.elbe.relations.css.theme.e4_default">
          </property>
          <property
                name="windowImages"
@@ -53,12 +45,24 @@
                value="product:icons/RelationWare.png">
          </property>
          <property
-               name="preferenceCustomization"
-               value="plugin_customization.ini">
-         </property>
-         <property
                name="applicationCSSResources"
                value="platform:/plugin/org.elbe.relations/css/images/">
+         </property>
+         <property
+               name="startupMessageRect"
+               value="5,250,449,23">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="3,275,449,15">
+         </property>
+         <property
+               name="applicationCSS"
+               value="platform:/plugin/org.elbe.relations/css/default.css">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
          </property>
       </product>
    </extension>
@@ -248,61 +252,61 @@
          point="org.eclipse.e4.ui.css.swt.theme">
       <theme
             basestylesheeturi="css/e4_default.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default.noos"
-            label="Default">
+            id="org.elbe.relations.css.theme.e4_default.noos"
+            label="Relations Default">
       </theme>
       <theme
             basestylesheeturi="css/e4_default_win7.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default"
-            label="Windows 7"
+            id="org.elbe.relations.css.theme.e4_default"
+            label="Relations Windows"
             os="win32">
       </theme>
       <theme
             basestylesheeturi="css/e4_classic_win7.css"
-            id="org.eclipse.e4.ui.css.theme.e4_classic_win7"
-            label="Windows 7 Classic"
+            id="org.elbe.relations.css.theme.e4_classic_win7"
+            label="Relations Windows Classic"
             os="win32">
       </theme>
       <theme
             basestylesheeturi="css/e4_default_winxp_blu.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default_winxp_blu"
-            label="Windows XP Blue"
+            id="org.elbe.relations.css.theme.e4_default_winxp_blu"
+            label="Relations Windows Blue"
             os="win32">
       </theme>
       <theme
             basestylesheeturi="css/e4_default_winxp_olv.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default_winxp_olv"
-            label="Windows XP Olive"
+            id="org.elbe.relations.css.theme.e4_default_winxp_olv"
+            label="Relations Windows Olive"
             os="win32">
       </theme>
       <theme
             basestylesheeturi="css/e4_default_gtk.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default"
-            label="GTK"
+            id="org.elbe.relations.css.theme.e4_default"
+            label="Relations GTK"
             os="linux">
       </theme>
       <theme
             basestylesheeturi="css/e4_default_gtk.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default"
-            label="Solaris"
+            id="org.elbe.relations.css.theme.e4_default"
+            label="Relations Solaris"
             os="solaris">
       </theme>
       <theme
             basestylesheeturi="css/e4_default_gtk.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default"
-            label="AIX"
+            id="org.elbe.relations.css.theme.e4_default"
+            label="Relations AIX"
             os="aix">
       </theme>
       <theme
             basestylesheeturi="css/e4_default_mac.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default"
-            label="Mac"
+            id="org.elbe.relations.css.theme.e4_default"
+            label="Relations Mac"
             os="macosx">
       </theme>
       <theme
             basestylesheeturi="css/e4_classic_winxp.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default"
-            label="HPUX"
+            id="org.elbe.relations.css.theme.e4_default"
+            label="Relations HPUX"
             os="hpux">
       </theme>
    </extension>
