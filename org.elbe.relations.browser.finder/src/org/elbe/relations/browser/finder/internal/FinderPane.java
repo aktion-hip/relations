@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
+ * Copyright (C) 2004-2016, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -117,7 +117,7 @@ public class FinderPane {
 	 * Places the cursor on the gallery's selected (or first) item.
 	 */
 	public void setFocus() {
-		if (gallery.getItemCount() == 0) {
+		if (items.isEmpty()) {
 			return;
 		}
 		if (gallery.getSelectionCount() == 0) {
