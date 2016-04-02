@@ -191,6 +191,17 @@
                     </xsl:if><xsl:value-of select="." /></w:t>
                 </w:r>
             </xsl:when>
+            <xsl:when test="name() = 'br'">
+                <w:r>
+                    <w:rPr>
+                        <w:rFonts w:eastAsia="Times New Roman" w:cs="Times New Roman"/>
+                        <w:sz w:val="24"/>
+                        <w:szCs w:val="24"/>
+                        <w:lang w:val="en-US" w:eastAsia="de-CH"/>
+                    </w:rPr>
+                    <w:br/>
+                </w:r>
+            </xsl:when>
             <xsl:otherwise>
                 <xsl:variable name="curr_name" select="name()" />
                 <xsl:for-each select="child::node()">

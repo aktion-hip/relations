@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.transform.TransformerException;
 
@@ -37,10 +39,14 @@ import org.elbe.relations.services.IPrintOut;
  * @see org.elbe.relations.print.IPrintOut
  */
 public abstract class AbstractPrintOut implements IPrintOut {
-	private static final String NL = System.getProperty("line.separator"); //$NON-NLS-1$
 	private static final String KEY_XSL_PARAMETER_1 = "RelatedWithLbl"; //$NON-NLS-1$
 	private static final String KEY_XSL_PARAMETER_2 = "TocLbl"; //$NON-NLS-1$
 	private static final String XML_TEMPLATE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><docBody><docTitle>%s</docTitle><docSubTitle>%s</docSubTitle></docBody>"; //$NON-NLS-1$
+	private static final String TEXT_START = "<Text>"; //$NON-NLS-1$
+	private static final String TEXT_END = "</Text>"; //$NON-NLS-1$
+	private static final String CONTENT_PATTERN = "(.*)" + TEXT_START + "(.*)"
+	        + TEXT_END + "(.*)"; //$NON-NLS-1$
+	private static final String NL_PATTERN = ">\\s{0,2}?<br/><"; //$NON-NLS-1$
 
 	private static final String MSG_RELATED_WITH = RelationsMessages
 	        .getString("AbstractPrintOut.section.intro"); //$NON-NLS-1$
@@ -50,6 +56,7 @@ public abstract class AbstractPrintOut implements IPrintOut {
 	private String docTitle = ""; //$NON-NLS-1$
 	private String docSubTitle = ""; //$NON-NLS-1$
 	private File outputFile;
+	private Pattern contentPattern;
 
 	/**
 	 * @param inFileName
@@ -151,11 +158,40 @@ public abstract class AbstractPrintOut implements IPrintOut {
 	public void printItem(final String inXML)
 	        throws TransformerException, IOException {
 		final TransformerProxy transformer = new TransformerProxy(
-		        openURL(getXSLNameContent()), inXML.replace(NL, ""), //$NON-NLS-1$
+		        openURL(getXSLNameContent()), prepareItemXML(inXML),
 		        getStylesheetParameters());
 		final StringWriter result = new StringWriter();
 		transformer.renderToStream(result);
 		insertSection(result.toString());
+	}
+
+	/**
+	 * Prepare the item's XML before it is transformed.<br/>
+	 * Default behavior: In the text node, all line breaks are replaced by a
+	 * <code>&lt;br/></code> tag.
+	 *
+	 * @param itemXML
+	 *            String
+	 * @return String
+	 */
+	protected String prepareItemXML(String itemXML) {
+		final Matcher matcher = getContentPattern().matcher(itemXML);
+		if (matcher.find()) {
+			final StringBuffer out = new StringBuffer(itemXML.length());
+			out.append(matcher.group(1)).append(TEXT_START)
+			        .append(matcher.group(2).replace("\n", "<br/>"))
+			        .append(TEXT_END).append(matcher.group(3));
+			return out.toString().replaceAll(NL_PATTERN, "><");
+		}
+		return itemXML;
+	}
+
+	private Pattern getContentPattern() {
+		if (contentPattern == null) {
+			contentPattern = Pattern.compile(CONTENT_PATTERN,
+			        Pattern.DOTALL | Pattern.MULTILINE);
+		}
+		return contentPattern;
 	}
 
 	private HashMap<String, Object> getStylesheetParameters() {

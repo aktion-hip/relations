@@ -16,7 +16,7 @@
     xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0"
     xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer"
     xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events"
-    office:version="1.0">
+    office:version="1.2">
     <office:font-face-decls>
         <style:font-face style:name="StarSymbol" svg:font-family="StarSymbol"
             style:font-charset="x-symbol"/>

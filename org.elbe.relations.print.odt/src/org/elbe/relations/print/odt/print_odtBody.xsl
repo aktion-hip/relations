@@ -23,7 +23,7 @@
             xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer"
             xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events"
             xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" office:version="1.0">
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" office:version="1.2">
             <office:scripts/>
             <office:font-face-decls>
                 <style:font-face style:name="Tahoma1" svg:font-family="Tahoma"/>
@@ -133,13 +133,13 @@
                 
                 <style:style style:name="Sect1" style:family="section">
                     <style:section-properties fo:background-color="transparent" style:editable="false">
-                        <style:columns fo:column-count="0" fo:column-gap="0cm"/>
+                        <style:columns fo:column-count="1" fo:column-gap="0cm"/>
                         <style:background-image/>
                     </style:section-properties>
                 </style:style>
                 <style:style style:name="Sect2" style:family="section">
                     <style:section-properties style:editable="false">
-                        <style:columns fo:column-count="0" fo:column-gap="0cm"/>
+                        <style:columns fo:column-count="1" fo:column-gap="0cm"/>
                     </style:section-properties>
                 </style:style>
             </office:automatic-styles>
