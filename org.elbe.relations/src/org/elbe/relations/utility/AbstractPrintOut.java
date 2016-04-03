@@ -35,19 +35,18 @@ import org.elbe.relations.services.IPrintOut;
  * Super class for all classes implementing the
  * <code>org.elbe.relations.print.IPrintOut</code> interface.
  *
- * @author Luthiger Created on 19.01.2007
+ * @author Luthiger
  * @see org.elbe.relations.print.IPrintOut
  */
 public abstract class AbstractPrintOut implements IPrintOut {
+	private static final String NL = "\n"; //$NON-NLS-1$
 	private static final String KEY_XSL_PARAMETER_1 = "RelatedWithLbl"; //$NON-NLS-1$
 	private static final String KEY_XSL_PARAMETER_2 = "TocLbl"; //$NON-NLS-1$
 	private static final String XML_TEMPLATE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><docBody><docTitle>%s</docTitle><docSubTitle>%s</docSubTitle></docBody>"; //$NON-NLS-1$
-	private static final String TEXT_START = "<Text>"; //$NON-NLS-1$
-	private static final String TEXT_END = "</Text>"; //$NON-NLS-1$
-	private static final String CONTENT_PATTERN = "(.*)" + TEXT_START + "(.*)"
-	        + TEXT_END + "(.*)"; //$NON-NLS-1$
-	private static final String NL_PATTERN = ">\\s{0,2}?<br/><"; //$NON-NLS-1$
-
+	private static final String PARA_START = "<para>"; //$NON-NLS-1$
+	private static final String PARA_END = "</para>"; //$NON-NLS-1$
+	private static final String CONTENT_PATTERN = PARA_START + "(.*?)" //$NON-NLS-1$
+	        + PARA_END;
 	private static final String MSG_RELATED_WITH = RelationsMessages
 	        .getString("AbstractPrintOut.section.intro"); //$NON-NLS-1$
 	private static final String MSG_TOC_LBL = RelationsMessages
@@ -176,14 +175,14 @@ public abstract class AbstractPrintOut implements IPrintOut {
 	 */
 	protected String prepareItemXML(String itemXML) {
 		final Matcher matcher = getContentPattern().matcher(itemXML);
-		if (matcher.find()) {
-			final StringBuffer out = new StringBuffer(itemXML.length());
-			out.append(matcher.group(1)).append(TEXT_START)
-			        .append(matcher.group(2).replace("\n", "<br/>"))
-			        .append(TEXT_END).append(matcher.group(3));
-			return out.toString().replaceAll(NL_PATTERN, "><");
+		final StringBuffer out = new StringBuffer(itemXML.length());
+		while (matcher.find()) {
+			matcher.appendReplacement(out, PARA_START
+			        + matcher.group(1).replace("$", "\\$").replace(NL, "<br/>")
+			        + PARA_END);
 		}
-		return itemXML;
+		matcher.appendTail(out);
+		return out.toString().replace(NL, "");
 	}
 
 	private Pattern getContentPattern() {
