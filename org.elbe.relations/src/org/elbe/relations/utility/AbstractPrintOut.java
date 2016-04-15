@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import javax.xml.transform.TransformerException;
 
 import org.elbe.relations.RelationsMessages;
+import org.elbe.relations.internal.bom.XMLSerializerSpecial;
 import org.elbe.relations.services.IPrintOut;
 
 /**
@@ -43,10 +44,8 @@ public abstract class AbstractPrintOut implements IPrintOut {
 	private static final String KEY_XSL_PARAMETER_1 = "RelatedWithLbl"; //$NON-NLS-1$
 	private static final String KEY_XSL_PARAMETER_2 = "TocLbl"; //$NON-NLS-1$
 	private static final String XML_TEMPLATE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><docBody><docTitle>%s</docTitle><docSubTitle>%s</docSubTitle></docBody>"; //$NON-NLS-1$
-	private static final String PARA_START = "<para>"; //$NON-NLS-1$
-	private static final String PARA_END = "</para>"; //$NON-NLS-1$
-	private static final String CONTENT_PATTERN = PARA_START + "(.*?)" //$NON-NLS-1$
-	        + PARA_END;
+	private static final String CONTENT_PATTERN = XMLSerializerSpecial.PARA_START
+	        + "(.*?)" + XMLSerializerSpecial.PARA_END;
 	private static final String MSG_RELATED_WITH = RelationsMessages
 	        .getString("AbstractPrintOut.section.intro"); //$NON-NLS-1$
 	private static final String MSG_TOC_LBL = RelationsMessages
@@ -177,9 +176,10 @@ public abstract class AbstractPrintOut implements IPrintOut {
 		final Matcher matcher = getContentPattern().matcher(itemXML);
 		final StringBuffer out = new StringBuffer(itemXML.length());
 		while (matcher.find()) {
-			matcher.appendReplacement(out, PARA_START
-			        + matcher.group(1).replace("$", "\\$").replace(NL, "<br/>")
-			        + PARA_END);
+			matcher.appendReplacement(out,
+			        XMLSerializerSpecial.PARA_START + matcher.group(1)
+			                .replace("$", "\\$").replace(NL, "<br/>")
+			                + XMLSerializerSpecial.PARA_END);
 		}
 		matcher.appendTail(out);
 		return out.toString().replace(NL, "");

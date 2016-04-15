@@ -173,17 +173,18 @@
     
     <xsl:template name="write">
         <xsl:param name="style" select="''" />
+        <xsl:param name="content" select="." />
         
         <xsl:choose>
             <xsl:when test="self::text()">
                 <w:r>
                     <w:rPr>
                         <w:rFonts w:eastAsia="Times New Roman" w:cs="Times New Roman"/>
-                        <xsl:if test="contains($style, 'b')"><w:b/></xsl:if>
-                        <xsl:if test="contains($style, 'i')"><w:i/></xsl:if>
+                        <xsl:if test="contains($style, '-b-')"><w:b/></xsl:if>
+                        <xsl:if test="contains($style, '-i-')"><w:i/></xsl:if>
                         <w:sz w:val="24"/>
                         <w:szCs w:val="24"/>
-                        <xsl:if test="contains($style, 'u')"><w:u w:val="single"/></xsl:if>
+                        <xsl:if test="contains($style, '-u-')"><w:u w:val="single"/></xsl:if>
                         <w:lang w:val="en-US" w:eastAsia="de-CH"/>
                     </w:rPr>            
                     <w:t><xsl:if test="starts-with(self::text(), ' ') or (substring(self::text(), string-length(self::text())) = ' ')">
@@ -206,7 +207,7 @@
                 <xsl:variable name="curr_name" select="name()" />
                 <xsl:for-each select="child::node()">
                     <xsl:call-template name="write">
-                        <xsl:with-param name="style" select="concat($style, $curr_name)" />
+                        <xsl:with-param name="style" select="concat($style, '-', $curr_name, '-')" />
                     </xsl:call-template>
                 </xsl:for-each>
             </xsl:otherwise>
@@ -215,12 +216,21 @@
         
     <!-- format a list: ul, ol_number, ol_upper, ol_lower -->
     <xsl:template match="ul | ol_number | ol_upper | ol_lower">
+        <xsl:call-template name="list">
+            <xsl:with-param name="indent" select="@indent" />
+        </xsl:call-template>
+    </xsl:template>
+    
+    <xsl:template name="list">
+        <xsl:param name="indent" select="0" />
+        
         <xsl:for-each select="li">
+            <xsl:variable name="sub_lists" select="./ul | ./ol_number | ./ol_upper | ./ol_lower" />
             <w:p>
                 <w:pPr>
                     <w:pStyle w:val="ListParagraph"/>
                     <w:numPr>
-                        <w:ilvl w:val="0"/>
+                        <w:ilvl w:val="{$indent}"/>
                         <xsl:choose>
                             <xsl:when test="name(..) = 'ul'"><w:numId w:val="1"/></xsl:when>
                             <xsl:when test="name(..) = 'ol_number'"><w:numId w:val="2"/></xsl:when>
@@ -237,11 +247,17 @@
                         <w:lang w:val="en-US" w:eastAsia="de-CH"/>
                     </w:rPr>
                 </w:pPr>
-                <xsl:call-template name="write">
-                    <xsl:with-param name="content" select="child::node()" />
-                    <xsl:with-param name="style" select="''" />
-                </xsl:call-template>
+                <xsl:for-each select="text() | b | i | u">
+                    <xsl:call-template name="write">
+                        <xsl:with-param name="style" select="''" />
+                    </xsl:call-template>
+                </xsl:for-each>
             </w:p>
+            <xsl:for-each select="$sub_lists">
+                <xsl:call-template name="list">
+                    <xsl:with-param name="indent" select="$indent+1" />
+                </xsl:call-template>
+            </xsl:for-each>
         </xsl:for-each>
     </xsl:template>
     

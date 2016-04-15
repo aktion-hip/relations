@@ -98,11 +98,11 @@
             </xsl:call-template>
         </xsl:variable>
         <xsl:for-each select="li">
+<xsl:text>                
+</xsl:text>            
             <xsl:value-of select="$indent_space"/>
             <xsl:value-of select="concat('-', '  ')"/>
             <xsl:apply-templates />
-<xsl:text>                
-</xsl:text>            
         </xsl:for-each>        
     </xsl:template>
     

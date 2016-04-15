@@ -40,6 +40,9 @@ public class AbstractPrintOutTest {
 	private static final String XML2 = "<para>Wird DS verwendet, so ist es vorteilhaft, wenn die Service-Konsumenten laufen, bevor die Service-Provider gestartet werden:"
 			+ NL + "Beispiele:</para>";
 	private static final String XML3 = "<para>$> tar czvf Relations-x.y.z_gtk.x86.tgz Relations/*</para>";
+	private static final String XML4 = "<ul indent=\"0\"><li>111</li>" + NL + "<li>222</li>" + NL + "<li>333" + NL
+			+ "<ul indent=\"1\"><li>aaa" + NL + "<ul indent=\"2\"><li>bbb</li>" + NL + "</ul></li><li>ccc</li>" + NL
+			+ "<li>444</li>" + NL + "</ul></li><li>555</li>" + NL + "</ul>";
 
 	/**
 	 * @throws java.lang.Exception
@@ -58,6 +61,7 @@ public class AbstractPrintOutTest {
 		final String expected1 = "<para><b>Dynamic Services (OSGI DS)</b> in Relations-RCP:<br/>Wenn eine neue Komponente erzeugt worden ist, muss Inhalt von C:/Data/eclipse/workbenches/Relations/.metadata.pluginsorg.eclipse.pde.core/relations.product gelöscht werden (<b>ausser</b> <i>config.ini</i>), damit die neue Komponente vom System erkannt wird.</para><para>Wird DS verwendet, so ist es vorteilhaft, wenn die Service-Konsumenten laufen, bevor die Service-Provider gestartet werden:<br/>Beispiele:</para>";
 		final String expected2 = "<para>Wird DS verwendet, so ist es vorteilhaft, wenn die Service-Konsumenten laufen, bevor die Service-Provider gestartet werden:<br/>Beispiele:</para>";
 		final String expected3 = "<para>$> tar czvf Relations-x.y.z_gtk.x86.tgz Relations/*</para>";
+		final String expected4 = "";
 
 		final TestPrintOut printOut = new TestPrintOut();
 		assertEquals("", printOut.prepareItemXML(""));
@@ -68,6 +72,7 @@ public class AbstractPrintOutTest {
 		assertEquals("<para>123</para>", printOut.prepareItemXML("<para>123</para>"));
 		assertEquals("<para></para>", printOut.prepareItemXML("<para></para>"));
 		assertEquals(expected3, printOut.prepareItemXML(XML3));
+		assertEquals(expected4, printOut.prepareItemXML(XML4));
 	}
 
 	//
