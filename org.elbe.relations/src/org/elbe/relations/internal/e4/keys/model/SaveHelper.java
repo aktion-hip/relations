@@ -56,8 +56,8 @@ import org.eclipse.ui.internal.keys.BindingPersistence;
 @SuppressWarnings("restriction")
 @Creatable
 public class SaveHelper {
-	private static final String ORIG_ATTR_TAG = "orig:";
-	private static final String TMPL_ORIG_SEQUENCE = ORIG_ATTR_TAG + "%s";
+	private static final String ORIG_ATTR_TAG = "orig:"; //$NON-NLS-1$
+	private static final String TMPL_ORIG_SEQUENCE = ORIG_ATTR_TAG + "%s"; //$NON-NLS-1$
 
 	@Inject
 	private MApplication application;
@@ -135,7 +135,7 @@ public class SaveHelper {
 
 		final List<String> newTags = outNewBinding.getTags();
 		for (final String tag : oldBinding.getTags()) {
-			if (!tag.startsWith(EBindingService.TYPE_ATTR_TAG + ":")
+			if (!tag.startsWith(EBindingService.TYPE_ATTR_TAG + ":") //$NON-NLS-1$
 			        && !tag.startsWith(ORIG_ATTR_TAG)) {
 				newTags.add(tag);
 			}
@@ -308,26 +308,26 @@ public class SaveHelper {
 		if (lSchemeId != null
 		        && !lSchemeId.equals(BindingPersistence.getDefaultSchemeId())) {
 			if (!lModelTags.contains(
-			        EBindingService.SCHEME_ID_ATTR_TAG + ":" + lSchemeId)) {
+			        EBindingService.SCHEME_ID_ATTR_TAG + ":" + lSchemeId)) { //$NON-NLS-1$
 				return false;
 			}
 		}
 		final String lLocale = newBinding.getLocale();
 		if (lLocale != null) {
 			if (!lModelTags.contains(
-			        EBindingService.LOCALE_ATTR_TAG + ":" + lLocale)) {
+			        EBindingService.LOCALE_ATTR_TAG + ":" + lLocale)) { //$NON-NLS-1$
 				return false;
 			}
 		}
 		final String lPlatform = newBinding.getPlatform();
 		if (lPlatform != null) {
 			if (!lModelTags.contains(
-			        EBindingService.PLATFORM_ATTR_TAG + ":" + lPlatform)) {
+			        EBindingService.PLATFORM_ATTR_TAG + ":" + lPlatform)) { //$NON-NLS-1$
 				return false;
 			}
 		}
 		if (newBinding.getType() == Binding.USER) {
-			if (!lModelTags.contains(EBindingService.TYPE_ATTR_TAG + ":user")) {
+			if (!lModelTags.contains(EBindingService.TYPE_ATTR_TAG + ":user")) { //$NON-NLS-1$
 				return false;
 			}
 		}
@@ -434,8 +434,8 @@ public class SaveHelper {
 					        createKeyBinding(lBinding, inSchemeId));
 				}
 				catch (final ParseException exc) {
-					log.error(exc, "Unable to restore binding \""
-					        + lBinding.getKeySequence() + "\" correctly!");
+					log.error(exc, "Unable to restore binding \"" //$NON-NLS-1$
+					        + lBinding.getKeySequence() + "\" correctly!"); //$NON-NLS-1$
 				}
 			}
 		}

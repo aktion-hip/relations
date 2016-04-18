@@ -44,7 +44,7 @@ public class WorkbenchLabelProvider extends LabelProvider {
 	public String getText(final Object inElement) {
 		final IWorkbenchAdapter lAdapter = getAdapter(inElement);
 		if (lAdapter == null) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 		final String lLabel = lAdapter.getLabel(inElement);
 		return lLabel;

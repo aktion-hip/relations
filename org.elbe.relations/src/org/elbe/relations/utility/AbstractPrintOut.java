@@ -45,7 +45,7 @@ public abstract class AbstractPrintOut implements IPrintOut {
 	private static final String KEY_XSL_PARAMETER_2 = "TocLbl"; //$NON-NLS-1$
 	private static final String XML_TEMPLATE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><docBody><docTitle>%s</docTitle><docSubTitle>%s</docSubTitle></docBody>"; //$NON-NLS-1$
 	private static final String CONTENT_PATTERN = XMLSerializerSpecial.PARA_START
-	        + "(.*?)" + XMLSerializerSpecial.PARA_END;
+	        + "(.*?)" + XMLSerializerSpecial.PARA_END; //$NON-NLS-1$
 	private static final String MSG_RELATED_WITH = RelationsMessages
 	        .getString("AbstractPrintOut.section.intro"); //$NON-NLS-1$
 	private static final String MSG_TOC_LBL = RelationsMessages
@@ -178,11 +178,11 @@ public abstract class AbstractPrintOut implements IPrintOut {
 		while (matcher.find()) {
 			matcher.appendReplacement(out,
 			        XMLSerializerSpecial.PARA_START + matcher.group(1)
-			                .replace("$", "\\$").replace(NL, "<br/>")
+			                .replace("$", "\\$").replace(NL, "<br/>") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			                + XMLSerializerSpecial.PARA_END);
 		}
 		matcher.appendTail(out);
-		return out.toString().replace(NL, "");
+		return out.toString().replace(NL, ""); //$NON-NLS-1$
 	}
 
 	private Pattern getContentPattern() {

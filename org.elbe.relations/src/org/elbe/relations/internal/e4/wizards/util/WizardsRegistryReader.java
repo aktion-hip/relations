@@ -476,7 +476,7 @@ public class WizardsRegistryReader {
 			category = new Category(inConfig);
 		}
 		catch (final CoreException exc) {
-			log.error(exc, "Cannot create category: " + exc.getStatus());
+			log.error(exc, "Cannot create category: " + exc.getStatus()); //$NON-NLS-1$
 			return;
 		}
 

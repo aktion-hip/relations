@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
 public abstract class AbstractJarPrintOut extends AbstractPrintOut {
 	public final static int BUFFER_LEN = 16384;
 
-	private static final String CHARSET = "UTF-8";
+	private static final String CHARSET = "UTF-8"; //$NON-NLS-1$
 
 	private DocumentBuilder docBuilder = null;
 
@@ -159,7 +159,7 @@ public abstract class AbstractJarPrintOut extends AbstractPrintOut {
 	protected String formatPart(String templateName, Object... content) {
 		final InputStream input = getClass().getResourceAsStream(templateName);
 		try (Scanner scanner = new Scanner(input, CHARSET)) {
-			final String template = scanner.useDelimiter("\\A").next();
+			final String template = scanner.useDelimiter("\\A").next(); //$NON-NLS-1$
 			return String.format(template, content);
 		}
 	}
@@ -259,11 +259,11 @@ public abstract class AbstractJarPrintOut extends AbstractPrintOut {
 	}
 
 	protected String getMetaDescription() {
-		return RelationsMessages.getString("PrintOut.msg.meta.desc");
+		return RelationsMessages.getString("PrintOut.msg.meta.desc"); //$NON-NLS-1$
 	}
 
 	protected String getMetaSubject() {
-		return RelationsMessages.getString("PrintOut.msg.meta.subject");
+		return RelationsMessages.getString("PrintOut.msg.meta.subject"); //$NON-NLS-1$
 	}
 
 	// --- private classes ---

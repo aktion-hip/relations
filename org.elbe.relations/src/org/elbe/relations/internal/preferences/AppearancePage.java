@@ -87,7 +87,7 @@ public class AppearancePage extends AbstractPreferencePage {
 	// ---
 
 	private static class ThemeHelper {
-		private static final String DFT_THEME = "Default";
+		private static final String DFT_THEME = "Default"; //$NON-NLS-1$
 
 		private final String[] themeItems;
 		private int activeIndex = 0;

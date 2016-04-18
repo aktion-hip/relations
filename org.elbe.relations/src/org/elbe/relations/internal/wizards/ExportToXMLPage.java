@@ -64,7 +64,7 @@ public class ExportToXMLPage extends BackupEmbeddedPage {
 
 	@Override
 	protected String postProcessFileName(final String inFileName) {
-		if (inFileName.endsWith(".zip") || inFileName.endsWith(".xml")) {
+		if (inFileName.endsWith(".zip") || inFileName.endsWith(".xml")) { //$NON-NLS-1$ //$NON-NLS-2$
 			return inFileName; // $NON-NLS-1$ //$NON-NLS-2$
 		}
 		return inFileName + ".xml"; //$NON-NLS-1$

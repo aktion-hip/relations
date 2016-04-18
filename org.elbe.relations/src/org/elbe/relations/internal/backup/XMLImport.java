@@ -519,9 +519,9 @@ public class XMLImport {
 	}
 
 	private class RelationInserter extends Inserter implements IEntryInserter {
-		private static final String ATT_NAME = "field";
-		private static final String FIELD_NAME1 = "NTYPE1";
-		private static final String FIELD_NAME2 = "NTYPE2";
+		private static final String ATT_NAME = "field"; //$NON-NLS-1$
+		private static final String FIELD_NAME1 = "NTYPE1"; //$NON-NLS-1$
+		private static final String FIELD_NAME2 = "NTYPE2"; //$NON-NLS-1$
 
 		public RelationInserter(final DomainObject inModel,
 		        final IInsertBehaviour inBehaviour) {

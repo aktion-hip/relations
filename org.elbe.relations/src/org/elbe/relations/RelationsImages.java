@@ -58,9 +58,9 @@ public enum RelationsImages {
 	WIZARD_EDIT_DB("wiz_edit_db.png"), //$NON-NLS-1$
 	WIZARD_NEW("new_wizban.png"), //$NON-NLS-1$
 	WIZARD_IMPORT("import_wizban.png"), //$NON-NLS-1$
-	WIZARD_EXPORT("export_wizban.png"), // $NON-NLS-2$
+	WIZARD_EXPORT("export_wizban.png"), //$NON-NLS-1$
 	WIZARD_IMPORT_XML("importzip_wiz.png"), //$NON-NLS-1$
-	WIZARD_EXPORT_XML("exportzip_wiz.png"); // $NON-NLS-2$
+	WIZARD_EXPORT_XML("exportzip_wiz.png"); //$NON-NLS-1$
 
 	private static String ICONS_DIR = "icons/"; //$NON-NLS-1$
 	private final String name;

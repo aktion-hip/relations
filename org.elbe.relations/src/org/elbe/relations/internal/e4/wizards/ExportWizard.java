@@ -68,7 +68,7 @@ public class ExportWizard extends AbstractExtensionWizard {
 		selection = inSelection;
 
 		if (getWindowTitle() == null) {
-			setWindowTitle(RelationsMessages.getString("Export.wizard.title"));
+			setWindowTitle(RelationsMessages.getString("Export.wizard.title")); //$NON-NLS-1$
 		}
 		setDefaultPageImageDescriptor(
 		        RelationsImages.WIZARD_EXPORT.getDescriptor());

@@ -25,8 +25,8 @@ import org.osgi.service.event.EventHandler;
  */
 @SuppressWarnings("restriction")
 public class ShowTextItemForm implements EventHandler {
-	public static final String TOPIC = "relations/show/text/form";
-	public static final String PARAM_CONTEXT = "eclipse_context";
+	public static final String TOPIC = "relations/show/text/form"; //$NON-NLS-1$
+	public static final String PARAM_CONTEXT = "eclipse_context"; //$NON-NLS-1$
 
 	@Override
 	public void handleEvent(Event event) {

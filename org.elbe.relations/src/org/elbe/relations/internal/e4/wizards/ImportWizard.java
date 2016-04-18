@@ -67,7 +67,7 @@ public class ImportWizard extends AbstractExtensionWizard {
 		selection = inSelection;
 
 		if (getWindowTitle() == null) {
-			setWindowTitle(RelationsMessages.getString("Import.wizard.title"));
+			setWindowTitle(RelationsMessages.getString("Import.wizard.title")); //$NON-NLS-1$
 
 		}
 		setDefaultPageImageDescriptor(

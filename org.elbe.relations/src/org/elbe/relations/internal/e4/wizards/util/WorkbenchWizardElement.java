@@ -37,6 +37,7 @@ import org.eclipse.ui.internal.util.BundleUtility;
 import org.eclipse.ui.model.WorkbenchAdapter;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.elbe.relations.Activator;
+import org.elbe.relations.RelationsMessages;
 
 /**
  * Instances represent registered wizards.
@@ -78,7 +79,7 @@ public class WorkbenchWizardElement extends WorkbenchAdapter
 
 	private String getAttributeChecked(final String inAttributeName) {
 		final String out = configuration.getAttribute(inAttributeName);
-		return out == null ? "" : out;
+		return out == null ? "" : out; //$NON-NLS-1$
 	}
 
 	@Override
@@ -332,7 +333,7 @@ public class WorkbenchWizardElement extends WorkbenchAdapter
 		catch (final Exception exc) {
 			throw new CoreException(
 			        new Status(IStatus.ERROR, Activator.getSymbolicName(),
-			                IStatus.ERROR, "Cannot create extension", exc));
+			                IStatus.ERROR, RelationsMessages.getString("WorkbenchWizardElement.failure.msg"), exc)); //$NON-NLS-1$
 		}
 	}
 

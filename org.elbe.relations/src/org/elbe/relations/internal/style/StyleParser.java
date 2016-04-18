@@ -356,7 +356,7 @@ public class StyleParser extends DefaultHandler implements IStyleParser {
 
 	private String stripNonValidXML(final String inTagged) {
 		final StringBuilder out = new StringBuilder();
-		if (inTagged == null || ("".equals(inTagged))) {
+		if (inTagged == null || ("".equals(inTagged))) { //$NON-NLS-1$
 			return ""; //$NON-NLS-1$
 		}
 

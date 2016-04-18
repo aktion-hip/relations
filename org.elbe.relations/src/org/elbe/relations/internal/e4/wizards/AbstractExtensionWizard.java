@@ -36,9 +36,9 @@ import org.elbe.relations.internal.e4.wizards.util.IWizardCategory;
  * @author Luthiger
  */
 public abstract class AbstractExtensionWizard extends Wizard {
-	public static final String NEW_WIZARD_REGISTRY = "relations.new.wizard.registry";
-	public static final String EXPORT_WIZARD_REGISTRY = "relations.export.wizard.registry";
-	public static final String IMPORT_WIZARD_REGISTRY = "relations.import.wizard.registry";
+	public static final String NEW_WIZARD_REGISTRY = "relations.new.wizard.registry"; //$NON-NLS-1$
+	public static final String EXPORT_WIZARD_REGISTRY = "relations.export.wizard.registry"; //$NON-NLS-1$
+	public static final String IMPORT_WIZARD_REGISTRY = "relations.import.wizard.registry"; //$NON-NLS-1$
 
 	@Inject
 	private IEclipseContext context;

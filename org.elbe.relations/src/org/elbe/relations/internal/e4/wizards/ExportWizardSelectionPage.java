@@ -22,6 +22,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.internal.e4.wizards.util.IWizardCategory;
 import org.elbe.relations.internal.e4.wizards.util.IWizardDescriptor;
 
@@ -53,10 +54,10 @@ public class ExportWizardSelectionPage
 	protected ExportWizardSelectionPage(final IStructuredSelection inSelection,
 	        final IEclipseContext inContext, final IWizardCategory inCategories,
 	        final IWizardDescriptor[] inPrimary) {
-		super("exportWizardSelectionPage");
+		super("exportWizardSelectionPage"); //$NON-NLS-1$
 
 		setPageComplete(false);
-		setTitle("Select a wizard");
+		setTitle(RelationsMessages.getString("ExportWizardSelectionPage.select.title")); //$NON-NLS-1$
 		setCurrtenResourceSelection(inSelection);
 		setContext(inContext);
 		wizardCategories = inCategories;

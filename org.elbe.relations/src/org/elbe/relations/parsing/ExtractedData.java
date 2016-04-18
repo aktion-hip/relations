@@ -184,7 +184,7 @@ public class ExtractedData {
 		if (inDate == null) {
 			return;
 		}
-		dateCrated = String.format("%s, %s",
+		dateCrated = String.format("%s, %s", //$NON-NLS-1$
 		        DateFormat.getDateInstance(DateFormat.LONG).format(inDate),
 		        DateFormat.getTimeInstance(DateFormat.LONG).format(inDate)); // $NON-NLS-1$
 		final Calendar lDate = Calendar.getInstance();

@@ -64,7 +64,7 @@ public class Category
 	 */
 	public Category() {
 		id = MISC_ID;
-		name = "other";
+		name = "other"; //$NON-NLS-1$
 		pluginId = MISC_ID; // TODO: remove hack for bug 55172
 	}
 

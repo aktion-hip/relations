@@ -65,7 +65,7 @@ public class NewWizard extends AbstractExtensionWizard {
 		selection = inSelection;
 
 		if (getWindowTitle() == null) {
-			setWindowTitle(RelationsMessages.getString("New.wizard.title"));
+			setWindowTitle(RelationsMessages.getString("New.wizard.title")); //$NON-NLS-1$
 		}
 		setDefaultPageImageDescriptor(
 		        RelationsImages.WIZARD_NEW.getDescriptor());

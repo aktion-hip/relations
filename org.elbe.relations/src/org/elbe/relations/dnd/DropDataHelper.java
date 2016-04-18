@@ -235,9 +235,9 @@ public final class DropDataHelper {
 					if (MessageDialog
 					        .openQuestion(Display.getCurrent().getActiveShell(),
 					                RelationsMessages.getString(
-					                        "Dialog.msg.title.problem"),
+					                        "Dialog.msg.title.problem"), //$NON-NLS-1$
 					        RelationsMessages.getString(
-					                "DropDataHelper.msg.response.403"))) {
+					                "DropDataHelper.msg.response.403"))) { //$NON-NLS-1$
 						final UniqueID textId = createMinText(inModel,
 						        inContext, lURL, lLog);
 						if (textId != null) {
@@ -261,7 +261,7 @@ public final class DropDataHelper {
 		        IEclipseContext context, String url, Logger log) {
 			try {
 				final String undefined = RelationsMessages
-				        .getString("TextEditWizardPage.uncomplete.data");
+				        .getString("TextEditWizardPage.uncomplete.data"); //$NON-NLS-1$
 				final NewTextAction action = new NewTextAction.Builder(
 				        undefined, undefined).type(AbstractText.TYPE_WEBPAGE)
 				                .publication(url).build(context);
@@ -278,8 +278,8 @@ public final class DropDataHelper {
 		}
 
 		private boolean is403Error(String errMsg) {
-			return errMsg.contains("HTTP") && errMsg.contains("response")
-			        && errMsg.contains("code") && errMsg.contains("403");
+			return errMsg.contains("HTTP") && errMsg.contains("response") //$NON-NLS-1$ //$NON-NLS-2$
+			        && errMsg.contains("code") && errMsg.contains("403"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		/**

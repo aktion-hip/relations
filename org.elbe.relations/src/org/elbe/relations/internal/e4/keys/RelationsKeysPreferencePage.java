@@ -595,7 +595,7 @@ public class RelationsKeysPreferencePage extends AbstractPreferencePage {
 				if (inIndex == 0) {
 					return lElement.getName();
 				}
-				return lElement.getContext() == null ? ""
+				return lElement.getContext() == null ? "" //$NON-NLS-1$
 		                : lElement.getContext().getName();
 			}
 		});
@@ -1179,7 +1179,7 @@ public class RelationsKeysPreferencePage extends AbstractPreferencePage {
 				lText = super.getText(inElement);
 			}
 			final StringBuilder outText = new StringBuilder(
-			        lText == null ? "" : lText);
+			        lText == null ? "" : lText); //$NON-NLS-1$
 			for (int i = 1; i < USER_DELTA_COLUMN; i++) {
 				final String text = getColumnText(inElement, i);
 				if (text != null) {

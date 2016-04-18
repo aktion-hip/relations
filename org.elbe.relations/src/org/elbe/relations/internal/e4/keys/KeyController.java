@@ -455,7 +455,7 @@ public class KeyController {
 					bindingManager.removeBinding(lKeyBinding);
 				} else {
 					final Map<String, String> lAttributes = new HashMap<String, String>();
-					lAttributes.put(EBindingService.TYPE_ATTR_TAG, "user");
+					lAttributes.put(EBindingService.TYPE_ATTR_TAG, "user"); //$NON-NLS-1$
 					final Binding lNewBinding = bindingService.createBinding(
 					        lKeyBinding.getKeySequence(), null,
 					        lKeyBinding.getContextId(), lAttributes);
@@ -615,7 +615,7 @@ public class KeyController {
 		                        .append(lElement.getTrigger().format())
 		                        .append(ESCAPED_QUOTE).append(DELIMITER);
 						lBuffer.append(ESCAPED_QUOTE)
-		                        .append(lElement.getContext() == null ? ""
+		                        .append(lElement.getContext() == null ? "" //$NON-NLS-1$
 		                                : lElement.getContext().getName())
 		                        .append(ESCAPED_QUOTE);
 						lBuffer.append(System.getProperty("line.separator")); //$NON-NLS-1$

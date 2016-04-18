@@ -173,7 +173,7 @@ public class ImportFromXMLPage extends ExportWizardPage
 			statusManager.set(importFileName, importInexistent);
 			return false;
 		}
-		if (!inFileName.endsWith(".zip") && !inFileName.endsWith(".xml")) {
+		if (!inFileName.endsWith(".zip") && !inFileName.endsWith(".xml")) { //$NON-NLS-1$ //$NON-NLS-2$
 			return false; // $NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (inFileName.endsWith(".zip")) { //$NON-NLS-1$

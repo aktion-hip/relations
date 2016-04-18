@@ -39,10 +39,10 @@ public abstract class AbstractExtensionHandler {
 		final IDialogSettings lWorkbenchSettings = WorkbenchPlugin.getDefault()
 		        .getDialogSettings();
 		IDialogSettings lWizardSettings = lWorkbenchSettings
-		        .getSection("NewWizardAction");
+		        .getSection("NewWizardAction"); //$NON-NLS-1$
 		if (lWizardSettings == null) {
 			lWizardSettings = lWorkbenchSettings
-			        .addNewSection("NewWizardAction");
+			        .addNewSection("NewWizardAction"); //$NON-NLS-1$
 		}
 		inWizard.setDialogSettings(lWizardSettings);
 		inWizard.setForcePreviousAndNextButtons(true);

@@ -878,7 +878,7 @@ public abstract class AbstractEditForm {
 
 		@Override
 		public String getName() {
-			return "style.parameter";
+			return "style.parameter"; //$NON-NLS-1$
 		}
 
 		@Override

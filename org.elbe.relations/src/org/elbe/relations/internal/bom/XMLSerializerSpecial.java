@@ -126,7 +126,7 @@ public class XMLSerializerSpecial extends XMLSerializer {
 		}
 
 		final StringBuilder lText = new StringBuilder();
-		final String[] lLines = inValue.replaceAll("(\\r|\\n|\\r\\n)+", NL)
+		final String[] lLines = inValue.replaceAll("(\\r|\\n|\\r\\n)+", NL) //$NON-NLS-1$
 		        .split(NL); // NL
 		final LineAnalizer lAnalizer = new LineAnalizer();
 		for (final String lLine : lLines) {

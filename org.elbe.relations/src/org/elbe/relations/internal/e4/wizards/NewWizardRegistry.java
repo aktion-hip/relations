@@ -26,7 +26,7 @@ package org.elbe.relations.internal.e4.wizards;
  *         see org.eclipse.ui.internal.wizards.NewWizardRegistry
  */
 public class NewWizardRegistry extends AbstractExtensionWizardRegistry {
-	private static final String PL_NEW = "newWizards";
+	private static final String PL_NEW = "newWizards"; //$NON-NLS-1$
 
 	@Override
 	protected String getExtensionPoint() {

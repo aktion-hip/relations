@@ -159,5 +159,5 @@ public final class RelationsConstants {
 	// the browser view on top when closing the application
 	public static final String ACTIVE_BROWSER_ID = "active.relations.browser"; //$NON-NLS-1$
 
-	public static final String EXIT_KEY = "relation.exit.key";
+	public static final String EXIT_KEY = "relation.exit.key"; //$NON-NLS-1$
 }

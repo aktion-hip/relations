@@ -18,6 +18,7 @@ import org.eclipse.equinox.p2.operations.UpdateOperation;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.elbe.relations.RelationsMessages;
 
 public class UpdateHandler {
 
@@ -50,12 +51,12 @@ public class UpdateHandler {
 		final UpdateOperation operation = new UpdateOperation(session);
 
 		final SubMonitor sub = SubMonitor.convert(monitor,
-		        "Checking for application updates...", 200);
+		        RelationsMessages.getString("UpdateHandler.monitor.checking"), 200); //$NON-NLS-1$
 
 		// check if updates are available
 		final IStatus status = operation.resolveModal(sub.newChild(100));
 		if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
-			showMessage(sync, "Nothing to update");
+			showMessage(sync, RelationsMessages.getString("UpdateHandler.feedback.nothing")); //$NON-NLS-1$
 			return Status.CANCEL_STATUS;
 		} else {
 			final ProvisioningJob provisioningJob = operation
@@ -66,8 +67,8 @@ public class UpdateHandler {
 					@Override
 					public void run() {
 						final boolean performUpdate = MessageDialog
-				                .openQuestion(null, "Updates available",
-				                        "There are updates available. Do you want to install them now?");
+				                .openQuestion(null, RelationsMessages.getString("UpdateHandler.updates.title"), //$NON-NLS-1$
+				                        RelationsMessages.getString("UpdateHandler.updates.msg")); //$NON-NLS-1$
 						if (performUpdate) {
 							provisioningJob.addJobChangeListener(
 				                    new JobChangeAdapter() {
@@ -82,8 +83,8 @@ public class UpdateHandler {
 						                                final boolean restart = MessageDialog
 				                                                .openQuestion(
 				                                                        null,
-				                                                        "Updates installed, restart?",
-				                                                        "Updates have been installed successfully, do you want to restart?");
+				                                                        RelationsMessages.getString("UpdateHandler.success.title"), //$NON-NLS-1$
+				                                                        RelationsMessages.getString("UpdateHandler.success.msg")); //$NON-NLS-1$
 						                                if (restart) {
 							                                workbench.restart();
 						                                }
@@ -112,10 +113,10 @@ public class UpdateHandler {
 				});
 			} else {
 				if (operation.hasResolved()) {
-					showError(sync, "Couldn't get provisioning job: "
+					showError(sync, RelationsMessages.getString("UpdateHandler.err.no.get") //$NON-NLS-1$
 					        + operation.getResolutionResult());
 				} else {
-					showError(sync, "Couldn't resolve provisioning job");
+					showError(sync, RelationsMessages.getString("UpdateHandler.err.no.resolve")); //$NON-NLS-1$
 				}
 				cancelled = true;
 			}
@@ -137,7 +138,7 @@ public class UpdateHandler {
 
 			@Override
 			public void run() {
-				MessageDialog.openInformation(null, "Information", message);
+				MessageDialog.openInformation(null, RelationsMessages.getString("UpdateHandler.feedback.title.info"), message); //$NON-NLS-1$
 			}
 		});
 	}
@@ -150,7 +151,7 @@ public class UpdateHandler {
 
 			@Override
 			public void run() {
-				MessageDialog.openError(null, "Error", message);
+				MessageDialog.openError(null, RelationsMessages.getString("UpdateHandler.feedback.title.err"), message); //$NON-NLS-1$
 			}
 		});
 	}
