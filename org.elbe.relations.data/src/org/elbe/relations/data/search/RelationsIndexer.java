@@ -43,7 +43,7 @@ import org.hip.kernel.exc.VException;
  */
 public abstract class RelationsIndexer extends AbstractSearching {
 	private final static int CHUNK_SIZE = 50;
-	private static final String INDEX_INDICATOR = "segments";
+	private static final String INDEX_INDICATOR = "segments"; //$NON-NLS-1$
 
 	/**
 	 * RelationsIndexer constructor
