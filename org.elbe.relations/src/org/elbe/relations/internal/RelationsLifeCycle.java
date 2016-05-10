@@ -31,6 +31,8 @@ import org.eclipse.e4.core.di.extensions.Preference;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.commands.MBindingTable;
+import org.eclipse.e4.ui.model.application.commands.MKeyBinding;
 import org.eclipse.e4.ui.model.application.ui.MElementContainer;
 import org.eclipse.e4.ui.model.application.ui.MUIElement;
 import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
@@ -51,6 +53,7 @@ import org.elbe.relations.handlers.ShowTextItemForm;
 import org.elbe.relations.internal.controller.RelationsBrowserManager;
 import org.elbe.relations.internal.data.DBSettings;
 import org.elbe.relations.internal.data.DataService;
+import org.elbe.relations.internal.e4.keys.model.DuplicateFixer;
 import org.elbe.relations.internal.preferences.LanguageService;
 import org.elbe.relations.internal.services.IDBController;
 import org.elbe.relations.internal.utility.ActionHelper;
@@ -170,8 +173,26 @@ public class RelationsLifeCycle {
 	}
 
 	@ProcessAdditions
-	void doRestore() {
+	void doRestore(final MApplication inApplication) {
 		browserManager.restoreState(preferences);
+		checkBindings(inApplication);
+	}
+
+	private void checkBindings(MApplication inApplication) {
+		for (final MBindingTable bindingTable : inApplication
+		        .getBindingTables()) {
+			checkBindings(bindingTable);
+		}
+	}
+
+	private void checkBindings(MBindingTable bindingTable) {
+		final DuplicateFixer fixer = new DuplicateFixer();
+		for (final MKeyBinding binding : bindingTable.getBindings()) {
+			fixer.add(binding.getKeySequence());
+		}
+		if (fixer.hasDuplicates()) {
+			fixer.fixDuplicates(bindingTable);
+		}
 	}
 
 	@ProcessRemovals

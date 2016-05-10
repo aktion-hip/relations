@@ -160,10 +160,10 @@ public class SaveHelper {
 	 */
 	public MKeyBinding addBinding(Binding newBinding) {
 		final MBindingTable table = getMTable(newBinding.getContextId());
-		return createORupdateMKeyBinding(application, table, newBinding);
+		return createOrUpdateMKeyBinding(application, table, newBinding);
 	}
 
-	private MKeyBinding createORupdateMKeyBinding(MApplication inApplication,
+	private MKeyBinding createOrUpdateMKeyBinding(MApplication inApplication,
 	        MBindingTable table, Binding newBinding) {
 		boolean lAddToTable = false;
 
@@ -207,7 +207,9 @@ public class SaveHelper {
 			outNewBinding.setCommand(lCmd);
 			outNewBinding
 			        .setKeySequence(newBinding.getTriggerSequence().toString());
-			outNewBinding.setContributorURI(toReplace.getContributorURI());
+			if (toReplace != null) {
+				outNewBinding.setContributorURI(toReplace.getContributorURI());
+			}
 
 			for (final Object obj : parmetrizedCmd.getParameterMap()
 			        .entrySet()) {
@@ -255,18 +257,34 @@ public class SaveHelper {
 			// just add the 'type' tag if it's a user binding
 			if (newBinding.getType() == Binding.USER) {
 				tags.add(EBindingService.TYPE_ATTR_TAG + ":user"); //$NON-NLS-1$
-				tags.add(String.format(TMPL_ORIG_SEQUENCE,
-				        getOrigSequence(toReplace)));
+				if (toReplace != null) {
+					tags.add(String.format(TMPL_ORIG_SEQUENCE,
+					        getOrigSequence(toReplace)));
+				}
 			}
 		}
 
 		outNewBinding.getTransientData()
 		        .put(EBindingService.MODEL_TO_BINDING_KEY, newBinding);
 		if (lAddToTable) {
-			table.getBindings().remove(toReplace);
-			table.getBindings().add(outNewBinding);
+			final List<MKeyBinding> bindings = table.getBindings();
+			bindings.remove(toReplace);
+			bindings.add(outNewBinding);
+			bindings.add(createDeleted(lCmd,
+			        newBinding.getTriggerSequence().toString()));
 		}
 		return outNewBinding;
+	}
+
+	private MKeyBinding createDeleted(MCommand command,
+	        String triggerSequence) {
+		final MKeyBinding out = CommandsFactoryImpl.eINSTANCE
+		        .createKeyBinding();
+		out.setCommand(command);
+		out.setKeySequence(triggerSequence);
+		final List<String> tags = out.getTags();
+		tags.add(EBindingService.DELETED_BINDING_TAG);
+		return out;
 	}
 
 	private String getOrigSequence(MKeyBinding toReplace) {

@@ -296,7 +296,7 @@
       <tags>type:user</tags>
     </bindings>
     <bindings xmi:id="_O2DxoExfEeOnfLACFZUbew" keySequence="M3+T" command="_HZDC8ExeEeOnfLACFZUbew">
-      <tags>deleted</tags>
+      <tags>type:user</tags>
     </bindings>
     <bindings xmi:id="_RaAVEExfEeOnfLACFZUbew" keySequence="M3+X" command="_RUA3QExeEeOnfLACFZUbew">
       <tags>type:user</tags>
@@ -318,10 +318,10 @@
   </bindingTables>
   <bindingTables xmi:id="_eBq7AEJUEeK4WpHp4ZQ4aQ" elementId="org.elbe.relations.bindingtable.browser" bindingContext="___ZYEDyeEeKc_uS-EtsnSg">
     <bindings xmi:id="_81j7cEJTEeK4WpHp4ZQ4aQ" keySequence="M1+B" command="_iY2VcEI6EeK4WpHp4ZQ4aQ">
-      <tags>deleted</tags>
+      <tags>type:user</tags>
     </bindings>
     <bindings xmi:id="_sbO3AEJTEeK4WpHp4ZQ4aQ" keySequence="M1+DEL" command="_Wy1IwBbxEeKNFaEs4feK6A">
-      <tags>deleted</tags>
+      <tags>type:user</tags>
     </bindings>
   </bindingTables>
   <rootContext xmi:id="_vLHKgDv5EeKA7_T_MYQC0Q" elementId="org.elbe.relations.context.app" name="In Relations Application">
