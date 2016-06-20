@@ -18,8 +18,8 @@
  ***************************************************************************/
 package org.elbe.relations.internal.forms;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Vector;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
@@ -43,7 +43,7 @@ public class RadioDialog extends Dialog {
 	private final int[] options;
 	private final String[] labels;
 	private final int initialOption;
-	private final Collection<Button> buttons = new Vector<Button>();
+	private final Collection<Button> buttons = new ArrayList<Button>();
 	private int result = -1;
 
 	/**
@@ -63,43 +63,43 @@ public class RadioDialog extends Dialog {
 	 *            String[] array of option labels
 	 */
 	public RadioDialog(final Shell inParentShell, final String inTitle,
-			final String inMessage, final int[] inOptions,
-			final int inOptionInitial, final String[] inLabels) {
+	        final String inMessage, final int[] inOptions,
+	        final int inOptionInitial, final String[] inLabels) {
 		super(inParentShell);
-		title = inTitle;
-		message = inMessage;
-		options = inOptions;
-		initialOption = inOptionInitial;
-		labels = inLabels;
+		this.title = inTitle;
+		this.message = inMessage;
+		this.options = inOptions;
+		this.initialOption = inOptionInitial;
+		this.labels = inLabels;
 	}
 
 	@Override
 	protected Control createDialogArea(final Composite inParent) {
-		if (title != null) {
-			getShell().setText(title);
+		if (this.title != null) {
+			getShell().setText(this.title);
 		}
-		final Composite outComposite = (Composite) super
-				.createDialogArea(inParent);
+		final Composite outComposite = (Composite) super.createDialogArea(
+		        inParent);
 		final GridLayout lLayout = new GridLayout();
 		lLayout.marginWidth = 15;
 		lLayout.marginHeight = 15;
 		outComposite.setLayout(lLayout);
-		if (message != null) {
+		if (this.message != null) {
 			final Label lLabel = new Label(outComposite, SWT.WRAP);
-			lLabel.setText(message + "\n"); //$NON-NLS-1$
+			lLabel.setText(this.message + "\n"); //$NON-NLS-1$
 		}
 		int i = 0;
-		for (final int lOption : options) {
+		for (final int lOption : this.options) {
 			final Button lButton = new Button(outComposite, SWT.RADIO);
 			final GridData lData = new GridData();
 			lData.horizontalIndent = 15;
 			lButton.setLayoutData(lData);
 			lButton.setData(lOption);
-			lButton.setText(labels[i++]);
-			if (lOption == initialOption) {
+			lButton.setText(this.labels[i++]);
+			if (lOption == this.initialOption) {
 				lButton.setSelection(true);
 			}
-			buttons.add(lButton);
+			this.buttons.add(lButton);
 		}
 		return outComposite;
 	}
@@ -107,9 +107,9 @@ public class RadioDialog extends Dialog {
 	@Override
 	protected void buttonPressed(final int inButtonId) {
 		if (inButtonId == OK) {
-			for (final Button lButton : buttons) {
+			for (final Button lButton : this.buttons) {
 				if (lButton.getSelection()) {
-					result = ((Integer) lButton.getData()).intValue();
+					this.result = ((Integer) lButton.getData()).intValue();
 					break;
 				}
 			}
@@ -121,7 +121,7 @@ public class RadioDialog extends Dialog {
 	 * @return int the selected option.
 	 */
 	public int getResult() {
-		return result;
+		return this.result;
 	}
 
 }

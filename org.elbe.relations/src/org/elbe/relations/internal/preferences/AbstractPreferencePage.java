@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -28,15 +28,13 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbenchPreferencePage;
 
 /**
  * Base class for preference pages used in Relations.
- * 
+ *
  * @author Luthiger
  */
-public abstract class AbstractPreferencePage extends PreferencePage implements
-		IWorkbenchPreferencePage {
+public abstract class AbstractPreferencePage extends PreferencePage {
 
 	public AbstractPreferencePage() {
 		super();
@@ -47,7 +45,7 @@ public abstract class AbstractPreferencePage extends PreferencePage implements
 	}
 
 	public AbstractPreferencePage(final String inTitle,
-			final ImageDescriptor inImage) {
+	        final ImageDescriptor inImage) {
 		super(inTitle, inImage);
 	}
 
@@ -64,7 +62,7 @@ public abstract class AbstractPreferencePage extends PreferencePage implements
 	/**
 	 * Utility method that creates a label instance and sets the default layout
 	 * data.
-	 * 
+	 *
 	 * @param inParent
 	 *            the inParent for the new label
 	 * @param inText
@@ -81,9 +79,10 @@ public abstract class AbstractPreferencePage extends PreferencePage implements
 		return outLabel;
 	}
 
-	protected Combo createCombo(final Composite inParent, final String[] inItems) {
-		final Combo outCombo = new Combo(inParent, SWT.DROP_DOWN
-				| SWT.READ_ONLY | SWT.SIMPLE);
+	protected Combo createCombo(final Composite inParent,
+	        final String[] inItems) {
+		final Combo outCombo = new Combo(inParent,
+		        SWT.DROP_DOWN | SWT.READ_ONLY | SWT.SIMPLE);
 		outCombo.setItems(inItems);
 		outCombo.setLayoutData(createGridData());
 		return outCombo;
@@ -94,13 +93,13 @@ public abstract class AbstractPreferencePage extends PreferencePage implements
 	}
 
 	protected Combo createLabelCombo(final Composite inParent,
-			final String inLabel, final String[] inItems) {
+	        final String inLabel, final String[] inItems) {
 		createLabel(inParent, inLabel);
 		return createCombo(inParent, inItems);
 	}
 
 	protected Text createLabelText(final Composite inParent,
-			final String inLabel) {
+	        final String inLabel) {
 		createLabel(inParent, inLabel);
 		return createText(inParent);
 	}
@@ -112,11 +111,12 @@ public abstract class AbstractPreferencePage extends PreferencePage implements
 		return outText;
 	}
 
-	protected void createSeparator(final Composite inParent, final int inColumns) {
-		final Label lSeparator = new Label(inParent, SWT.SEPARATOR
-				| SWT.HORIZONTAL);
-		lSeparator.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false,
-				inColumns, 1));
+	protected void createSeparator(final Composite inParent,
+	        final int inColumns) {
+		final Label lSeparator = new Label(inParent,
+		        SWT.SEPARATOR | SWT.HORIZONTAL);
+		lSeparator.setLayoutData(
+		        new GridData(SWT.FILL, SWT.NONE, true, false, inColumns, 1));
 	}
 
 	/**

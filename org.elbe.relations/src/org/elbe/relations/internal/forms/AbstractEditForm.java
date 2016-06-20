@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -86,8 +86,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.contexts.IContextActivation;
-import org.eclipse.ui.menus.CommandContributionItem;
 import org.elbe.relations.Activator;
 import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.internal.style.ResizeFontControl;
@@ -101,7 +99,7 @@ import org.elbe.relations.internal.utility.CheckDirtyServiceNoop;
 /**
  * Base class for the edit forms to edit or create items, i.e. term, text or
  * person items.
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
@@ -117,7 +115,6 @@ public abstract class AbstractEditForm {
 	protected StyledTextComponent styledText;
 	private Composite styledContainer;
 	protected CheckDirtyService checkDirtyService;
-	private final IContextActivation activeContext = null;
 
 	private String viewTitle = ""; //$NON-NLS-1$
 	private boolean editMode = false;
@@ -140,7 +137,7 @@ public abstract class AbstractEditForm {
 
 	/**
 	 * Subclasses have to call immediately after object creation.
-	 * 
+	 *
 	 * @param inEditMode
 	 *            boolean <code>true</code> if this form is in edit mode,
 	 *            <code>false</code> for new mode
@@ -162,7 +159,7 @@ public abstract class AbstractEditForm {
 
 	/**
 	 * Notifies the observers.
-	 * 
+	 *
 	 * @param inStatuses
 	 *            IStatus[]
 	 */
@@ -174,7 +171,7 @@ public abstract class AbstractEditForm {
 
 	/**
 	 * Subclasses must implement.
-	 * 
+	 *
 	 * @return IStatus[] Array of status information.
 	 */
 	protected abstract IStatus[] getStatuses();
@@ -191,7 +188,8 @@ public abstract class AbstractEditForm {
 
 		final GridData lData = new GridData(SWT.FILL, SWT.NULL, false, false,
 		        inNumColumns, SWT.NULL);
-		lData.widthHint = (int) (outLabel.computeSize(SWT.DEFAULT, SWT.DEFAULT).x * 1.2);
+		lData.widthHint = (int) (outLabel.computeSize(SWT.DEFAULT,
+		        SWT.DEFAULT).x * 1.2);
 		outLabel.setLayoutData(lData);
 		return outLabel;
 	}
@@ -209,9 +207,10 @@ public abstract class AbstractEditForm {
 		return outText;
 	}
 
-	protected StyledTextComponent createStyledText(final Composite inContainer) {
-		return createStyledText(inContainer, new GridData(SWT.FILL, SWT.FILL,
-		        true, true));
+	protected StyledTextComponent createStyledText(
+	        final Composite inContainer) {
+		return createStyledText(inContainer,
+		        new GridData(SWT.FILL, SWT.FILL, true, true));
 	}
 
 	protected StyledTextComponent createStyledText(final Composite inContainer,
@@ -226,7 +225,7 @@ public abstract class AbstractEditForm {
 	 * Creates <code>StyledTextComponent</code> for the edit form. The widget is
 	 * complete with a toolbar above displaying the style controls and a popup
 	 * menu (displaying the style controls too).
-	 * 
+	 *
 	 * @param inContainer
 	 *            Composite parent widget
 	 * @param inData
@@ -247,8 +246,8 @@ public abstract class AbstractEditForm {
 		final STKeyListener lSTListener = new STKeyListener(application);
 		final ContributionItemsFactory lStyleBarHelper = new ContributionItemsFactory(
 		        application, modelService, bindingService);
-		final ToolBarManager lToolBarManager = new ToolBarManager(SWT.FLAT
-		        | SWT.TRAIL);
+		final ToolBarManager lToolBarManager = new ToolBarManager(
+		        SWT.FLAT | SWT.TRAIL);
 		addStyleControls(styledContainer, lToolBarManager, lStyleBarHelper,
 		        lSTListener);
 
@@ -283,15 +282,15 @@ public abstract class AbstractEditForm {
 			public void menuAboutToShow(final IMenuManager inManager) {
 				inManager.add(new Separator("style")); //$NON-NLS-1$
 				for (final StyleContributionItem lItem : inMenuHelper
-				        .getItems()) {
+		                .getItems()) {
 					inManager.add(lItem);
 				}
-				inManager.add(new Separator(
-				        IWorkbenchActionConstants.MB_ADDITIONS));
+				inManager.add(
+		                new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 			}
 		});
-		inStyledText.setMenu(lMenuManager.createContextMenu(inStyledText
-		        .getControl()));
+		inStyledText.setMenu(
+		        lMenuManager.createContextMenu(inStyledText.getControl()));
 
 	}
 
@@ -365,7 +364,8 @@ public abstract class AbstractEditForm {
 	}
 
 	protected void setIndent(final int inIndent) {
-		((GridData) styledContainer.getLayoutData()).horizontalIndent = inIndent;
+		((GridData) styledContainer
+		        .getLayoutData()).horizontalIndent = inIndent;
 	}
 
 	protected void setWidth(final Control inControl, final int inWidth) {
@@ -385,7 +385,7 @@ public abstract class AbstractEditForm {
 
 	/**
 	 * Returns the form's dirty status.
-	 * 
+	 *
 	 * @return boolean <code>true</code> if at least on widget on the form is
 	 *         dirty.
 	 */
@@ -395,7 +395,7 @@ public abstract class AbstractEditForm {
 
 	/**
 	 * Signals if the page can be completed.
-	 * 
+	 *
 	 * @return boolean <code>true</code> if the page is complete.
 	 */
 	public abstract boolean getPageComplete();
@@ -421,15 +421,12 @@ public abstract class AbstractEditForm {
 			styledContainer.dispose();
 			styledContainer = null;
 		}
-		if (activeContext != null) {
-			activeContext.getContextService().deactivateContext(activeContext);
-		}
 		container.dispose();
 	}
 
 	/**
 	 * Notifies the user about this form's dirty status.
-	 * 
+	 *
 	 * @param inIsDirty
 	 *            boolean <code>true</code> if at least one widget on this form
 	 *            is dirty.
@@ -454,8 +451,8 @@ public abstract class AbstractEditForm {
 		        null);
 	}
 
-	protected void addCreatedLabel(final Composite inParent,
-	        final int inIndent, final int inColspan) {
+	protected void addCreatedLabel(final Composite inParent, final int inIndent,
+	        final int inColspan) {
 		if (editMode) {
 			labelCreated = new Label(inParent, SWT.NONE);
 			final GridData lLayout = new GridData(SWT.FILL, SWT.NULL, true,
@@ -495,8 +492,8 @@ public abstract class AbstractEditForm {
 			final EHandlerService lHandlerService = lContext
 			        .get(EHandlerService.class);
 
-			final MToolBar lToolbar = (MToolBar) inModelService.find(
-			        MUI_ID_STYLING_TOOLBAR, inApplication);
+			final MToolBar lToolbar = (MToolBar) inModelService
+			        .find(MUI_ID_STYLING_TOOLBAR, inApplication);
 			for (final MToolBarElement lElement : lToolbar.getChildren()) {
 				if (lElement instanceof MHandledToolItem) {
 					final StyleContributionItem lItem = new StyleContributionItem(
@@ -539,8 +536,8 @@ public abstract class AbstractEditForm {
 		        final EHandlerService inHandlerService) {
 			super(inElement.getElementId());
 			handlerService = inHandlerService;
-			icon = inUtility.imageDescriptorFromURI(URI.createURI(inElement
-			        .getIconURI()));
+			icon = inUtility.imageDescriptorFromURI(
+			        URI.createURI(inElement.getIconURI()));
 			tooltip = inElement.getLocalizedTooltip();
 			command = createCommand(inElement.getCommand(), inCommandManager);
 			sequence = inBindingService.getBestSequenceFor(command);
@@ -554,8 +551,7 @@ public abstract class AbstractEditForm {
 			if (widgetToolBar != null || inParent == null) {
 				return;
 			}
-			widgetToolBar = new ToolItem(inParent,
-			        CommandContributionItem.STYLE_CHECK);
+			widgetToolBar = new ToolItem(inParent, SWT.CHECK);
 			widgetToolBar.setData(this);
 			widgetToolBar.setImage(icon.createImage());
 			widgetToolBar.addListener(SWT.Dispose, getItemListener());
@@ -583,8 +579,7 @@ public abstract class AbstractEditForm {
 			if (widgetMenu != null || inParent == null) {
 				return;
 			}
-			widgetMenu = new MenuItem(inParent,
-			        CommandContributionItem.STYLE_CHECK);
+			widgetMenu = new MenuItem(inParent, SWT.CHECK);
 			widgetMenu.setData(this);
 			widgetMenu.setImage(icon.createImage());
 			widgetMenu.addListener(SWT.Dispose, getItemListener());
@@ -603,7 +598,8 @@ public abstract class AbstractEditForm {
 		private ParameterizedCommand createCommand(final MCommand inCommand,
 		        final CommandManager inCommandManager) {
 			return new ParameterizedCommand(
-			        inCommandManager.getCommand(inCommand.getElementId()), null);
+			        inCommandManager.getCommand(inCommand.getElementId()),
+			        null);
 		}
 
 		private Listener getItemListener() {
@@ -638,8 +634,8 @@ public abstract class AbstractEditForm {
 				lParameters.put(RelationsConstants.PN_COMMAND_STYLE_SELECTION,
 				        widgetToolBar.getSelection() ? "false" : "true"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			handlerService.executeHandler(ParameterizedCommand.generateCommand(
-			        adaptCommand(command), lParameters));
+			handlerService.executeHandler(ParameterizedCommand
+			        .generateCommand(adaptCommand(command), lParameters));
 		}
 
 		private Command adaptCommand(final ParameterizedCommand inCommand) {
@@ -726,8 +722,9 @@ public abstract class AbstractEditForm {
 		public void fill(final ToolBar inParent, final int inIndex) {
 			toolItem = new ToolItem(inParent, SWT.SEPARATOR, inIndex);
 			context.set(Composite.class, inParent);
-			final ResizeFontControl control = ContextInjectionFactory.make(
-			        ResizeFontControl.class, context);
+			final ResizeFontControl control = ContextInjectionFactory
+			        .make(ResizeFontControl.class, context);
+			control.createWidget(inParent);
 			toolItem.setWidth(control.getControl().computeSize(SWT.DEFAULT,
 			        SWT.DEFAULT, true).x);
 			toolItem.setControl(control.getControl());
@@ -736,7 +733,7 @@ public abstract class AbstractEditForm {
 
 	/**
 	 * Helper class to create a label - text widget.
-	 * 
+	 *
 	 * @author Luthiger
 	 */
 	protected class WidgetCreator {
@@ -760,7 +757,7 @@ public abstract class AbstractEditForm {
 
 	/**
 	 * Helper class to create a label - styled text widget.
-	 * 
+	 *
 	 * @author Luthiger
 	 */
 	protected class StyledTextCreator {
@@ -786,7 +783,7 @@ public abstract class AbstractEditForm {
 
 	/**
 	 * Listener to process key binding.
-	 * 
+	 *
 	 * @author Luthiger
 	 */
 	private static class STKeyListener implements Listener {
@@ -796,8 +793,8 @@ public abstract class AbstractEditForm {
 		private final EHandlerService handlerService;
 
 		STKeyListener(final MApplication inApplication) {
-			handlerService = inApplication.getContext().get(
-			        EHandlerService.class);
+			handlerService = inApplication.getContext()
+			        .get(EHandlerService.class);
 		}
 
 		/**
@@ -842,9 +839,9 @@ public abstract class AbstractEditForm {
 					lParameters.put(
 					        RelationsConstants.PN_COMMAND_STYLE_SELECTION,
 					        lToolItem.getSelection() ? "false" : "true"); //$NON-NLS-1$ //$NON-NLS-2$
-					handlerService.executeHandler(ParameterizedCommand
-					        .generateCommand(lToolItem.getCommand(),
-					                lParameters));
+					handlerService.executeHandler(
+					        ParameterizedCommand.generateCommand(
+					                lToolItem.getCommand(), lParameters));
 					state = KeySequence.getInstance();
 					return true;
 				}
@@ -881,7 +878,7 @@ public abstract class AbstractEditForm {
 
 		@Override
 		public String getName() {
-			return "style.parameter";
+			return "style.parameter"; //$NON-NLS-1$
 		}
 
 		@Override

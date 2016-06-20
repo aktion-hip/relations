@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -22,12 +22,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 
 import javax.inject.Inject;
 
@@ -53,13 +53,13 @@ import org.htmlcleaner.XPatherException;
  * <code>{@link WebPageParser#setBibliographyProviders()}</code> where all
  * <code>IBibliographyProvider</code> classes have to be registered.
  * </p>
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
 public class WebPageParser implements IWebPageParser {
 
-	private final List<IBibliographyProvider> bibliographyProviders = new Vector<IBibliographyProvider>();
+	private final List<IBibliographyProvider> bibliographyProviders = new ArrayList<IBibliographyProvider>();
 
 	@Inject
 	private Logger log;
@@ -69,35 +69,35 @@ public class WebPageParser implements IWebPageParser {
 
 	/**
 	 * OSGi DS: bind the <code>IBibliographyPackage</code> service.
-	 * 
+	 *
 	 * @param inBibliographyPackage
 	 *            {@link IBibliographyPackage}
 	 */
 	public void setBibliographyProviders(
-			final IBibliographyPackage inBibliographyPackage) {
+	        final IBibliographyPackage inBibliographyPackage) {
 		for (final IBibliographyProvider lProvider : inBibliographyPackage
-				.getBibliographyProviders()) {
+		        .getBibliographyProviders()) {
 			bibliographyProviders.add(lProvider);
 		}
 	}
 
 	/**
 	 * OSGi DS: unbind the <code>IBibliographyPackage</code> service.
-	 * 
+	 *
 	 * @param inBibliographyProvider
 	 *            {@link IBibliographyPackage}
 	 */
 	public void unsetBibliographyProviders(
-			final IBibliographyPackage inBibliographyProvider) {
+	        final IBibliographyPackage inBibliographyProvider) {
 		for (final IBibliographyProvider lProvider : inBibliographyProvider
-				.getBibliographyProviders()) {
+		        .getBibliographyProviders()) {
 			bibliographyProviders.remove(lProvider);
 		}
 	}
 
 	/**
 	 * Parses the web page specified by the provided url.
-	 * 
+	 *
 	 * @param inUrl
 	 *            String the web page's url.
 	 * @return WebPageParser.WebDropResult parameter object containing the
@@ -108,12 +108,12 @@ public class WebPageParser implements IWebPageParser {
 	 */
 	@Override
 	public WebPageParser.WebDropResult parse(final String inUrl)
-			throws MalformedURLException, IOException, ParserException {
+	        throws MalformedURLException, IOException, ParserException {
 		final XPathHelper lHelper = XPathHelper.newInstance(new URL(inUrl));
 		try {
 			final String lTitle = lHelper.getElement(XPathHelper.XPATH_TITLE);
 			final WebPageParser.WebDropResult outResult = new WebPageParser.WebDropResult(
-					lTitle == null ? "" : lTitle, inUrl); //$NON-NLS-1$
+			        lTitle == null ? "" : lTitle, inUrl); //$NON-NLS-1$
 
 			// first we extract all metadata information that seems to be
 			// appropriate about the web page dropped
@@ -130,44 +130,45 @@ public class WebPageParser implements IWebPageParser {
 	}
 
 	private void processPageMetadata(final XPathHelper inHelper,
-			final WebDropResult inWebResult) throws XPatherException {
-		final IHtmlExtractor lExtractor = DCHtmlExtractor.checkDCMeta(inHelper) ? new DCHtmlExtractor()
-				: new GenericHtmlExtractor();
+	        final WebDropResult inWebResult) throws XPatherException {
+		final IHtmlExtractor lExtractor = DCHtmlExtractor.checkDCMeta(inHelper)
+		        ? new DCHtmlExtractor() : new GenericHtmlExtractor();
 		final ExtractedData lExtracted = lExtractor.extractData(inHelper,
-				inWebResult.getTitle(), inWebResult.getUrl());
+		        inWebResult.getTitle(), inWebResult.getUrl());
 		inWebResult.setText(lExtracted.getText());
 		inWebResult.setNewTextAction(createAction(lExtracted));
 	}
 
 	private void processPageBibliography(final XPathHelper inHelper,
-			final WebDropResult inWebResult) {
+	        final WebDropResult inWebResult) {
 		try {
 			for (final IBibliographyProvider lProvider : getProviders()) {
 				lProvider.evaluate(inHelper, inWebResult, context);
-				if (inWebResult.hasBibliography())
+				if (inWebResult.hasBibliography()) {
 					break;
+				}
 			}
 		}
 		catch (final ParserException exc) {
 			log.error(exc, exc.getMessage());
 			Display.getCurrent().beep();
 			final RelationsStatusLineManager lStatusLine = context
-					.get(RelationsStatusLineManager.class);
+			        .get(RelationsStatusLineManager.class);
 			lStatusLine.showStatusLineMessage(RelationsMessages
-					.getString("WebPageParser.msg.parsing.error")); //$NON-NLS-1$
+			        .getString("WebPageParser.msg.parsing.error")); //$NON-NLS-1$
 		}
 	}
 
 	private NewTextAction createAction(final ExtractedData inExtracted) {
 		final String lAuthor = inExtracted.getAuthor();
 		final Builder lBuilder = new NewTextAction.Builder(
-				inExtracted.getTitle(), lAuthor.length() == 0 ? "-" : lAuthor); //$NON-NLS-1$
+		        inExtracted.getTitle(), lAuthor.length() == 0 ? "-" : lAuthor); //$NON-NLS-1$
 		lBuilder.coAuthor(inExtracted.getContributor());
 		lBuilder.publisher(inExtracted.getPublisher());
 		lBuilder.publication(inExtracted.getPath());
 		lBuilder.year(inExtracted.getYear());
-		lBuilder.place(DateFormat.getDateInstance(DateFormat.LONG).format(
-				new Date()));
+		lBuilder.place(
+		        DateFormat.getDateInstance(DateFormat.LONG).format(new Date()));
 		lBuilder.text(inExtracted.getText());
 		return lBuilder.build(context);
 	}
@@ -188,7 +189,7 @@ public class WebPageParser implements IWebPageParser {
 
 		/**
 		 * Constructor
-		 * 
+		 *
 		 * @param inTitle
 		 *            String the web page's title
 		 * @param inUrl
@@ -215,7 +216,7 @@ public class WebPageParser implements IWebPageParser {
 
 		/**
 		 * Sets the text for the item's text field.
-		 * 
+		 *
 		 * @param inText
 		 *            String
 		 */
@@ -233,7 +234,7 @@ public class WebPageParser implements IWebPageParser {
 		/**
 		 * Signals that the dragged web page contains bibliographical
 		 * information that can be evaluated.
-		 * 
+		 *
 		 * @return <code>true</code> if web page contains bibliographical
 		 *         information.
 		 */
@@ -243,7 +244,7 @@ public class WebPageParser implements IWebPageParser {
 
 		/**
 		 * Sets the <code>NewTextAction</code> to create a new text item.
-		 * 
+		 *
 		 * @param inAction
 		 *            NewTextAction
 		 */
@@ -254,7 +255,7 @@ public class WebPageParser implements IWebPageParser {
 		/**
 		 * Sets the <code>NewTextAction</code> to create a new text item with
 		 * the extracted bibliographical information.
-		 * 
+		 *
 		 * @param inAction
 		 *            {@link NewTextAction}
 		 */
@@ -282,14 +283,14 @@ public class WebPageParser implements IWebPageParser {
 	/**
 	 * We want the micro format providers being used first. This
 	 * <code>Comparator</code> ensures this.
-	 * 
+	 *
 	 * @author Luthiger Created on 29.12.2009
 	 */
-	private class ProviderComparator implements
-			Comparator<IBibliographyProvider> {
+	private class ProviderComparator
+	        implements Comparator<IBibliographyProvider> {
 		@Override
 		public int compare(final IBibliographyProvider inProvider1,
-				final IBibliographyProvider inProvider2) {
+		        final IBibliographyProvider inProvider2) {
 			if (inProvider1.isMicroFormat()) {
 				return inProvider2.isMicroFormat() ? 0 : -1;
 			}

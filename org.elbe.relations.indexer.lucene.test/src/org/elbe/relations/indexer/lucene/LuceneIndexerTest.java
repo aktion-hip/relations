@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -38,11 +38,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * 
+ *
  * @author lbenno
  */
 public class LuceneIndexerTest {
-	private final static String LANGUAGE = "de";
 	private final IndexHouseKeeper housekeeper = new IndexHouseKeeper();
 
 	@Before
@@ -57,8 +56,8 @@ public class LuceneIndexerTest {
 
 	@Test
 	public void testGetAnalyzerLanguages() {
-		final String[] lExpected = { "en", "de", "br", "cn", "cz", "el", "fr",
-		        "nl", "ru", "th" };
+		final String[] lExpected = { "ar", "bg", "br", "ca", "cn", "cz", "da", "de", "el", "en", "es", "eu", "fa", "fi",
+				"fr", "gl", "hi", "hu", "hy", "id", "it", "lv", "nl", "no", "pt", "ro", "ru", "sv", "th", "tr" };
 		final Collection<String> lExpectedLanguages = Arrays.asList(lExpected);
 
 		final IIndexer lIndexer = new LuceneIndexer();
@@ -72,24 +71,26 @@ public class LuceneIndexerTest {
 
 	@Test
 	public void testProcessIndexer() throws Exception {
+		final File directory = IndexHouseKeeper.getDirectory();
 		final IIndexer lIndexer = new LuceneIndexer();
-		lIndexer.processIndexer(getDocIndexer(),
-		        IndexHouseKeeper.getDirectory(), LANGUAGE);
-		final int lNumber = lIndexer.numberOfIndexed(IndexHouseKeeper
-		        .getDirectory());
-		assertEquals("one document indexed", 1, lNumber);
+
+		lIndexer.processIndexer(getDocIndexer(), directory, IndexHouseKeeper.LANGUAGE);
+		assertEquals("one document indexed", 1, lIndexer.numberOfIndexed(directory));
+
+		// initialize
+		lIndexer.initializeIndex(directory, IndexHouseKeeper.LANGUAGE);
+		assertEquals(0, lIndexer.numberOfIndexed(directory));
 	}
 
 	private IndexerHelper getDocIndexer() {
 		final IndexerHelper outIndexer = new IndexerHelper();
-		return addDocument(outIndexer, "name", "value");
+		return addDocument(outIndexer, "name", "value", IndexerField.Type.FULL_TEXT);
 	}
 
-	private IndexerHelper addDocument(final IndexerHelper inIndexer,
-	        final String inName, final String inValue) {
+	private IndexerHelper addDocument(final IndexerHelper inIndexer, final String inName, final String inValue,
+			IndexerField.Type inType) {
 		final IndexerDocument lDocument = new IndexerDocument();
-		lDocument.addField(new IndexerField(inName, inValue,
-		        IndexerField.Store.YES, IndexerField.Index.NOT_ANALYZED));
+		lDocument.addField(new IndexerField(inName, inValue, IndexerField.Store.YES, inType, 1.0f));
 		inIndexer.addDocument(lDocument);
 		return inIndexer;
 	}
@@ -102,31 +103,26 @@ public class LuceneIndexerTest {
 		assertNotNull("the directory contains files", lContent);
 		boolean lStartsWithSegments = false;
 		for (final String lFileName : lContent) {
-			lStartsWithSegments = lStartsWithSegments
-			        || lFileName.startsWith("segments");
+			lStartsWithSegments = lStartsWithSegments || lFileName.startsWith("segments");
 		}
-		assertTrue("at least on containing file starts with 'segments'",
-		        lStartsWithSegments);
+		assertTrue("at least on containing file starts with 'segments'", lStartsWithSegments);
 	}
 
 	@Test
 	public void testDeleteItemInIndex() throws Exception {
 		final String lUniqueID = "2:987";
 		final String lFieldName = AbstractSearching.ITEM_ID;
+		final File luceneDir = IndexHouseKeeper.getDirectory();
 
 		IndexerHelper lDocIndexer = getDocIndexer();
-		lDocIndexer = addDocument(lDocIndexer, lFieldName, lUniqueID);
+		lDocIndexer = addDocument(lDocIndexer, lFieldName, lUniqueID, IndexerField.Type.ID);
 
 		final IIndexer lIndexer = new LuceneIndexer();
-		lIndexer.processIndexer(lDocIndexer, IndexHouseKeeper.getDirectory(),
-		        LANGUAGE);
-		assertEquals("two documents in index", 2,
-		        lIndexer.numberOfIndexed(IndexHouseKeeper.getDirectory()));
+		lIndexer.processIndexer(lDocIndexer, luceneDir, IndexHouseKeeper.LANGUAGE);
+		assertEquals("two documents in index", 2, lIndexer.numberOfIndexed(luceneDir));
 
-		lIndexer.deleteItemInIndex(lUniqueID, lFieldName,
-		        IndexHouseKeeper.getDirectory());
-		assertEquals("one document in index", 1,
-		        lIndexer.numberOfIndexed(IndexHouseKeeper.getDirectory()));
+		lIndexer.deleteItemInIndex(lUniqueID, lFieldName, luceneDir, IndexHouseKeeper.LANGUAGE);
+		assertEquals("one document in index", 1, lIndexer.numberOfIndexed(luceneDir));
 	}
 
 }

@@ -1,6 +1,6 @@
-/*
+/**
 This package is part of Relations application.
-Copyright (C) 2009, Benno Luthiger
+Copyright (C) 2009-2016, Benno Luthiger
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public
@@ -21,8 +21,8 @@ package org.elbe.relations.biblio.meta.internal.unapi;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -33,7 +33,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * <p>Parser for XML documents like:
+ * <p>
+ * Parser for XML documents like:
+ *
  * <pre>
  * &lt;formats>
  * &lt;format name="endnote" type="text/plain"/>
@@ -44,27 +46,30 @@ import org.xml.sax.helpers.DefaultHandler;
  * </pre>
  * </p>
  *
- * @author Luthiger
- * Created on 29.12.2009
+ * @author Luthiger Created on 29.12.2009
  */
 public class XMLFormatsParser extends DefaultHandler {
 	private static final String TAG_FORMAT = "format".intern(); //$NON-NLS-1$
 	private static final String ATTRIBUTE_NAME = "name"; //$NON-NLS-1$
-	
+
 	private Collection<String> metadataFormats;
 
-	//prevent instance construction
-	private XMLFormatsParser() {}
+	// prevent instance construction
+	private XMLFormatsParser() {
+	}
 
 	public static XMLFormatsParser getInstance() {
 		return new XMLFormatsParser();
 	}
-	
+
 	/**
-	 * Parses the document at the specified <code>URL</code> and returns the metadata formats extracted from the document.
-	 * 
-	 * @param inUrl URL the document's URL.
-	 * @return Collection<String> the metadata formats extracted from the document.
+	 * Parses the document at the specified <code>URL</code> and returns the
+	 * metadata formats extracted from the document.
+	 *
+	 * @param inUrl
+	 *            URL the document's URL.
+	 * @return Collection<String> the metadata formats extracted from the
+	 *         document.
 	 * @throws ParserConfigurationException
 	 * @throws SAXException
 	 * @throws IOException
@@ -73,27 +78,27 @@ public class XMLFormatsParser extends DefaultHandler {
 		InputStream lInput = null;
 		try {
 			lInput = inUrl.openStream();
-			SAXParser lParser = SAXParserFactory.newInstance().newSAXParser();
+			final SAXParser lParser = SAXParserFactory.newInstance().newSAXParser();
 			lParser.parse(lInput, this);
-			return metadataFormats;			
-		}
-		finally {
+			return metadataFormats;
+		} finally {
 			if (lInput != null) {
 				lInput.close();
 			}
 		}
 	}
-	
+
 	@Override
 	public void startDocument() throws SAXException {
-		metadataFormats = new Vector<String>();
+		metadataFormats = new ArrayList<String>();
 	}
-	
+
 	@Override
-	public void startElement(String inUri, String inLocalName, String inName, Attributes inAttributes) throws SAXException {
-		if (inName == TAG_FORMAT) {
+	public void startElement(String inUri, String inLocalName, String inName, Attributes inAttributes)
+			throws SAXException {
+		if (TAG_FORMAT.equals(inName)) {
 			metadataFormats.add(inAttributes.getValue(ATTRIBUTE_NAME));
 		}
 	}
-	
+
 }

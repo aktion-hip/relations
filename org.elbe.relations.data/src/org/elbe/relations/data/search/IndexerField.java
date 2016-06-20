@@ -1,6 +1,6 @@
-/*
+/**
 This package is part of Relations project.
-Copyright (C) 2007, Benno Luthiger
+Copyright (C) 2007-2016, Benno Luthiger
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public
@@ -23,30 +23,44 @@ package org.elbe.relations.data.search;
  * Wrapper for lucene Field
  *
  * @author Luthiger
- * Created on 20.11.2008
  */
 public class IndexerField {
-	public enum Store {YES, NO, COMPRESS};
-	public enum Index {ANALYZED, NOT_ANALYZED, ANALYZED_NO_NORMS, NOT_ANALYZED_NO_NORMS, NO}
+	public enum Store {
+		YES,
+		NO
+	};
 
-	private String fieldName;
-	private String value;
-	private Store storeValue;
-	private Index indexValue;
+	public enum Type {
+		ID,
+		FULL_TEXT;
+	};
+
+	private final String fieldName;
+	private final String value;
+	private final Store storeValue;
+	private final Type type;
+	private final float boost;
 
 	/**
 	 * IndexerField constructor.
-	 * 
-	 * @param inFieldName String
-	 * @param inValue String
-	 * @param inStore IndexerField.Store
-	 * @param inIndex IndexerField.Index
+	 *
+	 * @param inFieldName
+	 *            String
+	 * @param inValue
+	 *            String
+	 * @param inStore
+	 *            IndexerField.Store
+	 * @param inType
+	 *            IndexerField.Type
+	 * @param inBoost
+	 *            float
 	 */
-	public IndexerField(String inFieldName, String inValue, Store inStore, Index inIndex) {
+	public IndexerField(String inFieldName, String inValue, Store inStore, Type inType, float inBoost) {
 		fieldName = inFieldName;
 		value = inValue;
 		storeValue = inStore;
-		indexValue = inIndex;
+		type = inType;
+		boost = inBoost;
 	}
 
 	public String getFieldName() {
@@ -61,13 +75,17 @@ public class IndexerField {
 		return storeValue;
 	}
 
-	public Index getIndexValue() {
-		return indexValue;
+	public Type getFieldType() {
+		return type;
 	}
-	
+
+	public float getBoost() {
+		return boost;
+	}
+
 	@Override
 	public String toString() {
 		return String.format("%s: %s", fieldName, value); //$NON-NLS-1$
 	}
-	
+
 }

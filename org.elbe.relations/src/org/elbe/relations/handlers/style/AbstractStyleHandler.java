@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -37,7 +37,7 @@ import org.elbe.relations.internal.style.Styles.StyleParameter;
 
 /**
  * Base class for style handlers.
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
@@ -53,7 +53,7 @@ public abstract class AbstractStyleHandler {
 	/**
 	 * Listener for events sent by the styled text widget. This method updates
 	 * the button's toggle state (e.g. whether it should be displayed pushed).
-	 * 
+	 *
 	 * @param inStyleParameter
 	 *            {@link StyleParameter}
 	 * @param inApplication
@@ -76,7 +76,7 @@ public abstract class AbstractStyleHandler {
 	/**
 	 * Style handler executor method to apply the selected style on the text in
 	 * the widget.
-	 * 
+	 *
 	 * @param inApplyStyleFlag
 	 *            String "true" to apply the selected style, "false" to remove
 	 *            it. A value <code>null</code> signals the active styled text
@@ -98,22 +98,22 @@ public abstract class AbstractStyleHandler {
 			// form
 			lApply = Boolean.parseBoolean(inApplyStyleFlag);
 		}
-		eventBroker
-		        .post(RelationsConstants.TOPIC_STYLE_CHANGE_FORM, Styles
-		                .createStyleEvent(getStyle(), inApplyStyleFlag != null,
-		                        lApply));
+		eventBroker.post(RelationsConstants.TOPIC_STYLE_CHANGE_FORM,
+		        Styles.createStyleEvent(getStyle(), inApplyStyleFlag != null,
+		                lApply));
 	}
 
 	@CanExecute
 	boolean canExecute(final IEclipseContext inContext) {
-		return inContext.get(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE) != null;
+		return inContext
+		        .get(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE) != null;
 	}
 
 	private boolean getStyleApplyForInspector(final MApplication inApplication,
 	        final EModelService inModel) {
 		final MHandledToolItem lItem = getToolItem(inApplication, inModel);
-		final Boolean outOldState = (Boolean) lItem.getTransientData().get(
-		        SELECTION_STATE);
+		final Boolean outOldState = (Boolean) lItem.getTransientData()
+		        .get(SELECTION_STATE);
 		lItem.getTransientData().put(SELECTION_STATE, !outOldState);
 		return !outOldState;
 	}

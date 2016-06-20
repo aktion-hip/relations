@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -28,7 +28,7 @@ import org.elbe.relations.utility.AbstractPrintOut;
 
 /**
  * Print out items to a simple text file.
- * 
+ *
  * @author Luthiger Created on 16.01.2007
  */
 public class PrintOut extends AbstractPrintOut implements IPrintOut {
@@ -41,7 +41,7 @@ public class PrintOut extends AbstractPrintOut implements IPrintOut {
 
 	/**
 	 * This plug-in returns always true.
-	 * 
+	 *
 	 * @see org.elbe.relations.print.IPrintOut#isAvailable()
 	 */
 	@Override
@@ -50,84 +50,58 @@ public class PrintOut extends AbstractPrintOut implements IPrintOut {
 	}
 
 	private void appendText(final String inText) throws IOException {
-		if (outputFile == null)
+		if (outputFile == null) {
 			return;
+		}
 		try {
 			outputFile.seek(outputFile.length());
 			outputFile.writeBytes(inText);
-		}
-		catch (final FileNotFoundException exc) {
+		} catch (final FileNotFoundException exc) {
 			throw createIOException(exc);
 		}
 	}
 
+	@Override
 	protected String getXSLNameBody() {
 		return XSL_DOCBODY;
 	}
 
+	@Override
 	protected String getXSLNameContent() {
 		return XSL_CONTENT;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.print.AbstractPrintOut#manageAfterOpenNew(java.io.
-	 * File)
-	 */
+	@Override
 	protected void manageAfterOpenNew(final File inPrintOut) throws IOException {
 		if (inPrintOut.createNewFile()) {
 			if (!inPrintOut.canRead() || !inPrintOut.canWrite()) {
-				throw new IOException(
-						"Could not open file for read/write: " + inPrintOut.getName()); //$NON-NLS-1$
+				throw new IOException("Could not open file for read/write: " + inPrintOut.getName()); //$NON-NLS-1$
 			}
 			outputFile = new RandomAccessFile(inPrintOut, "rw"); //$NON-NLS-1$
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.print.AbstractPrintOut#insertSection(java.lang.String)
-	 */
+	@Override
 	protected void insertSection(final String inSection) throws IOException {
 		final String lSection = inSection.replaceAll("&lt;", "<"); //$NON-NLS-1$ //$NON-NLS-2$
 		appendText(lSection + NL + NL);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.print.AbstractPrintOut#insertDocBody(java.lang.String)
-	 */
+	@Override
 	protected void insertDocBody(final String inXML) throws IOException {
 		appendText(inXML);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.print.AbstractPrintOut#manageAfterReopen(java.io.File)
-	 */
+	@Override
 	protected void manageAfterReopen(final File inPrintOut) throws IOException {
 		try {
 			outputFile = new RandomAccessFile(inPrintOut, "rw"); //$NON-NLS-1$
-		}
-		catch (final FileNotFoundException exc) {
+		} catch (final FileNotFoundException exc) {
 			throw createIOException(exc);
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.elbe.relations.print.AbstractPrintOut#manageBeforeClose(java.io.File)
-	 */
+	@Override
 	protected void manageBeforeClose(final File inPrintOut) throws IOException {
 		if (outputFile != null) {
 			outputFile.close();

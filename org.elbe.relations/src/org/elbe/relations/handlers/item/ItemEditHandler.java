@@ -40,22 +40,10 @@ public class ItemEditHandler {
 
 	@Execute
 	public void execute(final IEclipseContext inContext,
-			final IBrowserManager inBrowserManager,
-			final IEventBroker inEventBroker, final Logger inLog) {
+	        final IBrowserManager inBrowserManager,
+	        final IEventBroker inEventBroker, final Logger inLog) {
 		final ItemAdapter lSelected = inBrowserManager.getSelectedModel();
-		if (lSelected == null) {
-			return;
-		}
-
-		final Class<? extends IItemEditWizard> lWizardClass = lSelected
-				.getItemEditWizard();
-		final IItemEditWizard lWizard = ContextInjectionFactory.make(
-				lWizardClass, inContext);
-		lWizard.setModel(lSelected);
-		final WizardDialog lDialog = new WizardDialog(Display.getCurrent()
-				.getActiveShell(), lWizard);
-		lDialog.open();
-
+		openEditDialog(lSelected, inContext);
 	}
 
 	/**
@@ -67,6 +55,30 @@ public class ItemEditHandler {
 	@CanExecute
 	boolean checkForBrowserItem(final IBrowserManager inBrowserManager) {
 		return inBrowserManager.getSelectedModel() != null;
+	}
+
+	/**
+	 * Static method to open the edit dialog for the specified item.
+	 * 
+	 * @param item
+	 *            {@link ItemAdapter} the item to edit
+	 * @param context
+	 *            {@link IEclipseContext}
+	 */
+	public static void openEditDialog(ItemAdapter item,
+	        IEclipseContext context) {
+		if (item == null) {
+			return;
+		}
+
+		final Class<? extends IItemEditWizard> lWizardClass = item
+		        .getItemEditWizard();
+		final IItemEditWizard lWizard = ContextInjectionFactory
+		        .make(lWizardClass, context);
+		lWizard.setModel(item);
+		final WizardDialog lDialog = new WizardDialog(
+		        Display.getCurrent().getActiveShell(), lWizard);
+		lDialog.open();
 	}
 
 }

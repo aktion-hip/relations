@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
  * </p>
  * <xmp> XPathHelper helper = XPathHelper.newInstance(url); String value =
  * helper.getElement("//some/expression"); </xmp>
- * 
+ *
  * @author Luthiger Created on 16.11.2009
  */
 public class XPathHelper {
@@ -65,19 +65,19 @@ public class XPathHelper {
 		SIMPLE(new ISerializerFactory() {
 			@Override
 			public org.htmlcleaner.XmlSerializer createSerializer(
-			        final CleanerProperties inProperties) {
+		            final CleanerProperties inProperties) {
 				return new SimpleXmlSerializer(inProperties);
 			}
 		}), PRETTY(new ISerializerFactory() {
 			@Override
 			public org.htmlcleaner.XmlSerializer createSerializer(
-			        final CleanerProperties inProperties) {
+		            final CleanerProperties inProperties) {
 				return new PrettyXmlSerializer(inProperties);
 			}
 		}), COMPACT(new ISerializerFactory() {
 			@Override
 			public org.htmlcleaner.XmlSerializer createSerializer(
-			        final CleanerProperties inProperties) {
+		            final CleanerProperties inProperties) {
 				return new CompactXmlSerializer(inProperties);
 			}
 		});
@@ -96,7 +96,7 @@ public class XPathHelper {
 
 	/**
 	 * Private constructor.
-	 * 
+	 *
 	 * @param inUrl
 	 *            URL of the page to parse.
 	 * @throws IOException
@@ -109,7 +109,7 @@ public class XPathHelper {
 	/**
 	 * Creates a <code>XPathHelper</code> instance with the <code>URL</code> of
 	 * a web page.
-	 * 
+	 *
 	 * @param inUrl
 	 *            URL of the page to parse.
 	 * @return XPathHelper
@@ -122,7 +122,7 @@ public class XPathHelper {
 	/**
 	 * Convenience method: creates a <code>Document</code> from the specified
 	 * URL.
-	 * 
+	 *
 	 * @param inUrl
 	 *            the URL: <code>scheme://host:port/file</code>
 	 * @return {@link Document}
@@ -138,10 +138,11 @@ public class XPathHelper {
 	/**
 	 * Convenience method (for xml/xhtml): creates a <code>Document</code> from
 	 * the specified URL.
-	 * 
+	 *
 	 * @param inUrl
-	 *            URL
-	 * @return {@link Document}
+	 *            {@link URL}
+	 * @return {@link Document} the parsed XML document, may be
+	 *         <code>null</code>
 	 * @throws ParserConfigurationException
 	 * @throws IOException
 	 * @throws SAXException
@@ -154,14 +155,10 @@ public class XPathHelper {
 		final DocumentBuilder lBuilder = DocumentBuilderFactory.newInstance()
 		        .newDocumentBuilder();
 		final URLConnection lConnection = inUrl.openConnection();
-		BufferedInputStream lStream = null;
 		Document outDocument = null;
-		try {
-			lStream = new BufferedInputStream(lConnection.getInputStream());
+		try (BufferedInputStream lStream = new BufferedInputStream(
+		        lConnection.getInputStream());) {
 			outDocument = lBuilder.parse(lStream);
-		}
-		finally {
-			lStream.close();
 		}
 		return outDocument;
 	}
@@ -169,24 +166,25 @@ public class XPathHelper {
 	/**
 	 * Returns the text of the first node returned by the specified XPath
 	 * element.
-	 * 
+	 *
 	 * @param inXPath
 	 *            String
 	 * @return String the found node's value or <code>null</code>.
 	 * @throws XPatherException
 	 */
 	public String getElement(final String inXPath) throws XPatherException {
-		if (docNode == null)
+		if (docNode == null) {
 			return null;
+		}
 		final Object[] lResult = docNode.evaluateXPath(inXPath);
-		return lResult.length == 0 ? null : ((TagNode) lResult[0]).getText()
-		        .toString();
+		return lResult.length == 0 ? null
+		        : ((TagNode) lResult[0]).getText().toString();
 	}
 
 	/**
 	 * Convenience method (for xml/xhtml): returns the text node value from the
 	 * specified XPath element.
-	 * 
+	 *
 	 * @param inDocument
 	 *            {@link Document}
 	 * @param inXPath
@@ -202,7 +200,7 @@ public class XPathHelper {
 
 	/**
 	 * Returns the specified attribute's value from the specified XPath element.
-	 * 
+	 *
 	 * @param inXPath
 	 *            String XPath expression.
 	 * @param inAttribute
@@ -212,17 +210,18 @@ public class XPathHelper {
 	 */
 	public String getAttribute(final String inXPath, final String inAttribute)
 	        throws XPatherException {
-		if (docNode == null)
+		if (docNode == null) {
 			return null;
+		}
 		final Object[] lResult = docNode.evaluateXPath(inXPath);
-		return (lResult.length == 0) ? null : ((TagNode) lResult[0])
-		        .getAttributeByName(inAttribute);
+		return (lResult.length == 0) ? null
+		        : ((TagNode) lResult[0]).getAttributeByName(inAttribute);
 	}
 
 	/**
 	 * Convenience method (for xml/xhtml): returns the specified attribute's
 	 * value from the specified XPath element.
-	 * 
+	 *
 	 * @param inDocument
 	 *            {@link Document}
 	 * @param inXPath
@@ -234,7 +233,7 @@ public class XPathHelper {
 	 */
 	public static String getAttribute(final Document inDocument,
 	        final String inXPath, final String inAttribute)
-	        throws XPathExpressionException {
+	                throws XPathExpressionException {
 		final Element lElement = createElement(inDocument, inXPath);
 		return lElement == null ? null : lElement.getAttribute(inAttribute);
 	}
@@ -244,14 +243,14 @@ public class XPathHelper {
 		final XPathFactory lFactory = XPathFactory.newInstance();
 		final XPath lXPath = lFactory.newXPath();
 		final XPathExpression lXExpression = lXPath.compile(inXPath);
-		final Element lElement = (Element) lXExpression.evaluate(
-		        inDocument.getDocumentElement(), XPathConstants.NODE);
+		final Element lElement = (Element) lXExpression
+		        .evaluate(inDocument.getDocumentElement(), XPathConstants.NODE);
 		return lElement;
 	}
 
 	/**
 	 * Convenience method (for xml/xhtml): serializes the parsed page.
-	 * 
+	 *
 	 * @param inSerializer
 	 *            {@link XmlSerializer}
 	 * @return String the cleaned and serialized html
@@ -259,8 +258,9 @@ public class XPathHelper {
 	 */
 	public String getSerialized(final XmlSerializer inSerializer)
 	        throws IOException {
-		if (docNode == null)
+		if (docNode == null) {
 			return ""; //$NON-NLS-1$
+		}
 
 		final CleanerProperties lProps = new HtmlCleaner().getProperties();
 		lProps.setUseCdataForScriptAndStyle(true);
@@ -283,9 +283,11 @@ public class XPathHelper {
 	 * @return String the cleaned document's doctype
 	 */
 	public String getDocType() {
-		if (docNode == null)
+		if (docNode == null) {
 			return ""; //$NON-NLS-1$
-		return docNode.getDocType() == null ? "" : docNode.getDocType().getContent(); //$NON-NLS-1$
+		}
+		return docNode.getDocType() == null ? "" //$NON-NLS-1$
+		        : docNode.getDocType().getContent();
 	}
 
 	private interface ISerializerFactory {
@@ -297,14 +299,15 @@ public class XPathHelper {
 	 * Removes all <code>link</code> elements that can cause problems during
 	 * RDFa extraction because they have an unqualified <code>rel</code>
 	 * attribute, e.g.:
-	 * 
+	 *
 	 * <pre>
 	 * &lt;link rel="shortcut icon" href="favicon.ico" />
 	 * </pre>
 	 */
 	public void removeUnqualifiedLinks() {
-		if (docNode == null)
+		if (docNode == null) {
 			return;
+		}
 
 		final TagNode[] lLinks = docNode.getElementsByName("link", true); //$NON-NLS-1$
 		for (final TagNode lLink : lLinks) {

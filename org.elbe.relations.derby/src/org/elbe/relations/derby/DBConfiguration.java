@@ -29,61 +29,29 @@ import org.elbe.relations.services.IDBConnectionConfig;
  */
 public class DBConfiguration implements IDBConnectionConfig {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IDBCreateService#getName()
-	 */
 	@Override
 	public String getName() {
-		return "org.apache.derby.jdbc.EmbeddedDriver/Derby (embedded)/10.5.1.1"; //$NON-NLS-1$
+		return "org.apache.derby.jdbc.EmbeddedDriver/Derby (embedded)/10.9.1.0_1"; //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IDBCreateService#getJDBCDriverClass()
-	 */
 	@Override
 	public String getJDBCDriverClass() {
 		return "org.apache.derby.jdbc.EmbeddedDriver"; //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IDBCreateService#getSubprotocol()
-	 */
 	@Override
 	public String getSubprotocol() {
 		return "derby"; //$NON-NLS-1$
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IDBCreateService#isEmbedded()
-	 */
 	@Override
 	public boolean isEmbedded() {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IDBCreateService#getCreator()
-	 */
 	@Override
 	public IDBObjectCreator getCreator() {
 		return new DerbyCreator();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IDBCreateService#canSetIdentityField()
-	 */
 	@Override
 	public boolean canSetIdentityField() {
 		return false;

@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -45,11 +45,11 @@ import org.elbe.relations.internal.utility.FormUtility;
 /**
  * Base class for export wizard pages providing functionality for export wizard
  * pages.
- * 
- * @author Luthiger Created on 03.05.2007
+ *
+ * @author Luthiger
  */
-public abstract class ExportWizardPage extends WizardPage implements
-		IWizardPage {
+public abstract class ExportWizardPage extends WizardPage
+        implements IWizardPage {
 	protected final static int STATUS_FIELD_EMPTY = 11;
 	protected final static int STATUS_NO_OVERWRITE = 12;
 	protected final static int STATUS_FILE_EXISTS = 13;
@@ -59,29 +59,28 @@ public abstract class ExportWizardPage extends WizardPage implements
 	private static final String PLUGIN_ID = Activator.getSymbolicName();
 
 	protected IStatus nameEmpty = new Status(Status.ERROR, PLUGIN_ID,
-			STATUS_FIELD_EMPTY,
-			RelationsMessages.getString("PrintOutWizardPage.error.empty"), null); //$NON-NLS-1$
-	protected IStatus nameFileNoOverwrite = new Status(
-			Status.ERROR,
-			PLUGIN_ID,
-			STATUS_NO_OVERWRITE,
-			RelationsMessages.getString("ExportWizardPage.msg.nooverwrite"), null); //$NON-NLS-1$
-	protected IStatus nameFileExists = new Status(
-			Status.WARNING,
-			PLUGIN_ID,
-			STATUS_FILE_EXISTS,
-			RelationsMessages.getString("PrintOutWizardPage.warning.overwrite"), null); //$NON-NLS-1$
+	        STATUS_FIELD_EMPTY,
+	        RelationsMessages.getString("PrintOutWizardPage.error.empty"), //$NON-NLS-1$
+	        null);
+	protected IStatus nameFileNoOverwrite = new Status(Status.ERROR, PLUGIN_ID,
+	        STATUS_NO_OVERWRITE,
+	        RelationsMessages.getString("ExportWizardPage.msg.nooverwrite"), //$NON-NLS-1$
+	        null);
+	protected IStatus nameFileExists = new Status(Status.WARNING, PLUGIN_ID,
+	        STATUS_FILE_EXISTS,
+	        RelationsMessages.getString("PrintOutWizardPage.warning.overwrite"), //$NON-NLS-1$
+	        null);
 	protected IStatus nameFileNotExists = new Status(Status.ERROR, PLUGIN_ID,
-			STATUS_FILE_NOT_EXISTS,
-			RelationsMessages.getString("ExportWizardPage.msg.notexist"), null); //$NON-NLS-1$
+	        STATUS_FILE_NOT_EXISTS,
+	        RelationsMessages.getString("ExportWizardPage.msg.notexist"), null); //$NON-NLS-1$
 	protected IStatus nameFileNoArchive = new Status(Status.ERROR, PLUGIN_ID,
-			STATUS_NO_ARCHIVE,
-			RelationsMessages.getString("ExportWizardPage.msg.noarchive"), null); //$NON-NLS-1$
-	protected IStatus nameFileEmptyArchive = new Status(
-			Status.ERROR,
-			PLUGIN_ID,
-			STATUS_EMPTY_ARCHIVE,
-			RelationsMessages.getString("ExportWizardPage.msg.emptyarchive"), null); //$NON-NLS-1$
+	        STATUS_NO_ARCHIVE,
+	        RelationsMessages.getString("ExportWizardPage.msg.noarchive"), //$NON-NLS-1$
+	        null);
+	protected IStatus nameFileEmptyArchive = new Status(Status.ERROR, PLUGIN_ID,
+	        STATUS_EMPTY_ARCHIVE,
+	        RelationsMessages.getString("ExportWizardPage.msg.emptyarchive"), //$NON-NLS-1$
+	        null);
 
 	protected IStatus fileNameStatus;
 
@@ -94,19 +93,20 @@ public abstract class ExportWizardPage extends WizardPage implements
 	private Label createLabel(final Composite inParent, final String inText) {
 		final Label outLabel = new Label(inParent, SWT.NONE);
 		outLabel.setText(inText);
-		outLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		outLabel.setLayoutData(
+		        new GridData(SWT.FILL, SWT.CENTER, false, false));
 		return outLabel;
 	}
 
 	protected Label createLabel(final Composite inParent, final String inText,
-			final int inColSpan) {
+	        final int inColSpan) {
 		final Label outLabel = createLabel(inParent, inText);
 		((GridData) outLabel.getLayoutData()).horizontalSpan = inColSpan;
 		return outLabel;
 	}
 
 	protected Combo createLabelCombo(final Composite inParent,
-			final String inText, final int inComboType) {
+	        final String inText, final int inComboType) {
 		createLabel(inParent, inText);
 		final Combo outCombo = new Combo(inParent, inComboType);
 		outCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -115,7 +115,7 @@ public abstract class ExportWizardPage extends WizardPage implements
 
 	/**
 	 * Creates a <code>Combo</code> widget that has the required decoration.
-	 * 
+	 *
 	 * @param inParent
 	 *            Composite
 	 * @param inText
@@ -125,13 +125,14 @@ public abstract class ExportWizardPage extends WizardPage implements
 	 * @return Combo
 	 */
 	protected Combo createRequiredLabelCombo(final Composite inParent,
-			final String inText, final int inComboType) {
+	        final String inText, final int inComboType) {
 		createLabel(inParent, inText);
 		final Combo outCombo = new Combo(inParent, inComboType);
 		FormUtility.addDecorationRequired(outCombo);
-		final GridData lLayout = new GridData(SWT.FILL, SWT.CENTER, true, false);
+		final GridData lLayout = new GridData(SWT.FILL, SWT.CENTER, true,
+		        false);
 		lLayout.horizontalIndent = FieldDecorationRegistry.getDefault()
-				.getMaximumDecorationWidth();
+		        .getMaximumDecorationWidth();
 		outCombo.setLayoutData(lLayout);
 		return outCombo;
 	}
@@ -141,7 +142,7 @@ public abstract class ExportWizardPage extends WizardPage implements
 	}
 
 	protected void checkFileExists(final String inFileName,
-			final IStatus inStatusIfExists) {
+	        final IStatus inStatusIfExists) {
 		final File lFileToCheck = new File(inFileName);
 		fileNameStatus = Status.OK_STATUS;
 		if (lFileToCheck.isFile() && lFileToCheck.exists()) {
@@ -150,7 +151,7 @@ public abstract class ExportWizardPage extends WizardPage implements
 	}
 
 	protected void checkFileNotExists(final String inFileName,
-			final IStatus inStatusIfNotExists) {
+	        final IStatus inStatusIfNotExists) {
 		final File lFileToCheck = new File(inFileName);
 		fileNameStatus = inStatusIfNotExists;
 		if (lFileToCheck.isFile() && lFileToCheck.exists()) {
@@ -159,7 +160,7 @@ public abstract class ExportWizardPage extends WizardPage implements
 	}
 
 	protected Text createLabelText(final Composite inParent,
-			final String inLabel) {
+	        final String inLabel) {
 		final Label lLabel = new Label(inParent, SWT.NONE);
 		lLabel.setText(inLabel);
 		lLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
@@ -262,7 +263,7 @@ public abstract class ExportWizardPage extends WizardPage implements
 
 	/**
 	 * Creates a button to open a file dialog.
-	 * 
+	 *
 	 * @param inParent
 	 *            Composite
 	 * @param inButtonLabel
@@ -270,11 +271,11 @@ public abstract class ExportWizardPage extends WizardPage implements
 	 * @return Button
 	 */
 	protected Button createButtonFileDialog(final Composite inParent,
-			final String inButtonLabel) {
+	        final String inButtonLabel) {
 		final Button outButton = new Button(inParent, SWT.PUSH);
 		outButton.setText(inButtonLabel);
-		outButton
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		outButton.setLayoutData(
+		        new GridData(SWT.FILL, SWT.CENTER, false, false));
 		outButton.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent inEvent) {

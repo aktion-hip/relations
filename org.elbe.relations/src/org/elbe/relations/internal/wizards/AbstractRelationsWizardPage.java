@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -34,7 +34,7 @@ import org.elbe.relations.internal.wizards.interfaces.IRelationsSaveHelper;
 /**
  * This class provides general functionality for the wizard pages to create new
  * items and edit items respectively.
- * 
+ *
  * @author Benno Luthiger
  */
 public abstract class AbstractRelationsWizardPage extends WizardPage {
@@ -42,7 +42,7 @@ public abstract class AbstractRelationsWizardPage extends WizardPage {
 
 	/**
 	 * AbstractRelationsWizardPage
-	 * 
+	 *
 	 * @param inPageName
 	 *            String
 	 */
@@ -60,7 +60,7 @@ public abstract class AbstractRelationsWizardPage extends WizardPage {
 
 	/**
 	 * Configures this wizard's input form.
-	 * 
+	 *
 	 * @param inForm
 	 *            AbstractEditForm
 	 */
@@ -72,14 +72,14 @@ public abstract class AbstractRelationsWizardPage extends WizardPage {
 	/**
 	 * Makes this wizard page updating on events sent by the form. The messages
 	 * and button statuses are modified according to the statuses reported.
-	 * 
+	 *
 	 * @param inStatus
 	 *            {@link IStatus}
 	 */
 	@Inject
 	@Optional
 	public void updateHandler(
-			@UIEventTopic(RelationsConstants.TOPIC_WIZARD_PAGE_STATUS) final IStatus inStatus) {
+	        @UIEventTopic(RelationsConstants.TOPIC_WIZARD_PAGE_STATUS) final IStatus inStatus) {
 		setErrorMessage(FormUtility.getErrorMessage(inStatus));
 		setPageComplete(getPageComplete());
 	}
@@ -90,13 +90,15 @@ public abstract class AbstractRelationsWizardPage extends WizardPage {
 
 	@Override
 	public void dispose() {
-		getForm().dispose();
+		if (getForm() != null) {
+			getForm().dispose();
+		}
 		super.dispose();
 	}
 
 	/**
 	 * Returns the field content checked.
-	 * 
+	 *
 	 * @param inFieldContent
 	 *            Object the result of model.get(KEY)
 	 * @return String maybe an empty string if the object provided is null
@@ -112,7 +114,7 @@ public abstract class AbstractRelationsWizardPage extends WizardPage {
 	 * Functionality implementing the <code>IRelationsSaveHelper</code> is
 	 * processed after the new item is saved and, thus, initialized by a unique
 	 * item ID. This item ID is needed to save the item's relations.
-	 * 
+	 *
 	 * @param inHelper
 	 *            IRelationsSaveHelper
 	 */
@@ -126,7 +128,7 @@ public abstract class AbstractRelationsWizardPage extends WizardPage {
 
 	/**
 	 * Subclasses must override: Access to the concrete dialog's input form.
-	 * 
+	 *
 	 * @return AbstractEditForm
 	 */
 	protected abstract AbstractEditForm getForm();

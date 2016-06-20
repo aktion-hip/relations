@@ -1,6 +1,6 @@
-/*
+/**
 This package is part of Relations project.
-Copyright (C) 2007, Benno Luthiger
+Copyright (C) 2007-2016, Benno Luthiger
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public
@@ -19,20 +19,20 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 package org.elbe.relations.data.search;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Vector;
 
 /**
  * Wrapper for lucene Document
  *
  * @author Luthiger
- * Created on 20.11.2008
  */
 public class IndexerDocument {
-	private Collection<IndexerField> fields = new Vector<IndexerField>();
-	
+	private final Collection<IndexerField> fields = new ArrayList<IndexerField>();
+
 	/**
-	 * @param inField IndexerField
+	 * @param inField
+	 *            IndexerField
 	 */
 	public void addField(IndexerField inField) {
 		fields.add(inField);
@@ -40,7 +40,7 @@ public class IndexerDocument {
 
 	/**
 	 * Returns all fields added to the document.
-	 * 
+	 *
 	 * @return Collection<IndexerField>
 	 */
 	public Collection<IndexerField> getFields() {

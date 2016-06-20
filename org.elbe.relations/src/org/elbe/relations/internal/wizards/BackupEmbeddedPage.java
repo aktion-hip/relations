@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -32,8 +32,8 @@ import org.elbe.relations.internal.utility.WizardHelper;
 
 /**
  * Page displaying the input field to enter the file name for the data backup.
- * 
- * @author Luthiger Created on 25.04.2007
+ *
+ * @author Luthiger
  */
 public class BackupEmbeddedPage extends ExportWizardPage {
 
@@ -42,30 +42,23 @@ public class BackupEmbeddedPage extends ExportWizardPage {
 	protected BackupEmbeddedPage(final String inName) {
 		super(inName);
 		setTitle(RelationsMessages.getString("BackupEmbeddedPage.page.title")); //$NON-NLS-1$
-		setInfoMessage(RelationsMessages
-				.getString("BackupEmbeddedPage.page.msg")); //$NON-NLS-1$
+		setInfoMessage(
+		        RelationsMessages.getString("BackupEmbeddedPage.page.msg")); //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-	 * .Composite)
-	 */
 	@Override
 	public void createControl(final Composite inParent) {
 		final int lColumns = 3;
 		final Composite lComposite = WizardHelper.createComposite(inParent,
-				lColumns);
+		        lColumns);
 
-		createLabel(
-				lComposite,
-				RelationsMessages.getString("BackupEmbeddedPage.lbl.msg"), lColumns); //$NON-NLS-1$
+		createLabel(lComposite,
+		        RelationsMessages.getString("BackupEmbeddedPage.lbl.msg"), //$NON-NLS-1$
+		        lColumns);
 
-		backupFileName = createLabelText(lComposite, getLabelText()); //$NON-NLS-1$
+		backupFileName = createLabelText(lComposite, getLabelText()); // $NON-NLS-1$
 		createButtonFileDialog(lComposite,
-				RelationsMessages.getString("PrintOutWizardPage.lbl.browse")); //$NON-NLS-1$
+		        RelationsMessages.getString("PrintOutWizardPage.lbl.browse")); //$NON-NLS-1$
 
 		setControl(lComposite);
 		initializeValues();
@@ -85,7 +78,7 @@ public class BackupEmbeddedPage extends ExportWizardPage {
 	@Override
 	protected void focusGainedCheck(final String inText) {
 		if (fileNameStatus != null
-				&& fileNameStatus.getCode() != STATUS_NO_OVERWRITE) {
+		        && fileNameStatus.getCode() != STATUS_NO_OVERWRITE) {
 			fileNameStatus = Status.OK_STATUS;
 		}
 	}
@@ -102,15 +95,16 @@ public class BackupEmbeddedPage extends ExportWizardPage {
 
 	@Override
 	protected void checkFileExists(final String inFileName,
-			final IStatus inStatusIfExists) {
+	        final IStatus inStatusIfExists) {
 		if (inFileName.length() == 0) {
 			fileNameStatus = nameEmpty;
 			return;
 		}
 
 		super.checkFileExists(inFileName, inStatusIfExists);
-		if (!fileNameStatus.isOK())
+		if (!fileNameStatus.isOK()) {
 			return;
+		}
 
 		if (!inFileName.toLowerCase().endsWith(".zip")) { //$NON-NLS-1$
 			fileNameStatus = nameFileNoArchive;
@@ -120,10 +114,10 @@ public class BackupEmbeddedPage extends ExportWizardPage {
 	@Override
 	protected void openFileDialog() {
 		fileNameStatus = Status.OK_STATUS;
-		final FileDialog lDialog = new FileDialog(Display.getCurrent()
-				.getActiveShell(), SWT.SAVE);
-		lDialog.setText(RelationsMessages
-				.getString("BackupEmbeddedPage.filedlg.msg")); //$NON-NLS-1$
+		final FileDialog lDialog = new FileDialog(
+		        Display.getCurrent().getActiveShell(), SWT.SAVE);
+		lDialog.setText(
+		        RelationsMessages.getString("BackupEmbeddedPage.filedlg.msg")); //$NON-NLS-1$
 		setFilterForDialog(lDialog);
 		String lFileName = lDialog.open();
 		if (lFileName == null) {
@@ -144,7 +138,7 @@ public class BackupEmbeddedPage extends ExportWizardPage {
 	protected void setFilterForDialog(final FileDialog inDialog) {
 		inDialog.setFilterExtensions(new String[] { "*.zip" }); //$NON-NLS-1$
 		inDialog.setFilterNames(new String[] { RelationsMessages
-				.getString("BackupEmbeddedPage.filedlg.names") }); //$NON-NLS-1$		
+		        .getString("BackupEmbeddedPage.filedlg.names") }); //$NON-NLS-1$
 	}
 
 	/**
@@ -157,8 +151,9 @@ public class BackupEmbeddedPage extends ExportWizardPage {
 	@Override
 	protected boolean getPageComplete() {
 		final String lFileName = backupFileName.getText();
-		if (lFileName.length() == 0)
+		if (lFileName.length() == 0) {
 			return false;
+		}
 
 		final File lFileToCheck = new File(lFileName);
 		if (lFileToCheck.isFile() && lFileToCheck.exists()) {
@@ -171,7 +166,7 @@ public class BackupEmbeddedPage extends ExportWizardPage {
 	}
 
 	protected boolean checkFileEndingCondition(final String inFileName) {
-		return inFileName.toLowerCase().endsWith(".zip"); //$NON-NLS-1$		
+		return inFileName.toLowerCase().endsWith(".zip"); //$NON-NLS-1$
 	}
 
 }

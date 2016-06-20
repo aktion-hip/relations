@@ -5,7 +5,7 @@
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            application="org.elbe.relations.RelationsApplication"
+            application="org.eclipse.e4.ui.workbench.swt.E4Application"
             description="%product.description"
             name="org.elbe.relations">
          <property
@@ -18,15 +18,35 @@
          </property>
          <property
                name="aboutText"
-               value="Relations Rich Client Application&#x0A;&#x0A;The Relations application is a tool for knowledge management.&#x0A;&#x0A;Version: 2.0.0&#x0A;&#x0A;(c) Copyright: RelationWare, B. Luthiger.&#x0A;Visit http://relations-rcp.sourceforge.net/&#x0A;&#x0A;This product is built on Eclipse RCP,&#x0A;see http://www.eclipse.org/">
+               value="Relations Rich Client Application&#x0A;&#x0A;The Relations application is a tool for knowledge management.&#x0A;&#x0A;Version: 2.1.0&#x0A;&#x0A;(c) Copyright: RelationWare, B. Luthiger.&#x0A;Visit http://relations-rcp.sourceforge.net/&#x0A;&#x0A;This product is built on Eclipse RCP,&#x0A;see http://www.eclipse.org/">
          </property>
          <property
                name="aboutImage"
-               value="icons/aboutRelations.gif">
+               value="icons/aboutRelations.png">
          </property>
          <property
                name="startupForegroundColor"
                value="FFFFFF">
+         </property>
+         <property
+               name="lifeCycleURI"
+               value="bundleclass://org.elbe.relations/org.elbe.relations.internal.RelationsLifeCycle">
+         </property>
+         <property
+               name="cssTheme"
+               value="org.elbe.relations.css.theme.e4_default">
+         </property>
+         <property
+               name="windowImages"
+               value="icons/relations.gif,icons/relations32.gif,icons/relations48.gif">
+         </property>
+         <property
+               name="introBrandingImage"
+               value="product:icons/RelationWare.png">
+         </property>
+         <property
+               name="applicationCSSResources"
+               value="platform:/plugin/org.elbe.relations/css/images/">
          </property>
          <property
                name="startupMessageRect"
@@ -37,24 +57,12 @@
                value="3,275,449,15">
          </property>
          <property
+               name="applicationCSS"
+               value="platform:/plugin/org.elbe.relations/css/default.css">
+         </property>
+         <property
                name="preferenceCustomization"
                value="plugin_customization.ini">
-         </property>
-         <property
-               name="lifeCycleURI"
-               value="bundleclass://org.elbe.relations/org.elbe.relations.internal.RelationsLifeCycle">
-         </property>
-         <property
-               name="cssTheme"
-               value="org.eclipse.e4.ui.css.theme.e4_default">
-         </property>
-         <property
-               name="windowImages"
-               value="icons/relations.gif,icons/relations32.gif,icons/relations48.gif">
-         </property>
-         <property
-               name="introBrandingImage"
-               value="product:icons/RelationWare.png">
          </property>
       </product>
    </extension>
@@ -91,7 +99,7 @@
       </definition>
    </extension>
    <extension
-         point="org.eclipse.ui.preferencePages">
+         point="com.opcoach.e4.preferences.e4PreferencePages">
       <page
             class="org.elbe.relations.internal.preferences.RelationsPreferencePage"
             id="org.elbe.relations.prefs"
@@ -104,7 +112,7 @@
             name="%page.prefs.name.db.connect">
       </page>
       <page
-            class="org.eclipse.ui.ExtensionFactory:newKeysPreferencePage"
+            class="org.elbe.relations.internal.e4.keys.RelationsKeysPreferencePage"
             id="newKeysPreferencePage"
             name="%page.prefs.name.keys">
       </page>
@@ -241,95 +249,66 @@
       </wizard>
    </extension>
    <extension
-         id="RelationsApplication"
-         point="org.eclipse.core.runtime.applications">
-      <application>
-         <run
-               class="org.elbe.relations.app.RelationsApplication">
-         </run>
-      </application>
-   </extension>
-   <extension
          point="org.eclipse.e4.ui.css.swt.theme">
       <theme
             basestylesheeturi="css/e4_default.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default.noos"
-            label="Default">
+            id="org.elbe.relations.css.theme.e4_default.noos"
+            label="Relations Default">
       </theme>
       <theme
             basestylesheeturi="css/e4_default_win7.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default"
-            label="Windows 7"
-            os="win32"
-            os_version="6.1">
+            id="org.elbe.relations.css.theme.e4_default"
+            label="Relations Windows"
+            os="win32">
       </theme>
       <theme
             basestylesheeturi="css/e4_classic_win7.css"
-            id="org.eclipse.e4.ui.css.theme.e4_classic_win7"
-            label="Windows 7 Classic"
+            id="org.elbe.relations.css.theme.e4_classic_win7"
+            label="Relations Windows Classic"
             os="win32">
       </theme>
       <theme
             basestylesheeturi="css/e4_default_winxp_blu.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default_winxp_blu"
-            label="Windows XP Blue"
+            id="org.elbe.relations.css.theme.e4_default_winxp_blu"
+            label="Relations Windows Blue"
             os="win32">
       </theme>
       <theme
             basestylesheeturi="css/e4_default_winxp_olv.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default_winxp_olv"
-            label="Windows XP Olive"
+            id="org.elbe.relations.css.theme.e4_default_winxp_olv"
+            label="Relations Windows Olive"
             os="win32">
       </theme>
       <theme
             basestylesheeturi="css/e4_default_gtk.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default"
-            label="GTK"
+            id="org.elbe.relations.css.theme.e4_default"
+            label="Relations GTK"
             os="linux">
       </theme>
       <theme
             basestylesheeturi="css/e4_default_gtk.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default"
-            label="Solaris"
+            id="org.elbe.relations.css.theme.e4_default"
+            label="Relations Solaris"
             os="solaris">
       </theme>
       <theme
             basestylesheeturi="css/e4_default_gtk.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default"
-            label="AIX"
+            id="org.elbe.relations.css.theme.e4_default"
+            label="Relations AIX"
             os="aix">
       </theme>
       <theme
             basestylesheeturi="css/e4_default_mac.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default"
-            label="Mac"
+            id="org.elbe.relations.css.theme.e4_default"
+            label="Relations Mac"
             os="macosx">
       </theme>
       <theme
             basestylesheeturi="css/e4_classic_winxp.css"
-            id="org.eclipse.e4.ui.css.theme.e4_default"
-            label="HPUX"
+            id="org.elbe.relations.css.theme.e4_default"
+            label="Relations HPUX"
             os="hpux">
       </theme>
-   </extension>
-   <extension
-         point="org.eclipse.ui.intro">
-      <introProductBinding
-            introId="org.eclipse.ui.intro.universal"
-            productId="org.elbe.relations.product">
-      </introProductBinding>
-   </extension>
-   <extension
-         point="org.eclipse.ui.intro.configExtension">
-      <configExtension
-            configId="org.eclipse.ui.intro.universalConfig"
-            content="intro/introOverview.xml"/>
-      <configExtension
-            configId="org.eclipse.ui.intro.universalConfig"
-            content="intro/introFirststeps.xml"/>
-      <configExtension
-            configId="org.eclipse.ui.intro.universalConfig"
-            content="intro/introWhatsNew.xml"/>
    </extension>
    <extension
          point="org.eclipse.ui.contexts">
@@ -394,6 +373,18 @@
             description="%command.new.desc"
             id="org.eclipse.ui.newWizards"
             name="%command.new">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            description="%command.import.desc"
+            id="org.eclipse.ui.importWizards"
+            name="%command.import">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            description="%command.export.desc"
+            id="org.eclipse.ui.exportWizards"
+            name="%command.export">
       </command>
       <command
             categoryId="org.elbe.relations.category"
@@ -531,6 +522,11 @@
             description="%command.open.browser.desc"
             id="org.elbe.relations.command.open.url"
             name="%command.open.browser">
+      </command>
+      <command
+            categoryId="org.elbe.relations.category"
+            id="org.elbe.relations.command.part.maximize"
+            name="%command.maximize.restore">
       </command>
    </extension>
    <extension
@@ -733,5 +729,33 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+DEL">
       </key>
+      <key
+            commandId="org.elbe.relations.command.part.maximize"
+            contextId="org.elbe.relations.context.main"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro">
+      <introProductBinding
+            introId="org.eclipse.ui.intro.universal"
+            productId="org.elbe.relations.product">
+      </introProductBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.configExtension">
+      <configExtension
+            configId="org.eclipse.ui.intro.universalConfig"
+            content="intro/introOverview.xml">
+      </configExtension>
+      <configExtension
+            configId="org.eclipse.ui.intro.universalConfig"
+            content="intro/introFirststeps.xml">
+      </configExtension>
+      <configExtension
+            configId="org.eclipse.ui.intro.universalConfig"
+            content="intro/introWhatsNew.xml">
+      </configExtension>
    </extension>
 </plugin>

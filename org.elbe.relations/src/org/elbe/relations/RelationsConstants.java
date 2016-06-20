@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -22,12 +22,13 @@ import java.util.Locale;
 
 /**
  * Constants used by the Relations application.
- * 
+ *
  * @author Benno Luthiger
  */
 public final class RelationsConstants {
 
 	private RelationsConstants() {
+		// prevent instantiation
 	};
 
 	// The application's update site
@@ -62,7 +63,8 @@ public final class RelationsConstants {
 	public static final String PREFERENCE_NODE_DIALOG = "org.elbe.relations.dialogsettings"; //$NON-NLS-1$
 	public final static String DFT_LANGUAGE = Locale.ENGLISH.getLanguage();
 	public final static String DFT_DB_EMBEDDED = "default_db"; //$NON-NLS-1$
-	public static final String DFT_DBCONFIG_PLUGIN_ID = "org.apache.derby.jdbc.EmbeddedDriver/Derby (embedded)/10.5.1.1"; //$NON-NLS-1$
+	// TODO: adjust for new version
+	public static final String DFT_DBCONFIG_PLUGIN_ID = "org.apache.derby.jdbc.EmbeddedDriver/Derby (embedded)/10.9.1.0_1"; //$NON-NLS-1$
 	public static final String DFT_BIBLIO_SCHEMA_ID = "relations.bibliography.standard.en"; //$NON-NLS-1$
 	public static final String DFT_PRINT_OUT_PLUGIN_ID = "org.elbe.relations.print.dft"; //$NON-NLS-1$
 	public static final int DFT_MAX_SEARCH_HITS = 100;
@@ -82,8 +84,8 @@ public final class RelationsConstants {
 	public static final String RELATIONS_CONTRIBUTOR_URI = "platform:/plugin/org.elbe.relations"; //$NON-NLS-1$
 
 	public static final int DFT_TEXT_FONT_SIZE = 8;
-	public static final String[] INIT_SIZES = new String[] {
-	        "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$
+	public static final String[] INIT_SIZES = new String[] { "6", "7", "8", "9", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	        "10", "11", "12", "13", "14", "15", "16", "17", "18" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
 
 	// eclipse context variable
 	public static final String DB_ACCESS_HANDLER = "relations.dbAccessHandler"; //$NON-NLS-1$
@@ -156,4 +158,6 @@ public final class RelationsConstants {
 
 	// the browser view on top when closing the application
 	public static final String ACTIVE_BROWSER_ID = "active.relations.browser"; //$NON-NLS-1$
+
+	public static final String EXIT_KEY = "relation.exit.key"; //$NON-NLS-1$
 }

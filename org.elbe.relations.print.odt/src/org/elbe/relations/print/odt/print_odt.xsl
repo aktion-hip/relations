@@ -93,6 +93,14 @@
     
     <!-- format a list: ul, ol_number, ol_upper, ol_lower -->
     <xsl:template match="ul | ol_number | ol_upper | ol_lower">
+        <xsl:call-template name="list">
+            <xsl:with-param name="indent" select="@indent" />
+        </xsl:call-template>
+    </xsl:template>
+    
+    <xsl:template name="list">
+        <xsl:param name="indent" select="0" />
+        
         <text:list>
             <xsl:if test="not((ancestor::ul) | (ancestor::ol_number) | (ancestor::ol_upper) | (ancestor::ol_lower))">
                 <xsl:attribute name="text:style-name">
@@ -105,6 +113,7 @@
                 </xsl:attribute>
             </xsl:if>
             <xsl:for-each select="li">
+                <xsl:variable name="sub_lists" select="./ul | ./ol_number | ./ol_upper | ./ol_lower" />
                 <text:list-item>
                     <text:p>
                         <xsl:attribute name="text:style-name">
@@ -117,7 +126,11 @@
                         </xsl:attribute>
                         <xsl:apply-templates select="text() | b | i | u" />
                     </text:p>
-                    <xsl:apply-templates select="ul | ol_number | ol_upper | ol_lower" />  
+                    <xsl:for-each select="$sub_lists">
+                        <xsl:call-template name="list">
+                            <xsl:with-param name="indent" select="$indent+1" />
+                        </xsl:call-template>
+                    </xsl:for-each>
                 </text:list-item>
             </xsl:for-each>
         </text:list>

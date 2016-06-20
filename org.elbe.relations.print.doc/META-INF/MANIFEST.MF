@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MSWord Print-out Plug-in for Relations application
+Bundle-SymbolicName: org.elbe.relations.print.doc
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Import-Package: org.elbe.relations.services;version="[2.0.0,3.0.0)",
+ org.elbe.relations.utility;version="[2.0.0,3.0.0)"
+Service-Component: OSGI-INF/print.xml
+Bundle-Vendor: RelationWare

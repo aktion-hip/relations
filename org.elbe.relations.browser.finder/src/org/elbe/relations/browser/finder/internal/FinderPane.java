@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.workbench.swt.modeling.EMenuService;
+import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.nebula.widgets.gallery.AbstractGalleryGroupRenderer;
 import org.eclipse.nebula.widgets.gallery.AbstractGalleryItemRenderer;
 import org.eclipse.nebula.widgets.gallery.AbstractGridGroupRenderer;
@@ -58,23 +58,18 @@ import org.hip.kernel.exc.VException;
 
 /**
  * Pane to display the list of items in a <code>Gallery</code> list.
- * 
+ *
  * @author Luthiger
  */
-@SuppressWarnings("restriction")
 public class FinderPane {
 	private static final long TIME_LONG = 0xFFFFFFFFL;
 	private static final int ITEM_WIDTH_MIN = 170;
 	private static final int ITEM_HEIGHT_MIN = 7; // 5
 	private static final Display DISPLAY = Display.getCurrent();
-	private static final Color COLOR_BACK_FOCUS_ON = DISPLAY
-	        .getSystemColor(SWT.COLOR_BLUE);
-	private static final Color COLOR_BACK_FOCUS_OFF = DISPLAY
-	        .getSystemColor(SWT.COLOR_GRAY);
-	private static final Color COLOR_TEXT_SELECTION_ON = DISPLAY
-	        .getSystemColor(SWT.COLOR_WHITE);
-	private static final Color COLOR_TEXT_SELECTION_OFF = DISPLAY
-	        .getSystemColor(SWT.COLOR_BLACK);
+	private static final Color COLOR_BACK_FOCUS_ON = DISPLAY.getSystemColor(SWT.COLOR_BLUE);
+	private static final Color COLOR_BACK_FOCUS_OFF = DISPLAY.getSystemColor(SWT.COLOR_GRAY);
+	private static final Color COLOR_TEXT_SELECTION_ON = DISPLAY.getSystemColor(SWT.COLOR_WHITE);
+	private static final Color COLOR_TEXT_SELECTION_OFF = DISPLAY.getSystemColor(SWT.COLOR_BLACK);
 
 	private final Gallery gallery;
 	private GalleryItem lastSelected = null;
@@ -85,7 +80,7 @@ public class FinderPane {
 
 	/**
 	 * FinderPane constructor.
-	 * 
+	 *
 	 * @param inParent
 	 *            {@link Composite}
 	 * @param inService
@@ -101,13 +96,10 @@ public class FinderPane {
 	 *            boolean <code>true</code> if the pane should display
 	 *            scrollbars, <code>false</code> if not
 	 */
-	public FinderPane(final Composite inParent, final EMenuService inService,
-	        final MApplication inApplication,
-	        final IBrowserCallback inCallback, final IEclipseContext inContext,
-	        final boolean inShowScrollbar) {
+	public FinderPane(final Composite inParent, final EMenuService inService, final MApplication inApplication,
+			final IBrowserCallback inCallback, final IEclipseContext inContext, final boolean inShowScrollbar) {
 		callback = inCallback;
-		gallery = inShowScrollbar ? new Gallery(inParent, SWT.H_SCROLL
-		        | SWT.BORDER) : new NoScrollGallery(inParent);
+		gallery = inShowScrollbar ? new Gallery(inParent, SWT.H_SCROLL | SWT.BORDER) : new NoScrollGallery(inParent);
 		gallery.setGroupRenderer(createGroupRenderer());
 		gallery.setItemRenderer(createItemRenderer());
 		setFontSize(getPreferenceFontSize());
@@ -117,17 +109,15 @@ public class FinderPane {
 		gallery.addKeyListener(new PaneKeyListener());
 		gallery.addMouseListener(new PaneMouseAdapter(inApplication));
 
-		dndSource = DragAndDropHelper.createDragSource(gallery,
-		        !inShowScrollbar);
-		dndTarget = DragAndDropHelper.createDropTarget(gallery,
-		        !inShowScrollbar, inContext);
+		dndSource = DragAndDropHelper.createDragSource(gallery, !inShowScrollbar);
+		dndTarget = DragAndDropHelper.createDropTarget(gallery, !inShowScrollbar, inContext);
 	}
 
 	/**
 	 * Places the cursor on the gallery's selected (or first) item.
 	 */
 	public void setFocus() {
-		if (gallery.getItemCount() == 0) {
+		if (items.isEmpty()) {
 			return;
 		}
 		if (gallery.getSelectionCount() == 0) {
@@ -142,10 +132,8 @@ public class FinderPane {
 	}
 
 	private int getPreferenceFontSize() {
-		final IEclipsePreferences lStore = InstanceScope.INSTANCE
-		        .getNode(RelationsConstants.PREFERENCE_NODE);
-		final int outSize = lStore.getInt(FinderBrowserPart.class.getName(),
-		        RelationsConstants.DFT_TEXT_FONT_SIZE);
+		final IEclipsePreferences lStore = InstanceScope.INSTANCE.getNode(RelationsConstants.PREFERENCE_NODE);
+		final int outSize = lStore.getInt(FinderBrowserPart.class.getName(), RelationsConstants.DFT_TEXT_FONT_SIZE);
 		return outSize;
 	}
 
@@ -180,7 +168,7 @@ public class FinderPane {
 
 	/**
 	 * Update the (single item) list with the specified item.
-	 * 
+	 *
 	 * @param inItem
 	 *            {@link ItemAdapter} the new item to display in the list.
 	 * @throws VException
@@ -193,7 +181,7 @@ public class FinderPane {
 
 	/**
 	 * Update the displayed content with the specified list of items.
-	 * 
+	 *
 	 * @param inItems
 	 *            {@link List<ItemAdapter>} the new list to display.
 	 * @throws VException
@@ -221,17 +209,15 @@ public class FinderPane {
 		return new GalleryItem(gallery, SWT.NONE);
 	}
 
-	private void addItem(final GalleryItem inRootItem, final ItemAdapter inItem)
-	        throws VException {
-		final GalleryItemAdapter lItem = new GalleryItemAdapter(inRootItem,
-		        inItem);
+	private void addItem(final GalleryItem inRootItem, final ItemAdapter inItem) throws VException {
+		final GalleryItemAdapter lItem = new GalleryItemAdapter(inRootItem, inItem);
 		lItem.setFont(gallery.getFont());
 		items.add(inItem);
 	}
 
 	/**
 	 * Returns this gallery's selected item.
-	 * 
+	 *
 	 * @return {@link GalleryItemAdapter} the selected item, may be
 	 *         <code>null</code> if the gallery contains no items
 	 */
@@ -253,15 +239,14 @@ public class FinderPane {
 
 	/**
 	 * Returns the specified item's representation in the gallery.
-	 * 
+	 *
 	 * @param inSelected
 	 *            {@link ItemAdapter}
 	 * @return {@link GalleryItemAdapter} or <code>null</code> if specified item
 	 *         is not element of the gallery.
 	 * @throws VException
 	 */
-	public GalleryItemAdapter getSelected(final ItemAdapter inSelected)
-	        throws VException {
+	public GalleryItemAdapter getSelected(final ItemAdapter inSelected) throws VException {
 		final int lIndex = items.indexOf(inSelected.getUniqueID());
 		if (lIndex == -1) {
 			lastSelected = null;
@@ -276,7 +261,7 @@ public class FinderPane {
 
 	/**
 	 * Sets the gallery's font to the specified size.
-	 * 
+	 *
 	 * @param inFontSize
 	 *            int the font size (pt)
 	 */
@@ -284,8 +269,8 @@ public class FinderPane {
 	public void setFontSize(final int inFontSize) {
 		final FontData lData = gallery.getFont().getFontData()[0];
 		lData.setHeight(inFontSize);
-		((AbstractGridGroupRenderer) gallery.getGroupRenderer()).setItemSize(
-		        calculateWidth(inFontSize), calculateHeight(inFontSize));
+		((AbstractGridGroupRenderer) gallery.getGroupRenderer()).setItemSize(calculateWidth(inFontSize),
+				calculateHeight(inFontSize));
 		final Font lNewFont = new Font(Display.getCurrent(), lData);
 		gallery.setFont(lNewFont);
 		((ListItemRenderer) gallery.getItemRenderer()).setTextFont(lNewFont);
@@ -296,7 +281,8 @@ public class FinderPane {
 	}
 
 	private int calculateHeight(final int inFontSize) {
-		return Math.round(ITEM_HEIGHT_MIN + 2 * inFontSize);
+		return ITEM_HEIGHT_MIN + 2 * inFontSize;
+		// return Math.round(ITEM_HEIGHT_MIN + 2 * inFontSize);
 	}
 
 	// --- private classes ---
@@ -304,8 +290,7 @@ public class FinderPane {
 	public static class GalleryItemAdapter extends GalleryItem {
 		private final ItemAdapter adapted;
 
-		GalleryItemAdapter(final GalleryItem inParent, final ItemAdapter inItem)
-		        throws VException {
+		GalleryItemAdapter(final GalleryItem inParent, final ItemAdapter inItem) throws VException {
 			super(inParent, SWT.NONE);
 			adapted = inItem;
 			setText(inItem.getTitle());
@@ -332,10 +317,8 @@ public class FinderPane {
 			setSelectionColor(COLOR_TEXT_SELECTION_OFF, COLOR_BACK_FOCUS_OFF);
 		}
 
-		private void setSelectionColor(final Color inTextColor,
-		        final Color inBgColor) {
-			final ListItemRenderer lRenderer = (ListItemRenderer) gallery
-			        .getItemRenderer();
+		private void setSelectionColor(final Color inTextColor, final Color inBgColor) {
+			final ListItemRenderer lRenderer = (ListItemRenderer) gallery.getItemRenderer();
 			lRenderer.setSelectionForegroundColor(inTextColor);
 			lRenderer.setSelectionBackgroundColor(inBgColor);
 
@@ -365,8 +348,7 @@ public class FinderPane {
 					handleSelection(getSelected());
 				}
 				// handle selection change by first chars
-				final int lIndex = items.search(inEvent.character,
-				        getSelected(), inEvent.time & TIME_LONG);
+				final int lIndex = items.search(inEvent.character, getSelected(), inEvent.time & TIME_LONG);
 				if (lIndex >= 0) {
 					handleSelection(gallery.getItem(0).getItem(lIndex));
 				}
@@ -376,8 +358,7 @@ public class FinderPane {
 
 		private void handleSelection(final GalleryItem inSelected) {
 			gallery.setSelection(new GalleryItem[] { inSelected });
-			callback.selectionChange(((GalleryItemAdapter) inSelected)
-			        .getRelationsItem());
+			callback.selectionChange(((GalleryItemAdapter) inSelected).getRelationsItem());
 		}
 	}
 
@@ -390,12 +371,10 @@ public class FinderPane {
 
 		@Override
 		public void mouseDown(final MouseEvent inEvent) {
-			final GalleryItem lItem = gallery.getItem(new Point(inEvent.x,
-			        inEvent.y));
+			final GalleryItem lItem = gallery.getItem(new Point(inEvent.x, inEvent.y));
 			if (inEvent.button == 3) {
 				if (lItem == null) {
-					BrowserPopupStateController.setState(State.DISABLED,
-					        application);
+					BrowserPopupStateController.setState(State.DISABLED, application);
 					return;
 				} else {
 					callback.focusRequest(FinderPane.this);
@@ -418,8 +397,7 @@ public class FinderPane {
 
 		private void handleSelection(final GalleryItem inSelected) {
 			gallery.setSelection(new GalleryItem[] { inSelected });
-			callback.selectionChange(((GalleryItemAdapter) inSelected)
-			        .getRelationsItem());
+			callback.selectionChange(((GalleryItemAdapter) inSelected).getRelationsItem());
 		}
 	}
 

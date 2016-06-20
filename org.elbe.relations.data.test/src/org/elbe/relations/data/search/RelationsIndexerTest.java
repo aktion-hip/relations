@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -27,6 +27,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.elbe.relations.data.internal.search.IndexerRegistration;
@@ -41,7 +42,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
- * 
+ *
  * @author lbenno
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -75,9 +76,9 @@ public class RelationsIndexerTest {
 
 		int lIndexed = indexer.refreshIndex(monitor);
 		assertEquals(0, lIndexed);
-		verify(lIndexer1).initializeIndex(indexer.getIndexDir());
-		verify(lIndexer1, times(3)).processIndexer(any(IndexerHelper.class),
-		        eq(indexer.getIndexDir()), eq(indexer.getLanguage()));
+		verify(lIndexer1).initializeIndex(indexer.getIndexDir(), Locale.ENGLISH.getLanguage());
+		verify(lIndexer1, times(3)).processIndexer(any(IndexerHelper.class), eq(indexer.getIndexDir()),
+				eq(indexer.getLanguage()));
 
 		// index term
 		final IIndexer lIndexer2 = mock(IIndexer.class);
@@ -85,8 +86,8 @@ public class RelationsIndexerTest {
 		data.createTerm("term for indexing");
 		lIndexed = indexer.refreshIndex(monitor);
 		assertEquals(1, lIndexed);
-		verify(lIndexer2, times(3)).processIndexer(any(IndexerHelper.class),
-		        eq(indexer.getIndexDir()), eq(indexer.getLanguage()));
+		verify(lIndexer2, times(3)).processIndexer(any(IndexerHelper.class), eq(indexer.getIndexDir()),
+				eq(indexer.getLanguage()));
 
 		// index person
 		final IIndexer lIndexer3 = mock(IIndexer.class);
@@ -94,8 +95,8 @@ public class RelationsIndexerTest {
 		data.createPerson("Doe", "Jane");
 		lIndexed = indexer.refreshIndex(monitor);
 		assertEquals(2, lIndexed);
-		verify(lIndexer3, times(3)).processIndexer(any(IndexerHelper.class),
-		        eq(indexer.getIndexDir()), eq(indexer.getLanguage()));
+		verify(lIndexer3, times(3)).processIndexer(any(IndexerHelper.class), eq(indexer.getIndexDir()),
+				eq(indexer.getLanguage()));
 
 		// index text
 		final IIndexer lIndexer4 = mock(IIndexer.class);
@@ -103,8 +104,8 @@ public class RelationsIndexerTest {
 		data.createText("text for indexing", "Doe, Jane");
 		lIndexed = indexer.refreshIndex(monitor);
 		assertEquals(3, lIndexed);
-		verify(lIndexer4, times(3)).processIndexer(any(IndexerHelper.class),
-		        eq(indexer.getIndexDir()), eq(indexer.getLanguage()));
+		verify(lIndexer4, times(3)).processIndexer(any(IndexerHelper.class), eq(indexer.getIndexDir()),
+				eq(indexer.getLanguage()));
 	}
 
 	// ---

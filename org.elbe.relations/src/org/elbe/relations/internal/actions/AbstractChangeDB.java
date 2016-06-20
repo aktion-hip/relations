@@ -96,9 +96,9 @@ public abstract class AbstractChangeDB implements IDBChange {
 			MessageDialog
 			        .openError(new Shell(Display.getCurrent()),
 			                RelationsMessages
-			                        .getString("FormDBConnection.error.title"),
+			                        .getString("FormDBConnection.error.title"), //$NON-NLS-1$
 			                RelationsMessages.getString(
-			                        "FormDBConnection.error.connection.msg",
+			                        "FormDBConnection.error.connection.msg", //$NON-NLS-1$
 			                        new Object[] { dbSettings.getDBName(),
 			                                dbSettings.getUser() }));
 		}

@@ -5,8 +5,8 @@ Bundle-SymbolicName: org.elbe.relations.browser.finder;singleton:=true
 Bundle-Version: 2.0.0.qualifier
 Bundle-Activator: org.elbe.relations.browser.finder.Activator
 Bundle-Vendor: %relations.finder.browser.vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7,
- JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8,
+ JavaSE-1.7
 Import-Package: javax.annotation;version="1.1.0",
  javax.inject;version="1.0.0",
  org.eclipse.core.commands,
@@ -20,9 +20,9 @@ Import-Package: javax.annotation;version="1.1.0",
  org.eclipse.e4.core.services.log,
  org.eclipse.e4.ui.di,
  org.eclipse.e4.ui.model.application,
+ org.eclipse.e4.ui.services,
  org.eclipse.e4.ui.services.internal.events,
  org.eclipse.e4.ui.workbench,
- org.eclipse.e4.ui.workbench.swt.modeling,
  org.eclipse.nebula.widgets.gallery,
  org.eclipse.swt,
  org.eclipse.swt.custom,

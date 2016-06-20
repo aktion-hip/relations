@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2016, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -30,7 +30,7 @@ import org.hip.kernel.exc.VException;
 /**
  * Wrapper for <code>List<String></code>s providing a special search feature to
  * place the cursor on the element that matches a key stroke.
- * 
+ *
  * @author Luthiger Created on 17.12.2009
  */
 public class SearchListHelper {
@@ -53,7 +53,7 @@ public class SearchListHelper {
 
 	/**
 	 * Add method to fill the list.
-	 * 
+	 *
 	 * @param inItem
 	 *            ItemAdapter the item to add.
 	 * @throws VException
@@ -67,7 +67,7 @@ public class SearchListHelper {
 
 	/**
 	 * Method to look up the specified element's position in the list.
-	 * 
+	 *
 	 * @param inUniqueID
 	 *            UniqueID
 	 * @return int Returns the index in this list of the first occurrence of the
@@ -80,7 +80,7 @@ public class SearchListHelper {
 
 	/**
 	 * Search the list for best matches of the specified key pressed.
-	 * 
+	 *
 	 * @param inSearch
 	 *            char the key pressed
 	 * @param inSelected
@@ -90,10 +90,8 @@ public class SearchListHelper {
 	 * @return int index of the item matching the search key or -1, if no item
 	 *         matches.
 	 */
-	public int search(final char inSearch, final GalleryItemAdapter inSelected,
-	        final long inTime) {
-		final String lSearch = new String(new char[] { inSearch })
-		        .toLowerCase();
+	public int search(final char inSearch, final GalleryItemAdapter inSelected, final long inTime) {
+		final String lSearch = new String(new char[] { inSearch }).toLowerCase();
 
 		// we combine multiple key pressed in a specified time span
 		if (inTime - time < KEY_PRESS_DELAY) {
@@ -108,8 +106,7 @@ public class SearchListHelper {
 		int outIndex = -1;
 		if (lSelected.toLowerCase().startsWith(search)) {
 			outIndex = original.indexOf(lSelected) + 1;
-			if (outIndex < original.size()
-			        && lower.get(outIndex).startsWith(search)) {
+			if (outIndex < original.size() && lower.get(outIndex).startsWith(search)) {
 				return outIndex;
 			}
 		}
@@ -128,6 +125,14 @@ public class SearchListHelper {
 			return outIndex;
 		}
 		return NO_MOVE;
+	}
+
+	/**
+	 *
+	 * @return <code>true</code> if the helper class is empty
+	 */
+	protected boolean isEmpty() {
+		return original.isEmpty();
 	}
 
 }

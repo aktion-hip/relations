@@ -76,7 +76,17 @@
     <!-- format a paragraph -->
     <xsl:template match="para">
 <xsl:text>                
-</xsl:text>        
+</xsl:text><xsl:apply-templates />
+    </xsl:template>
+    
+    <!-- add new line -->
+    <xsl:template match="br">
+<xsl:text>                
+</xsl:text>
+    </xsl:template>
+    
+    <!-- remove white space from text nodes -->
+    <xsl:template match="text()">
         <xsl:value-of select="normalize-space(.)"/>
     </xsl:template>
     

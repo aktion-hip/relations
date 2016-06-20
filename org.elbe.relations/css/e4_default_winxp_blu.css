@@ -1,4 +1,5 @@
 @import url("e4_basestyle.css");
+@import url("relations.css");
 
 .MTrimmedWindow { 
  	background-color: #F0ECE0; 
@@ -25,7 +26,7 @@
 }
 
 .MPartStack.active {
-	swt-unselected-tabs-color: #F1F4FD #C9DAF3 #BED4F1 #BED4F1 #C9D7F2 #C9D7F2 #FFFFFF 20% 45% 60% 70% 100% 100%;
+	swt-unselected-tabs-color: #F1F4FD #C9DAF3 #BED4F1 #BED4F1 #C9D7F2 #C9D7F2 20% 45% 60% 70% 100% 100%;
     swt-outer-keyline-color: #B8C7E5;
 }
 
@@ -52,4 +53,3 @@ CTabFolder.MArea .MPartStack, CTabFolder.MArea .MPartStack.active {
 CTabFolder Canvas {
   background-color: #F8F8F8;
 }
-

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="org.elbe.relations" uid="Relations" id="org.elbe.relations.product" application="org.elbe.relations.RelationsApplication" version="2.0.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="org.elbe.relations" uid="Relations" id="org.elbe.relations.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="2.1.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
-      <image path="/org.elbe.relations/icons/aboutRelations.gif"/>
+      <image path="/org.elbe.relations/icons/aboutRelations.png"/>
       <text>
          Relations Rich Client Application
 
 The Relations application is a tool for knowledge management.
 
-Version: 2.0.0
+Version: 2.1.0
 
 (c) Copyright: RelationWare, B. Luthiger.
 Visit http://relations-rcp.sourceforge.net/
@@ -25,7 +25,10 @@ see http://www.eclipse.org/
    </configIni>
 
    <launcherArgs>
-      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+      <vmArgs>-Xmx386M -Dosgi.parentClassloader=ext
+      </vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -Djava.awt.headless=true
+      </vmArgsMac>
    </launcherArgs>
 
    <windowImages i16="icons/relations.gif" i32="icons/relations32.gif" i48="icons/relations48.gif"/>
@@ -46,6 +49,9 @@ see http://www.eclipse.org/
    <intro introId="org.eclipse.ui.intro.universal"/>
 
    <vm>
+      <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</linux>
+      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</macos>
+      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</windows>
    </vm>
 
    <license>
@@ -342,15 +348,52 @@ POSSIBILITY OF SUCH DAMAGES.
    </plugins>
 
    <features>
-      <feature id="org.elbe.relations.feature" version="2.0.0.qualifier"/>
-      <feature id="org.elbe.relations.add.feature" version="2.0.0.qualifier"/>
-      <feature id="org.eclipse.emf.ecore" version="2.9.1.v20130827-0309"/>
-      <feature id="org.eclipse.emf.common" version="2.9.1.v20130827-0309"/>
-      <feature id="org.eclipse.rcp" version="4.3.1.v20130911-1000"/>
-      <feature id="org.eclipse.e4.rcp" version="1.2.1.v20130910-2014"/>
-      <feature id="org.eclipse.help" version="2.0.1.v20130911-1000"/>
-      <feature id="org.eclipse.platform" version="4.3.1.v20130911-1000"/>
+      <feature id="org.elbe.relations.feature" version="2.1.0.qualifier"/>
+      <feature id="org.elbe.relations.add.feature" version="2.1.0.qualifier"/>
+      <feature id="org.eclipse.emf.common" version="2.11.0.v20150805-0538"/>
+      <feature id="org.eclipse.emf.ecore" version="2.11.1.v20150805-0538"/>
+      <feature id="org.eclipse.rcp" version="4.5.1.v20150904-0015"/>
+      <feature id="org.eclipse.e4.rcp"/>
+      <feature id="org.eclipse.equinox.p2.user.ui" version="2.2.101.v20150826-1318"/>
+      <feature id="org.eclipse.ecf.filetransfer.httpclient4.feature"/>
+      <feature id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature"/>
+      <feature id="org.eclipse.equinox.p2.extras.feature"/>
+      <feature id="org.eclipse.equinox.p2.core.feature"/>
+      <feature id="org.eclipse.ecf.core.feature"/>
+      <feature id="org.eclipse.equinox.p2.rcp.feature"/>
+      <feature id="org.eclipse.ecf.filetransfer.feature"/>
+      <feature id="org.eclipse.ecf.core.ssl.feature"/>
+      <feature id="org.eclipse.ecf.filetransfer.ssl.feature"/>
+      <feature id="org.eclipse.platform" version="4.5.1.v20150904-0015"/>
    </features>
 
+   <configurations>
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.e4.ui.css.swt.theme" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.equinox.util" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.biblio.dft" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.data" autoStart="true" startLevel="3" />
+      <plugin id="org.elbe.relations.defaultBrowser" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.indexer.lucene" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.print.dft" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.print.doc" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.print.odt" autoStart="true" startLevel="0" />
+      <plugin id="org.hip.vif.dbaccess.derby" autoStart="true" startLevel="0" />
+      <plugin id="org.hip.vif.dbaccess.mysql" autoStart="true" startLevel="0" />
+      <plugin id="org.hip.viffw" autoStart="true" startLevel="3" />
+   </configurations>
+
+   <preferencesInfo>
+      <targetfile overwrite="false"/>
+   </preferencesInfo>
+
+   <cssInfo>
+      <file path="/org.elbe.relations/css/default.css"/>
+   </cssInfo>
 
 </product>

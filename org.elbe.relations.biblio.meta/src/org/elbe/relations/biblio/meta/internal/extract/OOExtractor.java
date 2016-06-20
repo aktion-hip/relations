@@ -1,6 +1,6 @@
-/*
+/**
 This package is part of Relations application.
-Copyright (C) 2010, Benno Luthiger
+Copyright (C) 2010-2016, Benno Luthiger
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public
@@ -22,11 +22,10 @@ import org.elbe.relations.services.IExtractorAdapter;
 
 /**
  * Adapter to extract metadata from a OpenOffice.org file.
- * 
+ *
  * @author Luthiger Created on 23.01.2010
  */
-public class OOExtractor extends AbstractCompressedXMLContainerExtractor
-		implements IExtractorAdapter {
+public class OOExtractor extends AbstractCompressedXMLContainerExtractor implements IExtractorAdapter {
 	private static final String TAG_TITLE = "dc:title".intern(); //$NON-NLS-1$
 	private static final String TAG_DESCRIPTION = "dc:description".intern(); //$NON-NLS-1$
 	private static final String TAG_SUBJECT = "dc:subject".intern(); //$NON-NLS-1$
@@ -36,12 +35,6 @@ public class OOExtractor extends AbstractCompressedXMLContainerExtractor
 
 	private static final String OO_META = "meta.xml"; //$NON-NLS-1$
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.biblio.meta.internal.extract.AbstractExtractor#
-	 * getInputType()
-	 */
 	@Override
 	protected String getInputType() {
 		return "application/open-office-1.x"; //$NON-NLS-1$
@@ -54,17 +47,17 @@ public class OOExtractor extends AbstractCompressedXMLContainerExtractor
 
 	@Override
 	protected ParserListener getParserListener(final String inTagName) {
-		if (inTagName == TAG_TITLE) {
+		if (TAG_TITLE.equals(inTagName)) {
 			return ParserListener.TITLE;
-		} else if (inTagName == TAG_DESCRIPTION) {
+		} else if (TAG_DESCRIPTION.equals(inTagName)) {
 			return ParserListener.DESCRIPTION;
-		} else if (inTagName == TAG_SUBJECT) {
+		} else if (TAG_SUBJECT.equals(inTagName)) {
 			return ParserListener.SUBJECT;
-		} else if (inTagName == TAG_CREATOR) {
+		} else if (TAG_CREATOR.equals(inTagName)) {
 			return ParserListener.AUTHOR;
-		} else if (inTagName == TAG_KEYWORD) {
+		} else if (TAG_KEYWORD.equals(inTagName)) {
 			return ParserListener.KEYWORD;
-		} else if (inTagName == TAG_CREATION) {
+		} else if (TAG_CREATION.equals(inTagName)) {
 			return ParserListener.CREATION;
 		}
 		return ParserListener.NOOP;

@@ -73,7 +73,9 @@ public class RelationsNewWizardPage extends WizardPage {
 
 	@Override
 	public void dispose() {
-		form.dispose();
+		if (form != null) {
+			form.dispose();
+		}
 		super.dispose();
 	}
 

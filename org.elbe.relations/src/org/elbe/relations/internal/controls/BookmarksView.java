@@ -24,7 +24,7 @@ import javax.inject.Inject;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.PersistState;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.ui.workbench.swt.modeling.EMenuService;
+import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -41,7 +41,6 @@ import org.elbe.relations.search.RetrievedItemWithIcon;
  * 
  * @author Luthiger
  */
-@SuppressWarnings("restriction")
 public class BookmarksView extends AbstractToolPart {
 	private final TableViewer bookmarksView;
 

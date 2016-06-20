@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -35,7 +35,7 @@ import org.elbe.relations.services.IDBConnectionConfig;
  * Object intended to be stored in the eclipse context providing the data to
  * access the database.<br />
  * An instance of this class is in the context as <code>DBSettings.class</code>.
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
@@ -55,7 +55,7 @@ public class DBSettings implements IDBSettings {
 
 	/**
 	 * DBSettings constructor, called through DI.
-	 * 
+	 *
 	 * @param inPreferences
 	 * @param inDBController
 	 */
@@ -64,9 +64,9 @@ public class DBSettings implements IDBSettings {
 	        @Preference(nodePath = RelationsConstants.PREFERENCE_NODE) final IEclipsePreferences inPreferences,
 	        final IDBController inDBController) {
 		dbController = inDBController;
-		dbConnectionConfig = inDBController.getConfiguration(inPreferences.get(
-		        RelationsConstants.KEY_DB_PLUGIN_ID,
-		        RelationsConstants.DFT_DBCONFIG_PLUGIN_ID));
+		dbConnectionConfig = inDBController.getConfiguration(
+		        inPreferences.get(RelationsConstants.KEY_DB_PLUGIN_ID,
+		                RelationsConstants.DFT_DBCONFIG_PLUGIN_ID));
 		host = inPreferences.get(RelationsConstants.KEY_DB_HOST, ""); //$NON-NLS-1$
 		catalog = inPreferences.get(RelationsConstants.KEY_DB_CATALOG,
 		        RelationsConstants.DFT_DB_EMBEDDED);
@@ -136,7 +136,7 @@ public class DBSettings implements IDBSettings {
 
 	/**
 	 * @return {@link IDBConnectionConfig} the used DB's connection
-	 *         configuration
+	 *         configuration, may be <code>null</code>
 	 */
 	@Override
 	public IDBConnectionConfig getDBConnectionConfig() {
@@ -154,7 +154,7 @@ public class DBSettings implements IDBSettings {
 
 	/**
 	 * Convenience method for StatusLine.
-	 * 
+	 *
 	 * @return String e.g. <i>jdbc:mysql://localhost/relations</i>
 	 */
 	@Override
@@ -162,9 +162,9 @@ public class DBSettings implements IDBSettings {
 		if (getDBConnectionConfig().isEmbedded()) {
 			return EMBEDDED + ": " + getCatalog(); //$NON-NLS-1$
 		}
-		return CLIENT_URL_PATTERN.format(new Object[] {
-		        getDBConnectionConfig().getSubprotocol(), getHost(),
-		        getCatalog() });
+		return CLIENT_URL_PATTERN
+		        .format(new Object[] { getDBConnectionConfig().getSubprotocol(),
+		                getHost(), getCatalog() });
 	}
 
 }

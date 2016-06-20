@@ -1,0 +1,3 @@
+instructions.configure=\
+  addRepository(type:0,location:http${#58}//relations-rcp.sourceforge.net/updates/);\
+  addRepository(type:1,location:http${#58}//relations-rcp.sourceforge.net/updates/);
