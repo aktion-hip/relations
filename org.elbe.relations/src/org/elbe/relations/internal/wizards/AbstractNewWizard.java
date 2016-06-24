@@ -26,6 +26,7 @@ import javax.inject.Named;
 
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -117,7 +118,7 @@ public abstract class AbstractNewWizard extends Wizard implements INewWizard {
 	 */
 	@PostConstruct
 	public void init(
-	        @Named(IServiceConstants.ACTIVE_SELECTION) final IStructuredSelection inSelection) {
+	        @Named(IServiceConstants.ACTIVE_SELECTION) @Optional final IStructuredSelection inSelection) {
 		try {
 			ItemAdapter lSelected = null;
 			if ((inSelection != null) && !inSelection.isEmpty() && (inSelection
