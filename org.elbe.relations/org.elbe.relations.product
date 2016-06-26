@@ -388,6 +388,10 @@ POSSIBILITY OF SUCH DAMAGES.
       <plugin id="org.hip.viffw" autoStart="true" startLevel="3" />
    </configurations>
 
+   <repositories>
+      <repository location="http://relations-rcp.sourceforge.net/updates/" enabled="true" />
+   </repositories>
+
    <preferencesInfo>
       <targetfile overwrite="false"/>
    </preferencesInfo>
