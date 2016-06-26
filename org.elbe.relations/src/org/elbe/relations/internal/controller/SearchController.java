@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -34,7 +34,7 @@ import org.elbe.relations.search.RetrievedItemWithIcon;
 
 /**
  * Controller class for the view to search items.
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
@@ -55,7 +55,7 @@ public class SearchController {
 
 	public SearchController() {
 		searchResults = new WritableList(Collections.emptyList(),
-				RetrievedItemWithIcon.class);
+		        RetrievedItemWithIcon.class);
 	}
 
 	/**
@@ -64,29 +64,40 @@ public class SearchController {
 	private RelationsSearcher getSearcher() {
 		if (searcher == null) {
 			searcher = RelationsSearcher.createRelationsSearcher(context,
-					dbSettings);
+			        dbSettings);
 		}
 		return searcher;
 	}
 
 	/**
 	 * Executes a search.
-	 * 
+	 *
 	 * @param inSearchQuery
 	 *            String the search term
 	 * @return Collection&lt;RetrievedItemWithIcon>
 	 */
 	@SuppressWarnings("unchecked")
-	public Collection<RetrievedItemWithIcon> search(final String inSearchQuery) {
+	public Collection<RetrievedItemWithIcon> search(
+	        final String inSearchQuery) {
 		try {
-			searchResults = new WritableList(getSearcher()
-					.search(inSearchQuery), RetrievedItemWithIcon.class);
+			searchResults = new WritableList(
+			        getSearcher().search(inSearchQuery),
+			        RetrievedItemWithIcon.class);
 		}
 		catch (final Exception exc) {
 			searchResults = new WritableList(Collections.emptyList(),
-					RetrievedItemWithIcon.class);
+			        RetrievedItemWithIcon.class);
 			log.error(exc, exc.getMessage());
 		}
+		return searchResults;
+	}
+
+	/**
+	 * @return Collection&lt;RetrievedItemWithIcon> an empty list
+	 */
+	@SuppressWarnings("unchecked")
+	public Collection<RetrievedItemWithIcon> emptyList() {
+		searchResults.clear();
 		return searchResults;
 	}
 

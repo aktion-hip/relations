@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -25,8 +25,8 @@ import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.e4.ui.services.EMenuService;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
@@ -51,7 +51,7 @@ import org.elbe.relations.models.ILightWeightModel;
 /**
  * Abstract base class for Relations <code>ViewPart</code>s, providing generic
  * functionality for views.
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
@@ -96,7 +96,7 @@ public abstract class AbstractToolPart implements IPartWithSelection {
 
 	/**
 	 * Set the part's title.
-	 * 
+	 *
 	 * @param inTitle
 	 *            String
 	 */
@@ -110,9 +110,12 @@ public abstract class AbstractToolPart implements IPartWithSelection {
 		return new IDoubleClickListener() {
 			@Override
 			public void doubleClick(final DoubleClickEvent inEvent) {
-				handlerService.executeHandler(ParameterizedCommand
-						.generateCommand(commandService
-								.getCommand(ICommandIds.CMD_ITEM_SHOW), null));
+				handlerService
+		                .executeHandler(
+		                        ParameterizedCommand.generateCommand(
+		                                commandService.getCommand(
+		                                        ICommandIds.CMD_ITEM_SHOW),
+		                                null));
 			}
 		};
 	}
@@ -121,19 +124,20 @@ public abstract class AbstractToolPart implements IPartWithSelection {
 		return new Transfer[] { ItemTransfer.getInstance(log) };
 	}
 
-	protected DragSourceListener getDragSourceAdapter(final TableViewer inViewer) {
+	protected DragSourceListener getDragSourceAdapter(
+	        final TableViewer inViewer) {
 		return new DragSourceAdapter() {
 			@Override
 			public void dragSetData(final DragSourceEvent inEvent) {
 				final IStructuredSelection lSelected = (IStructuredSelection) inViewer
-						.getSelection();
+		                .getSelection();
 				if (!lSelected.isEmpty()) {
 					final Object[] lItems = lSelected.toArray();
 					final UniqueID[] lIDs = new UniqueID[lItems.length];
 					for (int i = 0; i < lItems.length; i++) {
 						final ILightWeightItem lItem = (ILightWeightItem) lItems[i];
 						lIDs[i] = new UniqueID(lItem.getItemType(),
-								lItem.getID());
+		                        lItem.getID());
 					}
 					inEvent.data = lIDs;
 				}
@@ -151,8 +155,9 @@ public abstract class AbstractToolPart implements IPartWithSelection {
 		return new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(final SelectionChangedEvent inEvent) {
-				selectionService.setSelection(((IStructuredSelection) inEvent
-						.getSelection()).getFirstElement());
+				selectionService.setSelection(
+		                ((IStructuredSelection) inEvent.getSelection())
+		                        .getFirstElement());
 			}
 		};
 	}

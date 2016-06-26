@@ -43,10 +43,13 @@ import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -151,7 +154,7 @@ public class SearchView extends AbstractToolPart {
 				}
 			}
 		});
-		input.addFocusListener(new FocusListener() {
+		input.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(final FocusEvent inEvent) {
 				final String lSelection = (String) selectionService
@@ -162,20 +165,20 @@ public class SearchView extends AbstractToolPart {
 					input.setText(""); //$NON-NLS-1$
 				}
 			}
-
-			@Override
-			public void focusLost(final FocusEvent inEvent) {
-			}
 		});
-		input.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(final SelectionEvent inEvent) {
-				searchFor(input.getText());
-			}
-
+		input.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent inEvent) {
 				searchFor(input.getText());
+			}
+		});
+		input.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent event) {
+				if (event.keyCode == SWT.Selection
+		                && !input.getText().isEmpty()) {
+					searchFor(input.getText());
+				}
 			}
 		});
 		return outIndent;
@@ -204,18 +207,21 @@ public class SearchView extends AbstractToolPart {
 		lLayout.horizontalIndent = inIndent;
 		lLayout.widthHint = 60;
 		button.setLayoutData(lLayout);
-		inSearch.getShell().setDefaultButton(button);
 	}
 
 	private void searchFor(final String inText) {
 		addUnique(inText);
+
+		// we need this to reset the selection marker
+		results.setInput(searchController.emptyList());
+
 		final Collection<RetrievedItemWithIcon> lSearchResult = searchController
 		        .search(inText);
 		if (lSearchResult.isEmpty()) {
 			return;
 		}
-
 		results.setInput(lSearchResult);
+
 		final Table lTable = results.getTable();
 		lTable.setFocus();
 		lTable.select(0);
