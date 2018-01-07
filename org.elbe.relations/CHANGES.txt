@@ -1,0 +1,10 @@
+CHANGES Relations
+=================
+
+Release 2.2.0:
+
+2018/01/07:
+	- Adjusted /org.elbe.relations.target/relations.target to Eclipse 4.7 (Oxygen).
+	- Setting version number to 2.2.0.
+	- Added /icons/message_info.png.
+	

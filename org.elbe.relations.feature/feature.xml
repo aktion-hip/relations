@@ -2,7 +2,7 @@
 <feature
       id="org.elbe.relations.feature"
       label="%featureName"
-      version="2.1.0.qualifier"
+      version="2.2.0.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -409,13 +409,6 @@ POSSIBILITY OF SUCH DAMAGES.
          id="org.elbe.relations.help"
          download-size="699"
          install-size="699"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.opcoach.e4.preferences"
-         download-size="0"
-         install-size="0"
          version="0.0.0"
          unpack="false"/>
 

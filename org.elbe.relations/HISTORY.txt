@@ -1,0 +1,16 @@
+HISTORY Relations
+=================
+
+Release 2.1.2:
+
+2018/01/07:
+
+Release 2.1.1:
+2016/06/27:
+	- Improved search view.
+	- Added lib/htmlcleaner2_1.jar to build.
+	- Fixed problem in creation of new wizard.
+
+Release 2.1.0:
+2016/05/17:
+	- Added correct message to display item creation date. 

@@ -66,7 +66,7 @@
               </children>
             </children>
             <children xsi:type="basic:PartStack" xmi:id="_RcW5wBY1EeKaY4i-iZlKSg" elementId="inspector.view" containerData="30">
-              <children xsi:type="basic:Part" xmi:id="_Us75sBY1EeKaY4i-iZlKSg" elementId="inspector.view.part" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.internal.controls.InspectorView" label="%part.name.inspector" iconURI="platform:/plugin/org.eclipse.jface/org/eclipse/jface/dialogs/images/message_info.gif" tooltip="%part.name.inspector.tip">
+              <children xsi:type="basic:Part" xmi:id="_Us75sBY1EeKaY4i-iZlKSg" elementId="inspector.view.part" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.internal.controls.InspectorView" label="%part.name.inspector" iconURI="platform:/plugin/org.elbe.relations/icons/message_info.png" tooltip="%part.name.inspector.tip">
                 <menus xsi:type="menu:PopupMenu" xmi:id="_WKIZ8DukEeKZga5MXWuOOQ" elementId="org.elbe.relations.inspector.popup">
                   <children xsi:type="menu:HandledMenuItem" xmi:id="_beX6wDukEeKZga5MXWuOOQ" elementId="inspector.popup:item.save" label="%command.change.save" iconURI="platform:/plugin/org.elbe.relations/icons/save.gif" tooltip="%command.change.save.tip" command="_-axcERYwEeKaY4i-iZlKSg"/>
                   <children xsi:type="menu:HandledMenuItem" xmi:id="_jl5bgDukEeKZga5MXWuOOQ" elementId="inspector.popup:item.undo" label="%command.change.undo" iconURI="platform:/plugin/org.elbe.relations/icons/undo_edit.gif" tooltip="%command.change.undo.tip" command="_lT7J8DusEeKZga5MXWuOOQ"/>

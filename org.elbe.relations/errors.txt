@@ -1,14 +1,12 @@
 Fehler Relations:
+- Return funktioniert nicht im Suchresultat. Gilt nur für die erste Suche nach dem Programmstart!
+===
 - Wenn in Finder aufgestartet wird, dann ist beim Wechsel auf den RelationsBrowser immer das Zentrums-Item aktiviert, 
   auch wenn im Finder ein zugeordnetes Item aktiv ist. Dieses Verhalten gilt nur, bis der RelationsBrowser das erste Mal
   den Fokus bekommen hat.
-- Eingabe Suche: Widget, um Text schnell zu löschen?
-- Export zu docx.
+
 - Update Site: http://www.vogella.com/tutorials/EclipseP2Update/article.html
-- About: org.eclipse.ui.internal.dialogs.AboutDialog
-
-http://www.opcoach.com/en/managing-preference-pages-with-eclipse-4/
-
+  oder https://blog.codecentric.de/en/2015/04/add-p2-update-functionality-to-an-eclipse-4-application-eclipse-rcp-cookbook/
 === ok
 - Drop von Webseiten. Beisp:
   http://www.economist.com/news/briefing/21677228-technology-behind-bitcoin-lets-people-who-do-not-know-or-trust-each-other-build-dependable
