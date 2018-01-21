@@ -33,9 +33,9 @@ import org.eclipse.e4.ui.di.Persist;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.model.application.ui.MDirtyable;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
-import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
@@ -124,7 +124,7 @@ public class InspectorView implements ISelectedTextProvider {
 	private ESelectionService selectionService;
 
 	@Inject
-	EPartService partService;
+	private EPartService partService;	
 
 	@Inject
 	public InspectorView(final Composite inParent,
@@ -205,8 +205,12 @@ public class InspectorView implements ISelectedTextProvider {
 		styledText.setDisabled();
 	}
 
-	private void handleFocusGained(final boolean inIsTextField) {
-		if (inIsTextField) {
+	/**
+	 * 
+	 * @param isTextField <code>true</code> styled text field, <code>false</code> title field
+	 */
+	private void handleFocusGained(final boolean isTextField) {
+		if (isTextField) {
 			context.set(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE, "active"); //$NON-NLS-1$
 		}
 		eventBroker.post(RelationsConstants.TOPIC_STYLE_ITEMS_FORM,
@@ -314,13 +318,7 @@ public class InspectorView implements ISelectedTextProvider {
 				refreshDisplay(inItem);
 			}
 		}
-		catch (final IOException exc) {
-			log.error(exc, exc.getMessage());
-		}
-		catch (final SAXException exc) {
-			log.error(exc, exc.getMessage());
-		}
-		catch (final VException exc) {
+		catch (IOException | SAXException | VException exc) {
 			log.error(exc, exc.getMessage());
 		}
 	}
@@ -380,13 +378,7 @@ public class InspectorView implements ISelectedTextProvider {
 			item.visit(lVisitor);
 			displayType.refresh(title, styledText, lVisitor);
 		}
-		catch (final VException exc) {
-			log.error(exc, exc.getMessage());
-		}
-		catch (final IOException exc) {
-			log.error(exc, exc.getMessage());
-		}
-		catch (final SAXException exc) {
+		catch (VException | IOException | SAXException exc) {
 			log.error(exc, exc.getMessage());
 		}
 		clearDirty();
@@ -418,13 +410,7 @@ public class InspectorView implements ISelectedTextProvider {
 			try {
 				refreshDisplay(item);
 			}
-			catch (final VException exc) {
-				log.error(exc, exc.getMessage());
-			}
-			catch (final IOException exc) {
-				log.error(exc, exc.getMessage());
-			}
-			catch (final SAXException exc) {
+			catch (VException | IOException | SAXException exc) {
 				log.error(exc, exc.getMessage());
 			}
 		}

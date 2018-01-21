@@ -1,4 +1,5 @@
 Fehler Relations:
+===
 - Return funktioniert nicht im Suchresultat. Gilt nur für die erste Suche nach dem Programmstart!
 ===
 - Wenn in Finder aufgestartet wird, dann ist beim Wechsel auf den RelationsBrowser immer das Zentrums-Item aktiviert, 

@@ -312,6 +312,8 @@ POSSIBILITY OF SUCH DAMAGES.
 
    <configurations>
       <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.e4.core.services" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.e4.ui.services" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
