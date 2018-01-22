@@ -3,6 +3,9 @@ CHANGES Relations
 
 Release 2.2.0:
 =============
+2018/01/22:
+	- Removed "More Info" button in org.elbe.relations.internal.about.AboutDialog.
+
 2018/01/21:
 	- Fixed bug with key bindings in Inspector view: Ctrl+C/X works as expected now.
 
