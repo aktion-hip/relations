@@ -79,6 +79,8 @@
 <plugin id="org.apache.batik.css.source" version="1.8.0.v20170214-1941"/>
 <plugin id="org.apache.batik.css.source" version="1.8.0.v20170214-1941"/>
 <plugin id="org.apache.batik.util" version="1.8.0.v20170214-1941"/>
+<plugin id="org.apache.batik.util.gui" version="1.8.0.v20170214-1941"/>
+<plugin id="org.apache.batik.util.gui.source" version="1.8.0.v20170214-1941"/>
 <plugin id="org.apache.batik.util.gui.source" version="1.8.0.v20170214-1941"/>
 <plugin id="org.apache.batik.util.source" version="1.8.0.v20170214-1941"/>
 <plugin id="org.apache.batik.util.source" version="1.8.0.v20170214-1941"/>
@@ -310,6 +312,8 @@
 <plugin id="org.eclipse.equinox.common.source" version="3.9.0.v20170207-1454"/>
 <plugin id="org.eclipse.equinox.concurrent" version="1.1.0.v20130327-1442"/>
 <plugin id="org.eclipse.equinox.concurrent.source"/>
+<plugin id="org.eclipse.equinox.console" version="1.1.300.v20170512-2111"/>
+<plugin id="org.eclipse.equinox.console.source" version="1.1.300.v20170512-2111"/>
 <plugin id="org.eclipse.equinox.console.source" version="1.1.300.v20170512-2111"/>
 <plugin id="org.eclipse.equinox.ds" version="1.5.0.v20170307-1429"/>
 <plugin id="org.eclipse.equinox.ds.source" version="1.5.0.v20170307-1429"/>
@@ -338,15 +342,28 @@
 <plugin id="org.eclipse.equinox.jsp.jasper.registry.source" version="1.0.300.v20130327-1442"/>
 <plugin id="org.eclipse.equinox.jsp.jasper.source" version="1.0.500.v20150119-1358"/>
 <plugin id="org.eclipse.equinox.jsp.jasper.source" version="1.0.500.v20150119-1358"/>
+<plugin id="org.eclipse.equinox.launcher" version="1.4.0.v20161219-1356"/>
+<plugin id="org.eclipse.equinox.launcher.cocoa.macosx.x86_64" version="1.1.550.v20170928-1359"/>
+<plugin id="org.eclipse.equinox.launcher.gtk.linux.ppc64" version="1.1.550.v20170928-1359"/>
+<plugin id="org.eclipse.equinox.launcher.gtk.linux.ppc64le" version="1.1.550.v20170928-1359"/>
+<plugin id="org.eclipse.equinox.launcher.gtk.linux.x86" version="1.1.550.v20170928-1359"/>
+<plugin id="org.eclipse.equinox.launcher.gtk.linux.x86_64" version="1.1.550.v20170928-1359"/>
 <plugin id="org.eclipse.equinox.launcher.source" version="1.4.0.v20161219-1356"/>
+<plugin id="org.eclipse.equinox.launcher.source" version="1.4.0.v20161219-1356"/>
+<plugin id="org.eclipse.equinox.launcher.win32.win32.x86" version="1.1.550.v20170928-1359"/>
+<plugin id="org.eclipse.equinox.launcher.win32.win32.x86_64" version="1.1.550.v20170928-1359"/>
 <plugin id="org.eclipse.equinox.p2.artifact.repository" version="1.1.650.v20170928-1405"/>
 <plugin id="org.eclipse.equinox.p2.artifact.repository.source" version="1.1.650.v20170928-1405"/>
 <plugin id="org.eclipse.equinox.p2.artifact.repository.source" version="1.1.650.v20170928-1405"/>
+<plugin id="org.eclipse.equinox.p2.console" version="1.0.600.v20170511-1106"/>
+<plugin id="org.eclipse.equinox.p2.console.source" version="1.0.600.v20170511-1106"/>
 <plugin id="org.eclipse.equinox.p2.console.source" version="1.0.600.v20170511-1106"/>
 <plugin id="org.eclipse.equinox.p2.core" version="2.4.101.v20170906-1259"/>
 <plugin id="org.eclipse.equinox.p2.core.source" version="2.4.101.v20170906-1259"/>
 <plugin id="org.eclipse.equinox.p2.core.source" version="2.4.101.v20170906-1259"/>
 <plugin id="org.eclipse.equinox.p2.director" version="2.3.300.v20160504-1450"/>
+<plugin id="org.eclipse.equinox.p2.director.app" version="1.0.500.v20160419-0834"/>
+<plugin id="org.eclipse.equinox.p2.director.app.source" version="1.0.500.v20160419-0834"/>
 <plugin id="org.eclipse.equinox.p2.director.app.source" version="1.0.500.v20160419-0834"/>
 <plugin id="org.eclipse.equinox.p2.director.source" version="2.3.300.v20160504-1450"/>
 <plugin id="org.eclipse.equinox.p2.director.source" version="2.3.300.v20160504-1450"/>
@@ -356,6 +373,8 @@
 <plugin id="org.eclipse.equinox.p2.engine" version="2.5.0.v20170319-2002"/>
 <plugin id="org.eclipse.equinox.p2.engine.source" version="2.5.0.v20170319-2002"/>
 <plugin id="org.eclipse.equinox.p2.engine.source" version="2.5.0.v20170319-2002"/>
+<plugin id="org.eclipse.equinox.p2.extensionlocation" version="1.2.300.v20160419-0834"/>
+<plugin id="org.eclipse.equinox.p2.extensionlocation.source" version="1.2.300.v20160419-0834"/>
 <plugin id="org.eclipse.equinox.p2.extensionlocation.source" version="1.2.300.v20160419-0834"/>
 <plugin id="org.eclipse.equinox.p2.garbagecollector" version="1.0.300.v20160504-1450"/>
 <plugin id="org.eclipse.equinox.p2.garbagecollector.source" version="1.0.300.v20160504-1450"/>
@@ -378,19 +397,29 @@
 <plugin id="org.eclipse.equinox.p2.publisher.eclipse.source" version="1.2.201.v20170906-1259"/>
 <plugin id="org.eclipse.equinox.p2.publisher.source" version="1.4.200.v20170511-1216"/>
 <plugin id="org.eclipse.equinox.p2.publisher.source" version="1.4.200.v20170511-1216"/>
+<plugin id="org.eclipse.equinox.p2.reconciler.dropins" version="1.1.400.v20160504-1450"/>
+<plugin id="org.eclipse.equinox.p2.reconciler.dropins.source" version="1.1.400.v20160504-1450"/>
 <plugin id="org.eclipse.equinox.p2.reconciler.dropins.source" version="1.1.400.v20160504-1450"/>
 <plugin id="org.eclipse.equinox.p2.repository" version="2.3.301.v20170906-1259"/>
 <plugin id="org.eclipse.equinox.p2.repository.source" version="2.3.301.v20170906-1259"/>
 <plugin id="org.eclipse.equinox.p2.repository.source" version="2.3.301.v20170906-1259"/>
+<plugin id="org.eclipse.equinox.p2.repository.tools" version="2.1.400.v20170511-1216"/>
+<plugin id="org.eclipse.equinox.p2.repository.tools.source" version="2.1.400.v20170511-1216"/>
 <plugin id="org.eclipse.equinox.p2.repository.tools.source" version="2.1.400.v20170511-1216"/>
 <plugin id="org.eclipse.equinox.p2.touchpoint.eclipse" version="2.1.501.v20170906-1259"/>
 <plugin id="org.eclipse.equinox.p2.touchpoint.eclipse.source" version="2.1.501.v20170906-1259"/>
 <plugin id="org.eclipse.equinox.p2.touchpoint.eclipse.source" version="2.1.501.v20170906-1259"/>
+<plugin id="org.eclipse.equinox.p2.touchpoint.natives" version="1.2.200.v20170511-1216"/>
 <plugin id="org.eclipse.equinox.p2.touchpoint.natives.source" version="1.2.200.v20170511-1216"/>
+<plugin id="org.eclipse.equinox.p2.touchpoint.natives.source" version="1.2.200.v20170511-1216"/>
+<plugin id="org.eclipse.equinox.p2.transport.ecf" version="1.1.300.v20161004-0244"/>
 <plugin id="org.eclipse.equinox.p2.transport.ecf.source" version="1.1.300.v20161004-0244"/>
+<plugin id="org.eclipse.equinox.p2.transport.ecf.source" version="1.1.300.v20161004-0244"/>
+<plugin id="org.eclipse.equinox.p2.ui" version="2.5.1.v20170906-1259"/>
 <plugin id="org.eclipse.equinox.p2.ui.importexport.source" version="1.1.301.v20170816-1007"/>
 <plugin id="org.eclipse.equinox.p2.ui.sdk.scheduler.source" version="1.3.100.v20170418-0708"/>
 <plugin id="org.eclipse.equinox.p2.ui.sdk.source" version="1.0.500.v20170511-1216"/>
+<plugin id="org.eclipse.equinox.p2.ui.source" version="2.5.1.v20170906-1259"/>
 <plugin id="org.eclipse.equinox.p2.ui.source" version="2.5.1.v20170906-1259"/>
 <plugin id="org.eclipse.equinox.p2.updatechecker.source" version="1.1.400.v20170106-2125"/>
 <plugin id="org.eclipse.equinox.p2.updatesite.source" version="1.0.601.v20170906-1259"/>
@@ -406,6 +435,8 @@
 <plugin id="org.eclipse.equinox.security.macosx.source" version="1.100.200.v20130327-1442"/>
 <plugin id="org.eclipse.equinox.security.source" version="1.2.300.v20170505-1235"/>
 <plugin id="org.eclipse.equinox.security.source" version="1.2.300.v20170505-1235"/>
+<plugin id="org.eclipse.equinox.security.ui" version="1.1.400.v20170505-1235"/>
+<plugin id="org.eclipse.equinox.security.ui.source" version="1.1.400.v20170505-1235"/>
 <plugin id="org.eclipse.equinox.security.ui.source" version="1.1.400.v20170505-1235"/>
 <plugin id="org.eclipse.equinox.security.win32.x86" version="1.0.300.v20130327-1442"/>
 <plugin id="org.eclipse.equinox.security.win32.x86.source" version="1.0.300.v20130327-1442"/>
@@ -436,8 +467,8 @@
 <plugin id="org.eclipse.help.webapp.source"/>
 <plugin id="org.eclipse.jdt"/>
 <plugin id="org.eclipse.jdt.annotation" version="1.1.100.v20160418-1457"/>
-<plugin id="org.eclipse.jdt.annotation.source" version="1.1.100.v20160418-1457"/>
 <plugin id="org.eclipse.jdt.annotation.source" version="2.1.100.v20170511-1408"/>
+<plugin id="org.eclipse.jdt.annotation.source" version="1.1.100.v20160418-1457"/>
 <plugin id="org.eclipse.jdt.apt.core"/>
 <plugin id="org.eclipse.jdt.apt.core.source"/>
 <plugin id="org.eclipse.jdt.apt.pluggable.core"/>
@@ -514,13 +545,15 @@
 <plugin id="org.eclipse.nebula.widgets.gallery"/>
 <plugin id="org.eclipse.nebula.widgets.gallery.source"/>
 <plugin id="org.eclipse.osgi" version="3.12.50.v20170928-1321"/>
+<plugin id="org.eclipse.osgi.compatibility.state" version="1.1.0.v20170516-1513"/>
+<plugin id="org.eclipse.osgi.compatibility.state.source" version="1.1.0.v20170516-1513"/>
 <plugin id="org.eclipse.osgi.compatibility.state.source" version="1.1.0.v20170516-1513"/>
 <plugin id="org.eclipse.osgi.services" version="3.6.0.v20170228-1906"/>
 <plugin id="org.eclipse.osgi.services.source" version="3.6.0.v20170228-1906"/>
 <plugin id="org.eclipse.osgi.services.source" version="3.6.0.v20170228-1906"/>
 <plugin id="org.eclipse.osgi.source" version="3.12.50.v20170928-1321"/>
-<plugin id="org.eclipse.osgi.source" version="3.12.50.v20170928-1321"/>
 <plugin id="org.eclipse.osgi.source" version="3.12.1.v20170821-1548"/>
+<plugin id="org.eclipse.osgi.source" version="3.12.50.v20170928-1321"/>
 <plugin id="org.eclipse.osgi.util" version="3.4.0.v20170111-1608"/>
 <plugin id="org.eclipse.osgi.util.source" version="3.4.0.v20170111-1608"/>
 <plugin id="org.eclipse.osgi.util.source" version="3.4.0.v20170111-1608"/>
@@ -614,6 +647,8 @@
 <plugin id="org.eclipse.ui.workbench.source" version="3.110.1.v20170704-1208"/>
 <plugin id="org.eclipse.ui.workbench.texteditor"/>
 <plugin id="org.eclipse.ui.workbench.texteditor.source"/>
+<plugin id="org.eclipse.update.configurator" version="3.3.400.v20160506-0750"/>
+<plugin id="org.eclipse.update.configurator.source" version="3.3.400.v20160506-0750"/>
 <plugin id="org.eclipse.update.configurator.source" version="3.3.400.v20160506-0750"/>
 <plugin id="org.hamcrest.core"/>
 <plugin id="org.hamcrest.core.source"/>
