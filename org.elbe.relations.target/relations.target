@@ -351,6 +351,7 @@
 <plugin id="org.eclipse.equinox.launcher.source" version="1.4.0.v20161219-1356"/>
 <plugin id="org.eclipse.equinox.launcher.source" version="1.4.0.v20161219-1356"/>
 <plugin id="org.eclipse.equinox.launcher.win32.win32.x86" version="1.1.550.v20170928-1359"/>
+<plugin id="org.eclipse.equinox.launcher.win32.win32.x86" version="1.1.550.v20170928-1359"/>
 <plugin id="org.eclipse.equinox.launcher.win32.win32.x86_64" version="1.1.550.v20170928-1359"/>
 <plugin id="org.eclipse.equinox.p2.artifact.repository" version="1.1.650.v20170928-1405"/>
 <plugin id="org.eclipse.equinox.p2.artifact.repository.source" version="1.1.650.v20170928-1405"/>
@@ -416,12 +417,22 @@
 <plugin id="org.eclipse.equinox.p2.transport.ecf.source" version="1.1.300.v20161004-0244"/>
 <plugin id="org.eclipse.equinox.p2.transport.ecf.source" version="1.1.300.v20161004-0244"/>
 <plugin id="org.eclipse.equinox.p2.ui" version="2.5.1.v20170906-1259"/>
+<plugin id="org.eclipse.equinox.p2.ui.importexport" version="1.1.301.v20170816-1007"/>
 <plugin id="org.eclipse.equinox.p2.ui.importexport.source" version="1.1.301.v20170816-1007"/>
+<plugin id="org.eclipse.equinox.p2.ui.importexport.source" version="1.1.301.v20170816-1007"/>
+<plugin id="org.eclipse.equinox.p2.ui.sdk" version="1.0.500.v20170511-1216"/>
+<plugin id="org.eclipse.equinox.p2.ui.sdk.scheduler" version="1.3.100.v20170418-0708"/>
 <plugin id="org.eclipse.equinox.p2.ui.sdk.scheduler.source" version="1.3.100.v20170418-0708"/>
+<plugin id="org.eclipse.equinox.p2.ui.sdk.scheduler.source" version="1.3.100.v20170418-0708"/>
+<plugin id="org.eclipse.equinox.p2.ui.sdk.source" version="1.0.500.v20170511-1216"/>
 <plugin id="org.eclipse.equinox.p2.ui.sdk.source" version="1.0.500.v20170511-1216"/>
 <plugin id="org.eclipse.equinox.p2.ui.source" version="2.5.1.v20170906-1259"/>
 <plugin id="org.eclipse.equinox.p2.ui.source" version="2.5.1.v20170906-1259"/>
+<plugin id="org.eclipse.equinox.p2.updatechecker" version="1.1.400.v20170106-2125"/>
 <plugin id="org.eclipse.equinox.p2.updatechecker.source" version="1.1.400.v20170106-2125"/>
+<plugin id="org.eclipse.equinox.p2.updatechecker.source" version="1.1.400.v20170106-2125"/>
+<plugin id="org.eclipse.equinox.p2.updatesite" version="1.0.601.v20170906-1259"/>
+<plugin id="org.eclipse.equinox.p2.updatesite.source" version="1.0.601.v20170906-1259"/>
 <plugin id="org.eclipse.equinox.p2.updatesite.source" version="1.0.601.v20170906-1259"/>
 <plugin id="org.eclipse.equinox.preferences" version="3.7.0.v20170126-2132"/>
 <plugin id="org.eclipse.equinox.preferences.source" version="3.7.0.v20170126-2132"/>
@@ -552,8 +563,8 @@
 <plugin id="org.eclipse.osgi.services.source" version="3.6.0.v20170228-1906"/>
 <plugin id="org.eclipse.osgi.services.source" version="3.6.0.v20170228-1906"/>
 <plugin id="org.eclipse.osgi.source" version="3.12.50.v20170928-1321"/>
-<plugin id="org.eclipse.osgi.source" version="3.12.1.v20170821-1548"/>
 <plugin id="org.eclipse.osgi.source" version="3.12.50.v20170928-1321"/>
+<plugin id="org.eclipse.osgi.source" version="3.12.1.v20170821-1548"/>
 <plugin id="org.eclipse.osgi.util" version="3.4.0.v20170111-1608"/>
 <plugin id="org.eclipse.osgi.util.source" version="3.4.0.v20170111-1608"/>
 <plugin id="org.eclipse.osgi.util.source" version="3.4.0.v20170111-1608"/>
@@ -592,6 +603,8 @@
 <plugin id="org.eclipse.swt.win32.win32.x86_64.source" version="3.106.1.v20170926-0519"/>
 <plugin id="org.eclipse.team.core"/>
 <plugin id="org.eclipse.team.core.source"/>
+<plugin id="org.eclipse.team.genericeditor.diff.extension"/>
+<plugin id="org.eclipse.team.genericeditor.diff.extension.source"/>
 <plugin id="org.eclipse.team.ui"/>
 <plugin id="org.eclipse.team.ui.source"/>
 <plugin id="org.eclipse.text"/>
@@ -612,6 +625,8 @@
 <plugin id="org.eclipse.ui.externaltools.source"/>
 <plugin id="org.eclipse.ui.forms"/>
 <plugin id="org.eclipse.ui.forms.source"/>
+<plugin id="org.eclipse.ui.genericeditor"/>
+<plugin id="org.eclipse.ui.genericeditor.source"/>
 <plugin id="org.eclipse.ui.ide"/>
 <plugin id="org.eclipse.ui.ide.application"/>
 <plugin id="org.eclipse.ui.ide.application.source"/>
