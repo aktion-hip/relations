@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Relations" sequenceNumber="137">
+<?pde version="3.8"?><target name="Relations" sequenceNumber="140">
 <locations>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.emf.ecore.feature.group" version="2.13.0.v20170609-0707"/>
-<unit id="org.eclipse.emf.feature.group" version="2.13.0.v20170609-0928"/>
-<unit id="org.eclipse.emf.rap.sdk.feature.group" version="2.13.0.v20170609-0928"/>
-<unit id="org.eclipse.emf.sdk.feature.group" version="2.13.0.v20170609-0928"/>
-<unit id="org.eclipse.equinox.executable.feature.group" version="3.7.1.v20170928-1359"/>
-<unit id="org.eclipse.jdt.feature.group" version="3.13.1.v20171009-0410"/>
-<unit id="org.eclipse.platform.sdk" version="4.7.1.M20171009-0410"/>
-<unit id="org.eclipse.rap.equinox.target.feature.feature.group" version="3.3.0.20170913-1712"/>
-<unit id="org.eclipse.rcp.sdk.id" version="4.7.1.M20171009-0410"/>
-<repository location="http://download.eclipse.org/releases/oxygen/"/>
+<unit id="com.opcoach.e4.preferences.feature.feature.group" version="1.1.0.201710152105"/>
+<repository location="https://dl.bintray.com/opcoach/e4Preferences/"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.ecf.core.feature.feature.group" version="1.4.0.v20170516-2248"/>
@@ -24,14 +16,6 @@
 <repository location="http://download.eclipse.org/rt/ecf/3.13.8/site.p2"/>
 </location>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.nebula.widgets.gallery.feature.feature.group" version="1.0.0.201712122235"/>
-<repository location="http://download.eclipse.org/technology/nebula/snapshot"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.e4.tools.spies.feature.feature.group" version="0.18.0.v20171213-1416"/>
-<repository location="http://download.eclipse.org/e4/snapshots/org.eclipse.e4.tools/latest/"/>
-</location>
-<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.p2.discovery.feature.feature.group" version="1.1.1.v20170906-1259"/>
 <unit id="org.eclipse.equinox.p2.sdk.feature.group" version="3.10.1.v20170928-1405"/>
 <unit id="org.eclipse.equinox.sdk.feature.group" version="3.13.1.v20170928-1405"/>
@@ -41,9 +25,25 @@
 <unit id="org.eclipse.rcp.source.feature.group" version="4.7.1.v20171009-0410"/>
 <repository location="http://download.eclipse.org/eclipse/updates/4.7/"/>
 </location>
-<location path="\\idfix\id-home\lbenno\Data\OS_projects\Relations\target\2.1" type="Directory"/>
 <location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.swt" version="3.106.1.v20170926-0519"/>
+</location>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.ecore.feature.group" version="2.13.0.v20170609-0707"/>
+<unit id="org.eclipse.emf.feature.group" version="2.13.0.v20170609-0928"/>
+<unit id="org.eclipse.emf.rap.sdk.feature.group" version="2.13.0.v20170609-0928"/>
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.13.0.v20170609-0928"/>
+<unit id="org.eclipse.equinox.executable.feature.group" version="3.7.1.v20170928-1359"/>
+<unit id="org.eclipse.jdt.feature.group" version="3.13.1.v20171009-0410"/>
+<unit id="org.eclipse.platform.sdk" version="4.7.1.M20171009-0410"/>
+<unit id="org.eclipse.rap.equinox.target.feature.feature.group" version="3.3.0.20170913-1712"/>
+<unit id="org.eclipse.rcp.sdk.id" version="4.7.1.M20171009-0410"/>
+<repository location="http://download.eclipse.org/releases/oxygen/"/>
+</location>
+<location path="\\idfix\id-home\lbenno\Data\OS_projects\Relations\target\2.1" type="Directory"/>
+<location includeAllPlatforms="true" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.nebula.feature.feature.group" version="1.4.0.201801191623"/>
+<repository location="http://download.eclipse.org/technology/nebula/snapshot"/>
 </location>
 </locations>
 <includeBundles>
@@ -55,6 +55,7 @@
 <plugin id="com.jcraft.jsch"/>
 <plugin id="com.jcraft.jsch.source"/>
 <plugin id="com.mysql.jdbc"/>
+<plugin id="com.opcoach.e4.preferences"/>
 <plugin id="com.sun.el"/>
 <plugin id="com.sun.el.source"/>
 <plugin id="javax.annotation" version="1.2.0.v201602091430"/>
@@ -218,10 +219,6 @@
 <plugin id="org.eclipse.e4.emf.xpath" version="0.2.0.v20160630-0728"/>
 <plugin id="org.eclipse.e4.emf.xpath.source" version="0.2.0.v20160630-0728"/>
 <plugin id="org.eclipse.e4.emf.xpath.source" version="0.2.0.v20160630-0728"/>
-<plugin id="org.eclipse.e4.tools.context.spy"/>
-<plugin id="org.eclipse.e4.tools.css.spy"/>
-<plugin id="org.eclipse.e4.tools.event.spy"/>
-<plugin id="org.eclipse.e4.tools.spy"/>
 <plugin id="org.eclipse.e4.ui.bindings" version="0.12.1.v20170823-1632"/>
 <plugin id="org.eclipse.e4.ui.bindings.source" version="0.12.1.v20170823-1632"/>
 <plugin id="org.eclipse.e4.ui.bindings.source" version="0.12.1.v20170823-1632"/>
@@ -350,7 +347,6 @@
 <plugin id="org.eclipse.equinox.launcher.gtk.linux.x86_64" version="1.1.550.v20170928-1359"/>
 <plugin id="org.eclipse.equinox.launcher.source" version="1.4.0.v20161219-1356"/>
 <plugin id="org.eclipse.equinox.launcher.source" version="1.4.0.v20161219-1356"/>
-<plugin id="org.eclipse.equinox.launcher.win32.win32.x86" version="1.1.550.v20170928-1359"/>
 <plugin id="org.eclipse.equinox.launcher.win32.win32.x86" version="1.1.550.v20170928-1359"/>
 <plugin id="org.eclipse.equinox.launcher.win32.win32.x86_64" version="1.1.550.v20170928-1359"/>
 <plugin id="org.eclipse.equinox.p2.artifact.repository" version="1.1.650.v20170928-1405"/>
@@ -503,8 +499,8 @@
 <plugin id="org.eclipse.jdt.junit.core"/>
 <plugin id="org.eclipse.jdt.junit.core.source"/>
 <plugin id="org.eclipse.jdt.junit.runtime" version="3.4.650.v20170920-1015"/>
-<plugin id="org.eclipse.jdt.junit.runtime.source" version="3.4.600.v20160505-0715"/>
 <plugin id="org.eclipse.jdt.junit.runtime.source" version="3.4.650.v20170920-1015"/>
+<plugin id="org.eclipse.jdt.junit.runtime.source" version="3.4.600.v20160505-0715"/>
 <plugin id="org.eclipse.jdt.junit.source"/>
 <plugin id="org.eclipse.jdt.junit4.runtime"/>
 <plugin id="org.eclipse.jdt.junit4.runtime.source"/>
@@ -563,8 +559,8 @@
 <plugin id="org.eclipse.osgi.services.source" version="3.6.0.v20170228-1906"/>
 <plugin id="org.eclipse.osgi.services.source" version="3.6.0.v20170228-1906"/>
 <plugin id="org.eclipse.osgi.source" version="3.12.50.v20170928-1321"/>
-<plugin id="org.eclipse.osgi.source" version="3.12.50.v20170928-1321"/>
 <plugin id="org.eclipse.osgi.source" version="3.12.1.v20170821-1548"/>
+<plugin id="org.eclipse.osgi.source" version="3.12.50.v20170928-1321"/>
 <plugin id="org.eclipse.osgi.util" version="3.4.0.v20170111-1608"/>
 <plugin id="org.eclipse.osgi.util.source" version="3.4.0.v20170111-1608"/>
 <plugin id="org.eclipse.osgi.util.source" version="3.4.0.v20170111-1608"/>
