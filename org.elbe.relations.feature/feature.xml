@@ -301,6 +301,7 @@ POSSIBILITY OF SUCH DAMAGES.
       <import plugin="org.eclipse.nebula.widgets.gallery"/>
       <import plugin="org.eclipse.help" version="3.6.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.e4.rcp" version="1.6.1.v20170928-1359"/>
+      <import plugin="com.opcoach.e4.preferences"/>
    </requires>
 
    <plugin
