@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="org.elbe.relations" uid="Relations" id="org.elbe.relations.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="2.1.1.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="org.elbe.relations" uid="Relations" id="org.elbe.relations.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="2.2.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/org.elbe.relations/icons/aboutRelations.png"/>
@@ -10,7 +10,7 @@
 
 The Relations application is a tool for knowledge management.
 
-Version: 2.1.0
+Version: 2.2.0
 
 (c) Copyright: RelationWare, B. Luthiger.
 Visit http://relations-rcp.sourceforge.net/
@@ -39,7 +39,6 @@ see http://www.eclipse.org/
       startupMessageRect="5,250,449,23"
       startupForegroundColor="FFFFFF" />
    <launcher name="Relations">
-      <solaris/>
       <win useIco="true">
          <ico path="/org.elbe.relations/icons/RelationsIcon.ico"/>
          <bmp/>
@@ -288,104 +287,38 @@ POSSIBILITY OF SUCH DAMAGES.
    </license>
 
    <plugins>
-      <plugin id="com.ibm.icu"/>
-      <plugin id="javax.annotation"/>
-      <plugin id="javax.inject"/>
-      <plugin id="javax.xml"/>
-      <plugin id="org.apache.batik.css"/>
-      <plugin id="org.apache.batik.util"/>
-      <plugin id="org.apache.batik.util.gui"/>
-      <plugin id="org.eclipse.ant.core"/>
-      <plugin id="org.eclipse.core.commands"/>
-      <plugin id="org.eclipse.core.contenttype"/>
-      <plugin id="org.eclipse.core.databinding"/>
-      <plugin id="org.eclipse.core.databinding.observable"/>
-      <plugin id="org.eclipse.core.databinding.property"/>
-      <plugin id="org.eclipse.core.expressions"/>
-      <plugin id="org.eclipse.core.filesystem"/>
-      <plugin id="org.eclipse.core.filesystem.win32.x86_64" fragment="true"/>
-      <plugin id="org.eclipse.core.jobs"/>
-      <plugin id="org.eclipse.core.resources"/>
-      <plugin id="org.eclipse.core.runtime"/>
-      <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
-      <plugin id="org.eclipse.core.variables"/>
-      <plugin id="org.eclipse.e4.core.commands"/>
-      <plugin id="org.eclipse.e4.core.contexts"/>
-      <plugin id="org.eclipse.e4.core.di"/>
-      <plugin id="org.eclipse.e4.core.di.extensions"/>
-      <plugin id="org.eclipse.e4.core.services"/>
-      <plugin id="org.eclipse.e4.ui.bindings"/>
-      <plugin id="org.eclipse.e4.ui.css.core"/>
-      <plugin id="org.eclipse.e4.ui.css.swt"/>
-      <plugin id="org.eclipse.e4.ui.css.swt.theme"/>
-      <plugin id="org.eclipse.e4.ui.di"/>
-      <plugin id="org.eclipse.e4.ui.model.workbench"/>
-      <plugin id="org.eclipse.e4.ui.services"/>
-      <plugin id="org.eclipse.e4.ui.widgets"/>
-      <plugin id="org.eclipse.e4.ui.workbench"/>
-      <plugin id="org.eclipse.e4.ui.workbench.swt"/>
-      <plugin id="org.eclipse.e4.ui.workbench3"/>
-      <plugin id="org.eclipse.emf.common"/>
-      <plugin id="org.eclipse.emf.ecore"/>
-      <plugin id="org.eclipse.emf.ecore.change"/>
-      <plugin id="org.eclipse.emf.ecore.xmi"/>
-      <plugin id="org.eclipse.equinox.app"/>
-      <plugin id="org.eclipse.equinox.common"/>
-      <plugin id="org.eclipse.equinox.ds"/>
-      <plugin id="org.eclipse.equinox.event"/>
-      <plugin id="org.eclipse.equinox.preferences"/>
-      <plugin id="org.eclipse.equinox.registry"/>
-      <plugin id="org.eclipse.equinox.util"/>
-      <plugin id="org.eclipse.jface"/>
-      <plugin id="org.eclipse.jface.databinding"/>
-      <plugin id="org.eclipse.osgi"/>
-      <plugin id="org.eclipse.osgi.services"/>
-      <plugin id="org.eclipse.swt"/>
-      <plugin id="org.eclipse.swt.win32.win32.x86_64" fragment="true"/>
-      <plugin id="org.w3c.css.sac"/>
-      <plugin id="org.w3c.dom.smil"/>
-      <plugin id="org.w3c.dom.svg"/>
    </plugins>
 
    <features>
-      <feature id="org.elbe.relations.feature" version="2.1.0.qualifier"/>
+      <feature id="org.elbe.relations.feature" version="2.2.0.qualifier"/>
       <feature id="org.elbe.relations.add.feature" version="2.1.0.qualifier"/>
-      <feature id="org.eclipse.emf.common" version="2.11.0.v20150805-0538"/>
-      <feature id="org.eclipse.emf.ecore" version="2.11.1.v20150805-0538"/>
-      <feature id="org.eclipse.rcp" version="4.5.1.v20150904-0015"/>
-      <feature id="org.eclipse.e4.rcp"/>
-      <feature id="org.eclipse.equinox.p2.user.ui" version="2.2.101.v20150826-1318"/>
-      <feature id="org.eclipse.ecf.filetransfer.httpclient4.feature"/>
-      <feature id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature"/>
-      <feature id="org.eclipse.equinox.p2.extras.feature"/>
-      <feature id="org.eclipse.equinox.p2.core.feature"/>
-      <feature id="org.eclipse.ecf.core.feature"/>
-      <feature id="org.eclipse.equinox.p2.rcp.feature"/>
-      <feature id="org.eclipse.ecf.filetransfer.feature"/>
-      <feature id="org.eclipse.ecf.core.ssl.feature"/>
-      <feature id="org.eclipse.ecf.filetransfer.ssl.feature"/>
-      <feature id="org.eclipse.platform" version="4.5.1.v20150904-0015"/>
+      <feature id="org.eclipse.emf.common" version="2.13.0.v20170609-0707"/>
+      <feature id="org.eclipse.emf.ecore" version="2.13.0.v20170609-0707"/>
+      <feature id="org.eclipse.rcp" version="4.7.1.v20171009-0410"/>
+      <feature id="org.eclipse.e4.rcp" version="1.6.1.v20170928-1359"/>
+      <feature id="org.eclipse.equinox.p2.user.ui" version="2.3.1.v20170928-1405"/>
+      <feature id="org.eclipse.ecf.filetransfer.httpclient4.feature" version="3.13.8.v20170715-2257"/>
+      <feature id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature" version="1.1.0.v20170110-1317"/>
+      <feature id="org.eclipse.equinox.p2.extras.feature" version="1.3.1.v20170928-1405"/>
+      <feature id="org.eclipse.equinox.p2.core.feature" version="1.4.1.v20170928-1405"/>
+      <feature id="org.eclipse.ecf.core.feature" version="1.4.0.v20170516-2248"/>
+      <feature id="org.eclipse.equinox.p2.rcp.feature" version="1.3.1.v20170928-1405"/>
+      <feature id="org.eclipse.ecf.filetransfer.feature" version="3.13.8.v20170715-2257"/>
+      <feature id="org.eclipse.ecf.core.ssl.feature" version="1.1.0.v20170110-1317"/>
+      <feature id="org.eclipse.ecf.filetransfer.ssl.feature" version="1.1.0.v20170110-1317"/>
+      <feature id="org.eclipse.platform" version="4.7.1.v20171009-0410"/>
+      <feature id="org.eclipse.help"/>
+      <feature id="com.opcoach.e4.preferences.feature" version="1.1.0.201710152105"/>
    </features>
 
    <configurations>
       <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.e4.ui.css.swt.theme" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.e4.core.services" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.e4.ui.services" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
-      <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
-      <plugin id="org.eclipse.equinox.util" autoStart="true" startLevel="0" />
-      <plugin id="org.elbe.relations.biblio.dft" autoStart="true" startLevel="0" />
-      <plugin id="org.elbe.relations.data" autoStart="true" startLevel="3" />
-      <plugin id="org.elbe.relations.defaultBrowser" autoStart="true" startLevel="0" />
-      <plugin id="org.elbe.relations.indexer.lucene" autoStart="true" startLevel="0" />
-      <plugin id="org.elbe.relations.print.dft" autoStart="true" startLevel="0" />
-      <plugin id="org.elbe.relations.print.doc" autoStart="true" startLevel="0" />
-      <plugin id="org.elbe.relations.print.odt" autoStart="true" startLevel="0" />
-      <plugin id="org.hip.vif.dbaccess.derby" autoStart="true" startLevel="0" />
-      <plugin id="org.hip.vif.dbaccess.mysql" autoStart="true" startLevel="0" />
-      <plugin id="org.hip.viffw" autoStart="true" startLevel="3" />
    </configurations>
 
    <repositories>

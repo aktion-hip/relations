@@ -18,6 +18,7 @@
  ***************************************************************************/
 package org.elbe.relations.internal.e4.wizards.util;
 
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
@@ -36,7 +37,6 @@ import org.eclipse.ui.IPluginContribution;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.util.Util;
 import org.eclipse.ui.statushandlers.IStatusAdapterConstants;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
@@ -119,7 +119,7 @@ public abstract class WorkbenchWizardNode
 
 	@Override
 	public String getLocalId() {
-		final IPluginContribution contribution = Util.getAdapter(wizardElement,
+		final IPluginContribution contribution = Adapters.adapt(wizardElement,
 		        IPluginContribution.class);
 		if (contribution != null) {
 			return contribution.getLocalId();
@@ -129,7 +129,7 @@ public abstract class WorkbenchWizardNode
 
 	@Override
 	public String getPluginId() {
-		final IPluginContribution contribution = Util.getAdapter(wizardElement,
+		final IPluginContribution contribution = Adapters.adapt(wizardElement,
 		        IPluginContribution.class);
 		if (contribution != null) {
 			return contribution.getPluginId();
@@ -157,8 +157,7 @@ public abstract class WorkbenchWizardNode
 					         */
 					        @Override
 					        public void handleException(final Throwable exc) {
-						        final IPluginContribution lContribution = Util
-		                                .getAdapter(wizardElement,
+						        final IPluginContribution lContribution = Adapters.adapt(wizardElement,
 		                                        IPluginContribution.class);
 						        lStatuses[0] = new Status(IStatus.ERROR,
 		                                lContribution != null
@@ -176,8 +175,7 @@ public abstract class WorkbenchWizardNode
 							        // create instance of target wizard
 						        }
 						        catch (final CoreException exc) {
-							        final IPluginContribution lContribution = Util
-		                                    .getAdapter(wizardElement,
+							        final IPluginContribution lContribution = Adapters.adapt(wizardElement,
 		                                            IPluginContribution.class);
 							        lStatuses[0] = new Status(IStatus.ERROR,
 		                                    lContribution != null

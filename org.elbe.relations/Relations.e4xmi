@@ -66,7 +66,7 @@
               </children>
             </children>
             <children xsi:type="basic:PartStack" xmi:id="_RcW5wBY1EeKaY4i-iZlKSg" elementId="inspector.view" containerData="30">
-              <children xsi:type="basic:Part" xmi:id="_Us75sBY1EeKaY4i-iZlKSg" elementId="inspector.view.part" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.internal.controls.InspectorView" label="%part.name.inspector" iconURI="platform:/plugin/org.eclipse.jface/org/eclipse/jface/dialogs/images/message_info.gif" tooltip="%part.name.inspector.tip">
+              <children xsi:type="basic:Part" xmi:id="_Us75sBY1EeKaY4i-iZlKSg" elementId="inspector.view.part" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.internal.controls.InspectorView" label="%part.name.inspector" iconURI="platform:/plugin/org.elbe.relations/icons/message_info.png" tooltip="%part.name.inspector.tip" bindingContexts="_FzjLEDu6EeKZga5MXWuOOQ">
                 <menus xsi:type="menu:PopupMenu" xmi:id="_WKIZ8DukEeKZga5MXWuOOQ" elementId="org.elbe.relations.inspector.popup">
                   <children xsi:type="menu:HandledMenuItem" xmi:id="_beX6wDukEeKZga5MXWuOOQ" elementId="inspector.popup:item.save" label="%command.change.save" iconURI="platform:/plugin/org.elbe.relations/icons/save.gif" tooltip="%command.change.save.tip" command="_-axcERYwEeKaY4i-iZlKSg"/>
                   <children xsi:type="menu:HandledMenuItem" xmi:id="_jl5bgDukEeKZga5MXWuOOQ" elementId="inspector.popup:item.undo" label="%command.change.undo" iconURI="platform:/plugin/org.elbe.relations/icons/undo_edit.gif" tooltip="%command.change.undo.tip" command="_lT7J8DusEeKZga5MXWuOOQ"/>
@@ -123,7 +123,7 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_8T40IEozEeOlq5sfE9Wmlw" label="%command.show.welcome" iconURI="platform:/plugin/org.eclipse.ui.intro/icons/welcome16.gif" command="_HGMgIEo0EeOlq5sfE9Wmlw"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_2KM7gEcyEeOLY8H4-5VcYg" elementId="" label="%handledmenuitem.label.18" command="_AKmocEc-EeOLY8H4-5VcYg"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_GlSN4EczEeOLY8H4-5VcYg" elementId="org.elbe.relations.menuseparator.help.help"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_n0Q6IHuyEeKuqp0Z70q4AA" elementId="" label="%handledmenuitem.label.help" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/help_contents.gif" command="_0MLSAHuyEeKuqp0Z70q4AA"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_n0Q6IHuyEeKuqp0Z70q4AA" elementId="" label="%handledmenuitem.label.help" iconURI="platform:/plugin/org.elbe.relations/icons/help_contents.png" command="_0MLSAHuyEeKuqp0Z70q4AA"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_ZxZaIAL1EeaNXrono6guGQ" elementId="org.elbe.relations.menuseparator.help.update"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_jx8SAAL1EeaNXrono6guGQ" elementId="" label="%command.updates.check" iconURI="platform:/plugin/org.elbe.relations/icons/update.gif" command="_6Pdn8AL1EeaNXrono6guGQ"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_dIsOoKU7EeKgdtHsUDGjpQ" elementId="additions"/>
@@ -324,6 +324,11 @@
       <tags>type:user</tags>
     </bindings>
   </bindingTables>
+  <bindingTables xmi:id="_J3EXsPevEeepw_7kdR_M8g" elementId="org.elbe.relations.bindingtable.inspector" bindingContext="_FzjLEDu6EeKZga5MXWuOOQ">
+    <bindings xmi:id="_PGY8QPevEeepw_7kdR_M8g" elementId="" keySequence="M1+C" command="_b6-zoPewEeepw_7kdR_M8g">
+      <tags>type:user</tags>
+    </bindings>
+  </bindingTables>
   <rootContext xmi:id="_vLHKgDv5EeKA7_T_MYQC0Q" elementId="org.elbe.relations.context.app" name="In Relations Application">
     <children xmi:id="_2rKewDv9EeKA7_T_MYQC0Q" elementId="org.elbe.relations.context.main" name="In Relations Main Window">
       <children xmi:id="_FzjLEDu6EeKZga5MXWuOOQ" elementId="org.elbe.relations.context.inspector" name="In Relations Inspector"/>
@@ -420,6 +425,7 @@
   <commands xmi:id="_2DSdAJXJEeWpfK4H-ptl-Q" elementId="org.elbe.relations.command.part.maximize" commandName="%command.maximize.restore" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <commands xmi:id="_IpzNALuZEeWV0esgnY2lLg" elementId="org.elbe.relations.show.about" commandName="%command.about" description="%command.about.desc" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <commands xmi:id="_6Pdn8AL1EeaNXrono6guGQ" elementId="org.elbe.relations.command.updates.check" commandName="%command.updates.check" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
+  <commands xmi:id="_b6-zoPewEeepw_7kdR_M8g" elementId="org.elbe.relations.command.copy" commandName="Copy" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <addons xmi:id="_-axcBBYwEeKaY4i-iZlKSg" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_-axcBRYwEeKaY4i-iZlKSg" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_-axcBhYwEeKaY4i-iZlKSg" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

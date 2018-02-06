@@ -68,7 +68,6 @@ import org.eclipse.ui.internal.about.InstallationDialog;
  */
 public class AboutDialog extends TrayDialog {
 	private final static int MAX_IMAGE_WIDTH_FOR_TEXT = 250;
-	private final static int DETAILS_ID = IDialogConstants.CLIENT_ID + 1;
 
 	private final IProduct product;
 	private String productName;
@@ -92,8 +91,7 @@ public class AboutDialog extends TrayDialog {
 		}
 
 		// create a descriptive object for each BundleGroup
-		final IBundleGroupProvider[] providers = Platform
-		        .getBundleGroupProviders();
+		final IBundleGroupProvider[] providers = Platform.getBundleGroupProviders();
 		final LinkedList<AboutBundleGroupData> groups = new LinkedList<AboutBundleGroupData>();
 		if (providers != null) {
 			for (final IBundleGroupProvider provider : providers) {
@@ -104,27 +102,6 @@ public class AboutDialog extends TrayDialog {
 			}
 		}
 		bundleGroupInfos = groups.toArray(new AboutBundleGroupData[0]);
-	}
-
-	@Override
-	protected void buttonPressed(int buttonId) {
-		switch (buttonId) {
-		case DETAILS_ID:
-			BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
-				@Override
-				public void run() {
-					final InstallationDialog dialog = new InstallationDialog(
-			                getShell(),
-			                RelationsServiceLocator.createServiceLocator(null));
-					dialog.setModalParent(AboutDialog.this);
-					dialog.open();
-				}
-			});
-			break;
-		default:
-			super.buttonPressed(buttonId);
-			break;
-		}
 	}
 
 	@Override
@@ -156,9 +133,6 @@ public class AboutDialog extends TrayDialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		parent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-		createButton(parent, DETAILS_ID,
-		        WorkbenchMessages.AboutDialog_DetailsButton, false);
 
 		final Label l = new Label(parent, SWT.NONE);
 		l.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

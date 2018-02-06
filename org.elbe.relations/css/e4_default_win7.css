@@ -17,7 +17,7 @@
 }
 
 .MTrimBar#org-eclipse-ui-main-toolbar {
-    background-image:  url(./win7.png);	
+    background-color: #F5F7FC #E1E6F6 100%;
 }
 
 .MToolControl.TrimStack {
@@ -32,6 +32,7 @@
 
 #PerspectiveSwitcher  {
 	background-color: #F5F7FC #E1E6F6 100%;
+	eclipse-perspective-keyline-color: #E1E6F6 #AAB0BF;
 }
 
 #org-eclipse-ui-editorss {
@@ -51,4 +52,12 @@ CTabFolder.MArea .MPartStack, CTabFolder.MArea .MPartStack.active {
 
 CTabFolder Canvas {
     background-color: #F8F8F8;
+}
+
+Section {
+	background-color: #ffffff;
+  	color: #505050;
+  	background-color-titlebar: #eaeaea;
+  	background-color-gradient-titlebar: #eaeaea;
+  	border-color-titlebar: #ffffff;
 }
