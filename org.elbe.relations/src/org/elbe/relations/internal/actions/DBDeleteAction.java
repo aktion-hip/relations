@@ -64,19 +64,14 @@ public class DBDeleteAction implements ICommand {
 	 */
 	public DBDeleteAction(final DBSettings inSettings,
 			final IEclipseContext inContext, final Logger inLog) {
-		dbSettings = inSettings;
-		context = inContext;
-		log = inLog;
+		this.dbSettings = inSettings;
+		this.context = inContext;
+		this.log = inLog;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.internal.actions.ICommand#execute()
-	 */
 	@Override
 	public void execute() {
-		final String lCatalog = dbSettings.getCatalog();
+		final String lCatalog = this.dbSettings.getCatalog();
 		final String lQuestion = RelationsMessages.getString(
 				"DBDeleteAction.action.msg2", new Object[] { lCatalog }); //$NON-NLS-1$
 		if (MessageDialog
@@ -86,23 +81,23 @@ public class DBDeleteAction implements ICommand {
 								.getString("DBDeleteAction.action.msg1"), lQuestion)) { //$NON-NLS-1$
 
 			// first drop the database content
-			dropTables(log);
+			dropTables(this.log);
 
 			// then change to the default embedded database
 			final IDBSettings lTempSettings = new TempSettings("", //$NON-NLS-1$
 					RelationsConstants.DFT_DB_EMBEDDED, "", "", //$NON-NLS-1$ //$NON-NLS-2$
-					dbSettings.getDBConnectionConfig());
+					this.dbSettings.getDBConnectionConfig());
 			final IDBChange lChangeDB = ContextInjectionFactory.make(
-					ChangeDB.class, context);
+					ChangeDB.class, this.context);
 			lChangeDB.setTemporarySettings(lTempSettings);
 			lChangeDB.execute();
 
 			// finally mark the file system traces of the embedded database
 			// deleted
 			final File lStore = EmbeddedCatalogHelper.getDBStorePath();
-			markDeleted(new File(lStore, lCatalog), log);
+			markDeleted(new File(lStore, lCatalog), this.log);
 			markDeleted(new File(new File(lStore.getParentFile(),
-					RelationsConstants.LUCENE_STORE), lCatalog), log);
+					RelationsConstants.LUCENE_STORE), lCatalog), this.log);
 		}
 	}
 

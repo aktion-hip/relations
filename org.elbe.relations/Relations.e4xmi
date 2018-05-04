@@ -117,6 +117,7 @@
       </children>
       <children xsi:type="menu:Menu" xmi:id="_-G3PwB67EeK3tP7nd1gQtA" elementId="org.elbe.relations.menu.utility" label="%menu.label.utility">
         <children xsi:type="menu:HandledMenuItem" xmi:id="_L_o9cB68EeK3tP7nd1gQtA" elementId="org.elbe.relations.menu.utility.reindex" label="%handledmenuitem.label.15" command="_h9_rIB68EeK3tP7nd1gQtA"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_ZAGNgDm0EeinGNvAVK3xcg" elementId="org.elbe.relations.menu.utility.cloud.export" label="%handledmenuitem.label.cloud" command="_Asr3gDm1EeinGNvAVK3xcg"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_P9JU0B68EeK3tP7nd1gQtA" elementId="org.elbe.relations.menu.utility.preferences" label="%handledmenuitem.label.16" command="_-6q8MB7EEeK3tP7nd1gQtA"/>
       </children>
       <children xsi:type="menu:Menu" xmi:id="_-axcHRYwEeKaY4i-iZlKSg" elementId="help" label="%menu.label.help">
@@ -127,6 +128,7 @@
         <children xsi:type="menu:MenuSeparator" xmi:id="_ZxZaIAL1EeaNXrono6guGQ" elementId="org.elbe.relations.menuseparator.help.update"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_jx8SAAL1EeaNXrono6guGQ" elementId="" label="%command.updates.check" iconURI="platform:/plugin/org.elbe.relations/icons/update.gif" command="_6Pdn8AL1EeaNXrono6guGQ"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_dIsOoKU7EeKgdtHsUDGjpQ" elementId="additions"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_7cc4oD0EEeiIr6m_H0bkTw" elementId="org.elbe.relations.menu.help.cloud" label="%handledmenuitem.label.help.cloud" command="_iPAjUD0FEeiIr6m_H0bkTw"/>
         <children xsi:type="menu:MenuSeparator" xmi:id="_ryPyoHuyEeKuqp0Z70q4AA" elementId="org.elbe.relations.menuseparator.help.about"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_-axcHhYwEeKaY4i-iZlKSg" label="%menu.item.about" iconURI="platform:/plugin/org.elbe.relations/icons/relations.gif" command="_IpzNALuZEeWV0esgnY2lLg"/>
       </children>
@@ -224,6 +226,8 @@
   <handlers xmi:id="_X0lLwLbQEeWBmrIyjRz8VA" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.HelpContentHandler" command="_0MLSAHuyEeKuqp0Z70q4AA"/>
   <handlers xmi:id="_0cUxoLuZEeWV0esgnY2lLg" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.AboutHandler" command="_IpzNALuZEeWV0esgnY2lLg"/>
   <handlers xmi:id="_6p7g8AL2EeaNXrono6guGQ" elementId="" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.item.UpdateHandler" command="_6Pdn8AL1EeaNXrono6guGQ"/>
+  <handlers xmi:id="_5HqxcDm1EeinGNvAVK3xcg" elementId="org.elbe.relations.handler.cloud.export" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.CloudExportHandler" command="_Asr3gDm1EeinGNvAVK3xcg"/>
+  <handlers xmi:id="_8wF1UD0FEeiIr6m_H0bkTw" elementId="org.elbe.relations.handler.cloud.help" contributionURI="bundleclass://org.elbe.relations/org.elbe.relations.handlers.CloudConfigurationHelper" command="_iPAjUD0FEeiIr6m_H0bkTw"/>
   <bindingTables xmi:id="_gRRkADyfEeKc_uS-EtsnSg" elementId="org.elbe.relations.bindingtable.app" bindingContext="_vLHKgDv5EeKA7_T_MYQC0Q"/>
   <bindingTables xmi:id="_8u67EDx4EeKc_uS-EtsnSg" elementId="org.elbe.relations.bindingtable.main" bindingContext="_2rKewDv9EeKA7_T_MYQC0Q">
     <bindings xmi:id="_-axcDRYwEeKaY4i-iZlKSg" keySequence="M1+Q" command="_-axcChYwEeKaY4i-iZlKSg">
@@ -426,6 +430,8 @@
   <commands xmi:id="_IpzNALuZEeWV0esgnY2lLg" elementId="org.elbe.relations.show.about" commandName="%command.about" description="%command.about.desc" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <commands xmi:id="_6Pdn8AL1EeaNXrono6guGQ" elementId="org.elbe.relations.command.updates.check" commandName="%command.updates.check" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <commands xmi:id="_b6-zoPewEeepw_7kdR_M8g" elementId="org.elbe.relations.command.copy" commandName="Copy" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
+  <commands xmi:id="_Asr3gDm1EeinGNvAVK3xcg" elementId="org.elbe.relations.command.cloud.export" commandName="%command.export.cloud" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
+  <commands xmi:id="_iPAjUD0FEeiIr6m_H0bkTw" elementId="org.elbe.relations.command.cloud.help" commandName="%command.help.cloud" category="_U-K2AFNyEeKu5ZyUiHaoHg"/>
   <addons xmi:id="_-axcBBYwEeKaY4i-iZlKSg" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_-axcBRYwEeKaY4i-iZlKSg" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_-axcBhYwEeKaY4i-iZlKSg" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

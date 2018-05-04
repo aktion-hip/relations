@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
@@ -45,8 +44,8 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.elbe.relations.Activator;
-import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.RelationsMessages;
+import org.elbe.relations.internal.actions.RelationsPreferences;
 import org.elbe.relations.internal.services.IDBController;
 import org.elbe.relations.internal.utility.CheckDirtyService;
 import org.elbe.relations.internal.utility.FormUtility;
@@ -54,11 +53,11 @@ import org.elbe.relations.internal.wizards.IUpdateListener;
 
 /**
  * Base class for forms to input information concerning the database settings.
- * 
+ *
  * @author Luthiger Created on 10.10.2008
  */
 public abstract class AbstractDBSettingsForm extends AbstractPreferenceForm {
-	protected ListenerList updateListeners;
+	protected ListenerList<IUpdateListener> updateListeners;
 	protected CheckDirtyService dbDirtySettings;
 	protected CheckDirtyService langSettings;
 	private static final String BUNDLE_ID = Activator.getSymbolicName();
@@ -82,7 +81,7 @@ public abstract class AbstractDBSettingsForm extends AbstractPreferenceForm {
 	private IDBController dbController;
 
 	protected IDBController getDBController() {
-		return dbController;
+		return this.dbController;
 	}
 
 	protected Combo createDbasesCombo(final Composite inParent,
@@ -99,15 +98,15 @@ public abstract class AbstractDBSettingsForm extends AbstractPreferenceForm {
 
 			@Override
 			public void widgetSelected(final SelectionEvent inEvent) {
-				final boolean lEmbedded = dbController
+				final boolean lEmbedded = AbstractDBSettingsForm.this.dbController
 						.checkEmbedded(((Combo) inEvent.widget)
 								.getSelectionIndex());
 				embeddedSwitch(lEmbedded);
-				notifyAboutUpdate(statusManager.getStati());
+				notifyAboutUpdate(AbstractDBSettingsForm.this.statusManager.getStati());
 			}
 		});
 		((GridData) outCombo.getLayoutData()).horizontalIndent = inIndent;
-		dbDirtySettings.register(outCombo);
+		this.dbDirtySettings.register(outCombo);
 		return outCombo;
 	}
 
@@ -117,9 +116,9 @@ public abstract class AbstractDBSettingsForm extends AbstractPreferenceForm {
 				inParent,
 				inColumns,
 				RelationsMessages
-						.getString("FormDBConnection.lbl.catalog.embedded"), new String[] {}); //$NON-NLS-1$
+				.getString("FormDBConnection.lbl.catalog.embedded"), new String[] {}); //$NON-NLS-1$
 		((GridData) outCombo.getLayoutData()).horizontalIndent = inIndent;
-		dbDirtySettings.register(outCombo);
+		this.dbDirtySettings.register(outCombo);
 		return outCombo;
 	}
 
@@ -130,11 +129,11 @@ public abstract class AbstractDBSettingsForm extends AbstractPreferenceForm {
 				inColumns,
 				RelationsMessages.getString("FormDBConnection.lbl.host"), SWT.BORDER | SWT.SINGLE); //$NON-NLS-1$
 		((GridData) lHostField.getLayoutData()).horizontalIndent = inIndent;
-		dbDirtySettings.register(lHostField);
+		this.dbDirtySettings.register(lHostField);
 		final DecoratedTextField outDecorated = createDecoratedTextField(
 				lHostField,
 				RelationsMessages.getString("FormDBConnection.decoration.host")); //$NON-NLS-1$
-		lHostField.addFocusListener(new FormFocusListener(hostEmpty,
+		lHostField.addFocusListener(new FormFocusListener(this.hostEmpty,
 				outDecorated));
 		lHostField.addModifyListener(new FormModifyListener(outDecorated));
 		// add content proposal to field proposing "localhost" as possible value
@@ -156,7 +155,7 @@ public abstract class AbstractDBSettingsForm extends AbstractPreferenceForm {
 		lAdapter.setPropagateKeys(true);
 		lAdapter.setProposalAcceptanceStyle(ContentProposalAdapter.PROPOSAL_REPLACE);
 
-		statusManager.initialize(lHostField);
+		this.statusManager.initialize(lHostField);
 		return outDecorated;
 	}
 
@@ -167,14 +166,14 @@ public abstract class AbstractDBSettingsForm extends AbstractPreferenceForm {
 				inColumns,
 				RelationsMessages.getString("FormDBConnection.lbl.catalog"), SWT.BORDER | SWT.SINGLE); //$NON-NLS-1$
 		((GridData) lCatalogField.getLayoutData()).horizontalIndent = inIndent;
-		dbDirtySettings.register(lCatalogField);
+		this.dbDirtySettings.register(lCatalogField);
 		final DecoratedTextField outDecorated = createDecoratedTextField(
 				lCatalogField,
 				RelationsMessages
-						.getString("FormDBConnection.decoration.catalog")); //$NON-NLS-1$
-		lCatalogField.addFocusListener(new FormFocusListener(catalogEmpty,
+				.getString("FormDBConnection.decoration.catalog")); //$NON-NLS-1$
+		lCatalogField.addFocusListener(new FormFocusListener(this.catalogEmpty,
 				outDecorated));
-		statusManager.initialize(lCatalogField);
+		this.statusManager.initialize(lCatalogField);
 		return outDecorated;
 	}
 
@@ -185,14 +184,14 @@ public abstract class AbstractDBSettingsForm extends AbstractPreferenceForm {
 				inColumns,
 				RelationsMessages.getString("FormDBConnection.lbl.user"), SWT.BORDER | SWT.SINGLE); //$NON-NLS-1$
 		((GridData) lUsernameField.getLayoutData()).horizontalIndent = inIndent;
-		dbDirtySettings.register(lUsernameField);
+		this.dbDirtySettings.register(lUsernameField);
 		final DecoratedTextField outDecorated = createDecoratedTextField(
 				lUsernameField,
 				RelationsMessages.getString("FormDBConnection.decoration.user")); //$NON-NLS-1$
-		lUsernameField.addFocusListener(new FormFocusListener(usernameEmpty,
+		lUsernameField.addFocusListener(new FormFocusListener(this.usernameEmpty,
 				outDecorated));
 		lUsernameField.addModifyListener(new FormModifyListener(outDecorated));
-		statusManager.initialize(lUsernameField);
+		this.statusManager.initialize(lUsernameField);
 		return outDecorated;
 	}
 
@@ -203,24 +202,24 @@ public abstract class AbstractDBSettingsForm extends AbstractPreferenceForm {
 				inColumns,
 				RelationsMessages.getString("FormDBConnection.lbl.password"), SWT.BORDER | SWT.SINGLE | SWT.PASSWORD); //$NON-NLS-1$
 		((GridData) lPasswrdField.getLayoutData()).horizontalIndent = inIndent;
-		dbDirtySettings.register(lPasswrdField);
+		this.dbDirtySettings.register(lPasswrdField);
 		final DecoratedTextField outDecorated = createDecoratedTextField(
 				lPasswrdField,
 				RelationsMessages
-						.getString("FormDBConnection.decoration.password")); //$NON-NLS-1$
-		lPasswrdField.addFocusListener(new FormFocusListener(passwrdEmpty,
+				.getString("FormDBConnection.decoration.password")); //$NON-NLS-1$
+		lPasswrdField.addFocusListener(new FormFocusListener(this.passwrdEmpty,
 				outDecorated));
 		lPasswrdField.addModifyListener(new FormModifyListener(outDecorated));
-		statusManager.initialize(lPasswrdField);
+		this.statusManager.initialize(lPasswrdField);
 		return outDecorated;
 	}
 
 	protected void resetFieldStatus() {
-		statusManager.reset();
+		this.statusManager.reset();
 	}
 
 	protected void resetFieldStatusExcept(final Text inText) {
-		statusManager.resetExcept(inText);
+		this.statusManager.resetExcept(inText);
 	}
 
 	abstract protected void embeddedSwitch(boolean inIsEmbedded);
@@ -230,42 +229,42 @@ public abstract class AbstractDBSettingsForm extends AbstractPreferenceForm {
 	abstract public void dispose();
 
 	protected IStatus[] getStati() {
-		return statusManager.getStati();
+		return this.statusManager.getStati();
 	}
 
 	protected void setFieldStatus(final Text inText, final IStatus inStatus) {
-		statusManager.set(inText, inStatus);
+		this.statusManager.set(inText, inStatus);
 	}
 
 	protected void initUpdateListeners() {
-		updateListeners = new ListenerList();
+		this.updateListeners = new ListenerList<>();
 	}
 
 	/**
 	 * Adds an update listener to the form to be notified about update events
 	 * fired after user interaction.
-	 * 
+	 *
 	 * @param inListner
 	 *            IUpdateListener
 	 */
 	public void addUpdateListener(final IUpdateListener inListner) {
-		updateListeners.add(inListner);
+		this.updateListeners.add(inListner);
 	}
 
 	/**
 	 * Removes the specified update listener.
-	 * 
+	 *
 	 * @param inListner
 	 *            IUpdateListener
 	 */
 	public void removeUpdateListener(final IUpdateListener inListner) {
-		updateListeners.remove(inListner);
+		this.updateListeners.remove(inListner);
 	}
 
 	protected void notifyAboutUpdate(final IStatus[] inStati) {
 		final MultiStatus lMulti = new MultiStatus(BUNDLE_ID, 1, inStati,
 				"", null); //$NON-NLS-1$
-		final Object[] lListeners = updateListeners.getListeners();
+		final Object[] lListeners = this.updateListeners.getListeners();
 		for (int i = 0; i < lListeners.length; ++i) {
 			((IUpdateListener) lListeners[i]).onUpdate(lMulti);
 		}
@@ -282,8 +281,7 @@ public abstract class AbstractDBSettingsForm extends AbstractPreferenceForm {
 	// --- private classes ---
 
 	protected IEclipsePreferences getPreferences() {
-		return InstanceScope.INSTANCE
-				.getNode(RelationsConstants.PREFERENCE_NODE);
+		return RelationsPreferences.getPreferences();
 	}
 
 	/**
@@ -298,49 +296,49 @@ public abstract class AbstractDBSettingsForm extends AbstractPreferenceForm {
 		public DecoratedTextField(final Text inText,
 				final ControlDecoration inRequired,
 				final ControlDecoration inError) {
-			text = inText;
-			requiredDeco = inRequired;
-			errorDeco = inError;
+			this.text = inText;
+			this.requiredDeco = inRequired;
+			this.errorDeco = inError;
 		}
 
 		public Text getText() {
-			return text;
+			return this.text;
 		}
 
 		public void dispose() {
-			text.dispose();
-			requiredDeco.dispose();
-			errorDeco.dispose();
+			this.text.dispose();
+			this.requiredDeco.dispose();
+			this.errorDeco.dispose();
 		}
 
 		public int length() {
-			return text.getText().length();
+			return this.text.getText().length();
 		}
 
 		public void setEnabled(final boolean isEnabled) {
-			text.setEnabled(isEnabled);
+			this.text.setEnabled(isEnabled);
 		}
 
 		public void setRequired(final boolean inShow) {
 			if (inShow) {
-				requiredDeco.show();
+				this.requiredDeco.show();
 			} else {
-				requiredDeco.hide();
+				this.requiredDeco.hide();
 			}
 		}
 
 		public void setError(final boolean inShow) {
 			if (inShow) {
-				errorDeco.show();
+				this.errorDeco.show();
 			} else {
-				errorDeco.hide();
+				this.errorDeco.hide();
 			}
 		}
 	}
 
 	/**
 	 * Utility class to manage the dirty state of form fields.
-	 * 
+	 *
 	 * @author Luthiger Created on 11.10.2008
 	 */
 	protected class CheckDirtyServicePreferences extends CheckDirtyService {
@@ -350,13 +348,13 @@ public abstract class AbstractDBSettingsForm extends AbstractPreferenceForm {
 
 		@Override
 		public void notifyDirtySwitch(final boolean inIsDirty) {
-			if (isDirty ^ inIsDirty) {
+			if (this.isDirty ^ inIsDirty) {
 				// if there is a switch in one element, check whether this was
 				// the first clean or last dirty element
 				final boolean lIsDirty = getDirty();
-				if (isDirty ^ lIsDirty) {
+				if (this.isDirty ^ lIsDirty) {
 					// the dialog's dirty status switched -> notification
-					isDirty = lIsDirty;
+					this.isDirty = lIsDirty;
 				}
 			}
 		}
@@ -369,26 +367,26 @@ public abstract class AbstractDBSettingsForm extends AbstractPreferenceForm {
 
 		public FormFocusListener(final IStatus inStatusError,
 				final DecoratedTextField inDecorated) {
-			statusError = inStatusError;
-			requiredDeco = inDecorated.requiredDeco;
-			errorDeco = inDecorated.errorDeco;
+			this.statusError = inStatusError;
+			this.requiredDeco = inDecorated.requiredDeco;
+			this.errorDeco = inDecorated.errorDeco;
 		}
 
 		@Override
 		public void focusGained(final FocusEvent inEvent) {
-			requiredDeco.show();
-			errorDeco.hide();
+			this.requiredDeco.show();
+			this.errorDeco.hide();
 		}
 
 		@Override
 		public void focusLost(final FocusEvent inEvent) {
 			final Text lControl = (Text) inEvent.widget;
 			if (lControl.getText().length() == 0) {
-				statusManager.set(lControl, statusError);
-				requiredDeco.hide();
-				errorDeco.show();
+				AbstractDBSettingsForm.this.statusManager.set(lControl, this.statusError);
+				this.requiredDeco.hide();
+				this.errorDeco.show();
 			}
-			notifyAboutUpdate(statusManager.getStati());
+			notifyAboutUpdate(AbstractDBSettingsForm.this.statusManager.getStati());
 		}
 	}
 
@@ -397,8 +395,8 @@ public abstract class AbstractDBSettingsForm extends AbstractPreferenceForm {
 		private final ControlDecoration errorDeco;
 
 		public FormModifyListener(final DecoratedTextField inDecorated) {
-			requiredDeco = inDecorated.requiredDeco;
-			errorDeco = inDecorated.errorDeco;
+			this.requiredDeco = inDecorated.requiredDeco;
+			this.errorDeco = inDecorated.errorDeco;
 		}
 
 		@Override
@@ -407,10 +405,10 @@ public abstract class AbstractDBSettingsForm extends AbstractPreferenceForm {
 				return;
 			final Text lControl = (Text) inEvent.widget;
 			if (lControl.getText().length() != 0) {
-				statusManager.set(lControl, Status.OK_STATUS);
-				notifyAboutUpdate(statusManager.getStati());
-				requiredDeco.show();
-				errorDeco.hide();
+				AbstractDBSettingsForm.this.statusManager.set(lControl, Status.OK_STATUS);
+				notifyAboutUpdate(AbstractDBSettingsForm.this.statusManager.getStati());
+				this.requiredDeco.show();
+				this.errorDeco.hide();
 			}
 		}
 	}

@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -33,7 +33,7 @@ import org.hip.kernel.bom.model.PropertyDef;
 
 /**
  * Serializer to export the entries of the Relations database into an XML file.
- * 
+ *
  * @author Luthiger Created on 04.10.2008
  */
 @SuppressWarnings("serial")
@@ -41,6 +41,8 @@ public class RelationsSerializer extends AbstractSerializer {
 	// constants
 	private final static String[] IN_EXPORTED_XML = { "&amp;" }; //$NON-NLS-1$
 	private final static String[] IN_DATABASE = { "&" }; //$NON-NLS-1$
+	private static final char[][] CLEAN = { { (char) 0x08, (char) 0x5c },
+			{ (char) 0x1a, (char) 0x5c } };
 	private final static String TMPL_TAG = "%sEntry"; //$NON-NLS-1$
 
 	private final DecimalFormat decimalFormat = new DecimalFormat();
@@ -74,9 +76,9 @@ public class RelationsSerializer extends AbstractSerializer {
 		final Object lValue = inProperty.getValue();
 		final PropertyDef lPropertyDef = inProperty.getPropertyDef();
 		emitStartTag(String.format(
-		        "%s field=\"%s\" type=\"%s\"", inProperty.getName(), //$NON-NLS-1$
-		        lPropertyDef.getMappingDef().getColumnName(),
-		        lPropertyDef.getValueType()));
+				"%s field=\"%s\" type=\"%s\"", inProperty.getName(), //$NON-NLS-1$
+				lPropertyDef.getMappingDef().getColumnName(),
+				lPropertyDef.getValueType()));
 
 		final String lFormatPattern = inProperty.getFormatPattern();
 
@@ -89,7 +91,7 @@ public class RelationsSerializer extends AbstractSerializer {
 		}
 
 		if ((lValue instanceof Timestamp) || (lValue instanceof Date)
-		        || (lValue instanceof Time)) {
+				|| (lValue instanceof Time)) {
 			emitText(lValue.toString());
 			return;
 		}
@@ -99,8 +101,8 @@ public class RelationsSerializer extends AbstractSerializer {
 				if (lFormatPattern.equals(" ") && ((Number) lValue).intValue() == 0) //$NON-NLS-1$
 					return;
 
-				decimalFormat.applyPattern(lFormatPattern);
-				emitText(decimalFormat.format(lValue));
+				this.decimalFormat.applyPattern(lFormatPattern);
+				emitText(this.decimalFormat.format(lValue));
 				return;
 			} else {
 				emitText(lValue);
@@ -138,10 +140,19 @@ public class RelationsSerializer extends AbstractSerializer {
 		// intentionally left empty
 	}
 
+	@Override
+	public String toString() {
+		String out = getBuffer2().toString();
+		for (int i = 0; i < CLEAN.length; i++) {
+			out = out.replace(CLEAN[i][0], CLEAN[i][1]);
+		}
+		return out;
+	}
+
 	/**
 	 * Convenience method: prepares text which will be exported to an XML file.
 	 * Makes the processed text valid XML in a text node.
-	 * 
+	 *
 	 * @param inToProcess
 	 *            String to process
 	 * @return String
@@ -150,7 +161,7 @@ public class RelationsSerializer extends AbstractSerializer {
 		String outProcessed = inToProcess;
 		for (int i = 0; i < IN_EXPORTED_XML.length; i++) {
 			outProcessed = outProcessed.replace(IN_DATABASE[i],
-			        IN_EXPORTED_XML[i]);
+					IN_EXPORTED_XML[i]);
 		}
 		return outProcessed;
 	}
@@ -159,7 +170,7 @@ public class RelationsSerializer extends AbstractSerializer {
 	 * Convenience method: prepares text which will be imported from an XML
 	 * file. Reverts the process of
 	 * <code>RelationsSerializer.prepareForExport()</code>.
-	 * 
+	 *
 	 * @param inToProcess
 	 *            String to process
 	 * @return String
@@ -168,7 +179,7 @@ public class RelationsSerializer extends AbstractSerializer {
 		String outProcessed = inToProcess;
 		for (int i = 0; i < IN_EXPORTED_XML.length; i++) {
 			outProcessed = outProcessed.replace(IN_EXPORTED_XML[i],
-			        IN_DATABASE[i]);
+					IN_DATABASE[i]);
 		}
 		return outProcessed;
 	}

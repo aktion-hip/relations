@@ -112,6 +112,12 @@
             name="%page.prefs.name.db.connect">
       </page>
       <page
+            category="org.elbe.relations.prefs"
+            class="org.elbe.relations.internal.preferences.CloudConfigPrefPage"
+            id="org.elbe.relations.prefs.cloud"
+            name="%page.prefs.name.cloud.config">
+      </page>
+      <page
             class="org.elbe.relations.internal.e4.keys.RelationsKeysPreferencePage"
             id="newKeysPreferencePage"
             name="%page.prefs.name.keys">
