@@ -97,233 +97,234 @@ import org.slf4j.LoggerFactory;
  * @author Luthiger
  */
 public class LuceneIndexer implements IIndexer {
-	private static final Logger LOG = LoggerFactory.getLogger(LuceneIndexer.class);
-	public static final Version LUCENE_VERSION = Version.LUCENE_4_10_1;
+    private static final Logger LOG = LoggerFactory.getLogger(LuceneIndexer.class);
+    public static final Version LUCENE_VERSION = Version.LUCENE_4_10_1;
 
-	private final DirectoryFactory directoryFactory = new FileSystemDirectoryFactory();
+    private final DirectoryFactory directoryFactory = new FileSystemDirectoryFactory();
 
-	// enum for language analyzers (see lucene-analyzers-common-4.10.1.jar)
-	private enum LanguageAnalyzer {
-		AR("ar", new ArabicAnalyzer()),
-		BG("bg", new BulgarianAnalyzer()),
-		BR("br", new BrazilianAnalyzer()),
-		CA("ca", new CatalanAnalyzer()),
-		CN("cn", new StandardAnalyzer()),
-		CZ("cz", new CzechAnalyzer()),
-		DA("da", new DanishAnalyzer()),
-		DE("de", new GermanAnalyzer()),
-		EL("el", new GreekAnalyzer()),
-		EN("en", new StandardAnalyzer()),
-		ES("es", new SpanishAnalyzer()),
-		EU("eu", new BasqueAnalyzer()),
-		FA("fa", new PersianAnalyzer()),
-		FI("fi", new FinnishAnalyzer()),
-		FR("fr", new FrenchAnalyzer()),
-		GL("gl", new GalicianAnalyzer()),
-		HI("hi", new HindiAnalyzer()),
-		HU("hu", new HungarianAnalyzer()),
-		HY("hy", new ArmenianAnalyzer()),
-		ID("id", new IndonesianAnalyzer()),
-		IT("it", new ItalianAnalyzer()),
-		LV("lv", new LatvianAnalyzer()),
-		NL("nl", new DutchAnalyzer()),
-		NO("no", new NorwegianAnalyzer()),
-		PT("pt", new PortugueseAnalyzer()),
-		RO("ro", new RomanianAnalyzer()),
-		RU("ru", new RussianAnalyzer()),
-		SV("sv", new SwedishAnalyzer()),
-		TH("th", new ThaiAnalyzer()),
-		TR("tr", new TurkishAnalyzer());
+    // enum for language analyzers (see lucene-analyzers-common-4.10.1.jar)
+    private enum LanguageAnalyzer {
+        AR("ar", new ArabicAnalyzer()),
+        BG("bg", new BulgarianAnalyzer()),
+        BR("br", new BrazilianAnalyzer()),
+        CA("ca", new CatalanAnalyzer()),
+        CN("cn", new StandardAnalyzer()),
+        CZ("cz", new CzechAnalyzer()),
+        DA("da", new DanishAnalyzer()),
+        DE("de", new GermanAnalyzer()),
+        EL("el", new GreekAnalyzer()),
+        EN("en", new StandardAnalyzer()),
+        ES("es", new SpanishAnalyzer()),
+        EU("eu", new BasqueAnalyzer()),
+        FA("fa", new PersianAnalyzer()),
+        FI("fi", new FinnishAnalyzer()),
+        FR("fr", new FrenchAnalyzer()),
+        GL("gl", new GalicianAnalyzer()),
+        HI("hi", new HindiAnalyzer()),
+        HU("hu", new HungarianAnalyzer()),
+        HY("hy", new ArmenianAnalyzer()),
+        ID("id", new IndonesianAnalyzer()),
+        IT("it", new ItalianAnalyzer()),
+        LV("lv", new LatvianAnalyzer()),
+        NL("nl", new DutchAnalyzer()),
+        NO("no", new NorwegianAnalyzer()),
+        PT("pt", new PortugueseAnalyzer()),
+        RO("ro", new RomanianAnalyzer()),
+        RU("ru", new RussianAnalyzer()),
+        SV("sv", new SwedishAnalyzer()),
+        TH("th", new ThaiAnalyzer()),
+        TR("tr", new TurkishAnalyzer());
 
-		public final String isoLanguage;
-		public final Analyzer analyzer;
+        public final String isoLanguage;
+        public final Analyzer analyzer;
 
-		LanguageAnalyzer(final String inISOLanguage, final Analyzer inAnalyzer) {
-			isoLanguage = inISOLanguage;
-			analyzer = inAnalyzer;
-			analyzer.setVersion(LUCENE_VERSION);
-		}
-	}
+        LanguageAnalyzer(final String inISOLanguage, final Analyzer inAnalyzer) {
+            this.isoLanguage = inISOLanguage;
+            this.analyzer = inAnalyzer;
+            this.analyzer.setVersion(LUCENE_VERSION);
+        }
+    }
 
-	@Override
-	public void processIndexer(final IndexerHelper inIndexer, final File inIndexDir, final String inLanguage,
-			final boolean inCreate) throws IOException {
-		try (IndexWriter lWriter = new IndexWriter(directoryFactory.getDirectory(inIndexDir),
-				createConfiguration(inLanguage, inCreate))) {
-			for (final IndexerDocument lDoc : inIndexer.getDocuments()) {
-				final Document lDocument = transformDoc(lDoc);
-				lWriter.addDocument(lDocument);
-			}
-			lWriter.commit();
-		} catch (final IOException exc) {
-			LOG.error("Error with Lucene index encountered!", exc);
-		}
-	}
+    @Override
+    public void processIndexer(final IndexerHelper inIndexer, final File inIndexDir, final String inLanguage,
+            final boolean inCreate) throws IOException {
+        try (IndexWriter lWriter = new IndexWriter(this.directoryFactory.getDirectory(inIndexDir),
+                createConfiguration(inLanguage, inCreate))) {
+            for (final IndexerDocument lDoc : inIndexer.getDocuments()) {
+                final Document lDocument = transformDoc(lDoc);
+                lWriter.addDocument(lDocument);
+            }
+            lWriter.commit();
+        } catch (final IOException exc) {
+            LOG.error("Error with Lucene index encountered!", exc);
+        }
+    }
 
-	private IndexWriterConfig createConfiguration(String inLanguage, final boolean inCreateNew) {
-		final IndexWriterConfig out = new IndexWriterConfig(LUCENE_VERSION, getAnalyzer(inLanguage));
-		out.setOpenMode(inCreateNew ? OpenMode.CREATE : OpenMode.CREATE_OR_APPEND);
-		return out;
-	}
+    private IndexWriterConfig createConfiguration(final String inLanguage, final boolean inCreateNew) {
+        final IndexWriterConfig out = new IndexWriterConfig(LUCENE_VERSION, getAnalyzer(inLanguage));
+        out.setOpenMode(inCreateNew ? OpenMode.CREATE : OpenMode.CREATE_OR_APPEND);
+        return out;
+    }
 
-	@Override
-	public void processIndexer(final IndexerHelper inIndexer, final File inIndexDir, final String inLanguage)
-			throws IOException {
-		processIndexer(inIndexer, inIndexDir, inLanguage, false);
-	}
+    @Override
+    public void processIndexer(final IndexerHelper inIndexer, final File inIndexDir, final String inLanguage)
+            throws IOException {
+        processIndexer(inIndexer, inIndexDir, inLanguage, false);
+    }
 
-	private Analyzer getAnalyzer(final String inLanguage) {
-		for (final LanguageAnalyzer lAnalyzer : LanguageAnalyzer.values()) {
-			if (inLanguage.equals(lAnalyzer.isoLanguage)) {
-				return lAnalyzer.analyzer;
-			}
-		}
-		return new StandardAnalyzer();
-	}
+    private Analyzer getAnalyzer(final String inLanguage) {
+        for (final LanguageAnalyzer lAnalyzer : LanguageAnalyzer.values()) {
+            if (inLanguage.equals(lAnalyzer.isoLanguage)) {
+                return lAnalyzer.analyzer;
+            }
+        }
+        return new StandardAnalyzer();
+    }
 
-	private Document transformDoc(final IndexerDocument inDoc) {
-		final Document outDocument = new Document();
-		for (final IndexerField lField : inDoc.getFields()) {
-			outDocument.add(createField(lField));
-		}
-		return outDocument;
-	}
+    private Document transformDoc(final IndexerDocument inDoc) {
+        final Document outDocument = new Document();
+        for (final IndexerField lField : inDoc.getFields()) {
+            outDocument.add(createField(lField));
+        }
+        return outDocument;
+    }
 
-	private Field createField(IndexerField inField) {
-		final Field.Store lStore = inField.getStoreValue() == IndexerField.Store.YES ? Field.Store.YES : Field.Store.NO;
-		final IFieldFactory factory = inField.getFieldType() == IndexerField.Type.ID ? new StringFieldFactory()
-				: new TextFieldFactory();
+    private Field createField(final IndexerField field) {
+        final Field.Store store = field.getStoreValue() == IndexerField.Store.YES ? Field.Store.YES : Field.Store.NO;
+        final IFieldFactory factory = field.getFieldType() == IndexerField.Type.ID ? new StringFieldFactory()
+                : new TextFieldFactory();
 
-		String value = inField.getValue();
-		if (inField instanceof IndexerDateField) {
-			value = DateTools.timeToString(0, getResolution(((IndexerDateField) inField).getResolution()));
-		}
-		final Field out = factory.createField(inField.getFieldName(), value, lStore);
-		if (out.fieldType().indexed()) {
-			out.setBoost(inField.getBoost());
-		}
-		return out;
-	}
+        String value = field.getValue();
+        if (field instanceof IndexerDateField) {
+            value = DateTools.timeToString(((IndexerDateField) field).getTime(),
+                    getResolution(((IndexerDateField) field).getResolution()));
+        }
+        final Field out = factory.createField(field.getFieldName(), value, store);
+        if (out.fieldType().indexed()) {
+            out.setBoost(field.getBoost());
+        }
+        return out;
+    }
 
-	private DateTools.Resolution getResolution(final TimeResolution inResolution) {
-		DateTools.Resolution outResolution = DateTools.Resolution.YEAR;
-		if (inResolution == TimeResolution.MONTH) {
-			outResolution = DateTools.Resolution.MONTH;
-		} else if (inResolution == TimeResolution.DAY) {
-			outResolution = DateTools.Resolution.DAY;
-		} else if (inResolution == TimeResolution.HOUR) {
-			outResolution = DateTools.Resolution.HOUR;
-		} else if (inResolution == TimeResolution.MINUTE) {
-			outResolution = DateTools.Resolution.MINUTE;
-		} else if (inResolution == TimeResolution.SECOND) {
-			outResolution = DateTools.Resolution.SECOND;
-		} else if (inResolution == TimeResolution.MILLISECOND) {
-			outResolution = DateTools.Resolution.MILLISECOND;
-		}
-		return outResolution;
-	}
+    private DateTools.Resolution getResolution(final TimeResolution inResolution) {
+        DateTools.Resolution outResolution = DateTools.Resolution.YEAR;
+        if (inResolution == TimeResolution.MONTH) {
+            outResolution = DateTools.Resolution.MONTH;
+        } else if (inResolution == TimeResolution.DAY) {
+            outResolution = DateTools.Resolution.DAY;
+        } else if (inResolution == TimeResolution.HOUR) {
+            outResolution = DateTools.Resolution.HOUR;
+        } else if (inResolution == TimeResolution.MINUTE) {
+            outResolution = DateTools.Resolution.MINUTE;
+        } else if (inResolution == TimeResolution.SECOND) {
+            outResolution = DateTools.Resolution.SECOND;
+        } else if (inResolution == TimeResolution.MILLISECOND) {
+            outResolution = DateTools.Resolution.MILLISECOND;
+        }
+        return outResolution;
+    }
 
-	@Override
-	public int numberOfIndexed(final File inIndexDir) throws IOException {
-		int outNumber = 0;
-		try (IndexReader lReader = DirectoryReader.open(directoryFactory.getDirectory(inIndexDir))) {
-			outNumber = lReader.numDocs();
-		}
-		return outNumber;
-	}
+    @Override
+    public int numberOfIndexed(final File inIndexDir) throws IOException {
+        int outNumber = 0;
+        try (IndexReader lReader = DirectoryReader.open(this.directoryFactory.getDirectory(inIndexDir))) {
+            outNumber = lReader.numDocs();
+        }
+        return outNumber;
+    }
 
-	@Override
-	public Collection<String> getAnalyzerLanguages() {
-		final Collection<String> outLanguages = new ArrayList<String>();
-		for (final LanguageAnalyzer lAnalyzer : LanguageAnalyzer.values()) {
-			outLanguages.add(lAnalyzer.isoLanguage);
-		}
-		return outLanguages;
-	}
+    @Override
+    public Collection<String> getAnalyzerLanguages() {
+        final Collection<String> outLanguages = new ArrayList<>();
+        for (final LanguageAnalyzer lAnalyzer : LanguageAnalyzer.values()) {
+            outLanguages.add(lAnalyzer.isoLanguage);
+        }
+        return outLanguages;
+    }
 
-	@Override
-	public void deleteItemInIndex(final String inUniqueID, final String inFieldName, final File inIndexDir,
-			String inLanguage) throws IOException {
-		try (IndexWriter lWriter = new IndexWriter(directoryFactory.getDirectory(inIndexDir),
-				createConfiguration(inLanguage, false))) {
-			lWriter.deleteDocuments(new Term(inFieldName, inUniqueID));
-			lWriter.commit();
-		} catch (final IOException exc) {
-			LOG.error("Error with Lucene index encountered!", exc);
-		}
-	}
+    @Override
+    public void deleteItemInIndex(final String inUniqueID, final String inFieldName, final File inIndexDir,
+            final String inLanguage) throws IOException {
+        try (IndexWriter lWriter = new IndexWriter(this.directoryFactory.getDirectory(inIndexDir),
+                createConfiguration(inLanguage, false))) {
+            lWriter.deleteDocuments(new Term(inFieldName, inUniqueID));
+            lWriter.commit();
+        } catch (final IOException exc) {
+            LOG.error("Error with Lucene index encountered!", exc);
+        }
+    }
 
-	@Override
-	public void initializeIndex(final File inIndexDir, String inLanguage) throws IOException {
-		final Directory directory = directoryFactory.getDirectory(inIndexDir);
-		final IndexWriter lNew = new IndexWriter(directory, createConfiguration(inLanguage, true));
-		lNew.commit();
-		lNew.close();
-	}
+    @Override
+    public void initializeIndex(final File inIndexDir, final String inLanguage) throws IOException {
+        final Directory directory = this.directoryFactory.getDirectory(inIndexDir);
+        final IndexWriter lNew = new IndexWriter(directory, createConfiguration(inLanguage, true));
+        lNew.commit();
+        lNew.close();
+    }
 
-	@Override
-	public List<RetrievedItem> search(final String inQueryTerm, final File inIndexDir, final String inLanguage,
-			final int inMaxHits) throws IOException, RException {
-		try (IndexReader lReader = DirectoryReader.open(directoryFactory.getDirectory(inIndexDir))) {
-			final IndexSearcher lSearcher = new IndexSearcher(lReader);
-			final TopDocs lDocs = lSearcher.search(parseQuery(inQueryTerm, inLanguage), inMaxHits);
-			return createResults(lDocs, lSearcher);
+    @Override
+    public List<RetrievedItem> search(final String inQueryTerm, final File inIndexDir, final String inLanguage,
+            final int inMaxHits) throws IOException, RException {
+        try (IndexReader lReader = DirectoryReader.open(this.directoryFactory.getDirectory(inIndexDir))) {
+            final IndexSearcher lSearcher = new IndexSearcher(lReader);
+            final TopDocs lDocs = lSearcher.search(parseQuery(inQueryTerm, inLanguage), inMaxHits);
+            return createResults(lDocs, lSearcher);
 
-		} catch (final ParseException exc) {
-			throw new RException(exc.getMessage());
-		}
-	}
+        } catch (final ParseException exc) {
+            throw new RException(exc.getMessage());
+        }
+    }
 
-	private List<RetrievedItem> createResults(final TopDocs inDocs, final IndexSearcher inSearcher)
-			throws CorruptIndexException, IOException {
-		final ScoreDoc[] lDocs = inDocs.scoreDocs;
-		final List<RetrievedItem> out = new ArrayList<RetrievedItem>(lDocs.length);
-		for (int i = 0; i < lDocs.length; i++) {
-			final int lDocID = lDocs[i].doc;
-			final Document lDocument = inSearcher.doc(lDocID);
-			out.add(new RetrievedItemWithIcon(new UniqueID(lDocument.get(AbstractSearching.UNIQUE_ID)),
-					lDocument.get(AbstractSearching.TITLE)));
-		}
-		return out;
-	}
+    private List<RetrievedItem> createResults(final TopDocs inDocs, final IndexSearcher inSearcher)
+            throws CorruptIndexException, IOException {
+        final ScoreDoc[] lDocs = inDocs.scoreDocs;
+        final List<RetrievedItem> out = new ArrayList<>(lDocs.length);
+        for (int i = 0; i < lDocs.length; i++) {
+            final int lDocID = lDocs[i].doc;
+            final Document lDocument = inSearcher.doc(lDocID);
+            out.add(new RetrievedItemWithIcon(new UniqueID(lDocument.get(AbstractSearching.UNIQUE_ID)),
+                    lDocument.get(AbstractSearching.TITLE)));
+        }
+        return out;
+    }
 
-	private Query parseQuery(final String inQueryTerm, final String inLanguage) throws ParseException {
-		final QueryParser outParser = new QueryParser(AbstractSearching.CONTENT_FULL, getAnalyzer(inLanguage));
-		return outParser.parse(inQueryTerm);
-	}
+    private Query parseQuery(final String inQueryTerm, final String inLanguage) throws ParseException {
+        final QueryParser outParser = new QueryParser(AbstractSearching.CONTENT_FULL, getAnalyzer(inLanguage));
+        return outParser.parse(inQueryTerm);
+    }
 
-	// --- inner classes ---
+    // --- inner classes ---
 
-	private static class FileSystemDirectoryFactory implements DirectoryFactory {
+    private static class FileSystemDirectoryFactory implements DirectoryFactory {
 
-		@Override
-		public Directory getDirectory(File inIndexDir) throws IOException {
-			return FSDirectory.open(inIndexDir);
-		}
-	}
+        @Override
+        public Directory getDirectory(final File inIndexDir) throws IOException {
+            return FSDirectory.open(inIndexDir);
+        }
+    }
 
-	// ---
+    // ---
 
-	private static interface IFieldFactory {
-		Field createField(String inName, String inValue, Field.Store inStored);
-	}
+    private static interface IFieldFactory {
+        Field createField(String inName, String inValue, Field.Store inStored);
+    }
 
-	private static class TextFieldFactory implements IFieldFactory {
+    private static class TextFieldFactory implements IFieldFactory {
 
-		@Override
-		public Field createField(String inName, String inValue, Store inStored) {
-			return new TextField(inName, inValue, inStored);
-		}
+        @Override
+        public Field createField(final String inName, final String inValue, final Store inStored) {
+            return new TextField(inName, inValue, inStored);
+        }
 
-	}
+    }
 
-	private static class StringFieldFactory implements IFieldFactory {
+    private static class StringFieldFactory implements IFieldFactory {
 
-		@Override
-		public Field createField(final String inName, final String inValue, final Store inStored) {
-			return new StringField(inName, inValue, inStored);
-		}
+        @Override
+        public Field createField(final String inName, final String inValue, final Store inStored) {
+            return new StringField(inName, inValue, inStored);
+        }
 
-	}
+    }
 
 }

@@ -18,6 +18,8 @@
  ***************************************************************************/
 package org.elbe.relations.cloud.dropbox;
 
+import java.util.function.Consumer;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
@@ -48,8 +50,9 @@ public class DropboxCloudProviderConfig extends AbstractCloudProviderConfig impl
     }
 
     @Override
-    public Control createConfigContents(final Group parent) {
+    public Control createConfigContents(final Group parent, final Consumer<Boolean> signalIsValid) {
         this.token = createLabelText(parent, "Access Token:");
+        this.token.addModifyListener(event -> signalIsValid.accept(!((Text) event.getSource()).getText().isEmpty()));
         final FormText hint = new FormText(parent, SWT.NO_FOCUS);
         hint.setText(
                 "<form><p>Hint: To get a Dropbox access token, go to <b>Help -> Cloud Configuration</b>.</p></form>",
@@ -79,6 +82,11 @@ public class DropboxCloudProviderConfig extends AbstractCloudProviderConfig impl
     @Override
     public ICloudProvider getProvider() {
         return new DropboxCloudProvider();
+    }
+
+    @Override
+    public boolean isValid() {
+        return !this.token.getText().isEmpty();
     }
 
 }

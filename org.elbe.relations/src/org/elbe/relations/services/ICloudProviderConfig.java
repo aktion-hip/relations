@@ -18,6 +18,8 @@
  ***************************************************************************/
 package org.elbe.relations.services;
 
+import java.util.function.Consumer;
+
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 
@@ -41,9 +43,17 @@ public interface ICloudProviderConfig {
 	 *
 	 * @param parent
 	 *            {@link Group} the parent composite (SWT group)
+	 * @param signalIsValid
+	 *            {@link Consumer} the lambda function to signal that the
+	 *            configuration is valid
 	 * @return {@link Control}
 	 */
-	Control createConfigContents(Group parent);
+	Control createConfigContents(Group parent, Consumer<Boolean> signalIsValid);
+
+	/**
+	 * @return boolean <code>true</code> if this configuration is valid
+	 */
+	boolean isValid();
 
 	/**
 	 * Call to enable or disable the widgets created in

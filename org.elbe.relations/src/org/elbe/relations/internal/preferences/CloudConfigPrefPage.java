@@ -80,7 +80,8 @@ public class CloudConfigPrefPage extends AbstractPreferencePage {
 				.align(SWT.FILL, SWT.BEGINNING).create());
 		group.setLayout(
 				GridLayoutFactory.swtDefaults().numColumns(2).create());
-		configuration.createConfigContents(group);
+		configuration.createConfigContents(group,
+		        validFlag -> setValid(validFlag));
 
 		new Label(group, SWT.NONE).setText("Active:");
 		final Button radioBtn = new Button(group, SWT.RADIO);
@@ -105,7 +106,12 @@ public class CloudConfigPrefPage extends AbstractPreferencePage {
 	private void handleActivationChange(final SelectionEvent event) {
 		final String name = event.widget.getData().toString();
 		for (final ConfigWrapper config : this.mappings) {
-			config.setEnabled(name.equals(config.getName()));
+			if (name.equals(config.getName())) {
+				setValid(config.isValid());
+				config.setEnabled(true);
+			} else {
+				config.setEnabled(false);
+			}
 		}
 	}
 
@@ -170,6 +176,10 @@ public class CloudConfigPrefPage extends AbstractPreferencePage {
 
 		protected ConfigWrapper(final ICloudProviderConfig configuration) {
 			this.configuration = configuration;
+		}
+
+		protected boolean isValid() {
+			return this.configuration.isValid();
 		}
 
 		protected ConfigWrapper setRadio(final Button isActiveRadio) {

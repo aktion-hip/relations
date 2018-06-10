@@ -51,7 +51,11 @@ public abstract class AbstractCloudProviderConfig {
 	}
 
 	private Text createText(final Composite parent) {
-		final Text outText = new Text(parent, SWT.BORDER | SWT.SINGLE);
+		return createText(parent, SWT.BORDER | SWT.SINGLE);
+	}
+
+	protected Text createText(final Composite parent, final int style) {
+		final Text outText = new Text(parent, style);
 		outText.setLayoutData(createGridData());
 		return outText;
 	}
