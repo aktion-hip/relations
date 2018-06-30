@@ -44,6 +44,7 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
+import com.google.api.services.drive.model.FileList;
 import com.google.gson.JsonObject;
 
 /** The Google Drive Provider component to upload a file to the Google Drive folder.
@@ -55,7 +56,9 @@ import com.google.gson.JsonObject;
 public class GoogleDriveProvider implements ICloudProvider {
     private static final String APPLICATION_NAME = "Relations-rcp";
     private static final String DRIVE_NAME = "relations_all.zip";
-    private static final String DRIVE_PATH = "synchronization";
+    private static final String DRIVE_PATH = "relations";
+    private static final String MIME_TYPE_FOLDER = "application/vnd.google-apps.folder";
+    private static final String MIME_TYPE_FILE = "application/zip";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final List<String> SCOPES = Arrays.asList(DriveScopes.DRIVE, DriveScopes.DRIVE_FILE,
             DriveScopes.DRIVE_APPDATA);
@@ -71,26 +74,51 @@ public class GoogleDriveProvider implements ICloudProvider {
                     .setApplicationName(APPLICATION_NAME)
                     .build();
 
-            // create folder
-            final File folderMetadata = new File();
-            folderMetadata.setName(DRIVE_PATH);
-            folderMetadata.setMimeType("application/vnd.google-apps.folder");
-
-            final File folder = drive.files().create(folderMetadata).setFields("id").execute();
-            final String folderId = folder.getId();
+            final String folderId = getFolderId(drive);
+            removeIfExists(drive, folderId);
 
             // upload file
             final File fileMetadata = new File();
             fileMetadata.setName(DRIVE_NAME);
             fileMetadata.setParents(Collections.singletonList(folderId));
 
-            final FileContent mediaContent = new FileContent("application/zip", toExport);
+            final FileContent mediaContent = new FileContent(MIME_TYPE_FILE, toExport);
             drive.files().create(fileMetadata, mediaContent).setFields("id, parents").execute();
         } catch (GeneralSecurityException | IOException exc) {
             log.error(exc, "Unable to upload the data export to Google Drive!");
             return false;
         }
         return true;
+    }
+
+    private String getFolderId(final Drive drive) throws IOException {
+        // test if folder exists
+        final FileList folderList = drive.files().list()
+                .setQ(String.format(
+                        "mimeType='%s' and trashed=false and name = '%s'", MIME_TYPE_FOLDER, DRIVE_PATH))
+                .execute();
+        final List<File> folders = folderList.getFiles();
+        if (folders.size() == 0) {
+            // create folder
+            final File folderMetadata = new File();
+            folderMetadata.setName(DRIVE_PATH);
+            folderMetadata.setMimeType("application/vnd.google-apps.folder");
+
+            final File folder = drive.files().create(folderMetadata).setFields("id").execute();
+            return folder.getId();
+        }
+        return folders.get(0).getId();
+    }
+
+    private void removeIfExists(final Drive drive, final String folderId) throws IOException {
+        final FileList fileList = drive.files().list()
+                .setQ(String.format(
+                        "mimeType='%s' and trashed=false and name = '%s' and '%s' in parents", MIME_TYPE_FILE,
+                        DRIVE_NAME, folderId))
+                .execute();
+        for (final File file : fileList.getFiles()) {
+            drive.files().delete(file.getId()).execute();
+        }
     }
 
     /** Creates an authorized Credential object.
