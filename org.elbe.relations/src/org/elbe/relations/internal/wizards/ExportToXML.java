@@ -147,13 +147,13 @@ public class ExportToXML extends Wizard implements IExportWizard {
 	}
 
 	private XMLExport createExporter(final String fileName) throws IOException {
+		final int count = this.dataService.getNumberOfItems()
+		        + this.dataService.getNumberOfRelations();
 		return fileName.endsWith(".zip") //$NON-NLS-1$
 				? new ZippedXMLExport(fileName,
-		                ExportToXML.this.languageService.getAppLocale(),
-		                this.dataService.getNumberOfItems())
-						: new XMLExport(fileName,
-		                ExportToXML.this.languageService.getAppLocale(),
-		                this.dataService.getNumberOfItems());
+						ExportToXML.this.languageService.getAppLocale(), count)
+		        : new XMLExport(fileName,
+		                ExportToXML.this.languageService.getAppLocale(), count);
 	}
 
 }

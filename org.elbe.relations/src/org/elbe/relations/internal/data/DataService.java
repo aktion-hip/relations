@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -66,14 +66,14 @@ import org.hip.kernel.exc.VException;
  * <code>IDataService</code>), thus giving them the possibility to access
  * information about the actual data access.
  * </p>
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
 public class DataService implements IDataService {
-	private static Collection<ILightWeightModel> terms = new ArrayList<ILightWeightModel>();
-	private static Collection<ILightWeightModel> texts = new ArrayList<ILightWeightModel>();
-	private static Collection<ILightWeightModel> persons = new ArrayList<ILightWeightModel>();
+	private static Collection<ILightWeightModel> terms = new ArrayList<>();
+	private static Collection<ILightWeightModel> texts = new ArrayList<>();
+	private static Collection<ILightWeightModel> persons = new ArrayList<>();
 	private static Collection<ILightWeightModel> combined;
 
 	@Inject
@@ -114,7 +114,7 @@ public class DataService implements IDataService {
 	/**
 	 * Adds the newly created term item to the relevant collections and sends a
 	 * notification.
-	 * 
+	 *
 	 * @param inTerm
 	 *            {@link LightWeightTerm}
 	 */
@@ -124,15 +124,15 @@ public class DataService implements IDataService {
 				: new LightWeightTermWithIcon(inTerm);
 		terms.add(lTerm);
 		combined.add(lTerm);
-		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_RELOAD, "reload"); //$NON-NLS-1$
-		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_CREATED,
+		this.eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_RELOAD, "reload"); //$NON-NLS-1$
+		this.eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_CREATED,
 				new UniqueID(IItem.TERM, lTerm.getID()));
 	}
 
 	/**
 	 * Adds the newly created text item to the relevant collections and sends a
 	 * notification.
-	 * 
+	 *
 	 * @param inText
 	 *            {@link LightWeightText}
 	 */
@@ -142,15 +142,15 @@ public class DataService implements IDataService {
 				: new LightWeightTextWithIcon(inText);
 		texts.add(lText);
 		combined.add(lText);
-		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_RELOAD, "reload"); //$NON-NLS-1$
-		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_CREATED,
+		this.eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_RELOAD, "reload"); //$NON-NLS-1$
+		this.eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_CREATED,
 				new UniqueID(IItem.TEXT, lText.getID()));
 	}
 
 	/**
 	 * Adds the newly created person item to the relevant collections and sends
 	 * a notification.
-	 * 
+	 *
 	 * @param inPerson
 	 *            {@link LightWeightPerson}
 	 */
@@ -160,8 +160,8 @@ public class DataService implements IDataService {
 				: new LightWeightPersonWithIcon(inPerson);
 		persons.add(lPerson);
 		combined.add(lPerson);
-		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_RELOAD, "reload"); //$NON-NLS-1$
-		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_CREATED,
+		this.eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_RELOAD, "reload"); //$NON-NLS-1$
+		this.eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_CREATED,
 				new UniqueID(IItem.PERSON, lPerson.getID()));
 	}
 
@@ -171,16 +171,16 @@ public class DataService implements IDataService {
 			switch (inID.itemType) {
 			case IItem.TERM:
 				return new TermWithIcon((AbstractTerm) BOMHelper.getTermHome()
-						.getItem(inID.itemID), context);
+						.getItem(inID.itemID), this.context);
 			case IItem.TEXT:
 				return new TextWithIcon((AbstractText) BOMHelper.getTextHome()
-						.getItem(inID.itemID), context);
+						.getItem(inID.itemID), this.context);
 			case IItem.PERSON:
 				return new PersonWithIcon((AbstractPerson) BOMHelper
-						.getPersonHome().getItem(inID.itemID), context);
+						.getPersonHome().getItem(inID.itemID), this.context);
 			default:
 				return new TermWithIcon((AbstractTerm) BOMHelper.getTermHome()
-						.getItem(inID.itemID), context);
+						.getItem(inID.itemID), this.context);
 			}
 		}
 		catch (final VException exc) {
@@ -190,14 +190,14 @@ public class DataService implements IDataService {
 
 	/**
 	 * Loads the data from the configured data store.
-	 * 
+	 *
 	 * @param inEventTopic
 	 *            String the event topic to post after data loading has been
 	 *            done
 	 */
 	@Override
 	public void loadData(final String inEventTopic) {
-		jobManager.asyncExec(new Runnable() {
+		this.jobManager.asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				try {
@@ -208,7 +208,7 @@ public class DataService implements IDataService {
 					persons = retrieveData(
 							BOMHelper.getCollectablePersonHome(),
 							new AlternativeFactory.PersonModelFactory());
-					combined = new ArrayList<ILightWeightModel>();
+					combined = new ArrayList<>();
 					combined.addAll(terms);
 					combined.addAll(texts);
 					combined.addAll(persons);
@@ -218,9 +218,9 @@ public class DataService implements IDataService {
 					texts = Collections.emptyList();
 					persons = Collections.emptyList();
 					combined = Collections.emptyList();
-					log.error(exc, exc.getMessage());
+					DataService.this.log.error(exc, exc.getMessage());
 				}
-				eventBroker.post(inEventTopic, "initialized"); //$NON-NLS-1$
+				DataService.this.eventBroker.post(inEventTopic, "initialized"); //$NON-NLS-1$
 			}
 		});
 	}
@@ -231,8 +231,19 @@ public class DataService implements IDataService {
 	}
 
 	@Override
+	public int getNumberOfRelations() {
+		try {
+			return BOMHelper.getRelationHome().getCount();
+		}
+		catch (org.hip.kernel.bom.BOMException | SQLException exc) {
+			DataService.this.log.error(exc, exc.getMessage());
+		}
+		return 0;
+	}
+
+	@Override
 	public String getDBName() {
-		return dbSettings.getDBName();
+		return this.dbSettings.getDBName();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -266,8 +277,8 @@ public class DataService implements IDataService {
 			persons.remove(inItem);
 			break;
 		}
-		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_RELOAD, "reload"); //$NON-NLS-1$
-		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_DELETED,
+		this.eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_RELOAD, "reload"); //$NON-NLS-1$
+		this.eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_DELETED,
 				new UniqueID(inItem.getItemType(), inItem.getID()));
 	}
 

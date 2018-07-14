@@ -108,7 +108,8 @@ public class ExportToCloudAction implements ICommand {
 					createJson(CloudConfigPrefPage
 							.getKey(cloudProviderConfig.getName()), store),
 					this.languageService, this.log, this.statusLine,
-					this.dataService.getNumberOfItems());
+			        this.dataService.getNumberOfItems()
+			                + this.dataService.getNumberOfRelations());
 			try {
 				new ProgressMonitorDialog(Display.getDefault().getActiveShell())
 				.run(true, true, operation);
@@ -179,8 +180,8 @@ public class ExportToCloudAction implements ICommand {
 				// 1) export DB content to zipped XML in temporary file
 				try (XMLExport exporter = new ZippedXMLExport(
 						tempExport.getAbsolutePath(),
-				        this.languageService.getAppLocale(),
-				        this.numberOfItems)) {
+						this.languageService.getAppLocale(),
+						this.numberOfItems)) {
 					exporter.export(monitor);
 				}
 				catch (VException | SQLException exc) {
