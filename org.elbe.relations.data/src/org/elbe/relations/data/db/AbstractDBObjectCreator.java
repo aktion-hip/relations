@@ -57,133 +57,117 @@ import org.xml.sax.SAXException;
  * @author Luthiger
  */
 public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
-	private static Bundle bundle = FrameworkUtil.getBundle(Constants.class);
-	// private static Bundle bundle = Platform
-	// .getBundle(RelationsConstants.MAIN_ID);
-	private static String RESOURCES_DIR = "resources/"; //$NON-NLS-1$
+    private static Bundle bundle = FrameworkUtil.getBundle(Constants.class);
+    private static String RESOURCES_DIR = "resources/"; //$NON-NLS-1$
 
-	/**
-	 * Returns the SQL statements based on the specified database model.
-	 *
-	 * @param inXMLName
-	 *            String name of the XML file specifying the database model.
-	 * @return Collection<String> of SQL CREATE TABLE/INDEX statements
-	 * @throws IOException
-	 * @throws TransformerFactoryConfigurationError
-	 * @throws TransformerException
-	 */
-	@Override
-	public Collection<String> getCreateStatemens(final String inXMLName)
-			throws IOException, TransformerFactoryConfigurationError, TransformerException {
-		final XMLHandler lHandler = new XMLHandler();
-		InputStream xml = null;
-		InputStream xsl = null;
+    /** Returns the SQL statements based on the specified database model.
+     *
+     * @param xmlName String name of the XML file specifying the database model.
+     * @return Collection<String> of SQL CREATE TABLE/INDEX statements
+     * @throws IOException
+     * @throws TransformerFactoryConfigurationError
+     * @throws TransformerException */
+    @Override
+    public Collection<String> getCreateStatemens(final String xmlName)
+            throws IOException, TransformerFactoryConfigurationError, TransformerException {
+        final XMLHandler handler = new XMLHandler();
 
-		if (bundle == null) {
-			return Collections.emptyList();
-		}
+        final URL entry = getModelXML(xmlName);
+        if (entry == null) {
+            return Collections.emptyList();
+        }
+        try (InputStream xml = entry.openStream()) {
+            final Source xmlSource = new StreamSource(xml);
+            try (InputStream xsl = getXSL().openStream()) {
+                final Source xslSource = new StreamSource(xsl);
 
-		try {
-			final URL entry = bundle.getEntry(RESOURCES_DIR + inXMLName);
-			if (entry == null) {
-				return Collections.emptyList();
-			}
+                // transform xml
+                final Templates templates = TransformerFactory.newInstance().newTemplates(xslSource);
+                final Transformer transformer = templates.newTransformer();
+                final Result result = new SAXResult(handler);
+                transformer.transform(xmlSource, result);
+            }
+        }
+        return handler.getStatements();
+    }
 
-			// get xml and xsl
-			xml = entry.openStream();
-			final Source lXMLSource = new StreamSource(xml);
-			xsl = getXSL().openStream();
-			final Source lXSLSource = new StreamSource(xsl);
+    protected URL getModelXML(final String xmlName) {
+        return bundle == null ? null : bundle.getEntry(RESOURCES_DIR + xmlName);
+    }
 
-			// transform xml
-			final Templates lTemplates = TransformerFactory.newInstance().newTemplates(lXSLSource);
-			final Transformer lTransformer = lTemplates.newTransformer();
-			final Result lResult = new SAXResult(lHandler);
-			lTransformer.transform(lXMLSource, lResult);
-		} finally {
-			if (xsl != null) {
-				xsl.close();
-			}
-			if (xml != null) {
-				xml.close();
-			}
-		}
-		return lHandler.getStatements();
-	}
+    protected abstract URL getXSL();
 
-	protected abstract URL getXSL();
+    // --- private classes ---
 
-	// --- private classes ---
+    private class XMLHandler implements ContentHandler {
+        private final Collection<String> statements = new ArrayList<>();
+        private StringBuilder entry = null;
+        private boolean isInEntry = false;
 
-	private class XMLHandler implements ContentHandler {
-		private final Collection<String> statements = new ArrayList<String>();
-		private StringBuilder entry = null;
-		private boolean isInEntry = false;
+        @Override
+        public void startElement(final String inUri, final String inLocalName, final String inName,
+                final Attributes inAtts) throws SAXException {
+            if (Constants.NODE_NAME_CREATED_OBJECT.equals(inName)) {
+                this.entry = new StringBuilder();
+                this.isInEntry = true;
+            }
+        }
 
-		@Override
-		public void startElement(final String inUri, final String inLocalName, final String inName,
-				final Attributes inAtts) throws SAXException {
-			if (Constants.NODE_NAME_CREATED_OBJECT.equals(inName)) {
-				entry = new StringBuilder();
-				isInEntry = true;
-			}
-		}
+        @Override
+        public void endElement(final String inUri, final String inLocalName, final String inName) throws SAXException {
+            if (Constants.NODE_NAME_CREATED_OBJECT.equals(inName)) {
+                final String lEntry = this.entry.toString().trim();
+                if (lEntry.length() > 0) {
+                    this.statements.add(lEntry);
+                }
+                this.isInEntry = false;
+            }
+        }
 
-		@Override
-		public void endElement(final String inUri, final String inLocalName, final String inName) throws SAXException {
-			if (Constants.NODE_NAME_CREATED_OBJECT.equals(inName)) {
-				final String lEntry = entry.toString().trim();
-				if (lEntry.length() > 0) {
-					statements.add(lEntry);
-				}
-				isInEntry = false;
-			}
-		}
+        @Override
+        public void characters(final char[] inChars, final int inStart, final int inLength) throws SAXException {
+            if (this.isInEntry) {
+                final char[] lTarget = new char[inLength];
+                System.arraycopy(inChars, inStart, lTarget, 0, inLength);
+                this.entry.append(lTarget);
+            }
+        }
 
-		@Override
-		public void characters(final char[] inChars, final int inStart, final int inLength) throws SAXException {
-			if (isInEntry) {
-				final char[] lTarget = new char[inLength];
-				System.arraycopy(inChars, inStart, lTarget, 0, inLength);
-				entry.append(lTarget);
-			}
-		}
+        public Collection<String> getStatements() {
+            return this.statements;
+        }
 
-		public Collection<String> getStatements() {
-			return statements;
-		}
+        @Override
+        public void startDocument() throws SAXException {
+        }
 
-		@Override
-		public void startDocument() throws SAXException {
-		}
+        @Override
+        public void endDocument() throws SAXException {
+        }
 
-		@Override
-		public void endDocument() throws SAXException {
-		}
+        @Override
+        public void ignorableWhitespace(final char[] inCh, final int inStart, final int inLength) throws SAXException {
+        }
 
-		@Override
-		public void ignorableWhitespace(final char[] inCh, final int inStart, final int inLength) throws SAXException {
-		}
+        @Override
+        public void processingInstruction(final String inTarget, final String inData) throws SAXException {
+        }
 
-		@Override
-		public void processingInstruction(final String inTarget, final String inData) throws SAXException {
-		}
+        @Override
+        public void setDocumentLocator(final Locator inLocator) {
+        }
 
-		@Override
-		public void setDocumentLocator(final Locator inLocator) {
-		}
+        @Override
+        public void skippedEntity(final String inName) throws SAXException {
+        }
 
-		@Override
-		public void skippedEntity(final String inName) throws SAXException {
-		}
+        @Override
+        public void startPrefixMapping(final String inPrefix, final String inUri) throws SAXException {
+        }
 
-		@Override
-		public void startPrefixMapping(final String inPrefix, final String inUri) throws SAXException {
-		}
-
-		@Override
-		public void endPrefixMapping(final String inPrefix) throws SAXException {
-		}
-	}
+        @Override
+        public void endPrefixMapping(final String inPrefix) throws SAXException {
+        }
+    }
 
 }

@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.data.bom.BOMHelper;
 import org.elbe.relations.data.bom.IItem;
+import org.elbe.relations.data.utility.RelationsSerializer;
 import org.elbe.relations.data.utility.UniqueID;
 import org.hip.kernel.bom.BOMException;
 import org.hip.kernel.bom.DomainObject;

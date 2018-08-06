@@ -32,9 +32,21 @@
             <xsl:when test="@type = 'time'">TIME</xsl:when>
             <xsl:when test="@type = 'timestamp'">TIMESTAMP</xsl:when>
         </xsl:choose>
-        <xsl:if test="@nullable = 'no'"> not null</xsl:if>
+        <xsl:if test="@nullable = 'no'">
+        	<xsl:choose>
+				<xsl:when test="@type = 'timestamp'"> DEFAULT CURRENT_TIMESTAMP</xsl:when>
+				<xsl:otherwise> not null</xsl:otherwise>
+        	</xsl:choose>
+        </xsl:if>
         <xsl:if test="@auto_increment = 'yes'"> generated always as identity</xsl:if>
-        <xsl:if test="@default"> default <xsl:value-of select="@default"/></xsl:if>,
+        <xsl:if test="@default">
+        	<xsl:choose>
+	            <xsl:when test="@type = 'date'"> not null</xsl:when>
+	            <xsl:when test="@type = 'time'"> not null</xsl:when>
+	            <xsl:when test="@type = 'timestamp'"> DEFAULT CURRENT_TIMESTAMP</xsl:when>
+	            <xsl:otherwise> default <xsl:value-of select="@default"/></xsl:otherwise>
+        	</xsl:choose>
+        </xsl:if>,
     </xsl:template>
     
     <xsl:template match="PrimaryKey">

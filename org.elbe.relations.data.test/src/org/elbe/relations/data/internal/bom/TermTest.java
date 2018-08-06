@@ -43,148 +43,147 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- *
  * @author Luthiger
  */
 public class TermTest {
-	private static DataHouseKeeper data;
+    private static DataHouseKeeper data;
 
-	private final String title = "Title";
-	private final String text = "Text";
+    private final String title = "Title";
+    private final String text = "Text";
 
-	@BeforeClass
-	public static void init() {
-		data = DataHouseKeeper.INSTANCE;
-	}
+    @BeforeClass
+    public static void init() {
+        data = DataHouseKeeper.INSTANCE;
+    }
 
-	@Before
-	public void setUp() throws Exception {
-		// data.setUp();
-	}
+    @Before
+    public void setUp() throws Exception {
+        // data.setUp();
+    }
 
-	@After
-	public void tearDown() throws Exception {
-		data.deleteAllInAll();
-	}
+    @After
+    public void tearDown() throws Exception {
+        data.deleteAllInAll();
+    }
 
-	@Test
-	public void testGetLightWeight() throws Exception {
-		final TermHome lHome = data.getTermHome();
+    @Test
+    public void testGetLightWeight() throws Exception {
+        final TermHome lHome = data.getTermHome();
 
-		assertEquals("number 0", 0, lHome.getCount());
+        assertEquals("number 0", 0, lHome.getCount());
 
-		final AbstractTerm lTerm = lHome.newTerm(title, text);
-		assertEquals("number 1", 1, lHome.getCount());
+        final AbstractTerm lTerm = lHome.newTerm(this.title, this.text);
+        assertEquals("number 1", 1, lHome.getCount());
 
-		final AbstractTerm lTerm2 = lHome.getTerm(lTerm.getID());
-		final LightWeightTerm lLightWeight = (LightWeightTerm) lTerm2.getLightWeight();
+        final AbstractTerm lTerm2 = lHome.getTerm(lTerm.getID());
+        final LightWeightTerm lLightWeight = (LightWeightTerm) lTerm2.getLightWeight();
 
-		assertEquals("id", lTerm.getID(), lLightWeight.getID());
-		assertEquals("title", title, lLightWeight.title);
-		assertEquals("text", text, lLightWeight.text);
-	}
+        assertEquals("id", lTerm.getID(), lLightWeight.getID());
+        assertEquals("title", this.title, lLightWeight.title);
+        assertEquals("text", this.text, lLightWeight.text);
+    }
 
-	@Test
-	public void testSaveTitleText() throws Exception {
-		final String lTitle2 = "new title";
-		final String lText2 = "new text content";
+    @Test
+    public void testSaveTitleText() throws Exception {
+        final String lTitle2 = "new title";
+        final String lText2 = "new text content";
 
-		final TermHome lHome = data.getTermHome();
+        final TermHome lHome = data.getTermHome();
 
-		assertEquals("number 0", 0, lHome.getCount());
+        assertEquals("number 0", 0, lHome.getCount());
 
-		final AbstractTerm lTerm = lHome.newTerm(title, text);
-		assertEquals("number 1", 1, lHome.getCount());
+        final AbstractTerm lTerm = lHome.newTerm(this.title, this.text);
+        assertEquals("number 1", 1, lHome.getCount());
 
-		final AbstractTerm lTerm2 = lHome.getTerm(lTerm.getID());
+        final AbstractTerm lTerm2 = lHome.getTerm(lTerm.getID());
 
-		assertEquals("title 1", title, lTerm2.getTitle());
-		assertEquals("text 1", text, lTerm2.get(TermHome.KEY_TEXT));
+        assertEquals("title 1", this.title, lTerm2.getTitle());
+        assertEquals("text 1", this.text, lTerm2.get(TermHome.KEY_TEXT));
 
-		lTerm2.saveTitleText(lTitle2, lText2);
+        lTerm2.saveTitleText(lTitle2, lText2);
 
-		final AbstractTerm lTerm3 = lHome.getTerm(lTerm.getID());
+        final AbstractTerm lTerm3 = lHome.getTerm(lTerm.getID());
 
-		assertEquals("title 2", lTitle2, lTerm3.getTitle());
-		assertEquals("text 2", lText2, lTerm3.get(TermHome.KEY_TEXT));
-	}
+        assertEquals("title 2", lTitle2, lTerm3.getTitle());
+        assertEquals("text 2", lText2, lTerm3.get(TermHome.KEY_TEXT));
+    }
 
-	@Test
-	public void testSave() throws Exception {
-		final long lStart = System.currentTimeMillis() - 1000;
+    @Test
+    public void testSave() throws Exception {
+        final long lStart = System.currentTimeMillis() - 1000;
 
-		final TermHome lHome = data.getTermHome();
-		AbstractTerm lTerm = lHome.newTerm(title, text);
-		assertEquals("number 1", 1, lHome.getCount());
+        final TermHome lHome = data.getTermHome();
+        AbstractTerm lTerm = lHome.newTerm(this.title, this.text);
+        assertEquals("number 1", 1, lHome.getCount());
 
-		lTerm.save("new title", "new text");
-		lTerm = lHome.getTerm(lTerm.getID());
-		assertTrue("compare timestamp", lStart < ((Timestamp) lTerm.get(TermHome.KEY_MODIFIED)).getTime());
+        lTerm.save("new title", "new text");
+        lTerm = lHome.getTerm(lTerm.getID());
+        assertTrue("compare timestamp", lStart < ((Timestamp) lTerm.get(TermHome.KEY_MODIFIED)).getTime());
 
-		final String lCreated = ((IItem) lTerm).getCreated();
-		assertNotNull("created string exists", lCreated);
+        final String lCreated = ((IItem) lTerm).getCreated();
+        assertNotNull("created string exists", lCreated);
 
-		String lCreatedLbl = "Created:";
-		String lModifiedLbl = "Modified:";
-		if (data.isGerman()) {
-			lCreatedLbl = "Erzeugt:";
-			lModifiedLbl = "Verändert:";
-		}
-		assertTrue("Created:", lCreated.indexOf(lCreatedLbl) >= 0);
-		assertTrue("Modified:", lCreated.indexOf(lModifiedLbl) >= 0);
-	}
+        String lCreatedLbl = "Created:";
+        String lModifiedLbl = "Modified:";
+        if (data.isGerman()) {
+            lCreatedLbl = "Erzeugt:";
+            lModifiedLbl = "Verändert:";
+        }
+        assertTrue("Created:", lCreated.indexOf(lCreatedLbl) >= 0);
+        assertTrue("Modified:", lCreated.indexOf(lModifiedLbl) >= 0);
+    }
 
-	@Test
-	public void testIndexContent() throws Exception {
-		final IndexerHelper lIndexer = new IndexerHelper();
+    @Test
+    public void testIndexContent() throws Exception {
+        final IndexerHelper indexer = new IndexerHelper();
 
-		final TermHome lHome = data.getTermHome();
-		final AbstractTerm lTerm = lHome.newTerm(title, text);
-		((Term) lTerm).indexContent(lIndexer);
+        final TermHome home = data.getTermHome();
+        final AbstractTerm term = home.newTerm(this.title, this.text);
+        ((Term) term).indexContent(indexer);
 
-		assertEquals("number of index docs", 1, lIndexer.getDocuments().size());
-		final IndexerDocument lDocument = lIndexer.getDocuments().iterator().next();
-		final Collection<IndexerField> lFields = lDocument.getFields();
+        assertEquals("number of index docs", 1, indexer.getDocuments().size());
+        final IndexerDocument document = indexer.getDocuments().iterator().next();
+        final Collection<IndexerField> fields = document.getFields();
 
-		assertEquals("number of index fields", 7, lFields.size());
-		final Collection<String> lFieldNames = new ArrayList<String>();
-		final Collection<String> lFieldFull = new ArrayList<String>();
-		for (final IndexerField lField : lDocument.getFields()) {
-			lFieldNames.add(lField.getFieldName());
-			lFieldFull.add(lField.toString());
-		}
-		assertTrue("contains itemID", lFieldNames.contains("itemID"));
-		assertTrue("contains itemType", lFieldNames.contains("itemType"));
-		assertTrue("contains itemTitle", lFieldNames.contains("itemTitle"));
-		assertTrue("contains itemDateCreated", lFieldNames.contains("itemDateCreated"));
-		assertTrue("contains itemDateModified", lFieldNames.contains("itemDateModified"));
-		assertTrue("contains itemFull", lFieldNames.contains("itemFull"));
-		assertTrue("contains full 'itemType: 1'", lFieldFull.contains("itemType: 1"));
-		assertTrue("contains full 'itemTitle: Title'", lFieldFull.contains("itemTitle: Title"));
-	}
+        assertEquals("number of index fields", 7, fields.size());
+        final Collection<String> fieldNames = new ArrayList<>();
+        final Collection<String> fieldFull = new ArrayList<>();
+        for (final IndexerField field : document.getFields()) {
+            fieldNames.add(field.getFieldName());
+            fieldFull.add(field.toString());
+        }
+        assertTrue("contains itemID", fieldNames.contains("itemID"));
+        assertTrue("contains itemType", fieldNames.contains("itemType"));
+        assertTrue("contains itemTitle", fieldNames.contains("itemTitle"));
+        assertTrue("contains itemDateCreated", fieldNames.contains("itemDateCreated"));
+        assertTrue("contains itemDateModified", fieldNames.contains("itemDateModified"));
+        assertTrue("contains itemFull", fieldNames.contains("itemFull"));
+        assertTrue("contains full 'itemType: 1'", fieldFull.contains("itemType: 1"));
+        assertTrue("contains full 'itemTitle: Title'", fieldFull.contains("itemTitle: Title"));
+    }
 
-	/**
-	 * Test of equals() and hashCode() defined on base class
-	 * {@link AbstractItem}
-	 *
-	 * @throws Exception
-	 */
-	@Test
-	public void testEquals() throws Exception {
-		final TermHome lHome = data.getTermHome();
-		final AbstractTerm lTerm1 = lHome.newTerm(title, text);
-		final AbstractTerm lTerm2 = lHome.newTerm(title, text);
-		final AbstractTerm lTerm3 = lHome.getTerm(lTerm1.getID());
+    /**
+     * Test of equals() and hashCode() defined on base class
+     * {@link AbstractItem}
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testEquals() throws Exception {
+        final TermHome lHome = data.getTermHome();
+        final AbstractTerm lTerm1 = lHome.newTerm(this.title, this.text);
+        final AbstractTerm lTerm2 = lHome.newTerm(this.title, this.text);
+        final AbstractTerm lTerm3 = lHome.getTerm(lTerm1.getID());
 
-		assertTrue("term equals self", lTerm1.equals(lTerm1));
-		assertTrue("hashCode equals self", lTerm1.hashCode() == lTerm1.hashCode());
-		assertFalse("model not equals null", lTerm1.equals(null));
-		assertFalse("model not equals String", lTerm1.equals(lTerm1.toString()));
-		assertFalse("String not equals model", "model".equals(lTerm1));
-		assertFalse("model not equals term model", lTerm1.equals(lTerm2));
-		assertTrue("term 1 equals term 3", lTerm1.equals(lTerm3));
-		assertTrue("term 3 equals term 1", lTerm3.equals(lTerm1));
-		assertEquals("hashCode 1 equals hashCode 3", lTerm1.hashCode(), lTerm3.hashCode());
-	}
+        assertTrue("term equals self", lTerm1.equals(lTerm1));
+        assertTrue("hashCode equals self", lTerm1.hashCode() == lTerm1.hashCode());
+        assertFalse("model not equals null", lTerm1.equals(null));
+        assertFalse("model not equals String", lTerm1.equals(lTerm1.toString()));
+        assertFalse("String not equals model", "model".equals(lTerm1));
+        assertFalse("model not equals term model", lTerm1.equals(lTerm2));
+        assertTrue("term 1 equals term 3", lTerm1.equals(lTerm3));
+        assertTrue("term 3 equals term 1", lTerm3.equals(lTerm1));
+        assertEquals("hashCode 1 equals hashCode 3", lTerm1.hashCode(), lTerm3.hashCode());
+    }
 
 }

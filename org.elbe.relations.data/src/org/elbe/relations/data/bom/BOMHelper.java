@@ -28,88 +28,92 @@ import org.elbe.relations.data.internal.bom.RelationsHomeManager;
  */
 public class BOMHelper {
 
-	public static TermHome getTermHome() {
-		return (TermHome) RelationsHomeManager.INSTANCE.getHome(Term.HOME_CLASS_NAME);
-	}
+    public static TermHome getTermHome() {
+        return (TermHome) RelationsHomeManager.INSTANCE.getHome(Term.HOME_CLASS_NAME);
+    }
 
-	public static TextHome getTextHome() {
-		return (TextHome) RelationsHomeManager.INSTANCE.getHome(Text.HOME_CLASS_NAME);
-	}
+    public static TextHome getTextHome() {
+        return (TextHome) RelationsHomeManager.INSTANCE.getHome(Text.HOME_CLASS_NAME);
+    }
 
-	public static PersonHome getPersonHome() {
-		return (PersonHome) RelationsHomeManager.INSTANCE.getHome(Person.HOME_CLASS_NAME);
-	}
+    public static PersonHome getPersonHome() {
+        return (PersonHome) RelationsHomeManager.INSTANCE.getHome(Person.HOME_CLASS_NAME);
+    }
 
-	public static RelationHome getRelationHome() {
-		return (RelationHome) RelationsHomeManager.INSTANCE.getHome(Relation.HOME_CLASS_NAME);
-	}
+    public static RelationHome getRelationHome() {
+        return (RelationHome) RelationsHomeManager.INSTANCE.getHome(Relation.HOME_CLASS_NAME);
+    }
 
-	public static CollectableTermHome getCollectableTermHome() {
-		return (CollectableTermHome) RelationsHomeManager.INSTANCE.getHome(Term.COLL_HOME_CLASS_NAME);
-	}
+    public static EventStoreHome getEventStoreHome() {
+        return (EventStoreHome) RelationsHomeManager.INSTANCE.getHome(EventStore.HOME_CLASS_NAME);
+    }
 
-	public static CollectableTextHome getCollectableTextHome() {
-		return (CollectableTextHome) RelationsHomeManager.INSTANCE.getHome(Text.COLL_HOME_CLASS_NAME);
-	}
+    public static CollectableTermHome getCollectableTermHome() {
+        return (CollectableTermHome) RelationsHomeManager.INSTANCE.getHome(Term.COLL_HOME_CLASS_NAME);
+    }
 
-	public static CollectablePersonHome getCollectablePersonHome() {
-		return (CollectablePersonHome) RelationsHomeManager.INSTANCE.getHome(Person.COLL_HOME_CLASS_NAME);
-	}
+    public static CollectableTextHome getCollectableTextHome() {
+        return (CollectableTextHome) RelationsHomeManager.INSTANCE.getHome(Text.COLL_HOME_CLASS_NAME);
+    }
 
-	public static JoinRelatedTermHome getJoinRelatedTerm1Home() {
-		return (JoinRelatedTermHome) RelationsHomeManager.INSTANCE
-				.getHome("org.elbe.relations.data.bom.JoinRelatedTerm1Home"); //$NON-NLS-1$
-	}
+    public static CollectablePersonHome getCollectablePersonHome() {
+        return (CollectablePersonHome) RelationsHomeManager.INSTANCE.getHome(Person.COLL_HOME_CLASS_NAME);
+    }
 
-	public static JoinRelatedTermHome getJoinRelatedTerm2Home() {
-		return (JoinRelatedTermHome) RelationsHomeManager.INSTANCE
-				.getHome("org.elbe.relations.data.bom.JoinRelatedTerm2Home"); //$NON-NLS-1$
-	}
+    public static JoinRelatedTermHome getJoinRelatedTerm1Home() {
+        return (JoinRelatedTermHome) RelationsHomeManager.INSTANCE
+                .getHome("org.elbe.relations.data.bom.JoinRelatedTerm1Home"); //$NON-NLS-1$
+    }
 
-	public static JoinRelatedTextHome getJoinRelatedText1Home() {
-		return (JoinRelatedTextHome) RelationsHomeManager.INSTANCE
-				.getHome("org.elbe.relations.data.bom.JoinRelatedText1Home"); //$NON-NLS-1$
-	}
+    public static JoinRelatedTermHome getJoinRelatedTerm2Home() {
+        return (JoinRelatedTermHome) RelationsHomeManager.INSTANCE
+                .getHome("org.elbe.relations.data.bom.JoinRelatedTerm2Home"); //$NON-NLS-1$
+    }
 
-	public static JoinRelatedTextHome getJoinRelatedText2Home() {
-		return (JoinRelatedTextHome) RelationsHomeManager.INSTANCE
-				.getHome("org.elbe.relations.data.bom.JoinRelatedText2Home"); //$NON-NLS-1$
-	}
+    public static JoinRelatedTextHome getJoinRelatedText1Home() {
+        return (JoinRelatedTextHome) RelationsHomeManager.INSTANCE
+                .getHome("org.elbe.relations.data.bom.JoinRelatedText1Home"); //$NON-NLS-1$
+    }
 
-	public static JoinRelatedPersonHome getJoinRelatedPerson1Home() {
-		return (JoinRelatedPersonHome) RelationsHomeManager.INSTANCE
-				.getHome("org.elbe.relations.data.bom.JoinRelatedPerson1Home"); //$NON-NLS-1$
-	}
+    public static JoinRelatedTextHome getJoinRelatedText2Home() {
+        return (JoinRelatedTextHome) RelationsHomeManager.INSTANCE
+                .getHome("org.elbe.relations.data.bom.JoinRelatedText2Home"); //$NON-NLS-1$
+    }
 
-	public static JoinRelatedPersonHome getJoinRelatedPerson2Home() {
-		return (JoinRelatedPersonHome) RelationsHomeManager.INSTANCE
-				.getHome("org.elbe.relations.data.bom.JoinRelatedPerson2Home"); //$NON-NLS-1$
-	}
+    public static JoinRelatedPersonHome getJoinRelatedPerson1Home() {
+        return (JoinRelatedPersonHome) RelationsHomeManager.INSTANCE
+                .getHome("org.elbe.relations.data.bom.JoinRelatedPerson1Home"); //$NON-NLS-1$
+    }
 
-	/**
-	 * Returns the <code>IItem</code> that corresponds to the specified
-	 * <code>ILightWeightItem</code>.
-	 *
-	 * @param inLightWeight
-	 *            {@link ILightWeightItem} the item who's corresponding
-	 *            <code>IItem</code> is to look up.
-	 * @return {@link IItem} may be <code>null</code> in case of an item type
-	 *         not in [TERM, TEXT, PERSON]
-	 * @throws BOMException
-	 */
-	public static IItem getItem(final ILightWeightItem inLightWeight) throws BOMException {
-		IItemFactory factory = null;
-		switch (inLightWeight.getItemType()) {
-		case IItem.TERM:
-			factory = getTermHome();
-			break;
-		case IItem.TEXT:
-			factory = getTextHome();
-			break;
-		case IItem.PERSON:
-			factory = getPersonHome();
-			break;
-		}
-		return factory == null ? null : factory.getItem(inLightWeight.getID());
-	}
+    public static JoinRelatedPersonHome getJoinRelatedPerson2Home() {
+        return (JoinRelatedPersonHome) RelationsHomeManager.INSTANCE
+                .getHome("org.elbe.relations.data.bom.JoinRelatedPerson2Home"); //$NON-NLS-1$
+    }
+
+    /**
+     * Returns the <code>IItem</code> that corresponds to the specified
+     * <code>ILightWeightItem</code>.
+     *
+     * @param inLightWeight
+     *            {@link ILightWeightItem} the item who's corresponding
+     *            <code>IItem</code> is to look up.
+     * @return {@link IItem} may be <code>null</code> in case of an item type
+     *         not in [TERM, TEXT, PERSON]
+     * @throws BOMException
+     */
+    public static IItem getItem(final ILightWeightItem inLightWeight) throws BOMException {
+        IItemFactory factory = null;
+        switch (inLightWeight.getItemType()) {
+            case IItem.TERM:
+                factory = getTermHome();
+                break;
+            case IItem.TEXT:
+                factory = getTextHome();
+                break;
+            case IItem.PERSON:
+                factory = getPersonHome();
+                break;
+        }
+        return factory == null ? null : factory.getItem(inLightWeight.getID());
+    }
 }

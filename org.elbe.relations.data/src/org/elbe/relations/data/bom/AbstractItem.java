@@ -23,6 +23,7 @@ import java.sql.Timestamp;
 import java.util.Locale;
 
 import org.elbe.relations.data.Messages;
+import org.elbe.relations.data.bom.EventStoreHome.StoreType;
 import org.elbe.relations.data.search.AbstractSearching;
 import org.elbe.relations.data.search.IndexerDateField;
 import org.elbe.relations.data.search.IndexerDocument;
@@ -41,168 +42,178 @@ import org.hip.kernel.exc.VException;
  */
 @SuppressWarnings("serial")
 public abstract class AbstractItem extends DomainObjectImpl implements IItem {
-	public final static String TRUNCATION_STATE = "22001"; //$NON-NLS-1$
-	public final static String TRUNCATION_MSG = Messages.getString("AbstractItem.error.truncation"); //$NON-NLS-1$
+    public final static String TRUNCATION_STATE = "22001"; //$NON-NLS-1$
+    public final static String TRUNCATION_MSG = Messages.getString("AbstractItem.error.truncation"); //$NON-NLS-1$
 
-	/**
-	 * AbstractItem constructor
-	 */
-	public AbstractItem() {
-		super();
-	}
+    /**
+     * AbstractItem constructor
+     */
+    public AbstractItem() {
+        super();
+    }
 
-	/**
-	 * @throws VException
-	 * @see IItem#getCreated()
-	 */
-	@Override
-	public String getCreated() throws VException {
-		return Messages.getString("Item.created.modified", getLocale(), //$NON-NLS-1$
-				getCreatedModified());
-	}
+    /**
+     * @throws VException
+     * @see IItem#getCreated()
+     */
+    @Override
+    public String getCreated() throws VException {
+        return Messages.getString("Item.created.modified", getLocale(), //$NON-NLS-1$
+                getCreatedModified());
+    }
 
-	/**
-	 * Returns the default locale <code>ENGLISH</code>. Subclasses should
-	 * override.
-	 *
-	 * @return {@link Locale} the locale used for localized messages.
-	 */
-	protected Locale getLocale() {
-		return Locale.ENGLISH;
-	}
+    /**
+     * Returns the default locale <code>ENGLISH</code>. Subclasses should
+     * override.
+     *
+     * @return {@link Locale} the locale used for localized messages.
+     */
+    protected Locale getLocale() {
+        return Locale.ENGLISH;
+    }
 
-	abstract protected Timestamp[] getCreatedModified() throws VException;
+    abstract protected Timestamp[] getCreatedModified() throws VException;
 
-	/**
-	 * @param inKey
-	 *            String Key of value to be retrieved.
-	 * @return String Value as String or empty String if value is NULL.
-	 * @throws VException
-	 */
-	protected String getChecked(final String inKey) throws VException {
-		final Object lValue = get(inKey);
-		return lValue == null ? "" : lValue.toString().trim(); //$NON-NLS-1$
-	}
+    /**
+     * @param inKey
+     *            String Key of value to be retrieved.
+     * @return String Value as String or empty String if value is NULL.
+     * @throws VException
+     */
+    protected String getChecked(final String inKey) throws VException {
+        final Object lValue = get(inKey);
+        return lValue == null ? "" : lValue.toString().trim(); //$NON-NLS-1$
+    }
 
-	/**
-	 * Deletes the item's search term in the search index.
-	 *
-	 * @throws IOException
-	 * @throws VException
-	 */
-	protected void deleteItemInIndex() throws IOException, VException {
-		final String lUniqueID = UniqueID.getStringOf(getItemType(), getID());
-		getIndexer().deleteItemInIndex(lUniqueID);
-	}
+    /**
+     * Deletes the item's search term in the search index.
+     *
+     * @throws IOException
+     * @throws VException
+     */
+    protected void deleteItemInIndex() throws IOException, VException {
+        final String lUniqueID = UniqueID.getStringOf(getItemType(), getID());
+        getIndexer().deleteItemInIndex(lUniqueID);
+    }
 
-	/**
-	 * Refreshes the item's search term in the search index.
-	 *
-	 * @throws IOException
-	 * @throws BOMException
-	 * @throws VException
-	 */
-	protected void refreshItemInIndex() throws IOException, BOMException, VException {
-		getIndexer().refreshItemInIndex(this);
-	}
+    /**
+     * Refreshes the item's search term in the search index.
+     *
+     * @throws IOException
+     * @throws BOMException
+     * @throws VException
+     */
+    protected void refreshItemInIndex() throws IOException, BOMException, VException {
+        getIndexer().refreshItemInIndex(this);
+    }
 
-	/**
-	 * Returns a default implementation of the <code>RelationsIndexer</code>
-	 * which does nothing. Subclasses have to override.
-	 *
-	 * @return {@link RelationsIndexer}
-	 */
-	protected RelationsIndexer getIndexer() {
-		return new NoOpIndexer();
-	}
+    /**
+     * Returns a default implementation of the <code>RelationsIndexer</code>
+     * which does nothing. Subclasses have to override.
+     *
+     * @return {@link RelationsIndexer}
+     */
+    protected RelationsIndexer getIndexer() {
+        return new NoOpIndexer();
+    }
 
-	/**
-	 * Returns the item's title.
-	 *
-	 * @return String
-	 */
-	@Override
-	public String toString() {
-		try {
-			return String.format("Item '%s'", getTitle()); //$NON-NLS-1$
-		} catch (final Exception exc) {
-			return super.toString();
-		}
-	}
+    /**
+     * Returns the item's title.
+     *
+     * @return String
+     */
+    @Override
+    public String toString() {
+        try {
+            return String.format("Item '%s'", getTitle()); //$NON-NLS-1$
+        } catch (final Exception exc) {
+            return super.toString();
+        }
+    }
 
-	// various helper methods providing protected functionality for item
-	// indexing
-	protected IndexerField getFieldTitle(final String inTitle) {
-		return new IndexerField(AbstractSearching.TITLE, inTitle, IndexerField.Store.YES, IndexerField.Type.FULL_TEXT,
-				2.0f);
-	}
+    // various helper methods providing protected functionality for item
+    // indexing
+    protected IndexerField getFieldTitle(final String inTitle) {
+        return new IndexerField(AbstractSearching.TITLE, inTitle, IndexerField.Store.YES, IndexerField.Type.FULL_TEXT,
+                2.0f);
+    }
 
-	protected IndexerField getFieldUniqueID(final String inItemID) {
-		return new IndexerField(AbstractSearching.UNIQUE_ID, inItemID, IndexerField.Store.YES, IndexerField.Type.ID,
-				1.0f);
-	}
+    protected IndexerField getFieldUniqueID(final String inItemID) {
+        return new IndexerField(AbstractSearching.UNIQUE_ID, inItemID, IndexerField.Store.YES, IndexerField.Type.ID,
+                1.0f);
+    }
 
-	protected IndexerField getFieldItemType(final String inItemType) {
-		return new IndexerField(AbstractSearching.ITEM_TYPE, inItemType, IndexerField.Store.YES, IndexerField.Type.ID,
-				1.0f);
-	}
+    protected IndexerField getFieldItemType(final String inItemType) {
+        return new IndexerField(AbstractSearching.ITEM_TYPE, inItemType, IndexerField.Store.YES, IndexerField.Type.ID,
+                1.0f);
+    }
 
-	protected IndexerField getFieldItemID(final String inItemID) {
-		return new IndexerField(AbstractSearching.ITEM_ID, inItemID, IndexerField.Store.YES, IndexerField.Type.ID,
-				1.0f);
-	}
+    protected IndexerField getFieldItemID(final String inItemID) {
+        return new IndexerField(AbstractSearching.ITEM_ID, inItemID, IndexerField.Store.YES, IndexerField.Type.ID,
+                1.0f);
+    }
 
-	protected IndexerField getFieldText(final String inText) {
-		return new IndexerField(AbstractSearching.CONTENT_FULL, inText, IndexerField.Store.NO,
-				IndexerField.Type.FULL_TEXT, 1.0f);
-	}
+    protected IndexerField getFieldText(final String inText) {
+        return new IndexerField(AbstractSearching.CONTENT_FULL, inText, IndexerField.Store.NO,
+                IndexerField.Type.FULL_TEXT, 1.0f);
+    }
 
-	protected void addCreatedModified(final IndexerDocument inDocument) throws VException {
-		final Timestamp[] lCreatedModified = getCreatedModified();
+    protected void addCreatedModified(final IndexerDocument inDocument) throws VException {
+        final Timestamp[] lCreatedModified = getCreatedModified();
 
-		IndexerField lDate = new IndexerDateField(AbstractSearching.DATE_CREATED, lCreatedModified[0].getTime(),
-				IndexerField.Store.YES, IndexerField.Type.ID, IndexerDateField.TimeResolution.DAY);
-		inDocument.addField(lDate);
+        IndexerField lDate = new IndexerDateField(AbstractSearching.DATE_CREATED, lCreatedModified[0].getTime(),
+                IndexerField.Store.YES, IndexerField.Type.ID, IndexerDateField.TimeResolution.DAY);
+        inDocument.addField(lDate);
 
-		lDate = new IndexerDateField(AbstractSearching.DATE_MODIFIED, lCreatedModified[1].getTime(),
-				IndexerField.Store.YES, IndexerField.Type.ID, IndexerDateField.TimeResolution.DAY);
-		inDocument.addField(lDate);
-	}
+        lDate = new IndexerDateField(AbstractSearching.DATE_MODIFIED, lCreatedModified[1].getTime(),
+                IndexerField.Store.YES, IndexerField.Type.ID, IndexerDateField.TimeResolution.DAY);
+        inDocument.addField(lDate);
+    }
 
-	@Override
-	public int hashCode() {
-		final int lPrime = 31;
-		int outHash = 1;
-		outHash = lPrime * outHash + getItemType();
-		try {
-			outHash = lPrime * outHash + (int) (getID() ^ (getID() >>> 32));
-		} catch (final VException exc) {
-			// intentionally left empty
-		}
-		return outHash;
-	}
+    /** Sets this item to the event store.
+     *
+     * @param type {@link StoreType}
+     * @throws org.hip.kernel.bom.BOMException */
+    protected void setToEventStore(final EventStoreHome.StoreType type) throws org.hip.kernel.bom.BOMException {
+        if (isChanged()) {
+            BOMHelper.getEventStoreHome().saveEntry(UniqueID.createUniqueID(this), this, type);
+        }
+    }
 
-	/**
-	 * @return <code>true</code> if ID and type are equal.
-	 * @see org.hip.kernel.bom.impl.DomainObjectImpl#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(final Object inObject) {
-		if (this == inObject) {
-			return true;
-		}
-		if (inObject == null) {
-			return false;
-		}
-		if (inObject instanceof IItem) {
-			final IItem lItem = (IItem) inObject;
-			try {
-				return getItemType() == lItem.getItemType() && getID() == lItem.getID();
-			} catch (final VException exc) {
-				return false;
-			}
-		}
-		return false;
-	}
+    @Override
+    public int hashCode() {
+        final int lPrime = 31;
+        int outHash = 1;
+        outHash = lPrime * outHash + getItemType();
+        try {
+            outHash = lPrime * outHash + (int) (getID() ^ (getID() >>> 32));
+        } catch (final VException exc) {
+            // intentionally left empty
+        }
+        return outHash;
+    }
+
+    /**
+     * @return <code>true</code> if ID and type are equal.
+     * @see org.hip.kernel.bom.impl.DomainObjectImpl#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object inObject) {
+        if (this == inObject) {
+            return true;
+        }
+        if (inObject == null) {
+            return false;
+        }
+        if (inObject instanceof IItem) {
+            final IItem lItem = (IItem) inObject;
+            try {
+                return getItemType() == lItem.getItemType() && getID() == lItem.getID();
+            } catch (final VException exc) {
+                return false;
+            }
+        }
+        return false;
+    }
 
 }

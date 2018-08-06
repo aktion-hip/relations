@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.data.bom.BOMHelper;
+import org.elbe.relations.data.utility.RelationsSerializer;
 import org.hip.kernel.bom.AbstractSerializer;
 import org.hip.kernel.bom.GeneralDomainObject;
 import org.hip.kernel.bom.GeneralDomainObjectHome;

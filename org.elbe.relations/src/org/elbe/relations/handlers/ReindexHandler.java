@@ -34,9 +34,9 @@ public class ReindexHandler {
 
 	@Execute
 	public void execute(final IEclipseContext inContext)
-			throws InvocationTargetException, InterruptedException {
-		final IndexerAction lAction = ContextInjectionFactory.make(
-				IndexerAction.class, inContext);
+	        throws InvocationTargetException, InterruptedException {
+		final IndexerAction lAction = ContextInjectionFactory
+		        .make(IndexerAction.class, inContext);
 		lAction.setSilent(false);
 		lAction.run();
 	}

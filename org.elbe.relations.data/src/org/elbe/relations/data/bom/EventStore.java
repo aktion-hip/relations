@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
+ * Copyright (C) 2004-2018, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -16,35 +16,20 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ***************************************************************************/
-package org.elbe.relations.data;
+package org.elbe.relations.data.bom;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
+import org.hip.kernel.bom.impl.DomainObjectImpl;
 
-import org.elbe.relations.data.db.AbstractDBObjectCreator;
-
-/**
- * @author Luthiger
- */
-public class TestEmbeddedCreator extends AbstractDBObjectCreator {
-    private static String XSL = "db_derby.xsl"; //$NON-NLS-1$
+/** The EventStore model.
+ *
+ * @author lbenno */
+public class EventStore extends DomainObjectImpl {
+    private static final long serialVersionUID = 1L;
+    public final static String HOME_CLASS_NAME = "org.elbe.relations.data.bom.EventStoreHome"; //$NON-NLS-1$
 
     @Override
-    protected URL getXSL() {
-        return getClass().getResource(XSL);
-    }
-
-    @Override
-    protected URL getModelXML(final String xmlName) {
-        final File parent = new File(AbstractDBObjectCreator.class.getResource("/").getPath()).getParentFile();
-        final File xml = new File(parent, "resources/" + xmlName);
-        try {
-            return xml.toURI().toURL();
-        } catch (final MalformedURLException exc) {
-            // intentionally left empty
-        }
-        return null;
+    public String getHomeClassName() {
+        return HOME_CLASS_NAME;
     }
 
 }
