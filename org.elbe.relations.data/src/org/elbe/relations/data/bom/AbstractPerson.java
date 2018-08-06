@@ -41,12 +41,12 @@ public abstract class AbstractPerson extends AbstractItem implements IItem {
     }
 
     @Override
-    public void visit(final IItemVisitor inVisitor) throws VException {
-        inVisitor.setTitle(getTitle());
-        inVisitor.setTitleEditable(false);
-        inVisitor.setSubTitle(getSubTitle());
-        inVisitor.setText(getChecked(PersonHome.KEY_TEXT));
-        inVisitor.setTextEditable(true);
+    public void visit(final IItemVisitor visitor) throws VException {
+        visitor.setTitle(getTitle());
+        visitor.setTitleEditable(false);
+        visitor.setSubTitle(getSubTitle());
+        visitor.setText(getChecked(PersonHome.KEY_TEXT));
+        visitor.setTextEditable(true);
     }
 
     private String getSubTitle() throws VException {
@@ -90,12 +90,12 @@ public abstract class AbstractPerson extends AbstractItem implements IItem {
      */
     @Override
     public String getTitle() throws VException {
-        final String lName = get(PersonHome.KEY_NAME).toString();
-        final String lFistname = getChecked(PersonHome.KEY_FIRSTNAME);
-        if ((lFistname != null) && (lFistname.length() > 0)) {
-            return String.format("%s, %s", lName, lFistname); //$NON-NLS-1$
+        final String name = get(PersonHome.KEY_NAME).toString();
+        final String fistname = getChecked(PersonHome.KEY_FIRSTNAME);
+        if ((fistname != null) && (fistname.length() > 0)) {
+            return String.format("%s, %s", name, fistname); //$NON-NLS-1$
         }
-        return lName;
+        return name;
     }
 
     @Override
@@ -110,54 +110,50 @@ public abstract class AbstractPerson extends AbstractItem implements IItem {
     public void saveTitleText(final String inTitle, final String inText) throws BOMException {
         try {
             setModel(inTitle, inText);
-            update(true);
             setToEventStore(EventStoreHome.StoreType.UPDATE);
+            update(true);
         } catch (VException | SQLException exc) {
             throw new BOMException(exc.getMessage());
         }
     }
 
-    protected void setModel(final String inTitle, final String inText) throws VException {
-        set(PersonHome.KEY_TEXT, inText);
+    protected void setModel(final String title, final String text) throws VException {
+        set(PersonHome.KEY_TEXT, text);
         set(PersonHome.KEY_MODIFIED, new Timestamp(System.currentTimeMillis()));
     }
 
-    /**
-     * Save changes after an edit of all fields.
+    /** Save changes after an edit of all fields.
      *
-     * @param inName
-     * @param inFirstName
-     * @param inText
-     * @param inFrom
-     * @param inTo
-     * @throws BOMException
-     */
-    public void save(final String inName, final String inFirstName, final String inText, final String inFrom,
-            final String inTo) throws BOMException {
+     * @param name
+     * @param firstName
+     * @param text
+     * @param from
+     * @param to
+     * @throws BOMException */
+    public void save(final String name, final String firstName, final String text, final String from, final String to)
+            throws BOMException {
         try {
-            setModel(inName, inFirstName, inText, inFrom, inTo);
-            update(true);
+            setModel(name, firstName, text, from, to);
             setToEventStore(EventStoreHome.StoreType.UPDATE);
+            update(true);
             refreshItemInIndex();
-        } catch (final VException exc) {
+        } catch (final VException | IOException exc) {
             throw new BOMException(exc.getMessage());
         } catch (final SQLException exc) {
             if (TRUNCATION_STATE.equals(exc.getSQLState())) {
                 throw new BOMTruncationException(TRUNCATION_MSG);
             }
             throw new BOMException(exc.getMessage());
-        } catch (final IOException exc) {
-            throw new BOMException(exc.getMessage());
         }
     }
 
-    protected void setModel(final String inName, final String inFirstName, final String inText, final String inFrom,
-            final String inTo) throws VException {
-        set(PersonHome.KEY_NAME, inName);
-        set(PersonHome.KEY_FIRSTNAME, inFirstName);
-        set(PersonHome.KEY_TEXT, inText);
-        set(PersonHome.KEY_FROM, inFrom);
-        set(PersonHome.KEY_TO, inTo);
+    protected void setModel(final String name, final String firstName, final String text, final String from,
+            final String to) throws VException {
+        set(PersonHome.KEY_NAME, name);
+        set(PersonHome.KEY_FIRSTNAME, firstName);
+        set(PersonHome.KEY_TEXT, text);
+        set(PersonHome.KEY_FROM, from);
+        set(PersonHome.KEY_TO, to);
         set(PersonHome.KEY_MODIFIED, new Timestamp(System.currentTimeMillis()));
     }
 

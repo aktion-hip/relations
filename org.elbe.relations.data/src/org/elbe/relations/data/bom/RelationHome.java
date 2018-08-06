@@ -110,24 +110,19 @@ ICreatableHome {
         return XML_OBJECT_DEF;
     }
 
-    /**
-     * Creates a relation between two items.
+    /** Creates a relation between two items.
      *
-     * @param inItem1
-     *            IItem
-     * @param inItem2
-     *            IItem
+     * @param item1 IItem
+     * @param item2 IItem
      * @return Relation
-     * @throws BOMException
-     */
-    public Relation newRelation(final IItem inItem1, final IItem inItem2)
-            throws BOMException {
+     * @throws BOMException */
+    public Relation newRelation(final IItem item1, final IItem item2) throws BOMException {
         try {
             final DomainObject outRelation = create();
-            outRelation.set(KEY_TYPE1, new Integer(inItem1.getItemType()));
-            outRelation.set(KEY_ITEM1, new Long(inItem1.getID()));
-            outRelation.set(KEY_TYPE2, new Integer(inItem2.getItemType()));
-            outRelation.set(KEY_ITEM2, new Long(inItem2.getID()));
+            outRelation.set(KEY_TYPE1, new Integer(item1.getItemType()));
+            outRelation.set(KEY_ITEM1, new Long(item1.getID()));
+            outRelation.set(KEY_TYPE2, new Integer(item2.getItemType()));
+            outRelation.set(KEY_ITEM2, new Long(item2.getID()));
             outRelation.insert(true);
 
             final long id = getMax(KEY_ID).longValue();
@@ -135,73 +130,52 @@ ICreatableHome {
             BOMHelper.getEventStoreHome().saveEntry(new UniqueID(IItem.RELATION, id), outRelation, StoreType.CREATE);
             return (Relation) outRelation;
         }
-        catch (final VException exc) {
-            throw new BOMException(exc);
-        }
-        catch (final SQLException exc) {
+        catch (VException | SQLException exc) {
             throw new BOMException(exc);
         }
     }
 
-    /**
-     * Delete the relation with the specified ID.
+    /** Delete the relation with the specified ID.
      *
-     * @param inRelationID
-     * @throws BOMException
-     */
-    public void deleteRelation(final long inRelationID) throws BOMException {
+     * @param relationID
+     * @throws BOMException */
+    public void deleteRelation(final long relationID) throws BOMException {
         try {
-            final KeyObject lKey = new KeyObjectImpl();
-            lKey.setValue(KEY_ID, new Long(inRelationID));
-            delete(lKey, true);
-            BOMHelper.getEventStoreHome().saveEntry(new UniqueID(IItem.RELATION, inRelationID));
+            final KeyObject key = new KeyObjectImpl();
+            key.setValue(KEY_ID, new Long(relationID));
+            delete(key, true);
+            BOMHelper.getEventStoreHome().saveEntry(new UniqueID(IItem.RELATION, relationID));
         }
-        catch (final VException exc) {
-            throw new BOMException(exc.getMessage());
-        }
-        catch (final SQLException exc) {
+        catch (VException | SQLException exc) {
             throw new BOMException(exc.getMessage());
         }
     }
 
-    /**
-     * Delete the relation that connects the items with the specified values.
+    /** Delete the relation that connects the items with the specified values.
      *
-     * @param inType1
-     *            int Type of item 1.
-     * @param inID1
-     *            long ID of item 1.
-     * @param inType2
-     *            int Type of item 2.
-     * @param inID2
-     *            long ID of item 2.
-     * @throws BOMException
-     */
-    public void deleteRelation(final int inType1, final long inID1,
-            final int inType2, final long inID2) throws BOMException {
+     * @param type1 int Type of item 1.
+     * @param id1 long ID of item 1.
+     * @param type2 int Type of item 2.
+     * @param id2 long ID of item 2.
+     * @throws BOMException */
+    public void deleteRelation(final int type1, final long id1, final int type2, final long id2) throws BOMException {
         try {
-            delete(createKey(inType1, inID1, inType2, inID2), true);
+            delete(createKey(type1, id1, type2, id2), true);
         }
-        catch (final SQLException exc) {
-            throw new BOMException(exc.getMessage());
-        }
-        catch (final VException exc) {
+        catch (SQLException | VException exc) {
             throw new BOMException(exc.getMessage());
         }
     }
 
-    /**
-     * Finds the relation item with the specified ID.
+    /** Finds the relation item with the specified ID.
      *
-     * @param inRelationID
-     *            long
+     * @param relationID long
      * @return Relation
-     * @throws BOMException
-     */
-    public Relation getRelation(final long inRelationID) throws BOMException {
+     * @throws BOMException */
+    public Relation getRelation(final long relationID) throws BOMException {
         try {
             final KeyObject lKey = new KeyObjectImpl();
-            lKey.setValue(KEY_ID, new Long(inRelationID));
+            lKey.setValue(KEY_ID, new Long(relationID));
             return (Relation) findByKey(lKey);
         }
         catch (final VException exc) {
@@ -209,99 +183,87 @@ ICreatableHome {
         }
     }
 
-    /**
-     * Returns all relations of the specified item.
+    /** Returns all relations of the specified item.
      *
-     * @param inItem
+     * @param item
      * @return QueryResult
-     * @throws BOMException
-     */
-    public QueryResult getRelations(final IItem inItem) throws BOMException {
+     * @throws BOMException */
+    public QueryResult getRelations(final IItem item) throws BOMException {
         try {
             final KeyObject lKey1 = new KeyObjectImpl();
-            lKey1.setValue(KEY_TYPE1, new Integer(inItem.getItemType()));
-            lKey1.setValue(KEY_ITEM1, new Long(inItem.getID()));
+            lKey1.setValue(KEY_TYPE1, new Integer(item.getItemType()));
+            lKey1.setValue(KEY_ITEM1, new Long(item.getID()));
 
             final KeyObject lKey2 = new KeyObjectImpl();
-            lKey2.setValue(KEY_TYPE2, new Integer(inItem.getItemType()));
-            lKey2.setValue(KEY_ITEM2, new Long(inItem.getID()));
+            lKey2.setValue(KEY_TYPE2, new Integer(item.getItemType()));
+            lKey2.setValue(KEY_ITEM2, new Long(item.getID()));
             lKey1.setValue(lKey2, KeyObject.BinaryBooleanOperator.OR);
 
             return select(lKey1);
         }
-        catch (final SQLException exc) {
-            throw new BOMException(exc.getMessage());
-        }
-        catch (final VException exc) {
+        catch (SQLException | VException exc) {
             throw new BOMException(exc.getMessage());
         }
     }
 
-    /**
-     * Retrieves the Relation with the specified values.
+    /** Retrieves the Relation with the specified values.
      *
-     * @param inType1
-     *            int
-     * @param inID1
-     *            long
-     * @param inType2
-     *            int
-     * @param inID2
-     *            long
+     * @param type1 int
+     * @param id1 long
+     * @param type2 int
+     * @param id2 long
      * @return Relation
-     * @throws BOMException
-     */
-    public Relation getRelation(final int inType1, final long inID1,
-            final int inType2, final long inID2) throws BOMException {
+     * @throws BOMException */
+    public Relation getRelation(final int type1, final long id1, final int type2, final long id2) throws BOMException {
         try {
-            return (Relation) findByKey(createKey(inType1, inID1, inType2,
-                    inID2));
+            return (Relation) findByKey(createKey(type1, id1, type2, id2));
         }
         catch (final VException exc) {
             throw new BOMException(exc.getMessage());
         }
     }
 
-    private KeyObject createKey(final int inType1, final long inID1,
-            final int inType2, final long inID2) throws VException {
+    private KeyObject createKey(final int type1, final long id1, final int type2, final long id2) throws VException {
         final KeyObject outKey = new KeyObjectImpl();
-        outKey.setValue(KEY_TYPE1, new Integer(inType1));
-        outKey.setValue(KEY_ITEM1, new Long(inID1));
-        outKey.setValue(KEY_TYPE2, new Integer(inType2));
-        outKey.setValue(KEY_ITEM2, new Long(inID2));
+        outKey.setValue(KEY_TYPE1, new Integer(type1));
+        outKey.setValue(KEY_ITEM1, new Long(id1));
+        outKey.setValue(KEY_TYPE2, new Integer(type2));
+        outKey.setValue(KEY_ITEM2, new Long(id2));
 
-        final KeyObject lKey = new KeyObjectImpl();
-        lKey.setValue(KEY_TYPE1, new Integer(inType2));
-        lKey.setValue(KEY_ITEM1, new Long(inID2));
-        lKey.setValue(KEY_TYPE2, new Integer(inType1));
-        lKey.setValue(KEY_ITEM2, new Long(inID1));
-        outKey.setValue(lKey, KeyObject.BinaryBooleanOperator.OR);
+        final KeyObject key2 = new KeyObjectImpl();
+        key2.setValue(KEY_TYPE1, new Integer(type2));
+        key2.setValue(KEY_ITEM1, new Long(id2));
+        key2.setValue(KEY_TYPE2, new Integer(type1));
+        key2.setValue(KEY_ITEM2, new Long(id1));
+        outKey.setValue(key2, KeyObject.BinaryBooleanOperator.OR);
         return outKey;
     }
 
-    /**
-     * Deletes all relations to the specified item.
+    /** Deletes all relations to the specified item.
      *
-     * @param inItem
-     *            IItem
-     */
-    public void deleteRelations(final IItem inItem) throws BOMException {
+     * @param item IItem */
+    public void deleteRelations(final IItem item) throws BOMException {
         try {
-            final KeyObject lKey1 = new KeyObjectImpl();
-            lKey1.setValue(KEY_TYPE1, new Integer(inItem.getItemType()));
-            lKey1.setValue(KEY_ITEM1, new Long(inItem.getID()));
+            final KeyObject key1 = new KeyObjectImpl();
+            key1.setValue(KEY_TYPE1, new Integer(item.getItemType()));
+            key1.setValue(KEY_ITEM1, new Long(item.getID()));
 
-            final KeyObject lKey2 = new KeyObjectImpl();
-            lKey2.setValue(KEY_TYPE2, new Integer(inItem.getItemType()));
-            lKey2.setValue(KEY_ITEM2, new Long(inItem.getID()));
-            lKey1.setValue(lKey2, KeyObject.BinaryBooleanOperator.OR);
+            final KeyObject key2 = new KeyObjectImpl();
+            key2.setValue(KEY_TYPE2, new Integer(item.getItemType()));
+            key2.setValue(KEY_ITEM2, new Long(item.getID()));
+            key1.setValue(key2, KeyObject.BinaryBooleanOperator.OR);
 
-            delete(lKey1, true);
+            // set deletion of relations to event store
+            final EventStoreHome eventStoreHome = BOMHelper.getEventStoreHome();
+            final QueryResult relations = select(key1);
+            while (relations.hasMoreElements()) {
+                final Long id = (Long) relations.nextAsDomainObject().get(RelationHome.KEY_ID);
+                eventStoreHome.saveEntry(new UniqueID(IItem.RELATION, id));
+            }
+            // delete relations
+            delete(key1, true);
         }
-        catch (final VException exc) {
-            throw new BOMException(exc.getMessage());
-        }
-        catch (final SQLException exc) {
+        catch (VException | SQLException exc) {
             throw new BOMException(exc.getMessage());
         }
     }
@@ -329,8 +291,8 @@ ICreatableHome {
      */
     @Override
     public String[] getSQLDrop() {
-        final String lSQL1 = "DROP TABLE tblRelation";
-        return new String[] { lSQL1 };
+        final String sql = "DROP TABLE tblRelation";
+        return new String[] { sql };
     }
 
 }

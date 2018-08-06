@@ -29,6 +29,7 @@ import java.util.Collection;
 
 import org.elbe.relations.data.bom.AbstractItem;
 import org.elbe.relations.data.bom.AbstractTerm;
+import org.elbe.relations.data.bom.EventStoreHome;
 import org.elbe.relations.data.bom.IItem;
 import org.elbe.relations.data.bom.LightWeightTerm;
 import org.elbe.relations.data.bom.Term;
@@ -68,69 +69,78 @@ public class TermTest {
 
     @Test
     public void testGetLightWeight() throws Exception {
-        final TermHome lHome = data.getTermHome();
+        final TermHome home = data.getTermHome();
 
-        assertEquals("number 0", 0, lHome.getCount());
+        assertEquals("number 0", 0, home.getCount());
 
-        final AbstractTerm lTerm = lHome.newTerm(this.title, this.text);
-        assertEquals("number 1", 1, lHome.getCount());
+        final AbstractTerm term = home.newTerm(this.title, this.text);
+        assertEquals("number 1", 1, home.getCount());
 
-        final AbstractTerm lTerm2 = lHome.getTerm(lTerm.getID());
-        final LightWeightTerm lLightWeight = (LightWeightTerm) lTerm2.getLightWeight();
+        final AbstractTerm term2 = home.getTerm(term.getID());
+        final LightWeightTerm lightWeight = (LightWeightTerm) term2.getLightWeight();
 
-        assertEquals("id", lTerm.getID(), lLightWeight.getID());
-        assertEquals("title", this.title, lLightWeight.title);
-        assertEquals("text", this.text, lLightWeight.text);
+        assertEquals("id", term.getID(), lightWeight.getID());
+        assertEquals("title", this.title, lightWeight.title);
+        assertEquals("text", this.text, lightWeight.text);
     }
 
     @Test
     public void testSaveTitleText() throws Exception {
-        final String lTitle2 = "new title";
-        final String lText2 = "new text content";
+        final String title2 = "new title";
+        final String text2 = "new text content";
 
-        final TermHome lHome = data.getTermHome();
+        final TermHome home = data.getTermHome();
+        final EventStoreHome storeHome = data.getEventStoreHome();
 
-        assertEquals("number 0", 0, lHome.getCount());
+        assertEquals(0, home.getCount());
+        assertEquals(0, storeHome.getCount());
 
-        final AbstractTerm lTerm = lHome.newTerm(this.title, this.text);
-        assertEquals("number 1", 1, lHome.getCount());
+        final AbstractTerm term = home.newTerm(this.title, this.text);
+        assertEquals(1, home.getCount());
+        assertEquals(1, storeHome.getCount());
 
-        final AbstractTerm lTerm2 = lHome.getTerm(lTerm.getID());
+        final AbstractTerm term2 = home.getTerm(term.getID());
 
-        assertEquals("title 1", this.title, lTerm2.getTitle());
-        assertEquals("text 1", this.text, lTerm2.get(TermHome.KEY_TEXT));
+        assertEquals("title 1", this.title, term2.getTitle());
+        assertEquals("text 1", this.text, term2.get(TermHome.KEY_TEXT));
 
-        lTerm2.saveTitleText(lTitle2, lText2);
+        term2.saveTitleText(title2, text2);
+        assertEquals(2, storeHome.getCount());
 
-        final AbstractTerm lTerm3 = lHome.getTerm(lTerm.getID());
+        final AbstractTerm term3 = home.getTerm(term.getID());
 
-        assertEquals("title 2", lTitle2, lTerm3.getTitle());
-        assertEquals("text 2", lText2, lTerm3.get(TermHome.KEY_TEXT));
+        assertEquals("title 2", title2, term3.getTitle());
+        assertEquals("text 2", text2, term3.get(TermHome.KEY_TEXT));
     }
 
     @Test
     public void testSave() throws Exception {
-        final long lStart = System.currentTimeMillis() - 1000;
+        final long start = System.currentTimeMillis() - 1000;
 
-        final TermHome lHome = data.getTermHome();
-        AbstractTerm lTerm = lHome.newTerm(this.title, this.text);
-        assertEquals("number 1", 1, lHome.getCount());
+        final TermHome home = data.getTermHome();
+        final EventStoreHome storeHome = data.getEventStoreHome();
 
-        lTerm.save("new title", "new text");
-        lTerm = lHome.getTerm(lTerm.getID());
-        assertTrue("compare timestamp", lStart < ((Timestamp) lTerm.get(TermHome.KEY_MODIFIED)).getTime());
+        AbstractTerm term = home.newTerm(this.title, this.text);
+        assertEquals(1, home.getCount());
+        assertEquals(1, storeHome.getCount());
 
-        final String lCreated = ((IItem) lTerm).getCreated();
-        assertNotNull("created string exists", lCreated);
+        term.save("new title", "new text");
+        assertEquals(2, storeHome.getCount());
 
-        String lCreatedLbl = "Created:";
-        String lModifiedLbl = "Modified:";
+        term = home.getTerm(term.getID());
+        assertTrue("compare timestamp", start < ((Timestamp) term.get(TermHome.KEY_MODIFIED)).getTime());
+
+        final String created = ((IItem) term).getCreated();
+        assertNotNull("created string exists", created);
+
+        String createdLbl = "Created:";
+        String modifiedLbl = "Modified:";
         if (data.isGerman()) {
-            lCreatedLbl = "Erzeugt:";
-            lModifiedLbl = "Verändert:";
+            createdLbl = "Erzeugt:";
+            modifiedLbl = "Verändert:";
         }
-        assertTrue("Created:", lCreated.indexOf(lCreatedLbl) >= 0);
-        assertTrue("Modified:", lCreated.indexOf(lModifiedLbl) >= 0);
+        assertTrue("Created:", created.indexOf(createdLbl) >= 0);
+        assertTrue("Modified:", created.indexOf(modifiedLbl) >= 0);
     }
 
     @Test

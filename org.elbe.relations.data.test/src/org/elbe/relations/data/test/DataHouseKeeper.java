@@ -85,8 +85,8 @@ public enum DataHouseKeeper {
     private boolean isEmbeddedDerby = false;
 
     DataHouseKeeper() {
-        initMySQL();
-        // initDerbyEmbedded();
+        // initMySQL();
+        initDerbyEmbedded();
     }
 
     /**

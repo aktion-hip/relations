@@ -66,11 +66,11 @@ public abstract class AbstractTerm extends AbstractItem {
     }
 
     @Override
-    public void visit(final IItemVisitor inVisitor) throws VException {
-        inVisitor.setTitle(getTitle());
-        inVisitor.setTitleEditable(true);
-        inVisitor.setText(getChecked(TermHome.KEY_TEXT));
-        inVisitor.setTextEditable(true);
+    public void visit(final IItemVisitor visitor) throws VException {
+        visitor.setTitle(getTitle());
+        visitor.setTitleEditable(true);
+        visitor.setText(getChecked(TermHome.KEY_TEXT));
+        visitor.setTextEditable(true);
     }
 
     /**
@@ -98,29 +98,23 @@ public abstract class AbstractTerm extends AbstractItem {
      * @see IItem#saveTitleText(String, String)
      */
     @Override
-    public void saveTitleText(final String inTitle, final String inText)
-            throws BOMException {
-        save(inTitle, inText);
+    public void saveTitleText(final String title, final String text) throws BOMException {
+        save(title, text);
     }
 
-    /**
-     * Saves the changes to the database.
+    /** Saves the changes to the database.
      *
-     * @param inTitle
-     *            String
-     * @param inText
-     *            String
-     * @throws BOMException
-     */
-    public void save(final String inTitle, final String inText)
-            throws BOMException {
+     * @param title String
+     * @param text String
+     * @throws BOMException */
+    public void save(final String title, final String text) throws BOMException {
         try {
-            setModel(inTitle, inText);
-            update(true);
+            setModel(title, text);
             setToEventStore(EventStoreHome.StoreType.UPDATE);
+            update(true);
             refreshItemInIndex();
         }
-        catch (final VException exc) {
+        catch (final VException | IOException exc) {
             throw new BOMException(exc.getMessage());
         }
         catch (final SQLException exc) {
@@ -129,24 +123,16 @@ public abstract class AbstractTerm extends AbstractItem {
             }
             throw new BOMException(exc.getMessage());
         }
-        catch (final IOException exc) {
-            throw new BOMException(exc.getMessage());
-        }
     }
 
-    /**
-     * Updates the model with the specified values.
+    /** Updates the model with the specified values.
      *
-     * @param inTitle
-     *            String
-     * @param inText
-     *            String
-     * @throws VException
-     */
-    protected void setModel(final String inTitle, final String inText)
-            throws VException {
-        set(TermHome.KEY_TITLE, inTitle);
-        set(TermHome.KEY_TEXT, inText);
+     * @param title String
+     * @param text String
+     * @throws VException */
+    protected void setModel(final String title, final String text) throws VException {
+        set(TermHome.KEY_TITLE, title);
+        set(TermHome.KEY_TEXT, text);
         set(TermHome.KEY_MODIFIED, new Timestamp(System.currentTimeMillis()));
     }
 

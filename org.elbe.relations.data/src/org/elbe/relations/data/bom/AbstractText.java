@@ -152,8 +152,8 @@ public abstract class AbstractText extends AbstractItem implements IItem {
     public void saveTitleText(final String inTitle, final String inText) throws BOMException {
         try {
             setModel(inTitle, inText);
-            update(true);
             setToEventStore(EventStoreHome.StoreType.UPDATE);
+            update(true);
         } catch (VException | SQLException exc) {
             throw new BOMException(exc.getMessage());
         }
@@ -203,17 +203,15 @@ public abstract class AbstractText extends AbstractItem implements IItem {
         try {
             setModel(inTitle, inText, inType, inAuthor, inCoAuthor, inSubTitle, inPublisher, inYear, inJournal, inPages,
                     inArticleVolume, inArticleNumber, inLocation);
-            update(true);
             setToEventStore(EventStoreHome.StoreType.UPDATE);
+            update(true);
             refreshItemInIndex();
-        } catch (final VException exc) {
+        } catch (final VException | IOException exc) {
             throw new BOMException(exc.getMessage());
         } catch (final SQLException exc) {
             if (TRUNCATION_STATE.equals(exc.getSQLState())) {
                 throw new BOMTruncationException(TRUNCATION_MSG);
             }
-            throw new BOMException(exc.getMessage());
-        } catch (final IOException exc) {
             throw new BOMException(exc.getMessage());
         }
     }
