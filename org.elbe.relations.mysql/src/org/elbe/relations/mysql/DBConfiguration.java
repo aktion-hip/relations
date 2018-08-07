@@ -29,61 +29,31 @@ import org.elbe.relations.services.IDBConnectionConfig;
  */
 public class DBConfiguration implements IDBConnectionConfig {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IDBCreateService#getName()
-	 */
 	@Override
 	public String getName() {
 		return "com.mysql.jdbc.Driver/MySQL Connector/J/5.1.18"; //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IDBCreateService#getJDBCDriverClass()
-	 */
 	@Override
 	public String getJDBCDriverClass() {
 		return "com.mysql.jdbc.Driver"; //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IDBCreateService#getSubprotocol()
-	 */
 	@Override
 	public String getSubprotocol() {
 		return "mysql"; //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IDBCreateService#isEmbedded()
-	 */
 	@Override
 	public boolean isEmbedded() {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IDBCreateService#getCreator()
-	 */
 	@Override
 	public IDBObjectCreator getCreator() {
 		return new MySQLCreator();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.elbe.relations.services.IDBCreateService#canSetIdentityField()
-	 */
 	@Override
 	public boolean canSetIdentityField() {
 		return true;

@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
+ * Copyright (C) 2004-2018, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -30,7 +30,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * Utility class to backup the actual database to a zipped XML file.
  *
- * @author Luthiger Created on 26.10.2008
+ * @author Luthiger
  */
 public class ZippedXMLExport extends XMLExport {
 
@@ -52,14 +52,14 @@ public class ZippedXMLExport extends XMLExport {
 	}
 
 	@Override
-	protected OutputStream createStream(final File inExportFile)
+	protected OutputStream createStream(final File exportFile)
 			throws IOException {
-		final FileOutputStream lStream = new FileOutputStream(inExportFile);
-		final ZipOutputStream lZipped = new ZipOutputStream(lStream);
-		final ZipEntry lEntry = new ZipEntry(inExportFile.getName().replaceAll(
+		final FileOutputStream stream = new FileOutputStream(exportFile);
+		final ZipOutputStream zipped = new ZipOutputStream(stream);
+		final ZipEntry entry = new ZipEntry(exportFile.getName().replaceAll(
 				".zip", ".xml")); //$NON-NLS-1$ //$NON-NLS-2$
-		lZipped.putNextEntry(lEntry);
-		return new BufferedOutputStream(lZipped);
+		zipped.putNextEntry(entry);
+		return new BufferedOutputStream(zipped);
 	}
 
 }

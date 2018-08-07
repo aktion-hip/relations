@@ -49,7 +49,7 @@ public class XMLExport implements AutoCloseable {
 	private final static String TAG_START = "<%s>" + NL; //$NON-NLS-1$
 	private final static String TAG_END = "</%s>" + NL; //$NON-NLS-1$
 
-	private final static String NODE_ROOT = "RelationsExport"; //$NON-NLS-1$
+	protected final static String NODE_ROOT = "RelationsExport"; //$NON-NLS-1$
 	public final static String NODE_TERMS = "TermEntries"; //$NON-NLS-1$
 	public final static String NODE_TEXTS = "TextEntries"; //$NON-NLS-1$
 	public final static String NODE_PERSONS = "PersonEntries"; //$NON-NLS-1$
@@ -89,15 +89,15 @@ public class XMLExport implements AutoCloseable {
 		}
 	}
 
-	protected OutputStream createStream(final File inExportFile)
+	protected OutputStream createStream(final File exportFile)
 			throws IOException {
-		final FileOutputStream lStream = new FileOutputStream(inExportFile);
+		final FileOutputStream lStream = new FileOutputStream(exportFile);
 		return new BufferedOutputStream(lStream);
 	}
 
-	private boolean deleteExisting(final File inFile) {
-		if (inFile.exists()) {
-			return inFile.delete();
+	private boolean deleteExisting(final File file) {
+		if (file.exists()) {
+			return file.delete();
 		}
 		return true;
 	}
@@ -159,7 +159,7 @@ public class XMLExport implements AutoCloseable {
 		return outExported;
 	}
 
-	private int processTable(final String taskName, final String nodeName,
+	protected int processTable(final String taskName, final String nodeName,
 			final GeneralDomainObjectHome home, final IProgressMonitor monitor)
 					throws IOException, VException, SQLException {
 		int outExported = 0;
@@ -177,7 +177,7 @@ public class XMLExport implements AutoCloseable {
 		appendText(String.format(TAG_START, text));
 	}
 
-	private void appendEnd(final String text) throws IOException {
+	protected void appendEnd(final String text) throws IOException {
 		appendText(String.format(TAG_END, text));
 	}
 
@@ -196,7 +196,8 @@ public class XMLExport implements AutoCloseable {
 	private int processSelection(final GeneralDomainObjectHome home,
 			final IProgressMonitor monitor)
 					throws VException, SQLException, IOException {
-		final SubMonitor progress = SubMonitor.convert(monitor, 100);
+		final SubMonitor progress = SubMonitor.convert(monitor,
+		        home.getCount());
 		int outExported = 0;
 		final QueryResult result = home.select();
 		final AbstractSerializer visitor = new RelationsSerializer();
@@ -215,7 +216,7 @@ public class XMLExport implements AutoCloseable {
 		return outExported;
 	}
 
-	private void appendText(final String text) throws IOException {
+	protected void appendText(final String text) throws IOException {
 		if (this.outputStream == null) {
 			return;
 		}

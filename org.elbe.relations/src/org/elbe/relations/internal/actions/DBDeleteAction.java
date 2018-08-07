@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -40,7 +40,7 @@ import org.hip.kernel.bom.impl.DefaultStatement;
 
 /**
  * Action to delete an embedded database.
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
@@ -54,109 +54,113 @@ public class DBDeleteAction implements ICommand {
 
 	/**
 	 * DBDeleteAction constructor.
-	 * 
-	 * @param inSettings
+	 *
+	 * @param settings
 	 *            {@link DBSettings}
-	 * @param inContext
+	 * @param context
 	 *            {@link IEclipseContext}
-	 * @param inLog
+	 * @param log
 	 *            {@link Logger}
 	 */
-	public DBDeleteAction(final DBSettings inSettings,
-			final IEclipseContext inContext, final Logger inLog) {
-		this.dbSettings = inSettings;
-		this.context = inContext;
-		this.log = inLog;
+	public DBDeleteAction(final DBSettings settings,
+			final IEclipseContext context, final Logger log) {
+		this.dbSettings = settings;
+		this.context = context;
+		this.log = log;
 	}
 
 	@Override
 	public void execute() {
-		final String lCatalog = this.dbSettings.getCatalog();
-		final String lQuestion = RelationsMessages.getString(
-				"DBDeleteAction.action.msg2", new Object[] { lCatalog }); //$NON-NLS-1$
+		final String catalog = this.dbSettings.getCatalog();
+		final String question = RelationsMessages.getString(
+				"DBDeleteAction.action.msg2", new Object[] { catalog }); //$NON-NLS-1$
 		if (MessageDialog
 				.openQuestion(
 						new Shell(Display.getCurrent()),
 						RelationsMessages
-								.getString("DBDeleteAction.action.msg1"), lQuestion)) { //$NON-NLS-1$
+						.getString("DBDeleteAction.action.msg1"), //$NON-NLS-1$
+						question)) {
 
 			// first drop the database content
 			dropTables(this.log);
 
 			// then change to the default embedded database
-			final IDBSettings lTempSettings = new TempSettings("", //$NON-NLS-1$
+			final IDBSettings tempSettings = new TempSettings("", //$NON-NLS-1$
 					RelationsConstants.DFT_DB_EMBEDDED, "", "", //$NON-NLS-1$ //$NON-NLS-2$
 					this.dbSettings.getDBConnectionConfig());
-			final IDBChange lChangeDB = ContextInjectionFactory.make(
+			final IDBChange changeDB = ContextInjectionFactory.make(
 					ChangeDB.class, this.context);
-			lChangeDB.setTemporarySettings(lTempSettings);
-			lChangeDB.execute();
+			changeDB.setTemporarySettings(tempSettings);
+			changeDB.execute();
 
 			// finally mark the file system traces of the embedded database
 			// deleted
-			final File lStore = EmbeddedCatalogHelper.getDBStorePath();
-			markDeleted(new File(lStore, lCatalog), this.log);
-			markDeleted(new File(new File(lStore.getParentFile(),
-					RelationsConstants.LUCENE_STORE), lCatalog), this.log);
+			final File store = EmbeddedCatalogHelper.getDBStorePath();
+			markDeleted(new File(store, catalog), this.log);
+			markDeleted(
+					new File(new File(store.getParentFile(),
+							RelationsConstants.LUCENE_STORE), catalog), this.log);
 		}
 	}
 
-	private static void dropTables(final Logger inLog) {
+	private static void dropTables(final Logger log) {
 		try {
-			final ICreatableHome[] lHomes = new ICreatableHome[4];
-			lHomes[0] = BOMHelper.getTermHome();
-			lHomes[1] = BOMHelper.getTextHome();
-			lHomes[2] = BOMHelper.getPersonHome();
-			lHomes[3] = BOMHelper.getRelationHome();
+			final ICreatableHome[] homes = new ICreatableHome[5];
+			homes[0] = BOMHelper.getTermHome();
+			homes[1] = BOMHelper.getTextHome();
+			homes[2] = BOMHelper.getPersonHome();
+			homes[3] = BOMHelper.getRelationHome();
+			homes[4] = BOMHelper.getEventStoreHome();
 
-			final DefaultStatement lStatement = new DefaultStatement();
-			for (int i = 0; i < lHomes.length; i++) {
-				final String[] lSQL = lHomes[i].getSQLDrop();
-				for (int j = 0; j < lSQL.length; j++) {
-					lStatement.execute(lSQL[j]);
+			final DefaultStatement statement = new DefaultStatement();
+			for (int i = 0; i < homes.length; i++) {
+				final String[] sql = homes[i].getSQLDrop();
+				for (int j = 0; j < sql.length; j++) {
+					statement.execute(sql[j]);
 				}
 			}
 		}
 		catch (final SQLException exc) {
-			inLog.error(exc, exc.getMessage());
+			log.error(exc, exc.getMessage());
 			MessageDialog
-					.openError(
-							new Shell(Display.getCurrent()),
-							RelationsMessages
-									.getString("DBDeleteAction.error.title"), ERROR_MSG); //$NON-NLS-1$
+			.openError(
+					new Shell(Display.getCurrent()),
+					RelationsMessages
+					.getString("DBDeleteAction.error.title"), ERROR_MSG); //$NON-NLS-1$
 		}
 	}
 
-	private static void markDeleted(final File inDirectory, final Logger inLog) {
-		final File lMarker = new File(inDirectory,
+	private static void markDeleted(final File directory, final Logger log) {
+		final File marker = new File(directory,
 				EmbeddedCatalogHelper.DELETED_MARKER);
 		try {
-			lMarker.createNewFile();
+			marker.createNewFile();
 		}
 		catch (final IOException exc) {
-			inLog.error(exc, exc.getMessage());
+			log.error(exc, exc.getMessage());
 			MessageDialog
-					.openError(
-							new Shell(Display.getCurrent()),
-							RelationsMessages
-									.getString("DBDeleteAction.error.title"), ERROR_MSG); //$NON-NLS-1$
+			.openError(
+					new Shell(Display.getCurrent()),
+					RelationsMessages
+					.getString("DBDeleteAction.error.title"), ERROR_MSG); //$NON-NLS-1$
 		}
 	}
 
 	/**
 	 * Convenience method: deletes the catalog in use in the embedded database.
-	 * 
-	 * @param inSettings
+	 *
+	 * @param settings
 	 *            {@link DBSettings}
-	 * @param inLog
+	 * @param log
 	 *            {@link Logger}
 	 */
-	public static void deleteEmbedded(final DBSettings inSettings,
-			final Logger inLog) {
-		dropTables(inLog);
+	public static void deleteEmbedded(final DBSettings settings,
+			final Logger log) {
+		dropTables(log);
 		markDeleted(
 				new File(EmbeddedCatalogHelper.getDBStorePath(),
-						inSettings.getCatalog()), inLog);
+						settings.getCatalog()),
+		        log);
 	}
 
 }

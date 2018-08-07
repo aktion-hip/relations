@@ -162,4 +162,6 @@ public final class RelationsConstants {
 	public static final String EXIT_KEY = "relation.exit.key"; //$NON-NLS-1$
 
 	public static final String PREFS_CLOUD_ACTIVE = "activeCloudConfig";
+	public static final String CLOUD_SYNC_FULL = "relations_all";
+	public static final String CLOUD_SYNC_DELTA = "relations_delta_";
 }

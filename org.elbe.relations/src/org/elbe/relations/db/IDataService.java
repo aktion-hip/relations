@@ -128,6 +128,11 @@ public interface IDataService {
 	int getNumberOfRelations();
 
 	/**
+	 * @return int The number of events in the store.
+	 */
+	int getNumberOfEvents();
+
+	/**
 	 * Convenience method for StatusLine.
 	 *
 	 * @return String e.g. <i>jdbc:mysql://localhost/relations</i>

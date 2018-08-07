@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2018, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -33,7 +33,7 @@ import org.hip.kernel.bom.impl.DomainObjectHomeImpl;
 
 /**
  * Helper class to create a catalog in an external database.
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
@@ -46,35 +46,36 @@ public class CreateExternalDB extends AbstractCreateDB {
 
 		try {
 			// can we connect?
-			final QueryStatement lStatement = new DefaultStatement();
-			final Collection<String> lTables = lStatement.showTables();
+			final QueryStatement statement = new DefaultStatement();
+			final Collection<String> tables = statement.showTables();
 			// we can connect
 
 			// is catalog empty?
-			if (lTables.size() == 0) {
+			if (tables.size() == 0) {
 				return;
 			}
 			// catalog is empty and we return positive
 
 			// do the tables we need exist and are they empty?
-			final int lTableCheck = tryHome(BOMHelper.getTermHome())
-			        + tryHome(BOMHelper.getTextHome())
-			        + tryHome(BOMHelper.getPersonHome())
-			        + tryHome(BOMHelper.getRelationHome());
+			final int tableCheck = tryHome(BOMHelper.getTermHome())
+					+ tryHome(BOMHelper.getTextHome())
+					+ tryHome(BOMHelper.getPersonHome())
+					+ tryHome(BOMHelper.getRelationHome())
+					+ tryHome(BOMHelper.getEventStoreHome());
 
-			if (lTableCheck > 0) {
+			if (tableCheck > 0) {
 				throw new DBPreconditionException(
-				        RelationsMessages
-				                .getString("CreateExternalDB.precondition.non.empty")); //$NON-NLS-1$
+						RelationsMessages
+						.getString("CreateExternalDB.precondition.non.empty")); //$NON-NLS-1$
 			}
-			if (lTableCheck < 0 && lTableCheck > -4) {
+			if (tableCheck < 0 && tableCheck > -5) {
 				throw new DBPreconditionException(
-				        RelationsMessages
-				                .getString("CreateExternalDB.precondition.some.tables")); //$NON-NLS-1$
+						RelationsMessages
+						.getString("CreateExternalDB.precondition.some.tables")); //$NON-NLS-1$
 			}
-			if (lTableCheck == 0) {
+			if (tableCheck == 0) {
 				// the tables we need are there but they are all empty
-				withTableCreation = false;
+				this.withTableCreation = false;
 				return;
 			}
 		}
@@ -89,12 +90,12 @@ public class CreateExternalDB extends AbstractCreateDB {
 		}
 	}
 
-	private int tryHome(final DomainObjectHomeImpl inHome) throws BOMException {
+	private int tryHome(final DomainObjectHomeImpl home) throws BOMException {
 		try {
-			return inHome.getCount();
+			return home.getCount();
 		}
 		catch (final SQLException exc) {
-			// We got a SQL exception because the speciefied table does not
+			// We got a SQL exception because the specified table does not
 			// exist. We signal this by returning -1.
 			return -1;
 		}
@@ -103,10 +104,10 @@ public class CreateExternalDB extends AbstractCreateDB {
 	@Override
 	public void execute() {
 		setTempDBSettings();
-		if (withTableCreation) {
-			final DbEmbeddedCreateHandler lDBCreate = ContextInjectionFactory
-			        .make(DbEmbeddedCreateHandler.class, getContext());
-			lDBCreate.execute(getTempSettings(), getContext());
+		if (this.withTableCreation) {
+			final DbEmbeddedCreateHandler dbCreate = ContextInjectionFactory
+					.make(DbEmbeddedCreateHandler.class, getContext());
+			dbCreate.execute(getTempSettings(), getContext());
 		}
 		createIndex();
 		doDBChange();

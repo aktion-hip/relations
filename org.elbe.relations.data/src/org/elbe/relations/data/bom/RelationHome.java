@@ -160,7 +160,9 @@ ICreatableHome {
      * @throws BOMException */
     public void deleteRelation(final int type1, final long id1, final int type2, final long id2) throws BOMException {
         try {
-            delete(createKey(type1, id1, type2, id2), true);
+            final DomainObject relation = findByKey(createKey(type1, id1, type2, id2));
+            BOMHelper.getEventStoreHome().saveEntry(new UniqueID(IItem.RELATION, (Long) relation.get(KEY_ID)));
+            relation.delete(true);
         }
         catch (SQLException | VException exc) {
             throw new BOMException(exc.getMessage());

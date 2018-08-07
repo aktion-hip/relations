@@ -22,16 +22,26 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.elbe.relations.RelationsConstants;
+import org.elbe.relations.RelationsMessages;
+import org.elbe.relations.data.bom.BOMHelper;
+import org.elbe.relations.data.bom.EventStoreHome;
 import org.elbe.relations.db.IDataService;
 import org.elbe.relations.internal.backup.XMLExport;
 import org.elbe.relations.internal.backup.ZippedXMLExport;
@@ -39,6 +49,8 @@ import org.elbe.relations.internal.controls.RelationsStatusLineManager;
 import org.elbe.relations.internal.preferences.CloudConfigPrefPage;
 import org.elbe.relations.internal.preferences.CloudConfigRegistry;
 import org.elbe.relations.internal.preferences.LanguageService;
+import org.elbe.relations.internal.utility.AbstractExportToCloudJob;
+import org.elbe.relations.internal.utility.ExportToCloudDialog;
 import org.elbe.relations.services.ICloudProvider;
 import org.elbe.relations.services.ICloudProviderConfig;
 import org.hip.kernel.exc.VException;
@@ -99,24 +111,33 @@ public class ExportToCloudAction implements ICommand {
 			return;
 		}
 
-		if (MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
-				"Export to Cloud",
-				String.format("Using the cloud provider \"%s\".",
-						cloudProviderConfig.getName()))) {
-			final IRunnableWithProgress operation = new ExportToCloudJob(
-					cloudProviderConfig.getProvider(),
-					createJson(CloudConfigPrefPage
-							.getKey(cloudProviderConfig.getName()), store),
-					this.languageService, this.log, this.statusLine,
-			        this.dataService.getNumberOfItems()
-			                + this.dataService.getNumberOfRelations());
-			try {
-				new ProgressMonitorDialog(Display.getDefault().getActiveShell())
-				.run(true, true, operation);
-			}
-			catch (InvocationTargetException | InterruptedException exc) {
-				this.log.error(exc, "Error during export to cloud!");
-			}
+		final ExportToCloudDialog dialog = new ExportToCloudDialog(
+				cloudProviderConfig, this.dataService.getNumberOfEvents() > 0);
+		if (dialog.open() == Window.OK) {
+			final IRunnableWithProgress operation = dialog.isIterative()
+					? new ExportToCloudIterative(
+							cloudProviderConfig.getProvider(),
+							createJson(
+									CloudConfigPrefPage.getKey(
+											cloudProviderConfig.getName()),
+									store),
+							this.languageService, this.log, this.statusLine)
+							: new ExportToCloudFull(cloudProviderConfig.getProvider(),
+									createJson(
+											CloudConfigPrefPage.getKey(
+													cloudProviderConfig.getName()),
+											store),
+									this.languageService, this.log, this.statusLine,
+									this.dataService.getNumberOfItems()
+									+ this.dataService.getNumberOfRelations());
+
+							try {
+								new ProgressMonitorDialog(Display.getDefault().getActiveShell())
+								.run(true, true, operation);
+							}
+							catch (InvocationTargetException | InterruptedException exc) {
+								this.log.error(exc, "Error during export to cloud!");
+							}
 		}
 	}
 
@@ -145,73 +166,108 @@ public class ExportToCloudAction implements ICommand {
 
 	// ---
 
-	/**
-	 * The export job with monitor.
-	 */
-	private static class ExportToCloudJob implements IRunnableWithProgress {
-
-		private final ICloudProvider cloudProvider;
-		private final JsonObject jsonObject;
-		private final LanguageService languageService;
-		private final Logger log;
-		private final RelationsStatusLineManager statusLine;
-		private final int numberOfItems;
-
-		protected ExportToCloudJob(final ICloudProvider cloudProvider,
+	private static class ExportToCloudFull extends AbstractExportToCloudJob {
+		protected ExportToCloudFull(final ICloudProvider cloudProvider,
 				final JsonObject jsonObject,
 				final LanguageService languageService, final Logger log,
 				final RelationsStatusLineManager statusLine,
 				final int numberOfItems) {
-			this.cloudProvider = cloudProvider;
-			this.jsonObject = jsonObject;
-			this.languageService = languageService;
-			this.log = log;
-			this.statusLine = statusLine;
-			this.numberOfItems = numberOfItems;
+			super(cloudProvider, jsonObject, languageService, log, statusLine,
+					numberOfItems);
 		}
 
 		@Override
-		public void run(final IProgressMonitor monitor)
-				throws InvocationTargetException, InterruptedException {
-			File tempExport = null;
-			try {
-				tempExport = File.createTempFile("relations_all",
-						".zip");
-				// 1) export DB content to zipped XML in temporary file
-				try (XMLExport exporter = new ZippedXMLExport(
-						tempExport.getAbsolutePath(),
-						this.languageService.getAppLocale(),
-						this.numberOfItems)) {
-					exporter.export(monitor);
-				}
-				catch (VException | SQLException exc) {
-					this.log.error(exc, exc.getMessage());
-				}
+		protected String createTempFileName() {
+			return RelationsConstants.CLOUD_SYNC_FULL;
+		}
 
-				// 2) upload temporary file to cloud
-				if (this.cloudProvider.upload(tempExport, this.jsonObject,
-						this.log)) {
-					Display.getDefault().asyncExec(() -> {
-						this.statusLine.showStatusLineMessage(
-								"Successfully exported Relations data to cloud.");
-					});
-				} else {
-					Display.getDefault().asyncExec(() -> {
-						MessageDialog.openError(
-								Display.getDefault().getActiveShell(),
-								"Export Error",
-								"Could not export the data to the cloud! See log file for more information.");
-					});
-				}
+		@Override
+		protected void prepareContentForExport(final File tempExport,
+				final IProgressMonitor monitor) throws IOException {
+			try (XMLExport exporter = new ZippedXMLExport(
+					tempExport.getAbsolutePath(),
+					getAppLocale(), getNumberOfItems())) {
+				exporter.export(monitor);
 			}
-			catch (final IOException exc) {
-				this.log.error(exc, exc.getMessage());
+			catch (VException | SQLException exc) {
+				getLog().error(exc, exc.getMessage());
 			}
-			finally {
-				if (tempExport != null) {
-					tempExport.delete();
-				}
+		}
+
+	}
+
+	private static class ExportToCloudIterative
+	extends AbstractExportToCloudJob {
+		private static final String PATTERN = "yyyy-MM-dd-HHmmss";
+
+		protected ExportToCloudIterative(final ICloudProvider cloudProvider,
+				final JsonObject jsonObject,
+				final LanguageService languageService, final Logger log,
+				final RelationsStatusLineManager statusLine) {
+			super(cloudProvider, jsonObject, languageService, log, statusLine,
+					0);
+		}
+
+		@Override
+		protected String createTempFileName() {
+			return String.format("%s%s", RelationsConstants.CLOUD_SYNC_DELTA,
+					new SimpleDateFormat(PATTERN).format(new Date()));
+		}
+
+		@Override
+		protected void prepareContentForExport(final File tempExport,
+				final IProgressMonitor monitor) throws IOException {
+			try (XMLExport exporter = new EventStoreExport(
+					tempExport.getAbsolutePath(), getAppLocale())) {
+				exporter.export(monitor);
 			}
+			catch (VException | SQLException exc) {
+				getLog().error(exc, exc.getMessage());
+			}
+		}
+
+	}
+
+	/**
+	 * Special exporter for only the entries in the EventStore.
+	 */
+	private static class EventStoreExport extends ZippedXMLExport {
+		private final static String NL = System.getProperty("line.separator"); //$NON-NLS-1$
+		private static final String NODE_EVENT_STORE = "EventStoreEntries"; //$NON-NLS-1$
+
+		private final Locale appLocale;
+
+		protected EventStoreExport(final String exportFileName,
+				final Locale appLocale) throws IOException {
+			super(exportFileName, appLocale, 0);
+			this.appLocale = appLocale;
+		}
+
+		@Override
+		public int export(final IProgressMonitor monitor)
+				throws VException, SQLException, IOException {
+			final EventStoreHome home = BOMHelper.getEventStoreHome();
+			final int numberOfItems = home.getCount();
+
+			final SubMonitor progress = SubMonitor.convert(monitor);
+			int outExported = 0;
+
+			appendText("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NL); //$NON-NLS-1$
+			final DateFormat format = DateFormat.getDateTimeInstance(
+					DateFormat.MEDIUM, DateFormat.MEDIUM, this.appLocale);
+			appendText(String.format("<%s date=\"%s\" countAll=\"%s\">" + NL, //$NON-NLS-1$
+					NODE_ROOT, format.format(Calendar.getInstance().getTime()),
+					numberOfItems));
+
+			outExported += processTable(
+					RelationsMessages.getString("XMLExport.export.events"), //$NON-NLS-1$
+					NODE_EVENT_STORE, home, progress);
+			if (monitor.isCanceled()) {
+				return outExported;
+			}
+
+			appendEnd(NODE_ROOT);
+			return outExported;
 		}
 	}
 

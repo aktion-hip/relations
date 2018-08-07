@@ -242,6 +242,17 @@ public class DataService implements IDataService {
 	}
 
 	@Override
+	public int getNumberOfEvents() {
+		try {
+			return BOMHelper.getEventStoreHome().getCount();
+		}
+		catch (org.hip.kernel.bom.BOMException | SQLException exc) {
+			DataService.this.log.error(exc, exc.getMessage());
+		}
+		return 0;
+	}
+
+	@Override
 	public String getDBName() {
 		return this.dbSettings.getDBName();
 	}

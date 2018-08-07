@@ -55,7 +55,6 @@ import com.google.gson.JsonObject;
 @SuppressWarnings("restriction")
 public class GoogleDriveProvider implements ICloudProvider {
     private static final String APPLICATION_NAME = "Relations-rcp";
-    private static final String DRIVE_NAME = "relations_all.zip";
     private static final String DRIVE_PATH = "relations";
     private static final String MIME_TYPE_FOLDER = "application/vnd.google-apps.folder";
     private static final String MIME_TYPE_FILE = "application/zip";
@@ -66,7 +65,8 @@ public class GoogleDriveProvider implements ICloudProvider {
     private static final String CREDENTIALS_FOLDER = "gd_credentials";
 
     @Override
-    public boolean upload(final java.io.File toExport, final JsonObject configuration, final Logger log) {
+    public boolean upload(final java.io.File toExport, final String fileName, final JsonObject configuration,
+            final Logger log) {
         try {
             // Build a new authorized API client service.
             final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -75,11 +75,11 @@ public class GoogleDriveProvider implements ICloudProvider {
                     .build();
 
             final String folderId = getFolderId(drive);
-            removeIfExists(drive, folderId);
+            removeIfExists(drive, fileName, folderId);
 
             // upload file
             final File fileMetadata = new File();
-            fileMetadata.setName(DRIVE_NAME);
+            fileMetadata.setName(fileName);
             fileMetadata.setParents(Collections.singletonList(folderId));
 
             final FileContent mediaContent = new FileContent(MIME_TYPE_FILE, toExport);
@@ -110,11 +110,11 @@ public class GoogleDriveProvider implements ICloudProvider {
         return folders.get(0).getId();
     }
 
-    private void removeIfExists(final Drive drive, final String folderId) throws IOException {
+    private void removeIfExists(final Drive drive, final String fileName, final String folderId) throws IOException {
         final FileList fileList = drive.files().list()
                 .setQ(String.format(
                         "mimeType='%s' and trashed=false and name = '%s' and '%s' in parents", MIME_TYPE_FILE,
-                        DRIVE_NAME, folderId))
+                        fileName, folderId))
                 .execute();
         for (final File file : fileList.getFiles()) {
             drive.files().delete(file.getId()).execute();

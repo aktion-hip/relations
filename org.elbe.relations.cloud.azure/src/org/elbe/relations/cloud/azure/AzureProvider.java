@@ -40,10 +40,10 @@ import com.microsoft.azure.storage.file.CloudFileShare;
 @SuppressWarnings("restriction")
 public class AzureProvider implements ICloudProvider {
     private static final String AZ_SHARE = "relations";
-    private static final String AZ_FILE_NAME = "relations_all.zip";
 
     @Override
-    public boolean upload(final File toExport, final JsonObject configuration, final Logger log) {
+    public boolean upload(final File toExport, final String fileName, final JsonObject configuration,
+            final Logger log) {
         final String connectString = getConnectString(configuration);
         if (connectString.isEmpty()) {
             return false;
@@ -57,7 +57,7 @@ public class AzureProvider implements ICloudProvider {
                 log.info("Created new share /" + AZ_SHARE + " on MS Azure.");
             }
             final CloudFileDirectory rootDir = share.getRootDirectoryReference();
-            final CloudFile cloudFile = rootDir.getFileReference(AZ_FILE_NAME);
+            final CloudFile cloudFile = rootDir.getFileReference(fileName);
             cloudFile.uploadFromFile(toExport.getAbsolutePath());
             return true;
         } catch (InvalidKeyException | URISyntaxException | StorageException | IOException exc) {

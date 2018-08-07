@@ -42,11 +42,12 @@ import com.google.gson.JsonObject;
  * @see https://dropbox.github.io/dropbox-sdk-java/api-docs/v2.0.x/com/dropbox/core/DbxWebAuth.html */
 @SuppressWarnings("restriction")
 public class DropboxCloudProvider implements ICloudProvider {
-    private static final String DROP_BOX_PATH = "/synchronization/relations_all.zip";
+    private static final String DROP_BOX_PATH = "/synchronization/%s";
     private static final String DROP_BOX_CLIENT_IT = "relations-cloud/1.0";
 
     @Override
-    public boolean upload(final File toExport, final JsonObject configuration, final Logger log) {
+    public boolean upload(final File toExport, final String fileName, final JsonObject configuration,
+            final Logger log) {
         final String token = getToken(configuration);
         if (token.isEmpty()) {
             return false;
@@ -54,7 +55,7 @@ public class DropboxCloudProvider implements ICloudProvider {
 
         final DbxRequestConfig config = new DbxRequestConfig(DROP_BOX_CLIENT_IT);
         final DbxClientV2 client = new DbxClientV2(config, token);
-        uploadFile(client, toExport, DROP_BOX_PATH, log);
+        uploadFile(client, toExport, String.format(DROP_BOX_PATH, fileName), log);
         return true;
     }
 

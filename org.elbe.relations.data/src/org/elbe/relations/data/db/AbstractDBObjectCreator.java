@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -59,6 +60,7 @@ import org.xml.sax.SAXException;
 public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
     private static Bundle bundle = FrameworkUtil.getBundle(Constants.class);
     private static String RESOURCES_DIR = "resources/"; //$NON-NLS-1$
+    private static final String TBL_EVENT_STORE = "tblEventStore"; //$NON-NLS-1$
 
     /** Returns the SQL statements based on the specified database model.
      *
@@ -89,6 +91,13 @@ public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
             }
         }
         return handler.getStatements();
+    }
+
+    @Override
+    public Collection<String> getCreateEventStoreStatements(final String xmlName)
+            throws IOException, TransformerFactoryConfigurationError, TransformerException {
+        final Collection<String> statements = getCreateStatemens(xmlName);
+        return statements.stream().filter(st -> st.contains(TBL_EVENT_STORE)).collect(Collectors.toList());
     }
 
     protected URL getModelXML(final String xmlName) {
