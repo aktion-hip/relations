@@ -37,7 +37,7 @@ public class GoogleDriveProviderConfig extends AbstractCloudProviderConfig imple
 
     @Override
     public String getName() {
-        return "Google Drive";
+        return "Google Drive"; //$NON-NLS-1$
     }
 
     @Override

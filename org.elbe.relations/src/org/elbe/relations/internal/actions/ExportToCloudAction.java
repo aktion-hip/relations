@@ -106,16 +106,16 @@ public class ExportToCloudAction implements ICommand {
 				store);
 		if (cloudProviderConfig == null) {
 			MessageDialog.openInformation(Display.getDefault().getActiveShell(),
-					"Configuration Problem",
-					"There is no Cloud Provider configured! (See Preferences -> Cloud Configuration)");
+					RelationsMessages.getString("ExportToCloudAction.problem.title"), //$NON-NLS-1$
+					RelationsMessages.getString("ExportToCloudAction.problem.msg")); //$NON-NLS-1$
 			return;
 		}
 
 		final ExportToCloudDialog dialog = new ExportToCloudDialog(
 				cloudProviderConfig, this.dataService.getNumberOfEvents() > 0);
 		if (dialog.open() == Window.OK) {
-			final IRunnableWithProgress operation = dialog.isIterative()
-					? new ExportToCloudIterative(
+			final IRunnableWithProgress operation = dialog.isIncremental()
+					? new ExportToCloudIncremental(
 							cloudProviderConfig.getProvider(),
 							createJson(
 									CloudConfigPrefPage.getKey(
@@ -136,22 +136,22 @@ public class ExportToCloudAction implements ICommand {
 								.run(true, true, operation);
 							}
 							catch (InvocationTargetException | InterruptedException exc) {
-								this.log.error(exc, "Error during export to cloud!");
+								this.log.error(exc, "Error during export to cloud!"); //$NON-NLS-1$
 							}
 		}
 	}
 
 	private JsonObject createJson(final String key,
 			final IEclipsePreferences store) {
-		final String jsonOfValues = store.get(key, "{}");
-		return new Gson().fromJson(jsonOfValues.isEmpty() ? "{}" : jsonOfValues,
+		final String jsonOfValues = store.get(key, "{}"); //$NON-NLS-1$
+		return new Gson().fromJson(jsonOfValues.isEmpty() ? "{}" : jsonOfValues, //$NON-NLS-1$
 				JsonObject.class);
 	}
 
 	private ICloudProviderConfig getActiveCloudProviderConfig(
 			final IEclipsePreferences store) {
 		final String nameOfActive = store
-				.get(RelationsConstants.PREFS_CLOUD_ACTIVE, "");
+				.get(RelationsConstants.PREFS_CLOUD_ACTIVE, ""); //$NON-NLS-1$
 		if (nameOfActive.isEmpty()) {
 			return null;
 		}
@@ -174,6 +174,7 @@ public class ExportToCloudAction implements ICommand {
 				final int numberOfItems) {
 			super(cloudProvider, jsonObject, languageService, log, statusLine,
 					numberOfItems);
+			setFullExport(true);
 		}
 
 		@Override
@@ -196,11 +197,11 @@ public class ExportToCloudAction implements ICommand {
 
 	}
 
-	private static class ExportToCloudIterative
+	private static class ExportToCloudIncremental
 	extends AbstractExportToCloudJob {
-		private static final String PATTERN = "yyyy-MM-dd-HHmmss";
+		private static final String PATTERN = "yyyy-MM-dd-HHmmss"; //$NON-NLS-1$
 
-		protected ExportToCloudIterative(final ICloudProvider cloudProvider,
+		protected ExportToCloudIncremental(final ICloudProvider cloudProvider,
 				final JsonObject jsonObject,
 				final LanguageService languageService, final Logger log,
 				final RelationsStatusLineManager statusLine) {
@@ -210,7 +211,7 @@ public class ExportToCloudAction implements ICommand {
 
 		@Override
 		protected String createTempFileName() {
-			return String.format("%s%s", RelationsConstants.CLOUD_SYNC_DELTA,
+			return String.format("%s%s", RelationsConstants.CLOUD_SYNC_DELTA, //$NON-NLS-1$
 					new SimpleDateFormat(PATTERN).format(new Date()));
 		}
 

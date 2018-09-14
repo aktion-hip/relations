@@ -67,7 +67,7 @@ public class DBStructureChecker {
 			if (BOMHelper.getPersonHome().checkStructure(null)
 					&& BOMHelper.getTextHome().checkStructure(null)
 					&& BOMHelper.getTermHome().checkStructure(null)
-			        && BOMHelper.getRelationHome().checkStructure(null)) {
+					&& BOMHelper.getRelationHome().checkStructure(null)) {
 				// && BOMHelper.getEventStoreHome().checkStructure(null)
 				return true;
 			}

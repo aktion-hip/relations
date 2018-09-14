@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.services.ICloudProviderConfig;
 
 /**
@@ -43,7 +44,7 @@ public class ExportToCloudDialog extends Dialog {
 
 	private final ICloudProviderConfig cloudProviderConfig;
 	private final boolean hasEvents;
-	private boolean iterativeFlag;
+	private boolean incrementalFlag;
 
 	/**
 	 * ExportToCloudDialog constructor.
@@ -62,7 +63,7 @@ public class ExportToCloudDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(final Composite parent) {
-		parent.getShell().setText("Export to Cloud");
+		parent.getShell().setText(RelationsMessages.getString("ExportToCloudDialog.dlg.title")); //$NON-NLS-1$
 		final Composite composite = (Composite) super.createDialogArea(parent);
 		composite.setLayout(
 				GridLayoutFactory.swtDefaults().numColumns(2)
@@ -71,39 +72,39 @@ public class ExportToCloudDialog extends Dialog {
 		final Label message = new Label(composite, SWT.NONE);
 		message.setLayoutData(
 				GridDataFactory.swtDefaults().span(2, 1).create());
-		message.setText(String.format("Using the cloud provider \"%s\".",
+		message.setText(String.format(RelationsMessages.getString("ExportToCloudDialog.dlg.msg"), //$NON-NLS-1$
 				this.cloudProviderConfig.getName()));
 
 		final Label synchType = new Label(composite, SWT.NONE);
 		synchType.setLayoutData(GridDataFactory.swtDefaults()
 				.align(SWT.BEGINNING, SWT.TOP).create());
-		synchType.setText("Synchronization:");
+		synchType.setText(RelationsMessages.getString("ExportToCloudDialog.sync.type.lbl")); //$NON-NLS-1$
 
 		final Composite group = new Composite(composite, SWT.NONE);
 		group.setLayoutData(
 				GridDataFactory.fillDefaults().grab(true, false).create());
 		group.setLayout(new RowLayout(SWT.VERTICAL));
 
-		final Button btnIterative = new Button(group, SWT.RADIO);
-		btnIterative.setText("iterative");
-		btnIterative.addSelectionListener(widgetSelectedAdapter(e -> {
-			this.iterativeFlag = true;
+		final Button btnIncremental = new Button(group, SWT.RADIO);
+		btnIncremental.setText(RelationsMessages.getString("ExportToCloudDialog.btn.incr.lbl")); //$NON-NLS-1$
+		btnIncremental.addSelectionListener(widgetSelectedAdapter(e -> {
+			this.incrementalFlag = true;
 		}));
 
 		final Button btnFull = new Button(group, SWT.RADIO);
-		btnFull.setText("full");
+		btnFull.setText(RelationsMessages.getString("ExportToCloudDialog.btn.full.lbl")); //$NON-NLS-1$
 		btnFull.addSelectionListener(widgetSelectedAdapter(e -> {
-			this.iterativeFlag = false;
+			this.incrementalFlag = false;
 		}));
 
 		if (this.hasEvents) {
-			btnIterative.setSelection(true);
-			this.iterativeFlag = true;
+			btnIncremental.setSelection(true);
+			this.incrementalFlag = true;
 		} else {
 			btnFull.setSelection(true);
-			btnIterative.setSelection(false);
-			btnIterative.setEnabled(false);
-			this.iterativeFlag = false;
+			btnIncremental.setSelection(false);
+			btnIncremental.setEnabled(false);
+			this.incrementalFlag = false;
 		}
 
 		return composite;
@@ -111,7 +112,7 @@ public class ExportToCloudDialog extends Dialog {
 
 	@Override
 	protected void createButtonsForButtonBar(final Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, "Export", true);
+		createButton(parent, IDialogConstants.OK_ID, RelationsMessages.getString("ExportToCloudDialog.bnt.export.lbl"), true); //$NON-NLS-1$
 		createButton(parent, IDialogConstants.CANCEL_ID,
 				IDialogConstants.CANCEL_LABEL, false);
 	}
@@ -122,12 +123,12 @@ public class ExportToCloudDialog extends Dialog {
 	}
 
 	/**
-	 * @return boolean <code>true</code> in case of <i>iterative</i>
+	 * @return boolean <code>true</code> in case of <i>incremental</i>
 	 *         synchronization is selected, <code>false</code> in case of full
 	 *         data synchronization
 	 */
-	public boolean isIterative() {
-		return this.iterativeFlag;
+	public boolean isIncremental() {
+		return this.incrementalFlag;
 	}
 
 }

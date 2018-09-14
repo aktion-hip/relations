@@ -15,6 +15,7 @@ Import-Package: com.fasterxml.jackson.core;version="[2.9.5,3.0.0)",
  org.eclipse.swt.widgets,
  org.elbe.relations.services;version="[2.0.1,3.0.0)",
  org.elbe.relations.utility;version="[2.0.1,3.0.0)"
+Automatic-Module-Name: org.elbe.relations.cloud.azure
 Service-Component: OSGI-INF/org.elbe.relations.cloud.azure.AzureProviderConfig.xml
 Bundle-ClassPath: lib/azure-storage-7.0.0.jar,
  .

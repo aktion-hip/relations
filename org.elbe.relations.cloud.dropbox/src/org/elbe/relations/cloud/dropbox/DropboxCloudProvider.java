@@ -31,6 +31,8 @@ import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
+import com.dropbox.core.v2.files.ListFolderResult;
+import com.dropbox.core.v2.files.Metadata;
 import com.dropbox.core.v2.files.WriteMode;
 import com.google.gson.JsonObject;
 
@@ -42,12 +44,13 @@ import com.google.gson.JsonObject;
  * @see https://dropbox.github.io/dropbox-sdk-java/api-docs/v2.0.x/com/dropbox/core/DbxWebAuth.html */
 @SuppressWarnings("restriction")
 public class DropboxCloudProvider implements ICloudProvider {
-    private static final String DROP_BOX_PATH = "/synchronization/%s";
-    private static final String DROP_BOX_CLIENT_IT = "relations-cloud/1.0";
+    private static final String DROP_BOX_ROOT = "/synchronization"; //$NON-NLS-1$
+    private static final String DROP_BOX_PATH = DROP_BOX_ROOT + "/%s"; //$NON-NLS-1$
+    private static final String DROP_BOX_CLIENT_IT = "relations-cloud/1.0"; //$NON-NLS-1$
 
     @Override
     public boolean upload(final File toExport, final String fileName, final JsonObject configuration,
-            final Logger log) {
+            final boolean isFullExport, final Logger log) {
         final String token = getToken(configuration);
         if (token.isEmpty()) {
             return false;
@@ -56,7 +59,29 @@ public class DropboxCloudProvider implements ICloudProvider {
         final DbxRequestConfig config = new DbxRequestConfig(DROP_BOX_CLIENT_IT);
         final DbxClientV2 client = new DbxClientV2(config, token);
         uploadFile(client, toExport, String.format(DROP_BOX_PATH, fileName), log);
+        if (isFullExport) {
+            deleteIncremental(client, log);
+        }
         return true;
+    }
+
+    private void deleteIncremental(final DbxClientV2 client, final Logger log) {
+        try {
+            ListFolderResult files = client.files().listFolder(DROP_BOX_ROOT);
+            while (true) {
+                for (final Metadata metadata : files.getEntries()) {
+                    if (metadata.getName().startsWith("relations_delta_")) { //$NON-NLS-1$
+                        client.files().deleteV2(metadata.getPathDisplay());
+                    }
+                }
+                if (!files.getHasMore()) {
+                    break;
+                }
+                files = client.files().listFolderContinue(files.getCursor());
+            }
+        } catch (final DbxException exc) {
+            log.error(exc, "Error encountered during cleaning up Dropbox cloud!"); //$NON-NLS-1$
+        }
     }
 
     private void uploadFile(final DbxClientV2 client, final File local, final String dropboxPath, final Logger log) {
@@ -67,7 +92,7 @@ public class DropboxCloudProvider implements ICloudProvider {
                     .uploadAndFinish(in);
             log.trace(metadata.toStringMultiline());
         } catch (final IOException | DbxException exc) {
-            log.error(exc, "Error encountered during export to Dropbox cloud!");
+            log.error(exc, "Error encountered during export to Dropbox cloud!"); //$NON-NLS-1$
         }
     }
 
@@ -75,7 +100,7 @@ public class DropboxCloudProvider implements ICloudProvider {
         if (configuration.has(DropboxCloudProviderConfig.KEY_TOKEN)) {
             return configuration.get(DropboxCloudProviderConfig.KEY_TOKEN).getAsString();
         }
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
 }

@@ -40,23 +40,22 @@ import com.google.gson.JsonObject;
  * @author lbenno */
 @Component
 public class DropboxCloudProviderConfig extends AbstractCloudProviderConfig implements ICloudProviderConfig {
-    protected static final String KEY_TOKEN = "access_token";
+    protected static final String KEY_TOKEN = "access_token"; //$NON-NLS-1$
 
     private Text token;
 
     @Override
     public String getName() {
-        return "Dropbox";
+        return "Dropbox"; //$NON-NLS-1$
     }
 
     @Override
     public Control createConfigContents(final Group parent, final Consumer<Boolean> signalIsValid) {
-        this.token = createLabelText(parent, "Access Token:");
+        this.token = createLabelText(parent, Messages.getString("DropboxCloudProviderConfig.access.lbl")); //$NON-NLS-1$
         this.token.addModifyListener(event -> signalIsValid.accept(!((Text) event.getSource()).getText().isEmpty()));
         final FormText hint = new FormText(parent, SWT.NO_FOCUS);
-        hint.setText(
-                "<form><p>Hint: To get a Dropbox access token, go to <b>Help -> Cloud Configuration</b>.</p></form>",
-                true, false);
+        hint.setText(String.format("<form><p>%s <b>%s</b>.</p></form>", Messages.getString("DropboxCloudProviderConfig.msg.1"), //$NON-NLS-1$ //$NON-NLS-2$
+                Messages.getString("DropboxCloudProviderConfig.msg.2")), true, false); //$NON-NLS-1$
         hint.setLayoutData(GridDataFactory.swtDefaults().span(2, 0).create());
 
         return parent;

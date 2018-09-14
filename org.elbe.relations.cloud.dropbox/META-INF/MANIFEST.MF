@@ -22,3 +22,4 @@ Service-Component: OSGI-INF/org.elbe.relations.cloud.dropbox.DropboxCloudProvide
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/dropbox-core-sdk-3.0.6.jar,
  .
+Automatic-Module-Name: org.elbe.relations.cloud.dropbox

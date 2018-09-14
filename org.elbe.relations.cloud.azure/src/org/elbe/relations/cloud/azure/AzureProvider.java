@@ -33,17 +33,18 @@ import com.microsoft.azure.storage.file.CloudFile;
 import com.microsoft.azure.storage.file.CloudFileClient;
 import com.microsoft.azure.storage.file.CloudFileDirectory;
 import com.microsoft.azure.storage.file.CloudFileShare;
+import com.microsoft.azure.storage.file.ListFileItem;
 
 /** The MS Azure Provider component to upload a file to the Azure folder.
  *
  * @author lbenno */
 @SuppressWarnings("restriction")
 public class AzureProvider implements ICloudProvider {
-    private static final String AZ_SHARE = "relations";
+    private static final String AZ_SHARE = "relations"; //$NON-NLS-1$
 
     @Override
     public boolean upload(final File toExport, final String fileName, final JsonObject configuration,
-            final Logger log) {
+            final boolean isFullExport, final Logger log) {
         final String connectString = getConnectString(configuration);
         if (connectString.isEmpty()) {
             return false;
@@ -54,14 +55,25 @@ public class AzureProvider implements ICloudProvider {
             final CloudFileClient fileClient = storageAccount.createCloudFileClient();
             final CloudFileShare share = fileClient.getShareReference(AZ_SHARE);
             if (share.createIfNotExists()) {
-                log.info("Created new share /" + AZ_SHARE + " on MS Azure.");
+                log.info("Created new share /" + AZ_SHARE + " on MS Azure."); //$NON-NLS-1$ //$NON-NLS-2$
             }
             final CloudFileDirectory rootDir = share.getRootDirectoryReference();
             final CloudFile cloudFile = rootDir.getFileReference(fileName);
             cloudFile.uploadFromFile(toExport.getAbsolutePath());
+
+            if (isFullExport) {
+                // remove all existing increments in the cloud storage
+                final Iterable<ListFileItem> incrementalFiles = rootDir.listFilesAndDirectories("relations_delta_", //$NON-NLS-1$
+                        null, null);
+                for (final ListFileItem incrementalFile : incrementalFiles) {
+                    if (incrementalFile instanceof CloudFile) {
+                        ((CloudFile) incrementalFile).delete();
+                    }
+                }
+            }
             return true;
         } catch (InvalidKeyException | URISyntaxException | StorageException | IOException exc) {
-            log.error(exc, "Unable to upload data to MS Azure!");
+            log.error(exc, "Unable to upload data to MS Azure!"); //$NON-NLS-1$
         }
         return false;
     }
@@ -70,7 +82,7 @@ public class AzureProvider implements ICloudProvider {
         if (configuration.has(AzureProviderConfig.KEY_CONNECT)) {
             return configuration.get(AzureProviderConfig.KEY_CONNECT).getAsString();
         }
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
 }

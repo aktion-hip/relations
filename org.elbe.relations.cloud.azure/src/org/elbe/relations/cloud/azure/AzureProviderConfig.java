@@ -44,17 +44,17 @@ import com.google.gson.JsonObject;
  * @author lbenno */
 @Component
 public class AzureProviderConfig extends AbstractCloudProviderConfig implements ICloudProviderConfig {
-    protected static final String KEY_CONNECT = "AzureConnectionString";
-    private static final String PATTERN_PART1 = "DefaultEndpointsProtocol";
-    private static final String PATTERN_PART2 = "AccountName";
-    private static final String PATTERN_PART3 = "AccountKey";
-    private static final String PATTERN_PART4 = "EndpointSuffix=core.windows.net";
-    private static final String PATTERN = PATTERN_PART1 + "=(.+?);" + PATTERN_PART2 + "=(.+?);" + PATTERN_PART3
-            + "=(\\p{ASCII}+?);" + PATTERN_PART4;
-    private static final String PATTERN_TMPL = PATTERN_PART1 + "=%s;" + PATTERN_PART2 + "=%s;" + PATTERN_PART3 + "=%s;"
+    protected static final String KEY_CONNECT = "AzureConnectionString"; //$NON-NLS-1$
+    private static final String PATTERN_PART1 = "DefaultEndpointsProtocol"; //$NON-NLS-1$
+    private static final String PATTERN_PART2 = "AccountName"; //$NON-NLS-1$
+    private static final String PATTERN_PART3 = "AccountKey"; //$NON-NLS-1$
+    private static final String PATTERN_PART4 = "EndpointSuffix=core.windows.net"; //$NON-NLS-1$
+    private static final String PATTERN = PATTERN_PART1 + "=(.+?);" + PATTERN_PART2 + "=(.+?);" + PATTERN_PART3 //$NON-NLS-1$ //$NON-NLS-2$
+            + "=(\\p{ASCII}+?);" + PATTERN_PART4; //$NON-NLS-1$
+    private static final String PATTERN_TMPL = PATTERN_PART1 + "=%s;" + PATTERN_PART2 + "=%s;" + PATTERN_PART3 + "=%s;" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             + PATTERN_PART4;
-    private static final String PROTOCOL_HTTPS = "https";
-    private static final String PROTOCOL_HTTP = "http";
+    private static final String PROTOCOL_HTTPS = "https"; //$NON-NLS-1$
+    private static final String PROTOCOL_HTTP = "http"; //$NON-NLS-1$
 
     private Button protocolHttps;
     private Button protocolHttp;
@@ -69,27 +69,27 @@ public class AzureProviderConfig extends AbstractCloudProviderConfig implements 
 
     @Override
     public String getName() {
-        return "MS Azure";
+        return "MS Azure"; //$NON-NLS-1$
     }
 
     @Override
     public Control createConfigContents(final Group parent, final Consumer<Boolean> signalIsValid) {
-        createLabel(parent, "Protocol:");
+        createLabel(parent, Messages.getString("AzureProviderConfig.lbl.protocol")); //$NON-NLS-1$
         final Composite protocolCont = new Composite(parent, SWT.NONE);
         protocolCont.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).create());
         this.protocolHttps = createProtocolBtn(protocolCont, PROTOCOL_HTTPS, signalIsValid);
         this.protocolHttps.setSelection(true);
         this.protocolHttp = createProtocolBtn(protocolCont, PROTOCOL_HTTP, signalIsValid);
 
-        this.accountName = createLabelText(parent, "Account Name:");
+        this.accountName = createLabelText(parent, Messages.getString("AzureProviderConfig.lbl.account.name")); //$NON-NLS-1$
         this.accountName.addModifyListener(event -> handleTextInput(signalIsValid));
-        createLabel(parent, "Account Key:");
+        createLabel(parent, Messages.getString("AzureProviderConfig.lbl.account.key")); //$NON-NLS-1$
         this.accountKey = createText(parent, SWT.BORDER | SWT.MULTI | SWT.WRAP);
         this.accountKey.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 30).create());
         this.accountKey.addModifyListener(event -> handleTextInput(signalIsValid));
 
         final Pattern pattern = Pattern.compile(PATTERN);
-        final Label connectionLbl = createLabel(parent, "or paste Connection String:");
+        final Label connectionLbl = createLabel(parent, Messages.getString("AzureProviderConfig.lbl.connection")); //$NON-NLS-1$
         connectionLbl.setLayoutData(GridDataFactory.swtDefaults().span(2, 1).create());
         this.connectionString = createText(parent, SWT.BORDER | SWT.MULTI | SWT.WRAP);
         this.connectionString.setLayoutData(
@@ -130,10 +130,10 @@ public class AzureProviderConfig extends AbstractCloudProviderConfig implements 
             }
 
             final String accName = matcher.group(2);
-            this.accountName.setText(accName == null ? "" : accName);
+            this.accountName.setText(accName == null ? "" : accName); //$NON-NLS-1$
 
             final String accKey = matcher.group(3);
-            this.accountKey.setText(accKey == null ? "" : accKey);
+            this.accountKey.setText(accKey == null ? "" : accKey); //$NON-NLS-1$
         }
         this.focus = Focus.OUT;
         signalIsValid.accept(isValid());

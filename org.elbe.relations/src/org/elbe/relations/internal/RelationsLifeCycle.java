@@ -166,7 +166,7 @@ public class RelationsLifeCycle {
 					this.dbSettings.getDBConnectionConfig().getCreator());
 		}
 		catch (IOException | TransformerException | SQLException exc) {
-			this.log.error(exc, "Unable to create the EventStore table!");
+			this.log.error(exc, "Unable to create the EventStore table!"); //$NON-NLS-1$
 		}
 
 		dataService.loadData(RelationsConstants.TOPIC_DB_CHANGED_RELOAD);

@@ -29,6 +29,7 @@ import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
+import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.data.utility.EventStoreChecker;
 import org.elbe.relations.internal.controls.RelationsStatusLineManager;
 import org.elbe.relations.internal.preferences.LanguageService;
@@ -50,6 +51,7 @@ implements IRunnableWithProgress {
 	private final Logger log;
 	private final RelationsStatusLineManager statusLine;
 	private final int numberOfItems;
+	private boolean isFullExport;
 
 	/**
 	 * AbstractExportToCloudJob constructor.
@@ -79,31 +81,35 @@ implements IRunnableWithProgress {
 		this.numberOfItems = numberOfItems;
 	}
 
+	protected void setFullExport(final boolean fullExportFlag) {
+		this.isFullExport = fullExportFlag;
+	}
+
 	@Override
 	public void run(final IProgressMonitor monitor)
 			throws InvocationTargetException, InterruptedException {
 		File tempExport = null;
 		try {
 			final String fileName = createTempFileName();
-			tempExport = File.createTempFile(fileName, ".zip");
+			tempExport = File.createTempFile(fileName, ".zip"); //$NON-NLS-1$
 
 			// 1) export DB content to zipped XML in temporary file
 			prepareContentForExport(tempExport, monitor);
 
 			// 2) upload temporary file to cloud
 			if (this.cloudProvider.upload(tempExport,
-					String.format("%s.zip", fileName),
-					this.jsonObject, this.log)) {
+					String.format("%s.zip", fileName), //$NON-NLS-1$
+			        this.jsonObject, this.isFullExport, this.log)) {
 				Display.getDefault().asyncExec(() -> {
 					this.statusLine.showStatusLineMessage(
-							"Successfully exported Relations data to cloud.");
+							RelationsMessages.getString("AbstractExportToCloudJob.status.msg")); //$NON-NLS-1$
 				});
 			} else {
 				Display.getDefault().asyncExec(() -> {
 					MessageDialog.openError(
 							Display.getDefault().getActiveShell(),
-							"Export Error",
-							"Could not export the data to the cloud! See log file for more information.");
+							RelationsMessages.getString("AbstractExportToCloudJob.err.title"), //$NON-NLS-1$
+							RelationsMessages.getString("AbstractExportToCloudJob.err.msg")); //$NON-NLS-1$
 				});
 			}
 

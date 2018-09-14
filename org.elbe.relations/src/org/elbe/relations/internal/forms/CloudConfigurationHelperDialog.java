@@ -34,6 +34,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.internal.actions.RelationsPreferences;
 import org.elbe.relations.internal.preferences.CloudConfigPrefPage;
 import org.elbe.relations.services.ICloudProviderConfigurationHelper;
@@ -71,7 +72,7 @@ public class CloudConfigurationHelperDialog extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
-		setTitle("Configure the access to your Cloud Provider");
+		setTitle(RelationsMessages.getString("CloudConfigurationHelperDialog.config.title")); //$NON-NLS-1$
 	}
 
 	@Override

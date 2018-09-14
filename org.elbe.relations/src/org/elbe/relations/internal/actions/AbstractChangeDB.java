@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
+ * Copyright (C) 2004-2018, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -87,6 +87,8 @@ public abstract class AbstractChangeDB implements IDBChange {
 						.getString("FormDBConnection.error.title"), //$NON-NLS-1$
 						RelationsMessages
 						.getString("FormDBConnection.error.msg")); //$NON-NLS-1$
+				this.log.warn(String.format("Unable to open DB at '%s'!", //$NON-NLS-1$
+						getDBInfo(this.dbSettings)));
 				return;
 			}
 
@@ -110,6 +112,11 @@ public abstract class AbstractChangeDB implements IDBChange {
 		}
 	}
 
+	private String getDBInfo(final IDBSettings settings) {
+		return ActionHelper.createDBConfiguration(this.dbSettings)
+				.getProperties().get("databaseName").toString(); //$NON-NLS-1$
+	}
+
 	/**
 	 * Execute the DB change: save settings to preferences and notify
 	 * application about change.
@@ -126,10 +133,10 @@ public abstract class AbstractChangeDB implements IDBChange {
 		// schema upgrade: checked creation of EventStore table
 		try {
 			new EventStoreChecker().createEventStoreChecked(
-			        this.dbSettings.getDBConnectionConfig().getCreator());
+					this.dbSettings.getDBConnectionConfig().getCreator());
 		}
 		catch (IOException | TransformerException | SQLException exc) {
-			this.log.error(exc, "Unable to create the EventStore table!");
+			this.log.error(exc, "Unable to create the EventStore table!"); //$NON-NLS-1$
 		}
 
 		// trigger change

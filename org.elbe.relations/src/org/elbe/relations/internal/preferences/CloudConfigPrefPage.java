@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.elbe.relations.RelationsConstants;
+import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.internal.actions.RelationsPreferences;
 import org.elbe.relations.services.ICloudProviderConfig;
 
@@ -49,7 +50,7 @@ import com.google.gson.JsonObject;
  * @author lbenno
  */
 public class CloudConfigPrefPage extends AbstractPreferencePage {
-	private static final String TMPL_KEY = "cloud_%s_pref";
+	private static final String TMPL_KEY = "cloud_%s_pref"; //$NON-NLS-1$
 
 	private final List<ConfigWrapper> mappings = new ArrayList<>(5);
 
@@ -83,7 +84,7 @@ public class CloudConfigPrefPage extends AbstractPreferencePage {
 		configuration.createConfigContents(group,
 		        validFlag -> setValid(validFlag));
 
-		new Label(group, SWT.NONE).setText("Active:");
+		new Label(group, SWT.NONE).setText(RelationsMessages.getString("CloudConfigPrefPage.btn.active.lbl")); //$NON-NLS-1$
 		final Button radioBtn = new Button(group, SWT.RADIO);
 		radioBtn.setData(configuration.getName());
 		radioBtn.addSelectionListener(
@@ -146,7 +147,7 @@ public class CloudConfigPrefPage extends AbstractPreferencePage {
 
 	protected ActiveWrapper createActive(final IEclipsePreferences store) {
 		return new ActiveWrapper(store,
-				store.get(RelationsConstants.PREFS_CLOUD_ACTIVE, ""));
+				store.get(RelationsConstants.PREFS_CLOUD_ACTIVE, "")); //$NON-NLS-1$
 	}
 
 	private String getKey(final ConfigWrapper config) {
@@ -162,7 +163,7 @@ public class CloudConfigPrefPage extends AbstractPreferencePage {
 	 * @return String the generated key
 	 */
 	public static String getKey(final String name) {
-		return String.format(TMPL_KEY, name.replace(" ", "").toLowerCase());
+		return String.format(TMPL_KEY, name.replace(" ", "").toLowerCase()); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	// ---
@@ -225,9 +226,9 @@ public class CloudConfigPrefPage extends AbstractPreferencePage {
 		}
 
 		protected JsonObject getValues(final String key) {
-			final String jsonOfValues = this.store.get(key, "{}");
+			final String jsonOfValues = this.store.get(key, "{}"); //$NON-NLS-1$
 			return new Gson().fromJson(
-					jsonOfValues.isEmpty() ? "{}" : jsonOfValues,
+					jsonOfValues.isEmpty() ? "{}" : jsonOfValues, //$NON-NLS-1$
 							JsonObject.class);
 		}
 

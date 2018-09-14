@@ -54,7 +54,7 @@ import org.hip.kernel.exc.VException;
  */
 @SuppressWarnings("restriction")
 public class IndexerAction extends Action {
-	private static final String NL = System.getProperty("line.separator");
+	private static final String NL = System.getProperty("line.separator"); //$NON-NLS-1$
 
 	private boolean silent = false;
 

@@ -24,6 +24,7 @@ import javax.inject.Named;
 
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -53,7 +54,7 @@ public class DBNewWizard extends Wizard implements INewWizard {
 
 	@PostConstruct
 	public void init(
-			@Named(IServiceConstants.ACTIVE_SELECTION) final IStructuredSelection selection) {
+	        @Optional @Named(IServiceConstants.ACTIVE_SELECTION) final IStructuredSelection selection) {
 		setWindowTitle(RelationsMessages.getString("DBNewWizard.view.title")); //$NON-NLS-1$
 	}
 

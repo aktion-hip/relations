@@ -39,15 +39,18 @@ public interface ICloudProvider {
 	 *            {@link File} the file containing the content to upload to the
 	 *            cloud
 	 * @param fileName
-	 *            String the name of the exporte file in the cloud
+	 *            String the name of the export file in the cloud
 	 * @param configuration
 	 *            {@link JsonObject} the cloud provider configuration
+	 * @param isFullExport
+	 *            boolean <code>true</code> in case of full export,
+	 *            <code>false</code> in case of incremental export
 	 * @param log
 	 *            {@link Logger}
 	 * @return boolean <code>true</code> if the content has been successfully
 	 *         uploaded
 	 */
 	boolean upload(File toExport, String fileName, JsonObject configuration,
-			Logger log);
+	        boolean isFullExport, Logger log);
 
 }

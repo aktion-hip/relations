@@ -54,22 +54,22 @@ import com.google.gson.JsonObject;
 @SuppressWarnings("restriction")
 @Component
 public class DropboxConfigurationHelper implements ICloudProviderConfigurationHelper {
-    private static final String TEMPL = "<form>" +
-            "<p><b>%1$s</b></p>" +
-            "<li style=\"text\" value=\"1.\">%2$s<br />%3$s</li>" +
-            "<li style=\"text\" value=\"2.\">%4$s</li>" +
-            "<li style=\"text\" value=\"3.\">%5$s</li>" +
-            "</form>";
-    private static final String MSG1 = "To get a Dropbox authorization code, proceed as follows:";
-    private static final String MSG2 = "Call the following URL:";
-    private static final String MSG4 = "Click \"Allow\" (you might have to log in first).";
-    private static final String MSG5 = "Copy the authorization code into the field below:";
+    private static final String TEMPL = "<form>" + //$NON-NLS-1$
+            "<p><b>%1$s</b></p>" + //$NON-NLS-1$
+            "<li style=\"text\" value=\"1.\">%2$s<br />%3$s</li>" + //$NON-NLS-1$
+            "<li style=\"text\" value=\"2.\">%4$s</li>" + //$NON-NLS-1$
+            "<li style=\"text\" value=\"3.\">%5$s</li>" + //$NON-NLS-1$
+            "</form>"; //$NON-NLS-1$
+    private static final String MSG1 = Messages.getString("DropboxConfigurationHelper.msg1"); //$NON-NLS-1$
+    private static final String MSG2 = Messages.getString("DropboxConfigurationHelper.msg2"); //$NON-NLS-1$
+    private static final String MSG4 = Messages.getString("DropboxConfigurationHelper.msg3"); //$NON-NLS-1$
+    private static final String MSG5 = Messages.getString("DropboxConfigurationHelper.msg4"); //$NON-NLS-1$
 
     private Text code;
 
     @Override
     public String getName() {
-        return "Dropbox";
+        return "Dropbox"; //$NON-NLS-1$
     }
 
     @Override
@@ -93,7 +93,7 @@ public class DropboxConfigurationHelper implements ICloudProviderConfigurationHe
             this.code.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
             final Button process = new Button(parent, SWT.PUSH);
-            process.setText("Process");
+            process.setText(Messages.getString("DropboxConfigurationHelper.btn.lbl")); //$NON-NLS-1$
             process.setEnabled(false);
 
             this.code.addModifyListener(new ModifyListener() {
@@ -104,7 +104,7 @@ public class DropboxConfigurationHelper implements ICloudProviderConfigurationHe
             });
 
             final Label feedback = new Label(parent, SWT.NONE);
-            feedback.setText("Dropbox created the following token:");
+            feedback.setText(Messages.getString("DropboxConfigurationHelper.feedback.lbl")); //$NON-NLS-1$
             feedback.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
             feedback.setVisible(false);
 
@@ -117,31 +117,31 @@ public class DropboxConfigurationHelper implements ICloudProviderConfigurationHe
             process.addSelectionListener(SelectionListener.widgetSelectedAdapter(event -> {
                 try {
                     store.accept(wrapper.finishFromCode(this.code.getText().trim(), token),
-                            new Feedback(true, "Successfully stored the Dropbox access token."));
+                            new Feedback(true, Messages.getString("DropboxConfigurationHelper.feedback.success"))); //$NON-NLS-1$
                     token.setVisible(true);
                     feedback.setVisible(true);
                 } catch (final DbxException exc) {
                     store.accept(new JsonObject(),
-                            new Feedback(false, "Error encountered while processing the Dropbox code!"));
-                    log.error(exc, "Error encountered while processing the Dropbox code!");
+                            new Feedback(false, Messages.getString("DropboxConfigurationHelper.feedback.error"))); //$NON-NLS-1$
+                    log.error(exc, "Error encountered while processing the Dropbox code!"); //$NON-NLS-1$
                 }
             }));
 
         } catch (IOException | JsonReadException exc1) {
-            log.error(exc1, "Error encountered while preparing the Dropbox configuration!");
+            log.error(exc1, "Error encountered while preparing the Dropbox configuration!"); //$NON-NLS-1$
         }
     }
 
     // ---
 
     private static class DropboxWrapper {
-        final DbxRequestConfig config = new DbxRequestConfig("relations-cloud/1.0");
+        final DbxRequestConfig config = new DbxRequestConfig("relations-cloud/1.0"); //$NON-NLS-1$
         private final DbxWebAuth webAuth;
         private final String authorizeUrl;
 
         protected DropboxWrapper() throws IOException, JsonReadException {
             final DbxAppInfo appInfo = DbxAppInfo.Reader
-                    .readFully(DropboxConfigurationHelper.class.getResourceAsStream("app.json"));
+                    .readFully(DropboxConfigurationHelper.class.getResourceAsStream("app.json")); //$NON-NLS-1$
             this.webAuth = new DbxWebAuth(this.config, appInfo);
             final DbxWebAuth.Request webAuthRequest = DbxWebAuth.newRequestBuilder()
                     .withNoRedirect().build();
@@ -149,7 +149,7 @@ public class DropboxConfigurationHelper implements ICloudProviderConfigurationHe
         }
 
         protected String getAuthorizeUrl() {
-            return this.authorizeUrl.replace("&", "&amp;");
+            return this.authorizeUrl.replace("&", "&amp;"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         protected JsonObject finishFromCode(final String code, final Text token) throws DbxException {
