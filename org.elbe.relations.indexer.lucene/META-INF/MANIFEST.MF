@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Lucene Indexer Plug-in
 Bundle-SymbolicName: org.elbe.relations.indexer.lucene
-Bundle-Version: 1.0.2.qualifier
+Bundle-Version: 1.0.3.qualifier
 Bundle-Vendor: RelationWare
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8,
  JavaSE-1.7
@@ -57,3 +57,5 @@ Import-Package: org.apache.lucene;version="[4.10.1,5.0.0)",
  org.hip.kernel.exc;version="[1.0.0,2.0.0)",
  org.slf4j;version="[1.6.4,2.0.0)"
 Service-Component: OSGI-INF/indexerService.xml
+Automatic-Module-Name: org.elbe.relations.indexer.lucene
+Bundle-ActivationPolicy: lazy

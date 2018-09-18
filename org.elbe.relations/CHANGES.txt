@@ -1,19 +1,11 @@
 CHANGES Relations
 =================
 
-Release 2.2.0:
+Release 2.3.0:
 =============
-2018/01/22:
-	- Removed "More Info" button in org.elbe.relations.internal.about.AboutDialog.
-
-2018/01/21:
-	- Fixed bug with key bindings in Inspector view: Ctrl+C/X works as expected now.
-
-2018/01/10:
-	- /css: Adjusted styling.
-
-2018/01/07:
-	- Adjusted /org.elbe.relations.target/relations.target to Eclipse 4.7 (Oxygen).
-	- Setting version number to 2.2.0.
+2018/09/:
+	- Added export to cloud, i.e. Dropbox, MS Azure and Google Drive.
+	- Adjusted /org.elbe.relations.target/relations.target to Eclipse 4.8 (Photon).
+	- Setting version number to 2.3.0.
 	- Added /icons/message_info.png.
 	

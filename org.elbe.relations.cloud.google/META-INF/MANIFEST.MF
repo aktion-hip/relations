@@ -30,3 +30,4 @@ Bundle-ClassPath: lib/google-api-client-1.23.0.jar,
  lib/google-api-client-java6-1.23.0.jar,
  lib/google-oauth-client-java6-1.23.0.jar,
  .
+Automatic-Module-Name: org.elbe.relations.cloud.google
