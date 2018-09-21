@@ -263,7 +263,6 @@ POSSIBILITY OF SUCH DAMAGES.
       <import plugin="org.eclipse.e4.ui.di" version="1.1.0" match="compatible"/>
       <import plugin="org.eclipse.e4.ui.workbench.swt" version="0.13.0" match="compatible"/>
       <import plugin="org.eclipse.e4.core.di.extensions" version="0.13.0" match="compatible"/>
-      <import plugin="org.eclipse.emf.ecore" version="2.11.1" match="compatible"/>
       <import plugin="org.eclipse.core.databinding.observable" version="1.5.0" match="compatible"/>
       <import plugin="org.eclipse.e4.ui.css.swt.theme" version="0.10.0" match="compatible"/>
       <import plugin="org.eclipse.core.resources" version="3.10.1" match="compatible"/>
@@ -274,10 +273,14 @@ POSSIBILITY OF SUCH DAMAGES.
       <import plugin="org.eclipse.equinox.p2.repository" version="2.3.100" match="compatible"/>
       <import plugin="org.eclipse.equinox.ds" version="1.5.0" match="compatible"/>
       <import plugin="org.eclipse.equinox.event" version="1.4.0" match="compatible"/>
+      <import plugin="com.google.gson"/>
       <import plugin="javax.annotation"/>
       <import plugin="javax.inject" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="javax.xml"/>
       <import plugin="org.eclipse.equinox.preferences"/>
       <import plugin="org.eclipse.e4.ui.workbench.addons.swt"/>
+      <import plugin="org.eclipse.emf.common"/>
+      <import plugin="org.eclipse.emf.ecore" version="2.11.1" match="compatible"/>
       <import plugin="org.eclipse.equinox.app"/>
       <import plugin="org.eclipse.equinox.p2.metadata" version="2.3.0" match="compatible"/>
       <import plugin="org.eclipse.help.base"/>
@@ -300,8 +303,11 @@ POSSIBILITY OF SUCH DAMAGES.
       <import plugin="org.apache.servicemix.bundles.lucene-queryparser"/>
       <import plugin="org.eclipse.nebula.widgets.gallery"/>
       <import plugin="org.eclipse.help" version="3.6.0" match="greaterOrEqual"/>
+      <import plugin="javax.servlet"/>
       <import feature="org.eclipse.e4.rcp" version="1.6.1.v20170928-1359"/>
-      <import plugin="com.opcoach.e4.preferences"/>
+      <import plugin="com.fasterxml.jackson.core.jackson-core"/>
+      <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.mortbay.jetty.server"/>
    </requires>
 
    <plugin
@@ -410,6 +416,34 @@ POSSIBILITY OF SUCH DAMAGES.
 
    <plugin
          id="org.elbe.relations.print.doc"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.elbe.relations.cloud.azure"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.elbe.relations.cloud.dropbox"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.elbe.relations.cloud.google"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.elbe.relations.help.base"
          download-size="0"
          install-size="0"
          version="0.0.0"
