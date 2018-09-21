@@ -70,7 +70,7 @@
 <plugin id="org.apache.commons.jxpath" version="1.3.0.v200911051830"/>
 <plugin id="org.apache.commons.jxpath.source" version="1.3.0.v200911051830"/>
 <plugin id="org.apache.commons.logging" version="1.2.0.v20180409-1502"/>
-<plugin id="org.apache.commons.logging.source" version="1.2.0.v20180409-1502"/>
+<plugin id="org.apache.commons.logging.source" version="1.1.1.v201101211721"/>
 <plugin id="org.apache.httpcomponents.httpclient"/>
 <plugin id="org.apache.httpcomponents.httpclient.source"/>
 <plugin id="org.apache.httpcomponents.httpcore"/>
@@ -332,8 +332,6 @@
 	<plugin id="org.eclipse.equinox.p2.console.source" version="1.1.0.v20180130-1836"/>
 	<plugin id="org.eclipse.equinox.p2.updatechecker" version="1.2.0.v20180302-1057"/>
 	<plugin id="org.eclipse.equinox.p2.updatechecker.source" version="1.2.0.v20180302-1057"/>
-	<plugin id="org.eclipse.equinox.p2.transport.ecf" version="1.2.0.v20180222-0922"/>
-	<plugin id="org.eclipse.equinox.p2.transport.ecf.source" version="1.2.0.v20180222-0922"/>
 	<plugin id="org.eclipse.equinox.p2.artifact.repository" version="1.2.0.v20180413-0846"/>
 	<plugin id="org.eclipse.equinox.p2.artifact.repository.source" version="1.2.0.v20180413-0846"/>
 	<plugin id="org.eclipse.equinox.p2.touchpoint.natives" version="1.3.0.v20180512-1128"/>
@@ -342,8 +340,6 @@
 	<plugin id="org.eclipse.equinox.p2.metadata.repository" version="1.3.0.v20180302-1057"/>
 	<plugin id="org.eclipse.equinox.p2.metadata.repository.source" version="1.3.0.v20180302-1057"/>
 	<plugin id="org.eclipse.equinox.p2.metadata.source" version="2.4.0.v20180320-1220"/>
-	<plugin id="org.eclipse.equinox.p2.core" version="2.5.0.v20180512-1128"/>
-	<plugin id="org.eclipse.equinox.p2.core.source" version="2.5.0.v20180512-1128"/>
 	<plugin id="org.eclipse.equinox.p2.operations" version="2.5.0.v20180302-1057"/>
 	<plugin id="org.eclipse.equinox.p2.operations.source" version="2.5.0.v20180302-1057"/>
 	<plugin id="org.eclipse.equinox.p2.engine" version="2.6.0.v20180409-1209"/>
@@ -534,5 +530,33 @@
 	<plugin id="org.apache.commons.io" version="2.2.0.v201405211200"/>
 	<plugin id="org.apache.commons.logging" version="1.1.1.v201101211721"/>
 	<plugin id="org.apache.commons.io.source" version="2.2.0.v201405211200"/>
+	<plugin id="org.eclipse.equinox.p2.core" version="2.5.0.v20180512-1128"/>
+	<plugin id="org.eclipse.equinox.p2.core.source" version="2.5.0.v20180512-1128"/>
+	<plugin id="org.eclipse.equinox.p2.touchpoint.eclipse" version="2.2.0.v20180302-1057"/>
+	<plugin id="org.eclipse.equinox.p2.touchpoint.eclipse.source" version="2.2.0.v20180302-1057"/>
+	<plugin id="org.eclipse.equinox.simpleconfigurator.manipulator" version="2.1.0.v20180103-0918"/>
+	<plugin id="org.eclipse.equinox.simpleconfigurator.manipulator.source" version="2.1.0.v20180103-0918"/>
+	<plugin id="org.eclipse.equinox.frameworkadmin.equinox" version="1.1.0.v20180512-1128"/>
+	<plugin id="org.eclipse.equinox.frameworkadmin.equinox.source" version="1.1.0.v20180512-1128"/>
+	<plugin id="org.eclipse.equinox.p2.transport.ecf" version="1.2.0.v20180222-0922"/>
+	<plugin id="org.eclipse.equinox.p2.transport.ecf.source" version="1.2.0.v20180222-0922"/>
+	<plugin id="org.eclipse.equinox.p2.directorywatcher" version="1.2.0.v20180130-1836"/>
+	<plugin id="org.eclipse.equinox.p2.directorywatcher.source" version="1.2.0.v20180130-1836"/>
+	<plugin id="org.eclipse.equinox.p2.publisher.eclipse" version="1.3.0.v20180320-1332"/>
+	<plugin id="org.eclipse.equinox.p2.publisher.eclipse.source" version="1.3.0.v20180320-1332"/>
+	<plugin id="org.eclipse.equinox.p2.reconciler.dropins" version="1.2.0.v20180302-1057"/>
+	<plugin id="org.eclipse.equinox.p2.reconciler.dropins.source" version="1.2.0.v20180302-1057"/>
+	<plugin id="org.eclipse.equinox.p2.extensionlocation" version="1.3.0.v20180103-0918"/>
+	<plugin id="org.eclipse.equinox.p2.extensionlocation.source" version="1.3.0.v20180103-0918"/>
+	<plugin id="org.eclipse.equinox.p2.repository.tools" version="2.2.0.v20180416-1436"/>
+	<plugin id="org.eclipse.equinox.p2.repository.tools.source" version="2.2.0.v20180416-1436"/>
+	<plugin id="org.eclipse.equinox.p2.ui.sdk.scheduler" version="1.4.0.v20180302-1057"/>
+	<plugin id="org.eclipse.equinox.p2.ui.sdk.scheduler.source" version="1.4.0.v20180302-1057"/>
+	<plugin id="org.apache.commons.logging.source" version="1.2.0.v20180409-1502"/>
+	<plugin id="org.eclipse.e4.core.di.source" version="1.7.0.v20180427-1454"/>
+	<plugin id="org.eclipse.equinox.p2.updatesite" version="1.1.0.v20180302-1057"/>
+	<plugin id="org.eclipse.equinox.p2.updatesite.source" version="1.1.0.v20180302-1057"/>
+	<plugin id="org.eclipse.equinox.p2.ui.importexport" version="1.2.0.v20180126-1930"/>
+	<plugin id="org.eclipse.equinox.p2.ui.importexport.source" version="1.2.0.v20180126-1930"/>
 </includeBundles>
 </target>
