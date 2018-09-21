@@ -308,6 +308,7 @@ POSSIBILITY OF SUCH DAMAGES.
       <feature id="org.eclipse.ecf.filetransfer.feature"/>
       <feature id="org.eclipse.ecf.core.ssl.feature"/>
       <feature id="org.eclipse.ecf.filetransfer.ssl.feature"/>
+      <feature id="com.opcoach.e4.preferences.feature" version="1.1.0.201710152105"/>
    </features>
 
    <configurations>

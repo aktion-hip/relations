@@ -275,7 +275,6 @@ POSSIBILITY OF SUCH DAMAGES.
       <import plugin="com.google.gson"/>
       <import plugin="javax.annotation"/>
       <import plugin="javax.inject" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="javax.xml"/>
       <import plugin="org.eclipse.equinox.preferences"/>
       <import plugin="org.eclipse.e4.ui.workbench.addons.swt"/>
       <import plugin="org.eclipse.emf.common"/>
@@ -301,12 +300,15 @@ POSSIBILITY OF SUCH DAMAGES.
       <import plugin="org.apache.servicemix.bundles.lucene-analyzers-common"/>
       <import plugin="org.apache.servicemix.bundles.lucene-queryparser"/>
       <import plugin="org.eclipse.nebula.widgets.gallery"/>
-      <import plugin="org.eclipse.help" version="3.6.0" match="greaterOrEqual"/>
-      <import plugin="javax.servlet"/>
-      <import feature="org.eclipse.e4.rcp" version="1.6.1.v20170928-1359"/>
       <import plugin="com.fasterxml.jackson.core.jackson-core"/>
       <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="javax.servlet"/>
       <import plugin="org.mortbay.jetty.server"/>
+      <import feature="org.eclipse.e4.rcp" version="1.6.1.v20170928-1359"/>
+      <import plugin="org.eclipse.equinox.p2.core" version="2.4.0" match="compatible"/>
+      <import plugin="org.eclipse.core.resources" version="3.13.0" match="compatible"/>
+      <import plugin="org.eclipse.help" version="3.8.0" match="compatible"/>
+      <import plugin="org.eclipse.help.webapp"/>
    </requires>
 
    <plugin
