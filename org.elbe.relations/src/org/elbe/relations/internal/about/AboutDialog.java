@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2016, Benno Luthiger
+ * Copyright (C) 2004-2018, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -33,7 +33,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ControlAdapter;
@@ -58,7 +57,6 @@ import org.eclipse.ui.internal.about.AboutBundleGroupData;
 import org.eclipse.ui.internal.about.AboutFeaturesButtonManager;
 import org.eclipse.ui.internal.about.AboutItem;
 import org.eclipse.ui.internal.about.AboutTextManager;
-import org.eclipse.ui.internal.about.InstallationDialog;
 
 /**
  * Displays information about the product.
@@ -71,7 +69,7 @@ public class AboutDialog extends TrayDialog {
 
 	private final IProduct product;
 	private String productName;
-	private final ArrayList<Image> images = new ArrayList<Image>();
+	private final ArrayList<Image> images = new ArrayList<>();
 	private StyledText text;
 	private final AboutBundleGroupData[] bundleGroupInfos;
 	private final AboutFeaturesButtonManager buttonManager = new AboutFeaturesButtonManager();
@@ -79,20 +77,20 @@ public class AboutDialog extends TrayDialog {
 	/**
 	 * @param shell
 	 */
-	public AboutDialog(Shell shell) {
+	public AboutDialog(final Shell shell) {
 		super(shell);
 
-		product = Platform.getProduct();
-		if (product != null) {
-			productName = product.getName();
+		this.product = Platform.getProduct();
+		if (this.product != null) {
+			this.productName = this.product.getName();
 		}
-		if (productName == null) {
-			productName = WorkbenchMessages.AboutDialog_defaultProductName;
+		if (this.productName == null) {
+			this.productName = WorkbenchMessages.AboutDialog_defaultProductName;
 		}
 
 		// create a descriptive object for each BundleGroup
 		final IBundleGroupProvider[] providers = Platform.getBundleGroupProviders();
-		final LinkedList<AboutBundleGroupData> groups = new LinkedList<AboutBundleGroupData>();
+		final LinkedList<AboutBundleGroupData> groups = new LinkedList<>();
 		if (providers != null) {
 			for (final IBundleGroupProvider provider : providers) {
 				final IBundleGroup[] bundleGroups = provider.getBundleGroups();
@@ -101,14 +99,14 @@ public class AboutDialog extends TrayDialog {
 				}
 			}
 		}
-		bundleGroupInfos = groups.toArray(new AboutBundleGroupData[0]);
+		this.bundleGroupInfos = groups.toArray(new AboutBundleGroupData[0]);
 	}
 
 	@Override
 	public boolean close() {
 		// dispose all images
-		for (int i = 0; i < images.size(); ++i) {
-			final Image image = images.get(i);
+		for (int i = 0; i < this.images.size(); ++i) {
+			final Image image = this.images.get(i);
 			image.dispose();
 		}
 
@@ -116,10 +114,10 @@ public class AboutDialog extends TrayDialog {
 	}
 
 	@Override
-	protected void configureShell(Shell newShell) {
+	protected void configureShell(final Shell newShell) {
 		super.configureShell(newShell);
 		newShell.setText(NLS.bind(WorkbenchMessages.AboutDialog_shellTitle,
-		        productName));
+				this.productName));
 	}
 
 	/**
@@ -131,7 +129,7 @@ public class AboutDialog extends TrayDialog {
 	 *            the button bar composite
 	 */
 	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
+	protected void createButtonsForButtonBar(final Composite parent) {
 		parent.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		final Label l = new Label(parent, SWT.NONE);
@@ -141,34 +139,34 @@ public class AboutDialog extends TrayDialog {
 		layout.makeColumnsEqualWidth = false;
 
 		final Button b = createButton(parent, IDialogConstants.OK_ID,
-		        IDialogConstants.OK_LABEL, true);
+				IDialogConstants.OK_LABEL, true);
 		b.setFocus();
 	}
 
 	@Override
-	protected Control createDialogArea(Composite parent) {
+	protected Control createDialogArea(final Composite parent) {
 		// brand the about box if there is product info
 		Image aboutImage = null;
 		AboutItem item = null;
-		if (product != null) {
+		if (this.product != null) {
 			final ImageDescriptor imageDescriptor = ProductProperties
-			        .getAboutImage(product);
+					.getAboutImage(this.product);
 			if (imageDescriptor != null) {
 				aboutImage = imageDescriptor.createImage();
 			}
 
 			// if the about image is small enough, then show the text
 			if (aboutImage == null || aboutImage
-			        .getBounds().width <= MAX_IMAGE_WIDTH_FOR_TEXT) {
+					.getBounds().width <= MAX_IMAGE_WIDTH_FOR_TEXT) {
 				final String aboutText = ProductProperties
-				        .getAboutText(product);
+						.getAboutText(this.product);
 				if (aboutText != null) {
 					item = AboutTextManager.scan(aboutText);
 				}
 			}
 
 			if (aboutImage != null) {
-				images.add(aboutImage);
+				this.images.add(aboutImage);
 			}
 		}
 
@@ -187,9 +185,9 @@ public class AboutDialog extends TrayDialog {
 
 		// page group
 		final Color background = JFaceColors
-		        .getBannerBackground(parent.getDisplay());
+				.getBannerBackground(parent.getDisplay());
 		final Color foreground = JFaceColors
-		        .getBannerForeground(parent.getDisplay());
+				.getBannerForeground(parent.getDisplay());
 		final Composite top = (Composite) super.createDialogArea(workArea);
 
 		// override any layout inherited from createDialogArea
@@ -222,7 +220,7 @@ public class AboutDialog extends TrayDialog {
 		try {
 			// default height enough for 6 lines of text
 			topContainerHeightHint = Math.max(topContainerHeightHint,
-			        gc.getFontMetrics().getHeight() * 6);
+					gc.getFontMetrics().getHeight() * 6);
 		}
 		finally {
 			gc.dispose();
@@ -241,7 +239,7 @@ public class AboutDialog extends TrayDialog {
 			imageLabel.setLayoutData(data);
 			imageLabel.setImage(aboutImage);
 			topContainerHeightHint = Math.max(topContainerHeightHint,
-			        aboutImage.getBounds().height);
+					aboutImage.getBounds().height);
 		}
 
 		GridData data = new GridData();
@@ -260,7 +258,7 @@ public class AboutDialog extends TrayDialog {
 			// wrapped styled text
 			// There is no easy way to do this.
 			final ScrolledComposite scroller = new ScrolledComposite(
-			        topContainer, SWT.V_SCROLL | SWT.H_SCROLL);
+					topContainer, SWT.V_SCROLL | SWT.H_SCROLL);
 			data = new GridData(GridData.FILL_BOTH);
 			data.widthHint = minWidth;
 			scroller.setLayoutData(data);
@@ -271,18 +269,18 @@ public class AboutDialog extends TrayDialog {
 			layout = new GridLayout();
 			textComposite.setLayout(layout);
 
-			text = new StyledText(textComposite,
-			        SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
+			this.text = new StyledText(textComposite,
+					SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
 
 			// Don't set caret to 'null' as this causes
 			// https://bugs.eclipse.org/293263.
 			// text.setCaret(null);
 
-			text.setFont(parent.getFont());
-			text.setText(item.getText());
-			text.setCursor(null);
-			text.setBackground(background);
-			text.setForeground(foreground);
+			this.text.setFont(parent.getFont());
+			this.text.setText(item.getText());
+			this.text.setCursor(null);
+			this.text.setBackground(background);
+			this.text.setForeground(foreground);
 
 			// aboutTextManager = new AboutTextManager(text);
 			// aboutTextManager.setItem(item);
@@ -293,18 +291,18 @@ public class AboutDialog extends TrayDialog {
 			gd.verticalAlignment = GridData.BEGINNING;
 			gd.horizontalAlignment = GridData.FILL;
 			gd.grabExcessHorizontalSpace = true;
-			text.setLayoutData(gd);
+			this.text.setLayoutData(gd);
 
 			// Adjust the scrollbar increments
 			scroller.getHorizontalBar().setIncrement(20);
 			scroller.getVerticalBar().setIncrement(20);
 
 			final boolean[] inresize = new boolean[1]; // flag to stop
-			                                           // unneccesary
+			// unneccesary
 			// recursion
 			textComposite.addControlListener(new ControlAdapter() {
 				@Override
-				public void controlResized(ControlEvent e) {
+				public void controlResized(final ControlEvent e) {
 					if (inresize[0]) {
 						return;
 					}
@@ -312,10 +310,10 @@ public class AboutDialog extends TrayDialog {
 					// required because of bugzilla report 4579
 					textComposite.layout(true);
 					// required because you want to change the height that the
-			        // scrollbar will scroll over when the width changes.
+					// scrollbar will scroll over when the width changes.
 					final int width = textComposite.getClientArea().width;
 					final Point p = textComposite.computeSize(width,
-			                SWT.DEFAULT);
+							SWT.DEFAULT);
 					scroller.setMinSize(minWidth, p.y);
 					inresize[0] = false;
 				}
@@ -386,7 +384,7 @@ public class AboutDialog extends TrayDialog {
 
 	}
 
-	private void createFeatureImageButtonRow(Composite parent) {
+	private void createFeatureImageButtonRow(final Composite parent) {
 		final Composite featureContainer = new Composite(parent, SWT.NONE);
 		final RowLayout rowLayout = new RowLayout();
 		rowLayout.wrap = true;
@@ -395,14 +393,14 @@ public class AboutDialog extends TrayDialog {
 		data.horizontalAlignment = GridData.FILL;
 		featureContainer.setLayoutData(data);
 
-		for (final AboutBundleGroupData bundleGroupInfo : bundleGroupInfos) {
+		for (final AboutBundleGroupData bundleGroupInfo : this.bundleGroupInfos) {
 			createFeatureButton(featureContainer, bundleGroupInfo);
 		}
 	}
 
-	private Button createFeatureButton(Composite parent,
-	        final AboutBundleGroupData info) {
-		if (!buttonManager.add(info)) {
+	private Button createFeatureButton(final Composite parent,
+			final AboutBundleGroupData info) {
+		if (!this.buttonManager.add(info)) {
 			return null;
 		}
 
@@ -412,26 +410,26 @@ public class AboutDialog extends TrayDialog {
 		final Button button = new Button(parent, SWT.FLAT | SWT.PUSH);
 		button.setData(info);
 		featureImage = desc.createImage();
-		images.add(featureImage);
+		this.images.add(featureImage);
 		button.setImage(featureImage);
 		button.setToolTipText(info.getProviderName());
 
 		button.getAccessible().addAccessibleListener(new AccessibleAdapter() {
 			@Override
-			public void getName(AccessibleEvent e) {
+			public void getName(final AccessibleEvent e) {
 				e.result = info.getProviderName();
 			}
 		});
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent event) {
-				final AboutBundleGroupData[] groupInfos = buttonManager
-		                .getRelatedInfos(info);
+			public void widgetSelected(final SelectionEvent event) {
+				final AboutBundleGroupData[] groupInfos = AboutDialog.this.buttonManager
+						.getRelatedInfos(info);
 				final AboutBundleGroupData selection = (AboutBundleGroupData) event.widget
-		                .getData();
+						.getData();
 
 				final AboutFeaturesDialog d = new AboutFeaturesDialog(
-		                getShell(), productName, groupInfos, selection);
+						getShell(), AboutDialog.this.productName, groupInfos, selection);
 				d.open();
 			}
 		});

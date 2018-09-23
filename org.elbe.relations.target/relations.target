@@ -70,7 +70,7 @@
 <plugin id="org.apache.commons.jxpath" version="1.3.0.v200911051830"/>
 <plugin id="org.apache.commons.jxpath.source" version="1.3.0.v200911051830"/>
 <plugin id="org.apache.commons.logging" version="1.2.0.v20180409-1502"/>
-<plugin id="org.apache.commons.logging.source" version="1.1.1.v201101211721"/>
+<plugin id="org.apache.commons.logging.source" version="1.2.0.v20180409-1502"/>
 <plugin id="org.apache.httpcomponents.httpclient"/>
 <plugin id="org.apache.httpcomponents.httpclient.source"/>
 <plugin id="org.apache.httpcomponents.httpcore"/>
@@ -552,11 +552,48 @@
 	<plugin id="org.eclipse.equinox.p2.repository.tools.source" version="2.2.0.v20180416-1436"/>
 	<plugin id="org.eclipse.equinox.p2.ui.sdk.scheduler" version="1.4.0.v20180302-1057"/>
 	<plugin id="org.eclipse.equinox.p2.ui.sdk.scheduler.source" version="1.4.0.v20180302-1057"/>
-	<plugin id="org.apache.commons.logging.source" version="1.2.0.v20180409-1502"/>
+	<plugin id="org.apache.commons.logging.source" version="1.1.1.v201101211721"/>
 	<plugin id="org.eclipse.e4.core.di.source" version="1.7.0.v20180427-1454"/>
 	<plugin id="org.eclipse.equinox.p2.updatesite" version="1.1.0.v20180302-1057"/>
 	<plugin id="org.eclipse.equinox.p2.updatesite.source" version="1.1.0.v20180302-1057"/>
 	<plugin id="org.eclipse.equinox.p2.ui.importexport" version="1.2.0.v20180126-1930"/>
 	<plugin id="org.eclipse.equinox.p2.ui.importexport.source" version="1.2.0.v20180126-1930"/>
+	<plugin id="com.ibm.icu.base"/>
+	<plugin id="com.ibm.icu.base.source"/>
+	<plugin id="org.eclipse.equinox.http.servletbridge" version="1.1.0.v20180120-0803"/>
+	<plugin id="org.eclipse.equinox.http.servletbridge.source" version="1.1.0.v20180120-0803"/>
+	<plugin id="org.eclipse.equinox.servletbridge" version="1.4.0.v20180121-0944"/>
+	<plugin id="org.eclipse.equinox.servletbridge.source" version="1.4.0.v20180121-0944"/>
+	<plugin id="org.eclipse.jdt.junit.runtime"/>
+	<plugin id="org.eclipse.jdt.junit.runtime.source"/>
+	<plugin id="org.apache.commons.fileupload"/>
+	<plugin id="org.eclipse.rap.rwt"/>
+	<plugin id="org.eclipse.rap.rwt.source"/>
+	<plugin id="org.eclipse.rap.rwt.osgi"/>
+	<plugin id="org.eclipse.rap.rwt.osgi.source"/>
+	<plugin id="org.eclipse.rap.jface"/>
+	<plugin id="org.eclipse.rap.jface.source"/>
+	<plugin id="org.eclipse.rap.jface.databinding"/>
+	<plugin id="org.eclipse.rap.jface.databinding.source"/>
+	<plugin id="org.eclipse.rap.ui"/>
+	<plugin id="org.eclipse.rap.ui.source"/>
+	<plugin id="org.eclipse.rap.ui.workbench"/>
+	<plugin id="org.eclipse.rap.ui.workbench.source"/>
+	<plugin id="org.eclipse.rap.ui.forms"/>
+	<plugin id="org.eclipse.rap.ui.forms.source"/>
+	<plugin id="org.eclipse.rap.ui.views"/>
+	<plugin id="org.eclipse.rap.ui.views.source"/>
+	<plugin id="org.eclipse.rap.ui.cheatsheets"/>
+	<plugin id="org.eclipse.rap.ui.cheatsheets.source"/>
+	<plugin id="org.eclipse.rap.nebula.jface.gridviewer"/>
+	<plugin id="org.eclipse.rap.nebula.jface.gridviewer.source"/>
+	<plugin id="org.eclipse.rap.nebula.widgets.grid"/>
+	<plugin id="org.eclipse.rap.nebula.widgets.grid.source"/>
+	<plugin id="org.eclipse.rap.nebula.widgets.richtext"/>
+	<plugin id="org.eclipse.rap.nebula.widgets.richtext.source"/>
+	<plugin id="org.eclipse.rap.filedialog"/>
+	<plugin id="org.eclipse.rap.filedialog.source"/>
+	<plugin id="org.eclipse.rap.fileupload"/>
+	<plugin id="org.eclipse.rap.fileupload.source"/>
 </includeBundles>
 </target>
