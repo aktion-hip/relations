@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title>Export to the Cloud</title>
+  <link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css">
+</head>
+<body>
+<h1>Export to the Cloud</h1>
+
+<p>The Relations application is now available as mobile app on Android.<br />
+To read the Relations data on your mobile phone, you must first upload the data
+created on your computer by the Relations application to the cloud.
+In a second step, you can synchronize (i.e. download and install) your mobile app's data with data in the cloud.</p>
+<p>For the initial transfer of the data, use the <em>full</em> synchronization option. After the initial upload, you can use the <em>incremental</em> data
+synchronization. This option only transfers the changes made since the last synchronization.</p>
+
+<p><img src="../img/whatsNew_23_1.png" alt="Export to Cloud" border="0" /></p>
+
+<p>For that you can upload to the cloud, you must first configure the access to your cloud provider. (<b>Utility -> Preferences... -> Cloud Configuration</b>)</p>
+
+<p><img src="../img/task_cloudConfig.PNG" alt="Cloud provider configuration" border="0" /></p>
+
+<h3>Dropbox</h3>
+<p>Dropbox needs an access token. You can get this access token from within the Relations application (see <b>Help -> Cloud Configuration</b>).</p>
+<p>To start the workflow, you have to call the displayed authorization URL. This will lead you to a login page on Dropbox.
+Once you are logged into Dropbox, you will be presented with a screen to authorize the Relations application to access your Dropbox data.<br />
+After you have approved, you will be redirected to a page displaying the application's access code.</p>
+<p><img src="../img/task_dropbox1.PNG" alt="Dropbox" border="0" /></p>
+<p>Copy this access code into the provided field and click the <em>Process</em> button.
+This will generated the Dropbox access token and safe it to the preferences.</p>
+<p><img src="../img/task_dropbox2.PNG" alt="Dropbox" border="0" /></p>
+
+<h3>MS Azure</h3>
+<p>To configure the access to MS Azure, log in to the your Azure account and navigate to your storage account.
+In the <em>Settings</em> section of the storage account overview, select <em>Access keys</em>.
+Your account access keys appear, as well as the complete connection string for each key.<br />
+You can enter the <em>protocol</em>, <em>account name</em> and <em>account key</em> individually or you can copy and paste the <em>connection string</em> value
+as a whole into the field provided.</p>
+
+<h3>Google Drive</h3>
+<p>To export your Relations data to Google Drive, no access configuration is needed.</p>
+
+<p>&#160;</p>
+<img src="../img/ngrelt.png" alt="Related tasks"><br>
+
+<ul>
+  <li><a href="xml_export.html">Export to XML - Import from XML</a></li>
+  <li><a href="database.html">Database backup, restore and import</a></li>
+</ul>
+
+<img src="../img/ngrelr.png" />
+<ul>
+  <li><a href="../reference/xml_export.html">The DTD of the XML export</a></li>
+</ul>
+<p></p>
+
+</body>
+</html>

@@ -149,7 +149,7 @@ public class DropboxConfigurationHelper implements ICloudProviderConfigurationHe
         }
 
         protected String getAuthorizeUrl() {
-            return this.authorizeUrl.replace("&", "&amp;"); //$NON-NLS-1$ //$NON-NLS-2$
+            return this.authorizeUrl; // .replace("&", "&amp;"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         protected JsonObject finishFromCode(final String code, final Text token) throws DbxException {
