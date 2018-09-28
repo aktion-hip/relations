@@ -24,9 +24,14 @@ see http://www.eclipse.org/
    </configIni>
 
    <launcherArgs>
+      <programArgsMac>-startup
+../../../plugins/org.eclipse.equinox.launcher_1.5.0.v20180512-1130.jar
+--launcher.library
+../../../plugins/org.eclipse.equinox.launcher.cocoa.macosx.x86_64_1.1.700.v20180518-1200
+      </programArgsMac>
       <vmArgs>-Xmx386M -Dosgi.parentClassloader=ext
       </vmArgs>
-      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -Djava.awt.headless=true
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
    </launcherArgs>
 
@@ -38,6 +43,8 @@ see http://www.eclipse.org/
       startupMessageRect="5,250,449,23"
       startupForegroundColor="FFFFFF" />
    <launcher name="Relations">
+      <linux icon="/org.elbe.relations/icons/RelationsIcon.xpm"/>
+      <macosx icon="/org.elbe.relations/icons/RelationsIcon.icns"/>
       <win useIco="true">
          <ico path="/org.elbe.relations/icons/RelationsIcon.ico"/>
          <bmp/>
@@ -308,7 +315,6 @@ POSSIBILITY OF SUCH DAMAGES.
       <feature id="org.eclipse.ecf.filetransfer.feature"/>
       <feature id="org.eclipse.ecf.core.ssl.feature"/>
       <feature id="org.eclipse.ecf.filetransfer.ssl.feature"/>
-      <feature id="org.eclipse.rap.equinox.target.feature" version="3.5.0.20180613-1200"/>
       <feature id="org.eclipse.e4.rcp.source" version="1.6.100.v20180611-0422"/>
       <feature id="org.eclipse.equinox.core.feature" version="1.5.0.v20180502-1828"/>
    </features>
