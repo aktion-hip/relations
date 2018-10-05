@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="org.elbe.relations" uid="Relations" id="org.elbe.relations.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="2.3.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Relations" uid="org.elbe.relations.product" id="org.elbe.relations.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="2.3.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/org.elbe.relations/icons/aboutRelations.png"/>
@@ -24,11 +24,6 @@ see http://www.eclipse.org/
    </configIni>
 
    <launcherArgs>
-      <programArgsMac>-startup
-../../../plugins/org.eclipse.equinox.launcher_1.5.0.v20180512-1130.jar
---launcher.library
-../../../plugins/org.eclipse.equinox.launcher.cocoa.macosx.x86_64_1.1.700.v20180518-1200
-      </programArgsMac>
       <vmArgs>-Xmx386M -Dosgi.parentClassloader=ext
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts

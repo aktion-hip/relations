@@ -7,10 +7,10 @@
       <product
             application="org.eclipse.e4.ui.workbench.swt.E4Application"
             description="%product.description"
-            name="org.elbe.relations">
+            name="Relations">
          <property
                name="appName"
-               value="org.elbe.relations">
+               value="Relations">
          </property>
          <property
                name="applicationXMI"
