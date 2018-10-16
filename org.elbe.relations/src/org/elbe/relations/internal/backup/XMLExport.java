@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -197,7 +198,7 @@ public class XMLExport implements AutoCloseable {
 			final IProgressMonitor monitor)
 					throws VException, SQLException, IOException {
 		final SubMonitor progress = SubMonitor.convert(monitor,
-		        home.getCount());
+				home.getCount());
 		int outExported = 0;
 		final QueryResult result = home.select();
 		final AbstractSerializer visitor = new RelationsSerializer();
@@ -220,7 +221,7 @@ public class XMLExport implements AutoCloseable {
 		if (this.outputStream == null) {
 			return;
 		}
-		this.outputStream.write(text.getBytes());
+		this.outputStream.write(text.getBytes(StandardCharsets.UTF_8));
 	}
 
 }
