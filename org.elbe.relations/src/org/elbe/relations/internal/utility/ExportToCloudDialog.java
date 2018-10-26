@@ -57,6 +57,7 @@ public class ExportToCloudDialog extends Dialog {
 	public ExportToCloudDialog(final ICloudProviderConfig cloudProviderConfig,
 			final boolean hasEvents) {
 		super(Display.getDefault().getActiveShell());
+		setShellStyle(getShellStyle() | SWT.RESIZE);
 		this.cloudProviderConfig = cloudProviderConfig;
 		this.hasEvents = hasEvents;
 	}
@@ -119,7 +120,7 @@ public class ExportToCloudDialog extends Dialog {
 
 	@Override
 	protected Point getInitialSize() {
-		return new Point(320, 150);
+		return new Point(340, 180);
 	}
 
 	/**
