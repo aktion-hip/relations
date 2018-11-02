@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -56,7 +56,7 @@ import org.hip.kernel.exc.VException;
  * injected, they have to be created <b>after</b> the creation of a
  * <code>IDataService</code> instance.
  * </p>
- * 
+ *
  * @author Luthiger
  * @see org.elbe.relations.services.IRelationsBrowser
  */
@@ -83,14 +83,14 @@ public class RelationsBrowserManager implements IBrowserManager {
 
 	public RelationsBrowserManager() {
 		super();
-		historyBack = new Stack<UniqueID>();
-		historyNext = new Stack<UniqueID>();
+		this.historyBack = new Stack<>();
+		this.historyNext = new Stack<>();
 	}
 
 	private void addToHistory(final ItemAdapter inModel) {
 		final UniqueID lID = inModel.getUniqueID();
-		if (historyBack.empty() || !lID.equals(historyBack.peek())) {
-			historyBack.push(lID);
+		if (this.historyBack.empty() || !lID.equals(this.historyBack.peek())) {
+			this.historyBack.push(lID);
 		}
 	}
 
@@ -98,114 +98,114 @@ public class RelationsBrowserManager implements IBrowserManager {
 	 * For lazy initialization
 	 */
 	private MApplication getApplication() {
-		if (application == null) {
-			application = context.get(MApplication.class);
+		if (this.application == null) {
+			this.application = this.context.get(MApplication.class);
 		}
-		return application;
+		return this.application;
 	}
 
 	/**
 	 * Returns the browsers' central model.
-	 * 
+	 *
 	 * @return {@link CentralAssociationsModel}
 	 */
 	@Override
 	public CentralAssociationsModel getCenterModel() {
-		return model;
+		return this.model;
 	}
 
 	/**
 	 * Returns the model actually selected in the browsers.
-	 * 
+	 *
 	 * @return {@link ItemAdapter}
 	 */
 	@Override
 	public ItemAdapter getSelectedModel() {
-		return selected;
+		return this.selected;
 	}
 
 	/**
 	 * Sets the model to this manager.
-	 * 
-	 * @param inModel
-	 *            {@link CentralAssociationsModel}
+	 *
+	 * @param model
+	 *            {@link CentralAssociationsModel} may be <code>null</code>
 	 */
 	@Override
-	public void setModel(final CentralAssociationsModel inModel) {
-		if (model != null) {
-			addToHistory(model.getCenter());
+	public void setModel(final CentralAssociationsModel model) {
+		if (this.model != null) {
+			addToHistory(this.model.getCenter());
 		}
-		model = inModel;
+		this.model = model;
 		handleDBChange();
 	}
 
 	@Inject
 	@Optional
 	public void dbInitialized(
-	        @EventTopic(RelationsConstants.TOPIC_DB_CHANGED_INITIALZED) final String inMsg) {
-		model = null;
-		selected = null;
+			@EventTopic(RelationsConstants.TOPIC_DB_CHANGED_INITIALZED) final String inMsg) {
+		this.model = null;
+		this.selected = null;
 		handleDBChanged();
 	}
 
 	@Inject
 	@Optional
 	public void dbChanged(
-	        @EventTopic(RelationsConstants.TOPIC_DB_CHANGED_CREATED) final UniqueID inUniqueID) {
+			@EventTopic(RelationsConstants.TOPIC_DB_CHANGED_CREATED) final UniqueID inUniqueID) {
 		if (inUniqueID == null) {
-			model = null;
-			selected = null;
+			this.model = null;
+			this.selected = null;
 		}
 		handleDBChanged();
 	}
 
 	private void handleDBChanged() {
-		eventBroker.post(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_CLEAR,
-		        "clear"); //$NON-NLS-1$
+		this.eventBroker.post(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_CLEAR,
+				"clear"); //$NON-NLS-1$
 		handleDBChange();
-		historyBack.clear();
-		historyNext.clear();
+		this.historyBack.clear();
+		this.historyNext.clear();
 	}
 
 	private void handleDBChange() {
-		if (model == null) {
-			selected = null;
+		if (this.model == null) {
+			this.selected = null;
 		} else {
-			selected = model.getCenter();
+			this.selected = this.model.getCenter();
 		}
-		eventBroker
-		        .post(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SEND_CENTER_MODEL,
-		                model);
+		this.eventBroker
+		.post(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SEND_CENTER_MODEL,
+				this.model);
 	}
 
 	@Inject
 	@Optional
 	public void itemChanged(
-	        @EventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_MODEL) final IItemModel inItem) {
+			@EventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_MODEL) final IItemModel inItem) {
 		try {
 			setModel(CentralAssociationsModel.createCentralAssociationsModel(
-			        inItem, context));
+					inItem, this.context));
 		}
 		catch (final VException exc) {
-			log.error(exc, exc.getMessage());
+			this.log.error(exc, exc.getMessage());
 		}
 		catch (final SQLException exc) {
-			log.error(exc, exc.getMessage());
+			this.log.error(exc, exc.getMessage());
 		}
 	}
 
 	/**
 	 * Notifies the manager that the selection changed to the specified item.
-	 * 
+	 *
 	 * @param inEvent
 	 *            {@link ItemAdapter}
 	 */
 	@Inject
 	@Optional
 	public void setSelected(
-	        @EventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED) final SelectedItemChangeEvent inEvent) {
-		selected = inEvent.getItem();
-		selectedRelation = null;
+			@EventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED) final SelectedItemChangeEvent inEvent) {
+		this.selected = inEvent.getItem();
+		this.selectedRelation = null;
 		checkSelected();
 		syncBrowsersForSelected(inEvent);
 	}
@@ -213,45 +213,45 @@ public class RelationsBrowserManager implements IBrowserManager {
 	/**
 	 * Notifies the manager that the selection changed to the specified
 	 * relation.
-	 * 
+	 *
 	 * @param inSelectedRelation
 	 *            {@link IRelation}
 	 */
 	@Inject
 	@Optional
 	public void setSelected(
-	        @EventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED) final IRelation inSelectedRelation) {
-		selectedRelation = inSelectedRelation;
+			@EventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED) final IRelation inSelectedRelation) {
+		this.selectedRelation = inSelectedRelation;
 	}
 
 	/**
 	 * Handling of the popup menu's item enablement.
 	 */
 	private void checkSelected() {
-		if (model == null) {
+		if (this.model == null) {
 			return;
 		}
 
-		if (model.getCenter().equals(selected)) {
+		if (this.model.getCenter().equals(this.selected)) {
 			BrowserPopupStateController.setState(State.ITEM_CENTER,
-			        getApplication());
+					getApplication());
 		} else {
 			BrowserPopupStateController.setState(State.ITEM_PERIPHERY,
-			        getApplication());
+					getApplication());
 		}
 	}
 
 	/**
 	 * Synchronizes all browsers for the selected item. Note: This is needed if
 	 * more then one relations browser is viewable.
-	 * 
+	 *
 	 * @param inEvent
 	 *            {@link SelectedItemChangeEvent}
 	 */
 	private void syncBrowsersForSelected(final SelectedItemChangeEvent inEvent) {
-		eventBroker.post(
-		        RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_SELECTED,
-		        inEvent);
+		this.eventBroker.post(
+				RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_SELECTED,
+				inEvent);
 	}
 
 	/**
@@ -259,34 +259,38 @@ public class RelationsBrowserManager implements IBrowserManager {
 	 */
 	@Override
 	public IRelation getSelectedRelation() {
-		return selectedRelation;
+		return this.selectedRelation;
 	}
 
 	/**
 	 * Checks whether the browsers have to be refreshed after an item has been
 	 * deleted.
-	 * 
-	 * @param inItem
+	 *
+	 * @param item
 	 *            IItemModel the deleted item
 	 * @throws VException
 	 */
 	@Override
-	public void checkAfterDeletion(final IItemModel inItem) throws VException {
-		final UniqueID lID = new UniqueID(inItem.getItemType(), inItem.getID());
+	public void checkAfterDeletion(final IItemModel item) throws VException {
+		final UniqueID id = new UniqueID(item.getItemType(), item.getID());
 		// deletion of center model?
-		if (getCenterModel().getCenter().getUniqueID().equals(lID)) {
-			setModel(null);
-		}
-		// deletion of selected model?
-		else if (getSelectedModel().getUniqueID().equals(lID)) {
-			setModel(reloadCenter());
-		}
-		// deletion of related model?
-		else {
-			for (final ItemAdapter lRelated : getCenterModel()
-			        .getRelatedItems()) {
-				if (lRelated.getUniqueID().equals(lID)) {
-					setModel(reloadCenter());
+		final CentralAssociationsModel centerModel = getCenterModel();
+		final ItemAdapter selectedModel = getSelectedModel();
+		if (centerModel != null && selectedModel != null) {
+			if (centerModel.getCenter().getUniqueID().equals(id)) {
+				setModel(null);
+			}
+			// deletion of selected model?
+			else if (selectedModel.getUniqueID().equals(id)) {
+				setModel(reloadCenter());
+			}
+			// deletion of related model?
+			else {
+				for (final ItemAdapter related : centerModel
+						.getRelatedItems()) {
+					if (related.getUniqueID().equals(id)) {
+						setModel(reloadCenter());
+					}
 				}
 			}
 		}
@@ -295,104 +299,102 @@ public class RelationsBrowserManager implements IBrowserManager {
 	/**
 	 * We have to reload the central model if one of the related items have been
 	 * deleted.
-	 * 
-	 * @return CentralAssociationsModel the refreshed central model
+	 *
+	 * @return CentralAssociationsModel the refreshed central model, may be
+	 *         <code>null</code>
 	 */
 	private CentralAssociationsModel reloadCenter() {
 		try {
 			return CentralAssociationsModel.createCentralAssociationsModel(
-			        model.getCenter(), context);
+					this.model.getCenter(), this.context);
 		}
-		catch (final VException exc) {
-			log.error(exc, exc.getMessage());
-		}
-		catch (final SQLException exc) {
-			log.error(exc, exc.getMessage());
+		catch (VException | SQLException exc) {
+			this.log.error(exc, exc.getMessage());
 		}
 		return null;
 	}
 
 	/**
 	 * Save the browser state to the preferences.
-	 * 
+	 *
 	 * @param inPreferences
 	 *            {@link IEclipsePreferences}
 	 */
 	public void saveState(final IEclipsePreferences inPreferences) {
-		if (model == null) {
+		if (this.model == null) {
 			inPreferences.put(RelationsConstants.CENTER_ITEM_ID, ""); //$NON-NLS-1$
 			return;
 		}
 
-		final UniqueID lID = model.getCenter().getUniqueID();
+		final UniqueID lID = this.model.getCenter().getUniqueID();
 		if (lID != null) {
 			inPreferences
-			        .put(RelationsConstants.CENTER_ITEM_ID, lID.toString());
+			.put(RelationsConstants.CENTER_ITEM_ID, lID.toString());
 		}
 	}
 
 	/**
 	 * Restore the browser state from the preferences.
-	 * 
+	 *
 	 * @param inPreferences
 	 *            {@link IEclipsePreferences}
 	 */
 	public void restoreState(final IEclipsePreferences inPreferences) {
 		final String lID = inPreferences.get(RelationsConstants.CENTER_ITEM_ID,
-		        ""); //$NON-NLS-1$
+				""); //$NON-NLS-1$
 		if (!lID.isEmpty()) {
 			try {
 				setModel(CentralAssociationsModel
-				        .createCentralAssociationsModel(
-				                data.retrieveItem(new UniqueID(lID)), context));
+						.createCentralAssociationsModel(
+								this.data.retrieveItem(new UniqueID(lID)), this.context));
 			}
 			catch (final VException exc) {
-				log.error(exc, exc.getMessage());
+				this.log.error(exc, exc.getMessage());
 			}
 			catch (final SQLException exc) {
-				log.error(exc, exc.getMessage());
+				this.log.error(exc, exc.getMessage());
 			}
 			catch (final BOMException exc) {
-				log.error(exc, exc.getMessage());
+				this.log.error(exc, exc.getMessage());
 			}
 		}
 	}
 
 	@Override
 	public boolean hasPrevious() {
-		return !historyBack.isEmpty();
+		return !this.historyBack.isEmpty();
 	}
 
 	@Override
 	public void moveBack() {
-		historyNext.push(model.getCenter().getUniqueID());
-		moveHistory(historyBack.pop());
-		historyBack.pop();
+		this.historyNext.push(this.model.getCenter().getUniqueID());
+		moveHistory(this.historyBack.pop());
+		this.historyBack.pop();
 	}
 
 	@Override
 	public boolean hasNext() {
-		return !historyNext.isEmpty();
+		return !this.historyNext.isEmpty();
 	}
 
 	@Override
 	public void moveForward() {
-		moveHistory(historyNext.pop());
+		moveHistory(this.historyNext.pop());
 	}
 
 	private void moveHistory(final UniqueID inUniqueID) {
 		try {
 			setModel(CentralAssociationsModel.createCentralAssociationsModel(
-			        data.retrieveItem(inUniqueID), context));
+					this.data.retrieveItem(inUniqueID), this.context));
 		}
 		catch (final VException exc) {
-			log.error(exc, exc.getMessage());
+			this.log.error(exc, exc.getMessage());
 		}
 		catch (final SQLException exc) {
-			log.error(exc, exc.getMessage());
+			this.log.error(exc, exc.getMessage());
 		}
 		catch (final BOMException exc) {
-			log.error(exc, exc.getMessage());
+			this.log.error(exc, exc.getMessage());
 		}
 	}
 

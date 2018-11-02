@@ -34,8 +34,8 @@ import org.eclipse.e4.ui.model.application.commands.MKeyBinding;
 @SuppressWarnings("restriction")
 public class DuplicateFixer {
 	private static final String TAG_USER = EBindingService.TYPE_ATTR_TAG
-	        + ":user";
-	private static final String TAG_ORIG = "orig:";
+	        + ":user"; //$NON-NLS-1$
+	private static final String TAG_ORIG = "orig:"; //$NON-NLS-1$
 
 	private final Collection<String> keys = new ArrayList<String>();
 	private final Collection<String> duplicates = new ArrayList<String>();

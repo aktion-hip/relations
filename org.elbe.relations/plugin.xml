@@ -7,10 +7,10 @@
       <product
             application="org.eclipse.e4.ui.workbench.swt.E4Application"
             description="%product.description"
-            name="org.elbe.relations">
+            name="Relations">
          <property
                name="appName"
-               value="org.elbe.relations">
+               value="Relations">
          </property>
          <property
                name="applicationXMI"
@@ -18,7 +18,7 @@
          </property>
          <property
                name="aboutText"
-               value="Relations Rich Client Application&#x0A;&#x0A;The Relations application is a tool for knowledge management.&#x0A;&#x0A;Version: 2.2.0&#x0A;&#x0A;(c) Copyright: RelationWare, B. Luthiger.&#x0A;Visit http://relations-rcp.sourceforge.net/&#x0A;&#x0A;This product is built on Eclipse RCP,&#x0A;see http://www.eclipse.org/">
+               value="Relations Rich Client Application&#x0A;&#x0A;The Relations application is a tool for knowledge management.&#x0A;&#x0A;Version: 2.3.0&#x0A;&#x0A;(c) Copyright: RelationWare, B. Luthiger.&#x0A;Visit http://relations-rcp.sourceforge.net/&#x0A;&#x0A;This product is built on Eclipse RCP,&#x0A;see http://www.eclipse.org/">
          </property>
          <property
                name="aboutImage"
@@ -110,6 +110,12 @@
             class="org.elbe.relations.internal.preferences.RelationsConnectionPrefPage"
             id="org.elbe.relations.prefs.db"
             name="%page.prefs.name.db.connect">
+      </page>
+      <page
+            category="org.elbe.relations.prefs"
+            class="org.elbe.relations.internal.preferences.CloudConfigPrefPage"
+            id="org.elbe.relations.prefs.cloud"
+            name="%page.prefs.name.cloud.config">
       </page>
       <page
             class="org.elbe.relations.internal.e4.keys.RelationsKeysPreferencePage"

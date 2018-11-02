@@ -27,7 +27,6 @@ import javax.inject.Inject;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -42,6 +41,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.RelationsMessages;
+import org.elbe.relations.internal.actions.RelationsPreferences;
 import org.elbe.relations.internal.controller.BibliographyController;
 import org.elbe.relations.internal.controller.BrowserController;
 import org.elbe.relations.internal.controller.BrowserController.BrowserInfo;
@@ -89,7 +89,7 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 	 * @param inImage
 	 */
 	public RelationsPreferencePage(final String inTitle,
-	        final ImageDescriptor inImage) {
+			final ImageDescriptor inImage) {
 		super(inTitle, inImage);
 	}
 
@@ -101,39 +101,39 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 		setLayout(outComposite, lColumns);
 		outComposite.setFont(inParent.getFont());
 
-		biblioCombo = createLabelCombo(outComposite,
-		        RelationsMessages
-		                .getString("RelationsPreferencePage.lbl.biblio"), //$NON-NLS-1$
-		        new String[] {});
+		this.biblioCombo = createLabelCombo(outComposite,
+				RelationsMessages
+				.getString("RelationsPreferencePage.lbl.biblio"), //$NON-NLS-1$
+				new String[] {});
 		createSeparator(outComposite, lColumns);
 
 		// font sizes in browser views
 		final Label lLabel = createLabel(outComposite, RelationsMessages
-		        .getString("RelationsPreferencePage.lbl.font.size")); //$NON-NLS-1$
+				.getString("RelationsPreferencePage.lbl.font.size")); //$NON-NLS-1$
 		((GridData) lLabel.getLayoutData()).horizontalSpan = lColumns;
 
-		browserFontSizes = new BrowserViewsHelper(outComposite,
-		        browserController.getBrowserInfos(), eventBroker);
+		this.browserFontSizes = new BrowserViewsHelper(outComposite,
+				this.browserController.getBrowserInfos(), this.eventBroker);
 
 		// Max number of search hits
 		createSeparator(outComposite, lColumns);
 		final Label lLabel2 = createLabel(outComposite, RelationsMessages
-		        .getString("RelationsPreferencePage.title.fulltext.search")); // Volltext-Suche: //$NON-NLS-1$
+				.getString("RelationsPreferencePage.title.fulltext.search")); // Volltext-Suche: //$NON-NLS-1$
 		((GridData) lLabel2.getLayoutData()).horizontalSpan = lColumns;
-		maxHits = createLabelText(outComposite, RelationsMessages
-		        .getString("RelationsPreferencePage.lbl.fulltext.search")); // Max. //$NON-NLS-1$
-		                                                                    // Anzahl
-		                                                                    // Treffer
+		this.maxHits = createLabelText(outComposite, RelationsMessages
+				.getString("RelationsPreferencePage.lbl.fulltext.search")); // Max. //$NON-NLS-1$
+		// Anzahl
+		// Treffer
 
 		// Max number displayed of last changed items
 		final Label lLabel3 = createLabel(outComposite, RelationsMessages
-		        .getString("RelationsPreferencePage.title.changed.items")); // Letzte //$NON-NLS-1$
-		                                                                    // Änderungen:
+				.getString("RelationsPreferencePage.title.changed.items")); // Letzte //$NON-NLS-1$
+		// Änderungen:
 		((GridData) lLabel3.getLayoutData()).horizontalSpan = lColumns;
-		maxLastChanged = createLabelText(outComposite, RelationsMessages
-		        .getString("RelationsPreferencePage.lbl.changed.items")); // Max. //$NON-NLS-1$
-		                                                                  // Anzahl
-		                                                                  // Einträge
+		this.maxLastChanged = createLabelText(outComposite, RelationsMessages
+				.getString("RelationsPreferencePage.lbl.changed.items")); // Max. //$NON-NLS-1$
+		// Anzahl
+		// Einträge
 
 		initializeValues();
 		return outComposite;
@@ -143,17 +143,17 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 	 * Initializes states of the controls from the preference store.
 	 */
 	private void initializeValues() {
-		final IEclipsePreferences lStore = InstanceScope.INSTANCE
-		        .getNode(RelationsConstants.PREFERENCE_NODE);
-		biblioCombo.setItems(biblioController.getBiblioNames());
-		biblioCombo.select(biblioController.getSelectedIndex());
-		maxHits.setText(String
-		        .valueOf(lStore.getInt(RelationsConstants.KEY_MAX_SEARCH_HITS,
-		                RelationsConstants.DFT_MAX_SEARCH_HITS)));
-		maxLastChanged.setText(String
-		        .valueOf(lStore.getInt(RelationsConstants.KEY_MAX_LAST_CHANGED,
-		                RelationsConstants.DFT_MAX_LAST_CHANGED)));
-		browserFontSizes.initializeValues(lStore);
+		final IEclipsePreferences lStore = RelationsPreferences
+				.getPreferences();
+		this.biblioCombo.setItems(this.biblioController.getBiblioNames());
+		this.biblioCombo.select(this.biblioController.getSelectedIndex());
+		this.maxHits.setText(String
+				.valueOf(lStore.getInt(RelationsConstants.KEY_MAX_SEARCH_HITS,
+						RelationsConstants.DFT_MAX_SEARCH_HITS)));
+		this.maxLastChanged.setText(String
+				.valueOf(lStore.getInt(RelationsConstants.KEY_MAX_LAST_CHANGED,
+						RelationsConstants.DFT_MAX_LAST_CHANGED)));
+		this.browserFontSizes.initializeValues(lStore);
 	}
 
 	/**
@@ -161,12 +161,12 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 	 */
 	@Override
 	protected void performDefaults() {
-		biblioCombo.setItems(biblioController.getBiblioNames());
-		biblioCombo.select(biblioController.getSelectedIndex());
-		browserFontSizes.setDefaults();
-		maxHits.setText(String.valueOf(RelationsConstants.DFT_MAX_SEARCH_HITS));
-		maxLastChanged.setText(
-		        String.valueOf(RelationsConstants.DFT_MAX_LAST_CHANGED));
+		this.biblioCombo.setItems(this.biblioController.getBiblioNames());
+		this.biblioCombo.select(this.biblioController.getSelectedIndex());
+		this.browserFontSizes.setDefaults();
+		this.maxHits.setText(String.valueOf(RelationsConstants.DFT_MAX_SEARCH_HITS));
+		this.maxLastChanged.setText(
+				String.valueOf(RelationsConstants.DFT_MAX_LAST_CHANGED));
 		super.performDefaults();
 	}
 
@@ -184,16 +184,16 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 	}
 
 	private boolean savePreferences() {
-		if (biblioCombo != null) {
-			final IEclipsePreferences lStore = InstanceScope.INSTANCE
-			        .getNode(RelationsConstants.PREFERENCE_NODE);
-			lStore.put(RelationsConstants.KEY_BIBLIO_SCHEMA, biblioController
-			        .getBibliography(biblioCombo.getSelectionIndex()).getId());
+		if (this.biblioCombo != null) {
+			final IEclipsePreferences lStore = RelationsPreferences
+			        .getPreferences();
+			lStore.put(RelationsConstants.KEY_BIBLIO_SCHEMA, this.biblioController
+					.getBibliography(this.biblioCombo.getSelectionIndex()).getId());
 			lStore.put(RelationsConstants.KEY_MAX_SEARCH_HITS,
-			        maxHits.getText());
+					this.maxHits.getText());
 			lStore.put(RelationsConstants.KEY_MAX_LAST_CHANGED,
-			        maxLastChanged.getText());
-			browserFontSizes.savePreferences(lStore);
+					this.maxLastChanged.getText());
+			this.browserFontSizes.savePreferences(lStore);
 		}
 		return true;
 	}
@@ -223,21 +223,21 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 
 		@SuppressWarnings("unchecked")
 		BrowserViewsHelper(final Composite inComposite,
-		        final Collection<BrowserInfo> inBrowsers,
-		        final IEventBroker inEventBroker) {
-			eventBroker = inEventBroker;
-			browserIds = new ArrayList<Class<IRelationsBrowser>>(
-			        inBrowsers.size());
-			browserCombos = new HashMap<Class<IRelationsBrowser>, Combo>();
+				final Collection<BrowserInfo> inBrowsers,
+				final IEventBroker inEventBroker) {
+			this.eventBroker = inEventBroker;
+			this.browserIds = new ArrayList<>(
+					inBrowsers.size());
+			this.browserCombos = new HashMap<>();
 			boolean lFirst = true;
 			for (final BrowserInfo lBrowserInformation : inBrowsers) {
 				final Class<IRelationsBrowser> lId = (Class<IRelationsBrowser>) lBrowserInformation
-				        .getBrowser();
-				browserIds.add(lId);
+						.getBrowser();
+				this.browserIds.add(lId);
 				final Combo lCombo = createComboExtended(inComposite,
-				        lBrowserInformation.getName(),
-				        RelationsConstants.INIT_SIZES, lFirst);
-				browserCombos.put(lId, lCombo);
+						lBrowserInformation.getName(),
+						RelationsConstants.INIT_SIZES, lFirst);
+				this.browserCombos.put(lId, lCombo);
 				lFirst = false;
 			}
 		}
@@ -249,14 +249,14 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 		 *            {@link IEclipsePreferences}
 		 */
 		public void initializeValues(final IEclipsePreferences inStore) {
-			for (final Class<IRelationsBrowser> lID : browserCombos.keySet()) {
+			for (final Class<IRelationsBrowser> lID : this.browserCombos.keySet()) {
 				final int lValue = inStore.getInt(lID.getName(),
-				        RelationsConstants.DFT_TEXT_FONT_SIZE);
-				browserCombos.get(lID).select(getIndex(lValue));
+						RelationsConstants.DFT_TEXT_FONT_SIZE);
+				this.browserCombos.get(lID).select(getIndex(lValue));
 			}
 			final boolean lIsEqual = inStore.getBoolean(CHECK_BOX_ID, false);
 			handleEqualCheck(lIsEqual);
-			equalCheckBox.setSelection(lIsEqual);
+			this.equalCheckBox.setSelection(lIsEqual);
 		}
 
 		/**
@@ -267,16 +267,16 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 		 */
 		public void savePreferences(final IEclipsePreferences inStore) {
 			final int lDefault = RelationsConstants.DFT_TEXT_FONT_SIZE;
-			for (final Class<IRelationsBrowser> lID : browserCombos.keySet()) {
-				final Combo lCombo = browserCombos.get(lID);
+			for (final Class<IRelationsBrowser> lID : this.browserCombos.keySet()) {
+				final Combo lCombo = this.browserCombos.get(lID);
 				final int lIndex = lCombo.getSelectionIndex();
 				final int lValue = lIndex == -1 ? lDefault
-				        : Integer
-				                .valueOf(RelationsConstants.INIT_SIZES[lIndex]);
+						: Integer
+						.valueOf(RelationsConstants.INIT_SIZES[lIndex]);
 				inStore.putInt(lID.getName(), lValue);
-				eventBroker.post(getTopic(lID), lValue);
+				this.eventBroker.post(getTopic(lID), lValue);
 			}
-			inStore.putBoolean(CHECK_BOX_ID, equalCheckBox.getSelection());
+			inStore.putBoolean(CHECK_BOX_ID, this.equalCheckBox.getSelection());
 		}
 
 		private String getTopic(final Class<IRelationsBrowser> inID) {
@@ -288,12 +288,12 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 		 */
 		public void setDefaults() {
 			final int lDefaultIndex = getIndex(
-			        RelationsConstants.DFT_TEXT_FONT_SIZE);
-			for (final Combo lCombo : browserCombos.values()) {
+					RelationsConstants.DFT_TEXT_FONT_SIZE);
+			for (final Combo lCombo : this.browserCombos.values()) {
 				lCombo.select(lDefaultIndex);
 			}
 			makeIndividual();
-			equalCheckBox.setSelection(false);
+			this.equalCheckBox.setSelection(false);
 		}
 
 		private int getIndex(final int inValue) {
@@ -310,15 +310,15 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 		}
 
 		private Label createFPLabel(final Composite inParent,
-		        final String inText) {
+				final String inText) {
 			final Label outLabel = new Label(inParent, SWT.LEFT);
 			outLabel.setText(inText);
 			return outLabel;
 		}
 
 		private Combo createComboExtended(final Composite inParent,
-		        final String inText, final String[] inItems,
-		        final boolean inAddCheckBox) {
+				final String inText, final String[] inItems,
+				final boolean inAddCheckBox) {
 			createFPLabel(inParent, addShortCut(inText));
 
 			final Composite lComposite = new Composite(inParent, SWT.NONE);
@@ -326,12 +326,12 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 
 			final Combo outCombo = createCombo(lComposite, inItems);
 			outCombo.setLayoutData(
-			        new GridData(SWT.LEFT, SWT.CENTER, false, false));
+					new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
 			if (inAddCheckBox) {
-				equalCheckBox = createCheckBox(lComposite,
-				        RelationsMessages.getString(
-				                "RelationsPreferencePage.lbl.font.size.equal")); //$NON-NLS-1$
+				this.equalCheckBox = createCheckBox(lComposite,
+						RelationsMessages.getString(
+								"RelationsPreferencePage.lbl.font.size.equal")); //$NON-NLS-1$
 			} else {
 				createFPLabel(lComposite, ""); //$NON-NLS-1$
 			}
@@ -353,7 +353,7 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 		}
 
 		private Button createCheckBox(final Composite inParent,
-		        final String inText) {
+				final String inText) {
 			final Button outButton = new Button(inParent, SWT.CHECK);
 			outButton.setText(inText);
 			outButton.setData(CHECK_BOX_ID);
@@ -365,7 +365,7 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 
 				@Override
 				public void widgetDefaultSelected(
-			            final SelectionEvent inEvent) {
+						final SelectionEvent inEvent) {
 					widgetSelected(inEvent);
 				}
 			});
@@ -381,7 +381,7 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 		}
 
 		private void makeIndividual() {
-			for (final Combo lCombo : browserCombos.values()) {
+			for (final Combo lCombo : this.browserCombos.values()) {
 				lCombo.setEnabled(true);
 			}
 		}
@@ -389,12 +389,12 @@ public class RelationsPreferencePage extends AbstractPreferencePage {
 		private void makeEqual() {
 			boolean lFirst = true;
 			int lSelectionIndex = 0;
-			for (final Class<IRelationsBrowser> lId : browserIds) {
+			for (final Class<IRelationsBrowser> lId : this.browserIds) {
 				if (lFirst) {
-					lSelectionIndex = browserCombos.get(lId)
-					        .getSelectionIndex();
+					lSelectionIndex = this.browserCombos.get(lId)
+							.getSelectionIndex();
 				} else {
-					final Combo lCombo = browserCombos.get(lId);
+					final Combo lCombo = this.browserCombos.get(lId);
 					lCombo.select(lSelectionIndex);
 					lCombo.setEnabled(false);
 				}

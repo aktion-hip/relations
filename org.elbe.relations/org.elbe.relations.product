@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="org.elbe.relations" uid="Relations" id="org.elbe.relations.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="2.2.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Relations" uid="org.elbe.relations.product" id="org.elbe.relations.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="2.3.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/org.elbe.relations/icons/aboutRelations.png"/>
@@ -10,7 +10,7 @@
 
 The Relations application is a tool for knowledge management.
 
-Version: 2.2.0
+Version: 2.3.0
 
 (c) Copyright: RelationWare, B. Luthiger.
 Visit http://relations-rcp.sourceforge.net/
@@ -21,13 +21,12 @@ see http://www.eclipse.org/
    </aboutInfo>
 
    <configIni use="default">
-      <win32>/org.elbe.relations/config.ini</win32>
    </configIni>
 
    <launcherArgs>
       <vmArgs>-Xmx386M -Dosgi.parentClassloader=ext
       </vmArgs>
-      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -Djava.awt.headless=true
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
    </launcherArgs>
 
@@ -39,6 +38,8 @@ see http://www.eclipse.org/
       startupMessageRect="5,250,449,23"
       startupForegroundColor="FFFFFF" />
    <launcher name="Relations">
+      <linux icon="/org.elbe.relations/icons/RelationsIcon.xpm"/>
+      <macosx icon="/org.elbe.relations/icons/RelationsIcon.icns"/>
       <win useIco="true">
          <ico path="/org.elbe.relations/icons/RelationsIcon.ico"/>
          <bmp/>
@@ -290,38 +291,56 @@ POSSIBILITY OF SUCH DAMAGES.
    </plugins>
 
    <features>
-      <feature id="org.elbe.relations.feature" version="2.2.0.qualifier"/>
+      <feature id="org.elbe.relations.feature" version="2.3.0.qualifier"/>
       <feature id="org.elbe.relations.add.feature" version="2.1.0.qualifier"/>
-      <feature id="org.eclipse.emf.common" version="2.13.0.v20170609-0707"/>
-      <feature id="org.eclipse.emf.ecore" version="2.13.0.v20170609-0707"/>
-      <feature id="org.eclipse.rcp" version="4.7.1.v20171009-0410"/>
-      <feature id="org.eclipse.e4.rcp" version="1.6.1.v20170928-1359"/>
-      <feature id="org.eclipse.equinox.p2.user.ui" version="2.3.1.v20170928-1405"/>
-      <feature id="org.eclipse.ecf.filetransfer.httpclient4.feature" version="3.13.8.v20170715-2257"/>
-      <feature id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature" version="1.1.0.v20170110-1317"/>
-      <feature id="org.eclipse.equinox.p2.extras.feature" version="1.3.1.v20170928-1405"/>
-      <feature id="org.eclipse.equinox.p2.core.feature" version="1.4.1.v20170928-1405"/>
-      <feature id="org.eclipse.ecf.core.feature" version="1.4.0.v20170516-2248"/>
-      <feature id="org.eclipse.equinox.p2.rcp.feature" version="1.3.1.v20170928-1405"/>
-      <feature id="org.eclipse.ecf.filetransfer.feature" version="3.13.8.v20170715-2257"/>
-      <feature id="org.eclipse.ecf.core.ssl.feature" version="1.1.0.v20170110-1317"/>
-      <feature id="org.eclipse.ecf.filetransfer.ssl.feature" version="1.1.0.v20170110-1317"/>
-      <feature id="org.eclipse.platform" version="4.7.1.v20171009-0410"/>
-      <feature id="org.eclipse.help"/>
       <feature id="com.opcoach.e4.preferences.feature" version="1.1.0.201710152105"/>
+      <feature id="org.eclipse.emf.ecore"/>
+      <feature id="org.eclipse.emf.common"/>
+      <feature id="org.eclipse.e4.rcp"/>
+      <feature id="org.eclipse.rcp" version="4.8.0.v20180611-0656"/>
+      <feature id="org.eclipse.platform" version="4.8.0.v20180611-0656"/>
+      <feature id="org.eclipse.equinox.p2.user.ui"/>
+      <feature id="org.eclipse.ecf.filetransfer.httpclient4.feature"/>
+      <feature id="org.eclipse.help"/>
+      <feature id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature"/>
+      <feature id="org.eclipse.equinox.p2.extras.feature"/>
+      <feature id="org.eclipse.equinox.p2.core.feature"/>
+      <feature id="org.eclipse.ecf.core.feature"/>
+      <feature id="org.eclipse.equinox.p2.rcp.feature"/>
+      <feature id="org.eclipse.ecf.filetransfer.feature"/>
+      <feature id="org.eclipse.ecf.core.ssl.feature"/>
+      <feature id="org.eclipse.ecf.filetransfer.ssl.feature"/>
+      <feature id="org.eclipse.e4.rcp.source" version="1.6.100.v20180611-0422"/>
+      <feature id="org.eclipse.equinox.core.feature" version="1.5.0.v20180502-1828"/>
    </features>
 
    <configurations>
       <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.e4.core.services" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.e4.ui.css.swt.theme" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.e4.ui.services" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.elbe.relations.biblio.dft" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.cloud.azure" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.cloud.dropbox" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.cloud.google" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.data" autoStart="true" startLevel="3" />
+      <plugin id="org.elbe.relations.defaultBrowser" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.indexer.lucene" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.print.dft" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.print.doc" autoStart="true" startLevel="0" />
+      <plugin id="org.elbe.relations.print.odt" autoStart="true" startLevel="0" />
+      <plugin id="org.hip.vif.dbaccess.derby" autoStart="true" startLevel="0" />
+      <plugin id="org.hip.vif.dbaccess.mysql" autoStart="true" startLevel="0" />
+      <plugin id="org.hip.viffw" autoStart="true" startLevel="3" />
    </configurations>
 
    <repositories>
+      <repository location="http://relations-rcp.sourceforge.net/updates/" enabled="true" />
+      <repository location="http://relations-rcp.sourceforge.net/updates/" enabled="true" />
       <repository location="http://relations-rcp.sourceforge.net/updates/" enabled="true" />
    </repositories>
 

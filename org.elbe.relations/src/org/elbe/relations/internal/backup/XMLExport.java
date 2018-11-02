@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -32,6 +33,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.data.bom.BOMHelper;
+import org.elbe.relations.data.utility.RelationsSerializer;
 import org.hip.kernel.bom.AbstractSerializer;
 import org.hip.kernel.bom.GeneralDomainObject;
 import org.hip.kernel.bom.GeneralDomainObjectHome;
@@ -40,15 +42,15 @@ import org.hip.kernel.exc.VException;
 
 /**
  * Utility class to backup the actual database to an XML file.
- * 
+ *
  * @author Luthiger Created on 04.10.2008
  */
-public class XMLExport {
+public class XMLExport implements AutoCloseable {
 	private final static String NL = System.getProperty("line.separator"); //$NON-NLS-1$
 	private final static String TAG_START = "<%s>" + NL; //$NON-NLS-1$
 	private final static String TAG_END = "</%s>" + NL; //$NON-NLS-1$
 
-	private final static String NODE_ROOT = "RelationsExport"; //$NON-NLS-1$
+	protected final static String NODE_ROOT = "RelationsExport"; //$NON-NLS-1$
 	public final static String NODE_TERMS = "TermEntries"; //$NON-NLS-1$
 	public final static String NODE_TEXTS = "TextEntries"; //$NON-NLS-1$
 	public final static String NODE_PERSONS = "PersonEntries"; //$NON-NLS-1$
@@ -57,87 +59,99 @@ public class XMLExport {
 	private final File exportFile;
 	private OutputStream outputStream = null;
 	private final Locale appLocale;
+	private final int numberOfItems;
 
 	/**
 	 * XMLBackup constructor
-	 * 
-	 * @param inExportFileName
+	 *
+	 * @param exportFileName
 	 *            String name of the backup file
-	 * @param inAppLocale
+	 * @param appLocale
 	 *            {@link Locale} the application's locale
+	 * @param numberOfItems
+	 *            int
 	 * @throws IOException
 	 */
-	public XMLExport(final String inExportFileName, final Locale inAppLocale)
-	        throws IOException {
-		exportFile = new File(inExportFileName);
-		appLocale = inAppLocale;
-		deleteExisting(exportFile);
-		if (!exportFile.exists() && exportFile.getParentFile().exists()) {
-			if (exportFile.createNewFile()) { // NOPMD
-				if (!exportFile.canRead() || !exportFile.canWrite()) {
+	public XMLExport(final String exportFileName, final Locale appLocale,
+			final int numberOfItems)
+					throws IOException {
+		this.numberOfItems = numberOfItems;
+		this.exportFile = new File(exportFileName);
+		this.appLocale = appLocale;
+		deleteExisting(this.exportFile);
+		if (!this.exportFile.exists() && this.exportFile.getParentFile().exists()) {
+			if (this.exportFile.createNewFile()) { // NOPMD
+				if (!this.exportFile.canRead() || !this.exportFile.canWrite()) {
 					throw new IOException(
-					        "Could not open file for read/write: " + exportFile.getName()); //$NON-NLS-1$
+							"Could not open file for read/write: " + this.exportFile.getName()); //$NON-NLS-1$
 				}
-				outputStream = createStream(exportFile);
+				this.outputStream = createStream(this.exportFile);
 			}
 		}
 	}
 
-	protected OutputStream createStream(final File inExportFile)
-	        throws IOException {
-		final FileOutputStream lStream = new FileOutputStream(inExportFile);
+	protected OutputStream createStream(final File exportFile)
+			throws IOException {
+		final FileOutputStream lStream = new FileOutputStream(exportFile);
 		return new BufferedOutputStream(lStream);
 	}
 
-	private boolean deleteExisting(final File inFile) {
-		if (inFile.exists()) {
-			return inFile.delete();
+	private boolean deleteExisting(final File file) {
+		if (file.exists()) {
+			return file.delete();
 		}
 		return true;
 	}
 
 	/**
 	 * Perform the export to an XML file.
-	 * 
-	 * @param inMonitor
+	 *
+	 * @param monitor
 	 *            IProgressMonitor
 	 * @return int number of backuped database entries
 	 * @throws VException
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	public int export(final IProgressMonitor inMonitor) throws VException,
-	        SQLException, IOException {
-		final SubMonitor lProgress = SubMonitor.convert(inMonitor, 100);
+	public int export(final IProgressMonitor monitor) throws VException,
+	SQLException, IOException {
+		final SubMonitor progress = SubMonitor.convert(monitor, 100);
 		int outExported = 0;
 
 		appendText("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NL); //$NON-NLS-1$
-		final DateFormat lFormat = DateFormat.getDateTimeInstance(
-		        DateFormat.MEDIUM, DateFormat.MEDIUM, appLocale);
+		final DateFormat format = DateFormat.getDateTimeInstance(
+				DateFormat.MEDIUM, DateFormat.MEDIUM, this.appLocale);
 		appendText(String
-		        .format("<%s date=\"%s\">" + NL, NODE_ROOT, lFormat.format(Calendar.getInstance().getTime()))); //$NON-NLS-1$
+				.format("<%s date=\"%s\" countAll=\"%s\">" + NL, NODE_ROOT, //$NON-NLS-1$
+						format.format(Calendar.getInstance().getTime()),
+						this.numberOfItems));
 
 		outExported += processTable(
-		        RelationsMessages.getString("XMLExport.export.terms"), NODE_TERMS, BOMHelper.getTermHome(), lProgress.newChild(25)); //$NON-NLS-1$
-		if (inMonitor.isCanceled()) {
+				RelationsMessages.getString("XMLExport.export.terms"), //$NON-NLS-1$
+				NODE_TERMS, BOMHelper.getTermHome(), progress.newChild(25));
+		if (monitor.isCanceled()) {
 			return outExported;
 		}
 
 		outExported += processTable(
-		        RelationsMessages.getString("XMLExport.export.texts"), NODE_TEXTS, BOMHelper.getTextHome(), lProgress.newChild(25)); //$NON-NLS-1$
-		if (inMonitor.isCanceled()) {
+				RelationsMessages.getString("XMLExport.export.texts"), //$NON-NLS-1$
+				NODE_TEXTS, BOMHelper.getTextHome(), progress.newChild(25));
+		if (monitor.isCanceled()) {
 			return outExported;
 		}
 
 		outExported += processTable(
-		        RelationsMessages.getString("XMLExport.export.persons"), NODE_PERSONS, BOMHelper.getPersonHome(), lProgress.newChild(25)); //$NON-NLS-1$
-		if (inMonitor.isCanceled()) {
+				RelationsMessages.getString("XMLExport.export.persons"), //$NON-NLS-1$
+				NODE_PERSONS, BOMHelper.getPersonHome(), progress.newChild(25));
+		if (monitor.isCanceled()) {
 			return outExported;
 		}
 
 		outExported += processTable(
-		        RelationsMessages.getString("XMLExport.export.relations"), NODE_RELATIONS, BOMHelper.getRelationHome(), lProgress.newChild(25)); //$NON-NLS-1$
-		if (inMonitor.isCanceled()) {
+				RelationsMessages.getString("XMLExport.export.relations"), //$NON-NLS-1$
+				NODE_RELATIONS, BOMHelper.getRelationHome(),
+				progress.newChild(25));
+		if (monitor.isCanceled()) {
 			return outExported;
 		}
 
@@ -146,67 +160,68 @@ public class XMLExport {
 		return outExported;
 	}
 
-	private int processTable(final String inTaskName, final String inNodeName,
-	        final GeneralDomainObjectHome inHome,
-	        final IProgressMonitor inMonitor) throws IOException, VException,
-	        SQLException {
+	protected int processTable(final String taskName, final String nodeName,
+			final GeneralDomainObjectHome home, final IProgressMonitor monitor)
+					throws IOException, VException, SQLException {
 		int outExported = 0;
 
-		inMonitor.subTask(inTaskName);
-		appendStart(inNodeName);
-		outExported += processSelection(inHome, inMonitor);
+		monitor.subTask(taskName);
+		appendStart(nodeName);
+		outExported += processSelection(home, monitor);
 		appendText(NL);
-		appendEnd(inNodeName);
+		appendEnd(nodeName);
 
 		return outExported;
 	}
 
-	private void appendStart(final String inText) throws IOException {
-		appendText(String.format(TAG_START, inText));
+	private void appendStart(final String text) throws IOException {
+		appendText(String.format(TAG_START, text));
 	}
 
-	private void appendEnd(final String inText) throws IOException {
-		appendText(String.format(TAG_END, inText));
+	protected void appendEnd(final String text) throws IOException {
+		appendText(String.format(TAG_END, text));
 	}
 
 	/**
 	 * Close the backup stream.
-	 * 
+	 *
 	 * @throws IOException
 	 */
+	@Override
 	public void close() throws IOException {
-		if (outputStream != null) {
-			outputStream.close();
+		if (this.outputStream != null) {
+			this.outputStream.close();
 		}
 	}
 
-	private int processSelection(final GeneralDomainObjectHome inHome,
-	        final IProgressMonitor inMonitor) throws VException, SQLException,
-	        IOException {
-		final SubMonitor lProgress = SubMonitor.convert(inMonitor, 100);
+	private int processSelection(final GeneralDomainObjectHome home,
+			final IProgressMonitor monitor)
+					throws VException, SQLException, IOException {
+		final SubMonitor progress = SubMonitor.convert(monitor,
+				home.getCount());
 		int outExported = 0;
-		final QueryResult lResult = inHome.select();
-		final AbstractSerializer lVisitor = new RelationsSerializer();
-		while (lResult.hasMoreElements()) {
-			final GeneralDomainObject lModel = lResult.nextAsDomainObject();
-			if (lModel != null) {
-				lModel.accept(lVisitor);
-				appendText(lVisitor.toString());
-				lModel.release();
-				lVisitor.clear();
+		final QueryResult result = home.select();
+		final AbstractSerializer visitor = new RelationsSerializer();
+		while (result.hasMoreElements()) {
+			final GeneralDomainObject model = result.nextAsDomainObject();
+			if (model != null) {
+				model.accept(visitor);
+				appendText(visitor.toString());
+				model.release();
+				visitor.clear();
 			}
 
 			outExported++;
-			lProgress.worked(1);
+			progress.worked(1);
 		}
 		return outExported;
 	}
 
-	private void appendText(final String inText) throws IOException {
-		if (outputStream == null) {
+	protected void appendText(final String text) throws IOException {
+		if (this.outputStream == null) {
 			return;
 		}
-		outputStream.write(inText.getBytes());
+		this.outputStream.write(text.getBytes(StandardCharsets.UTF_8));
 	}
 
 }

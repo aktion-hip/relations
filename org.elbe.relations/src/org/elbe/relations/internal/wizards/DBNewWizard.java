@@ -24,6 +24,7 @@ import javax.inject.Named;
 
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -53,33 +54,33 @@ public class DBNewWizard extends Wizard implements INewWizard {
 
 	@PostConstruct
 	public void init(
-	        @Named(IServiceConstants.ACTIVE_SELECTION) final IStructuredSelection inSelection) {
+	        @Optional @Named(IServiceConstants.ACTIVE_SELECTION) final IStructuredSelection selection) {
 		setWindowTitle(RelationsMessages.getString("DBNewWizard.view.title")); //$NON-NLS-1$
 	}
 
 	@Override
 	public void addPages() {
-		page = ContextInjectionFactory.make(DBNewWizardPage.class, context);
-		addPage(page);
+		this.page = ContextInjectionFactory.make(DBNewWizardPage.class, this.context);
+		addPage(this.page);
 	}
 
 	@Override
 	public boolean performFinish() {
-		final IDBChange lCreateDB = page.getResultObject();
+		final IDBChange createDB = this.page.getResultObject();
 		try {
-			lCreateDB.checkPreconditions();
-			BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
+			createDB.checkPreconditions();
+			BusyIndicator.showWhile(this.shell.getDisplay(), new Runnable() {
 				@Override
 				public void run() {
-					lCreateDB.execute();
+					createDB.execute();
 				}
 			});
 			return true;
 		}
 		catch (final DBPreconditionException exc) {
 			MessageDialog.openError(new Shell(Display.getCurrent()),
-			        RelationsMessages.getString("FormDBConnection.error.title"), //$NON-NLS-1$
-			        exc.getMessage());
+					RelationsMessages.getString("FormDBConnection.error.title"), //$NON-NLS-1$
+					exc.getMessage());
 		}
 		return false;
 	}

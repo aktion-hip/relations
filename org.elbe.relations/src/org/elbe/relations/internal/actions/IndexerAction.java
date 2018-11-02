@@ -54,6 +54,8 @@ import org.hip.kernel.exc.VException;
  */
 @SuppressWarnings("restriction")
 public class IndexerAction extends Action {
+	private static final String NL = System.getProperty("line.separator"); //$NON-NLS-1$
+
 	private boolean silent = false;
 
 	@Inject
@@ -79,11 +81,11 @@ public class IndexerAction extends Action {
 	 * Setter for silent switch. If Action is set silent, no message to confirm
 	 * the start of the job is displayed.
 	 *
-	 * @param inSilent
+	 * @param silent
 	 *            boolean
 	 */
-	public void setSilent(final boolean inSilent) {
-		silent = inSilent;
+	public void setSilent(final boolean silent) {
+		this.silent = silent;
 	}
 
 	/**
@@ -91,42 +93,42 @@ public class IndexerAction extends Action {
 	 */
 	@Override
 	public void run() {
-		if (silent) {
+		if (this.silent) {
 			indexSilent();
 			return;
 		}
 
-		final String lMessage1 = RelationsMessages
-		        .getString("IndexerAction.msg.1"); //$NON-NLS-1$
-		final String lMessage2 = RelationsMessages
-		        .getString("IndexerAction.msg.2"); //$NON-NLS-1$
-		final String lMessage3 = RelationsMessages
-		        .getString("IndexerAction.msg.3"); //$NON-NLS-1$
-		final String lMessage4 = RelationsMessages
-		        .getString("IndexerAction.msg.4"); //$NON-NLS-1$
+		final String message1 = RelationsMessages
+				.getString("IndexerAction.msg.1"); //$NON-NLS-1$
+		final String message2 = RelationsMessages
+				.getString("IndexerAction.msg.2"); //$NON-NLS-1$
+		final String message3 = RelationsMessages
+				.getString("IndexerAction.msg.3"); //$NON-NLS-1$
+		final String message4 = RelationsMessages
+				.getString("IndexerAction.msg.4"); //$NON-NLS-1$
 
-		final RelationsIndexer lIndexer = RelationsIndexerWithLanguage
-		        .createRelationsIndexer(context);
-		int lNumberOfIndexed = 0;
+		final RelationsIndexer indexer = RelationsIndexerWithLanguage
+				.createRelationsIndexer(this.context);
+		int numberOfIndexed = 0;
 		try {
-			lNumberOfIndexed = lIndexer.numberOfIndexed();
+			numberOfIndexed = indexer.numberOfIndexed();
 		}
 		catch (final IOException exc) {
 			// intentionally left empty
 		}
 
-		String lMessage = MessageFormat.format(lMessage1,
-		        new Object[] { new Integer(lNumberOfIndexed) });
-		if (lNumberOfIndexed == dataService.getNumberOfItems()) {
-			lMessage += " " + lMessage2; //$NON-NLS-1$
+		String message = MessageFormat.format(message1,
+				new Object[] { new Integer(numberOfIndexed) });
+		if (numberOfIndexed == this.dataService.getNumberOfItems()) {
+			message += " " + message2; //$NON-NLS-1$
 		}
-		lMessage += "\n\n" + //$NON-NLS-1$
-		        MessageFormat.format(lMessage3,
-		                new Object[] { dataService.getDBName() })
-		        + "\n\n" + lMessage4; //$NON-NLS-1$
+		message += NL + NL + // $NON-NLS-1$
+				MessageFormat.format(message3,
+						new Object[] { this.dataService.getDBName() })
+		        + NL + NL + message4; // $NON-NLS-1$
 		if (MessageDialog.openQuestion(new Shell(Display.getCurrent()),
-		        RelationsMessages.getString("IndexerAction.dialog.title"), //$NON-NLS-1$
-		        lMessage)) {
+				RelationsMessages.getString("IndexerAction.dialog.title"), //$NON-NLS-1$
+				message)) {
 			indexWithFeedback();
 		}
 	}
@@ -135,22 +137,22 @@ public class IndexerAction extends Action {
 	 * Index silently and asynchronously.
 	 */
 	private void indexSilent() {
-		jobManager.asyncExec(new Runnable() {
+		this.jobManager.asyncExec(new Runnable() {
 			@Override
 			public void run() {
 				final RelationsIndexer lIndexer = RelationsIndexerWithLanguage
-		                .createRelationsIndexer(context);
+						.createRelationsIndexer(IndexerAction.this.context);
 				try {
 					lIndexer.refreshIndex(new NullProgressMonitor());
 				}
 				catch (final IOException exc) {
-					log.error(exc, exc.getMessage());
+					IndexerAction.this.log.error(exc, exc.getMessage());
 				}
 				catch (final VException exc) {
-					log.error(exc, exc.getMessage());
+					IndexerAction.this.log.error(exc, exc.getMessage());
 				}
 				catch (final SQLException exc) {
-					log.error(exc, exc.getMessage());
+					IndexerAction.this.log.error(exc, exc.getMessage());
 				}
 			}
 		});
@@ -158,23 +160,25 @@ public class IndexerAction extends Action {
 	}
 
 	private void indexWithFeedback() {
-		final IEclipseContext lContext = context.createChild();
-		final IndexJob lJob = new IndexJob(lContext, dataService, log);
-		final ProgressMonitorDialog lDialog = new ProgressMonitorDialog(shell);
+		final IEclipseContext lContext = this.context.createChild();
+		final IndexJob lJob = new IndexJob(lContext, this.dataService,
+				this.log);
+		final ProgressMonitorDialog lDialog = new ProgressMonitorDialog(
+				this.shell);
 		lDialog.open();
 		try {
 			lDialog.run(true, true, lJob);
-			statusLine.showStatusLineMessage(
-			        RelationsMessages.getString("IndexerAction.job.feedback", //$NON-NLS-1$
-			                new Object[] { lJob.getIndexed() }));
+			this.statusLine.showStatusLineMessage(
+					RelationsMessages.getString("IndexerAction.job.feedback", //$NON-NLS-1$
+							new Object[] { lJob.getIndexed() }));
 		}
 		catch (final InvocationTargetException exc) {
-			log.error(exc, exc.getMessage());
+			this.log.error(exc, exc.getMessage());
 		}
 		catch (final InterruptedException exc) {
-			statusLine.showStatusLineMessage(RelationsMessages
-			        .getString("action.indexer.status.cancelled")); //$NON-NLS-1$
-			log.error(exc, exc.getMessage());
+			this.statusLine.showStatusLineMessage(RelationsMessages
+					.getString("action.indexer.status.cancelled")); //$NON-NLS-1$
+			this.log.error(exc, exc.getMessage());
 		}
 		finally {
 			lContext.dispose();
@@ -191,33 +195,33 @@ public class IndexerAction extends Action {
 		private int indexed = 0;
 
 		public IndexJob(final IEclipseContext inContext,
-		        final IDataService inDataService, final Logger inLogger) {
-			context = inContext;
-			dataService = inDataService;
-			log = inLogger;
+				final IDataService inDataService, final Logger inLogger) {
+			this.context = inContext;
+			this.dataService = inDataService;
+			this.log = inLogger;
 		}
 
 		@Override
 		public void run(final IProgressMonitor inMonitor) {
-			context.set(IProgressMonitor.class.getName(), inMonitor);
+			this.context.set(IProgressMonitor.class.getName(), inMonitor);
 			final SubMonitor lProgress = SubMonitor.convert(inMonitor,
-			        dataService.getNumberOfItems());
+					this.dataService.getNumberOfItems());
 			lProgress.beginTask(
-			        RelationsMessages.getString("IndexerAction.job.start"), //$NON-NLS-1$
-			        dataService.getNumberOfItems());
+					RelationsMessages.getString("IndexerAction.job.start"), //$NON-NLS-1$
+					this.dataService.getNumberOfItems());
 			final RelationsIndexer lIndexer = RelationsIndexerWithLanguage
-			        .createRelationsIndexer(context);
+					.createRelationsIndexer(this.context);
 			try {
-				indexed = lIndexer.refreshIndex(lProgress);
+				this.indexed = lIndexer.refreshIndex(lProgress);
 			}
 			catch (final IOException exc) {
-				log.error(exc, exc.getMessage());
+				this.log.error(exc, exc.getMessage());
 			}
 			catch (final VException exc) {
-				log.error(exc, exc.getMessage());
+				this.log.error(exc, exc.getMessage());
 			}
 			catch (final SQLException exc) {
-				log.error(exc, exc.getMessage());
+				this.log.error(exc, exc.getMessage());
 			}
 			finally {
 				inMonitor.done();
@@ -228,7 +232,7 @@ public class IndexerAction extends Action {
 		 * @return int the number of indexed items
 		 */
 		int getIndexed() {
-			return indexed;
+			return this.indexed;
 		}
 	}
 

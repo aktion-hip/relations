@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -32,75 +32,76 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * 
+ *
  * @author Luthiger
  */
 public class TextHomeTest {
-	private static DataHouseKeeper data;
+    private static DataHouseKeeper data;
 
-	@BeforeClass
-	public static void init() {
-		data = DataHouseKeeper.INSTANCE;
-	}
+    @BeforeClass
+    public static void init() {
+        data = DataHouseKeeper.INSTANCE;
+    }
 
-	@Before
-	public void setUp() throws Exception {
-		// data.setUp();
-	}
+    @Before
+    public void setUp() throws Exception {
+        // data.setUp();
+    }
 
-	@After
-	public void tearDown() throws Exception {
-		data.deleteAllInAll();
-	}
+    @After
+    public void tearDown() throws Exception {
+        data.deleteAllInAll();
+    }
 
-	@Test
-	public void testNewText() throws BOMException, VException, SQLException {
-		final long lNow = System.currentTimeMillis() - 1000;
+    @Test
+    public void testNewText() throws BOMException, VException, SQLException {
+        final long now = System.currentTimeMillis() - 1000;
 
-		final TextHome lHome = data.getTextHome();
+        final TextHome home = data.getTextHome();
+        final EventStoreHome storeHome = data.getEventStoreHome();
 
-		assertEquals("number 0", 0, lHome.getCount());
+        assertEquals(0, home.getCount());
+        assertEquals(0, storeHome.getCount());
 
-		final AbstractItem lText = lHome.newText("Book Title", "", "Author",
-				"", "", "", "", "", new Integer(0), new Integer(0), "", "",
-				new Integer(1));
-		assertEquals("number 1", 1, lHome.getCount());
+        final AbstractItem lText = home.newText("Book Title", "", "Author", "", "", "", "", "", new Integer(0),
+                new Integer(0), "", "", new Integer(1));
+        assertEquals(1, home.getCount());
+        assertEquals(1, storeHome.getCount());
 
-		final AbstractItem lRetrieved = lHome.getText(lText.getID());
-		final long lCreated = ((Timestamp) lRetrieved.get(TextHome.KEY_CREATED))
-				.getTime();
-		final long lModified = ((Timestamp) lRetrieved
-				.get(TextHome.KEY_MODIFIED)).getTime();
-		assertEquals("Created 1", lCreated, lModified);
-		assertTrue("Created 2", lCreated >= lNow);
+        final AbstractItem retrieved = home.getText(lText.getID());
+        final long created = ((Timestamp) retrieved.get(TextHome.KEY_CREATED)).getTime();
+        final long modified = ((Timestamp) retrieved.get(TextHome.KEY_MODIFIED)).getTime();
+        assertEquals("Created 1", created, modified);
+        assertTrue("Created 2", created >= now);
 
-		lHome.deleteItem(lText.getID());
-		assertEquals("number 2", 0, lHome.getCount());
-	}
+        home.deleteItem(lText.getID());
+        assertEquals(0, home.getCount());
+        assertEquals(2, storeHome.getCount());
+    }
 
-	/*
-	 * Test method for 'org.elbe.relations.bom.TextHome.getText(long)'
-	 */
-	@Test
-	public void testGetText() throws BOMException, VException, SQLException {
-		final String lTitle = "Book Title";
-		final String lAuthor = "Author";
-		final TextHome lHome = data.getTextHome();
+    @Test
+    public void testGetText() throws BOMException, VException, SQLException {
+        final String title = "Book Title";
+        final String author = "Author";
+        final TextHome home = data.getTextHome();
+        final EventStoreHome storeHome = data.getEventStoreHome();
 
-		assertEquals("number 0", 0, lHome.getCount());
+        assertEquals(0, home.getCount());
+        assertEquals(0, storeHome.getCount());
 
-		AbstractItem lText = lHome.newText(lTitle, "", lAuthor, "", "", "", "",
-				"", new Integer(0), new Integer(0), "", "", new Integer(1));
-		final long lId = lText.getID();
+        AbstractItem text = home.newText(title, "", author, "", "", "", "", "", new Integer(0), new Integer(0), "",
+                "", new Integer(1));
+        final long id = text.getID();
 
-		lHome.newText("another", "", "text", "", "", "", "", "",
-				new Integer(0), new Integer(0), "", "", new Integer(1));
-		assertEquals("number 1", 2, lHome.getCount());
+        home.newText("another", "", "text", "", "", "", "", "", new Integer(0), new Integer(0), "", "",
+                new Integer(1));
+        assertEquals(2, home.getCount());
+        assertEquals(2, storeHome.getCount());
 
-		lText = (AbstractItem) lHome.getItem(lId);
-		assertEquals("title", lTitle, lText.getTitle());
-		assertEquals("author", lAuthor, lText.get(TextHome.KEY_AUTHOR)
-				.toString());
-	}
+        text = (AbstractItem) home.getItem(id);
+        assertEquals("title", title, text.getTitle());
+        assertEquals("author", author, text.get(TextHome.KEY_AUTHOR)
+                .toString());
+    }
 
 }

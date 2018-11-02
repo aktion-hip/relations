@@ -8,3 +8,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8,
  JavaSE-1.7
 Require-Bundle: org.junit
 Import-Package: org.elbe.relations.data
+Automatic-Module-Name: org.elbe.relations.indexer.lucene.test

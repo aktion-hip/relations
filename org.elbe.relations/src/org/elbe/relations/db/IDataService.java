@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -33,7 +33,7 @@ import org.elbe.relations.models.ILightWeightModel;
  * Interface for all data handling concerns.<br />
  * An implementation of this interface can be retrieved from the
  * <code>IEclipseContext</code>.
- * 
+ *
  * @author Luthiger
  */
 public interface IDataService {
@@ -61,7 +61,7 @@ public interface IDataService {
 	/**
 	 * Adds the newly created term item to the relevant collections and sends a
 	 * notification.
-	 * 
+	 *
 	 * @param inTerm
 	 *            {@link LightWeightTerm}
 	 */
@@ -70,7 +70,7 @@ public interface IDataService {
 	/**
 	 * Adds the newly created text item to the relevant collections and sends a
 	 * notification.
-	 * 
+	 *
 	 * @param inText
 	 *            {@link LightWeightText}
 	 */
@@ -79,7 +79,7 @@ public interface IDataService {
 	/**
 	 * Adds the newly created person item to the relevant collections and sends
 	 * a notification.
-	 * 
+	 *
 	 * @param inPerson
 	 *            {@link LightWeightPerson}
 	 */
@@ -87,7 +87,7 @@ public interface IDataService {
 
 	/**
 	 * Loads the data from the configured data store.
-	 * 
+	 *
 	 * @param inEventTopic
 	 *            String the event topic to post after data loading has been
 	 *            done
@@ -96,7 +96,7 @@ public interface IDataService {
 
 	/**
 	 * Retrieves an item with an UniqueID.
-	 * 
+	 *
 	 * @param inID
 	 *            {@link UniqueID}
 	 * @return {@link IItemModel}
@@ -107,7 +107,7 @@ public interface IDataService {
 	/**
 	 * Removes the deleted item from the relevant collections and notifies the
 	 * listeners.
-	 * 
+	 *
 	 * @param inItem
 	 *            ILightWeightItem
 	 */
@@ -115,14 +115,26 @@ public interface IDataService {
 
 	/**
 	 * Convenience method for StatusLine.
-	 * 
-	 * @return int The number of items in the database.
+	 *
+	 * @return int The number of items in the database (without items in the
+	 *         Relations table).
 	 */
 	int getNumberOfItems();
 
 	/**
+	 *
+	 * @return int The number of items in the Relations table.
+	 */
+	int getNumberOfRelations();
+
+	/**
+	 * @return int The number of events in the store.
+	 */
+	int getNumberOfEvents();
+
+	/**
 	 * Convenience method for StatusLine.
-	 * 
+	 *
 	 * @return String e.g. <i>jdbc:mysql://localhost/relations</i>
 	 */
 	String getDBName();

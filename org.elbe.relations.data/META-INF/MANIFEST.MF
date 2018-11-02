@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: The data model bundle for Relations.
 Bundle-SymbolicName: org.elbe.relations.data
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-Vendor: RelationWare
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8,
  JavaSE-1.7
@@ -12,8 +12,10 @@ Import-Package: org.eclipse.core.runtime;version="[3.5.0,4.0.0)",
  org.eclipse.core.runtime.preferences;version="[3.3.0,4.0.0)",
  org.hip.kernel.bom;version="[1.0.0,2.0.0)",
  org.hip.kernel.bom.impl;version="[1.0.0,2.0.0)",
+ org.hip.kernel.bom.model;version="[1.0.0,2.0.0)",
  org.hip.kernel.exc;version="[1.0.0,2.0.0)",
  org.hip.kernel.sys;version="[1.0.0,2.0.0)",
+ org.hip.kernel.util;version="[1.0.0,2.0.0)",
  org.osgi.framework;version="[1.7.0,2.0.0)",
  org.slf4j;version="[1.6.4,2.0.0)"
 Export-Package: org.elbe.relations.data;version="1.0.0",
@@ -23,4 +25,6 @@ Export-Package: org.elbe.relations.data;version="1.0.0",
  org.elbe.relations.data.utility;version="1.0.0"
 Service-Component: OSGI-INF/indexerService.xml
 Eclipse-ExtensibleAPI: true
-Require-Bundle: org.eclipse.core.resources;bundle-version="[3.10.1,4.0.0)"
+Require-Bundle: org.eclipse.core.resources;bundle-version="[3.13.0,4.0.0)"
+Automatic-Module-Name: org.elbe.relations.data
+Bundle-ActivationPolicy: lazy

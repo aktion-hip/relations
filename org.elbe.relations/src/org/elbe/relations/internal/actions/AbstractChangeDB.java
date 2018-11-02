@@ -1,27 +1,29 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2018, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ***************************************************************************/
 package org.elbe.relations.internal.actions;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.xml.transform.TransformerException;
 
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.core.services.log.Logger;
@@ -30,6 +32,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.RelationsMessages;
+import org.elbe.relations.data.utility.EventStoreChecker;
 import org.elbe.relations.internal.data.DBSettings;
 import org.elbe.relations.internal.data.IDBSettings;
 import org.elbe.relations.internal.data.TempSettings;
@@ -41,7 +44,7 @@ import org.hip.kernel.exc.VException;
 
 /**
  * Base class for helper classes to change the application's database (catalog).
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
@@ -66,24 +69,26 @@ public abstract class AbstractChangeDB implements IDBChange {
 	private Logger log;
 
 	@Override
-	public void setTemporarySettings(final IDBSettings inDBSettings) {
-		dbSettings = inDBSettings;
+	public void setTemporarySettings(final IDBSettings dbSettings) {
+		this.dbSettings = dbSettings;
 	}
 
 	protected IDBSettings getTempSettings() {
-		return dbSettings;
+		return this.dbSettings;
 	}
 
 	@Override
 	public void execute() {
 		try {
 			// check structure with temporary settings
-			if (!checker.hasExpectedStructure(dbSettings)) {
+			if (!this.checker.hasExpectedStructure(this.dbSettings)) {
 				MessageDialog.openError(new Shell(Display.getCurrent()),
-				        RelationsMessages
-				                .getString("FormDBConnection.error.title"), //$NON-NLS-1$
-				        RelationsMessages
-				                .getString("FormDBConnection.error.msg")); //$NON-NLS-1$ 
+						RelationsMessages
+						.getString("FormDBConnection.error.title"), //$NON-NLS-1$
+						RelationsMessages
+						.getString("FormDBConnection.error.msg")); //$NON-NLS-1$
+				this.log.warn(String.format("Unable to open DB at '%s'!", //$NON-NLS-1$
+						getDBInfo(this.dbSettings)));
 				return;
 			}
 
@@ -92,19 +97,24 @@ public abstract class AbstractChangeDB implements IDBChange {
 			doDBChange();
 		}
 		catch (final SQLException exc) {
-			log.error(exc, exc.getMessage());
+			this.log.error(exc, exc.getMessage());
 			MessageDialog
-			        .openError(new Shell(Display.getCurrent()),
-			                RelationsMessages
-			                        .getString("FormDBConnection.error.title"), //$NON-NLS-1$
-			                RelationsMessages.getString(
-			                        "FormDBConnection.error.connection.msg", //$NON-NLS-1$
-			                        new Object[] { dbSettings.getDBName(),
-			                                dbSettings.getUser() }));
+			.openError(new Shell(Display.getCurrent()),
+					RelationsMessages
+					.getString("FormDBConnection.error.title"), //$NON-NLS-1$
+					RelationsMessages.getString(
+							"FormDBConnection.error.connection.msg", //$NON-NLS-1$
+							new Object[] { this.dbSettings.getDBName(),
+									this.dbSettings.getUser() }));
 		}
 		catch (final VException exc) {
-			log.error(exc, exc.getMessage());
+			this.log.error(exc, exc.getMessage());
 		}
+	}
+
+	private String getDBInfo(final IDBSettings settings) {
+		return ActionHelper.createDBConfiguration(this.dbSettings)
+				.getProperties().get("databaseName").toString(); //$NON-NLS-1$
 	}
 
 	/**
@@ -112,44 +122,53 @@ public abstract class AbstractChangeDB implements IDBChange {
 	 * application about change.
 	 */
 	protected void doDBChange() {
-		restoreSettings = new TempSettings(origDbSettings.getHost(),
-		        origDbSettings.getCatalog(), origDbSettings.getUser(),
-		        origDbSettings.getPassword(),
-		        origDbSettings.getDBConnectionConfig());
+		this.restoreSettings = new TempSettings(this.origDbSettings.getHost(),
+				this.origDbSettings.getCatalog(), this.origDbSettings.getUser(),
+				this.origDbSettings.getPassword(),
+				this.origDbSettings.getDBConnectionConfig());
 
 		// persist temporary settings
-		((TempSettings) dbSettings).saveToPreferences();
+		((TempSettings) this.dbSettings).saveToPreferences();
+
+		// schema upgrade: checked creation of EventStore table
+		try {
+			new EventStoreChecker().createEventStoreChecked(
+					this.dbSettings.getDBConnectionConfig().getCreator());
+		}
+		catch (IOException | TransformerException | SQLException exc) {
+			this.log.error(exc, "Unable to create the EventStore table!"); //$NON-NLS-1$
+		}
 
 		// trigger change
-		eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_DB, "changeDB"); //$NON-NLS-1$
+		this.eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_DB, "changeDB"); //$NON-NLS-1$
 	}
 
 	@Override
 	public void restore() {
-		if (restoreSettings == null) {
+		if (this.restoreSettings == null) {
 			return;
 		}
 
-		((TempSettings) restoreSettings).saveToPreferences();
-		dbAccess.setActiveConfiguration(ActionHelper
-		        .createDBConfiguration(restoreSettings));
+		((TempSettings) this.restoreSettings).saveToPreferences();
+		this.dbAccess.setActiveConfiguration(ActionHelper
+				.createDBConfiguration(this.restoreSettings));
 	}
 
 	/**
 	 * Activate temporary DB settings.
 	 */
 	protected void setTempDBSettings() {
-		dbAccess.setActiveConfiguration(ActionHelper
-		        .createDBConfiguration(dbSettings));
+		this.dbAccess.setActiveConfiguration(ActionHelper
+				.createDBConfiguration(this.dbSettings));
 	}
 
 	protected void setOrigDBSettings() {
-		dbAccess.setActiveConfiguration(ActionHelper
-		        .createDBConfiguration(origDbSettings));
+		this.dbAccess.setActiveConfiguration(ActionHelper
+				.createDBConfiguration(this.origDbSettings));
 	}
 
 	protected Logger getLog() {
-		return log;
+		return this.log;
 	}
 
 	@Override

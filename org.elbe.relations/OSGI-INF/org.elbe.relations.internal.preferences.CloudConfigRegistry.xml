@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="org.elbe.relations.internal.preferences.CloudConfigRegistry">
+   <service>
+      <provide interface="org.elbe.relations.internal.preferences.CloudConfigRegistry"/>
+   </service>
+   <reference bind="bindCloudProviderConfig" cardinality="0..n" interface="org.elbe.relations.services.ICloudProviderConfig" name="CloudProviderConfig" unbind="unbindCloudProviderConfig"/>
+   <implementation class="org.elbe.relations.internal.preferences.CloudConfigRegistry"/>
+</scr:component>

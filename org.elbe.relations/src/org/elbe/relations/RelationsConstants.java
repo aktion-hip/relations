@@ -85,7 +85,7 @@ public final class RelationsConstants {
 
 	public static final int DFT_TEXT_FONT_SIZE = 8;
 	public static final String[] INIT_SIZES = new String[] { "6", "7", "8", "9", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-	        "10", "11", "12", "13", "14", "15", "16", "17", "18" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+			"10", "11", "12", "13", "14", "15", "16", "17", "18" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
 
 	// eclipse context variable
 	public static final String DB_ACCESS_HANDLER = "relations.dbAccessHandler"; //$NON-NLS-1$
@@ -160,4 +160,8 @@ public final class RelationsConstants {
 	public static final String ACTIVE_BROWSER_ID = "active.relations.browser"; //$NON-NLS-1$
 
 	public static final String EXIT_KEY = "relation.exit.key"; //$NON-NLS-1$
+
+	public static final String PREFS_CLOUD_ACTIVE = "activeCloudConfig"; //$NON-NLS-1$
+	public static final String CLOUD_SYNC_FULL = "relations_all"; //$NON-NLS-1$
+	public static final String CLOUD_SYNC_DELTA = "relations_delta_"; //$NON-NLS-1$
 }

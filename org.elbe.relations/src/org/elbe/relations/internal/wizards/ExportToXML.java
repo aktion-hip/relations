@@ -51,7 +51,7 @@ import org.hip.kernel.exc.VException;
 @SuppressWarnings("restriction")
 public class ExportToXML extends Wizard implements IExportWizard {
 	private final static String STATUS_MSG = RelationsMessages
-	        .getString("ExportToXML.msg.status"); //$NON-NLS-1$
+			.getString("ExportToXML.msg.status"); //$NON-NLS-1$
 
 	@Inject
 	private Logger log;
@@ -81,29 +81,29 @@ public class ExportToXML extends Wizard implements IExportWizard {
 
 	@Override
 	public void addPages() {
-		page = new ExportToXMLPage("ExportToXMLPage"); //$NON-NLS-1$
-		addPage(page);
+		this.page = new ExportToXMLPage("ExportToXMLPage"); //$NON-NLS-1$
+		addPage(this.page);
 	}
 
 	@Override
 	public boolean performFinish() {
-		final String lCatalog = dbSettings.getCatalog();
-		final String lBackupFile = page.getFileName();
-		statusLine.showStatusLineMessage(
-		        String.format(STATUS_MSG, lCatalog, lBackupFile));
+		final String lCatalog = this.dbSettings.getCatalog();
+		final String lBackupFile = this.page.getFileName();
+		this.statusLine.showStatusLineMessage(
+				String.format(STATUS_MSG, lCatalog, lBackupFile));
 
-		final ProgressMonitorDialog lDialog = new ProgressMonitorDialog(shell);
+		final ProgressMonitorDialog lDialog = new ProgressMonitorDialog(this.shell);
 		lDialog.open();
 
-		final ExporterJob lJob = new ExporterJob(page.getFileName());
+		final ExporterJob lJob = new ExporterJob(this.page.getFileName());
 		try {
 			lDialog.run(true, true, lJob);
 		}
 		catch (final InvocationTargetException exc) {
-			log.error(exc, exc.getMessage());
+			this.log.error(exc, exc.getMessage());
 		}
 		catch (final InterruptedException exc) {
-			log.error(exc, exc.getMessage());
+			this.log.error(exc, exc.getMessage());
 		}
 		finally {
 			lDialog.close();
@@ -113,8 +113,8 @@ public class ExportToXML extends Wizard implements IExportWizard {
 
 	@Override
 	public void dispose() {
-		if (page != null) {
-			page.dispose();
+		if (this.page != null) {
+			this.page.dispose();
 		}
 		super.dispose();
 	}
@@ -125,45 +125,35 @@ public class ExportToXML extends Wizard implements IExportWizard {
 		private final String fileName;
 
 		public ExporterJob(final String inFileName) {
-			fileName = inFileName;
+			this.fileName = inFileName;
 		}
 
 		@Override
 		public void run(final IProgressMonitor inMonitor) {
 			inMonitor.beginTask(
-			        RelationsMessages.getString("ExportToXML.msg.job.start"), //$NON-NLS-1$
-			        dataService.getNumberOfItems());
+					RelationsMessages.getString("ExportToXML.msg.job.start"), //$NON-NLS-1$
+					ExportToXML.this.dataService.getNumberOfItems());
 
-			XMLExport lExport = null;
-			try {
-				lExport = fileName.endsWith(".zip") //$NON-NLS-1$
-				        ? new ZippedXMLExport(fileName,
-				                languageService.getAppLocale())
-				        : new XMLExport(fileName,
-				                languageService.getAppLocale());
-				lExport.export(inMonitor);
+			try (XMLExport exporter = createExporter(this.fileName)) {
+				exporter.export(inMonitor);
 			}
-			catch (final IOException exc) {
-				log.error(exc, exc.getMessage());
-			}
-			catch (final VException exc) {
-				log.error(exc, exc.getMessage());
-			}
-			catch (final SQLException exc) {
-				log.error(exc, exc.getMessage());
+			catch (IOException | VException | SQLException exc) {
+				ExportToXML.this.log.error(exc, exc.getMessage());
 			}
 			finally {
-				if (lExport != null) {
-					try {
-						lExport.close();
-					}
-					catch (final IOException exc) {
-						log.error(exc, exc.getMessage());
-					}
-				}
 				inMonitor.done();
 			}
 		}
+	}
+
+	private XMLExport createExporter(final String fileName) throws IOException {
+		final int count = this.dataService.getNumberOfItems()
+		        + this.dataService.getNumberOfRelations();
+		return fileName.endsWith(".zip") //$NON-NLS-1$
+				? new ZippedXMLExport(fileName,
+						ExportToXML.this.languageService.getAppLocale(), count)
+		        : new XMLExport(fileName,
+		                ExportToXML.this.languageService.getAppLocale(), count);
 	}
 
 }

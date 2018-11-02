@@ -12,6 +12,7 @@
 	<topic label="Reindexing the database" href="html/tasks/reindex_database.html" />
 	<topic label="Backup, restore and import" href="html/tasks/database.html" />
 	<topic label="Export to XML and import" href="html/tasks/xml_export.html"/>
+	<topic label="Export to the Cloud" href="html/tasks/cloud_export.html"/>
 	<topic label="BibTEX export" href="html/tasks/export_bibtex.html" />
 	<topic label="Software update" href="html/tasks/update.html" />
 	<topic label="Working with views" href="html/tasks/views.html" />

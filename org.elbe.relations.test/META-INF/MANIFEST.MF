@@ -10,6 +10,7 @@ Bundle-Vendor: RelationWare
 Require-Bundle: org.mockito.mockito-all;bundle-version="1.9.5",
  org.junit
 Import-Package: org.eclipse.core.expressions,
+ org.eclipse.emf.ecore.xml.type.impl,
  org.elbe.relations.data.test;version="[1.0.0,2.0.0)"
 Bundle-ClassPath: libs/unitils-io-3.3.jar,
  libs/unitils-core-3.3.jar,

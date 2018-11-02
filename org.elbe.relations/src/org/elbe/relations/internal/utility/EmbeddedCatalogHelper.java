@@ -48,13 +48,13 @@ public class EmbeddedCatalogHelper {
 	public final static String REINDEX_MARKER = ".reindex"; //$NON-NLS-1$
 
 	private final static IStatus ERROR_EXISTS = new Status(Status.ERROR,
-	        Activator.getSymbolicName(), 1,
-	        RelationsMessages.getString("EmbeddedCatalogHelper.error.exists"), //$NON-NLS-1$
-	        null);
+			Activator.getSymbolicName(), 1,
+			RelationsMessages.getString("EmbeddedCatalogHelper.error.exists"), //$NON-NLS-1$
+			null);
 	private final static IStatus ERROR_CHAR = new Status(Status.ERROR,
-	        Activator.getSymbolicName(), 1,
-	        RelationsMessages.getString("EmbeddedCatalogHelper.error.chars"), //$NON-NLS-1$
-	        null);
+			Activator.getSymbolicName(), 1,
+			RelationsMessages.getString("EmbeddedCatalogHelper.error.chars"), //$NON-NLS-1$
+			null);
 	private final static Pattern ALLOWED_CHAR = Pattern.compile("\\w*"); //$NON-NLS-1$
 
 	private final String[] catalogs;
@@ -63,7 +63,7 @@ public class EmbeddedCatalogHelper {
 	 * EmbeddedCatalogHelper constructor.
 	 */
 	public EmbeddedCatalogHelper() {
-		catalogs = getCatalogs();
+		this.catalogs = getCatalogs();
 	}
 
 	/**
@@ -73,11 +73,11 @@ public class EmbeddedCatalogHelper {
 	 *         (Derby) database.
 	 */
 	public static String[] getCatalogs() {
-		final File lDBStore = getDBStorePath();
+		final File dbStore = getDBStorePath();
 
 		// we retrieve all directories in the db store except those marked
 		// deleted, i.e. containing the delete marker file.
-		final File[] lDBDirs = lDBStore.listFiles(new FileFilter() {
+		final File[] dbDirs = dbStore.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(final File inFile) {
 				if (!inFile.isDirectory()) {
@@ -86,17 +86,17 @@ public class EmbeddedCatalogHelper {
 				final String[] lContent = inFile.list(new FilenameFilter() {
 					@Override
 					public boolean accept(final File inArg0,
-		                    final String inFileName) {
+							final String inFileName) {
 						return DELETED_MARKER.equals(inFileName);
 					}
 				});
 				return lContent == null || lContent.length == 0;
 			}
 		});
-		final String[] outEmbeddedDBs = new String[lDBDirs == null ? 0
-		        : lDBDirs.length];
+		final String[] outEmbeddedDBs = new String[dbDirs == null ? 0
+				: dbDirs.length];
 		for (int i = 0; i < outEmbeddedDBs.length; i++) {
-			outEmbeddedDBs[i] = lDBDirs[i].getName();
+			outEmbeddedDBs[i] = dbDirs[i].getName();
 		}
 		return outEmbeddedDBs;
 	}
@@ -104,18 +104,18 @@ public class EmbeddedCatalogHelper {
 	/**
 	 * Validates the specified input.
 	 *
-	 * @param inInput
+	 * @param input
 	 *            String
 	 * @return IStatus <code>ERROR_EXISTS</code> if the inputed value equals an
 	 *         existing embedded database, <code>ERROR_CHAR</code> if the input
 	 *         contains characters that are not allowed, <code>OK_STATUS</code>
 	 *         else.
 	 */
-	public IStatus validate(final String inInput) {
-		if (checkCatalogExists(inInput)) {
+	public IStatus validate(final String input) {
+		if (checkCatalogExists(input)) {
 			return ERROR_EXISTS;
 		}
-		if (!ALLOWED_CHAR.matcher(inInput).matches()) {
+		if (!ALLOWED_CHAR.matcher(input).matches()) {
 			return ERROR_CHAR;
 		}
 		return Status.OK_STATUS;
@@ -124,13 +124,13 @@ public class EmbeddedCatalogHelper {
 	/**
 	 * Validates the specified input, checks for allowed characters only.
 	 *
-	 * @param inInput
+	 * @param input
 	 *            String
 	 * @return IStatus <code>OK_STATUS</code> if the inputed data contains only
 	 *         allowed characters, else returns <code>ERROR_CHAR</code>.
 	 */
-	public IStatus validateForAllowedChars(final String inInput) {
-		if (!ALLOWED_CHAR.matcher(inInput).matches()) {
+	public IStatus validateForAllowedChars(final String input) {
+		if (!ALLOWED_CHAR.matcher(input).matches()) {
 			return ERROR_CHAR;
 		}
 		return Status.OK_STATUS;
@@ -140,14 +140,14 @@ public class EmbeddedCatalogHelper {
 	 * Checks for the existence of a catalog (of an embedded database) with the
 	 * specified name.
 	 *
-	 * @param inCatalogName
+	 * @param catalogName
 	 *            String the name of the catalog to check
 	 * @return boolean <code>true</code> if a catalog with the name exists, else
 	 *         <code>false</code>.
 	 */
-	public boolean checkCatalogExists(final String inCatalogName) {
-		for (final String lCatalogName : catalogs) {
-			if (inCatalogName.equals(lCatalogName)) {
+	public boolean checkCatalogExists(final String catalogName) {
+		for (final String nameOfCatatlog : this.catalogs) {
+			if (catalogName.equals(nameOfCatatlog)) {
 				return true;
 			}
 		}
@@ -162,19 +162,19 @@ public class EmbeddedCatalogHelper {
 	 *         of the default database.
 	 */
 	public static boolean hasDefaultEmbedded() {
-		final File lDBStore = getDBStorePath();
-		final File[] lDBDirs = lDBStore.listFiles(new FileFilter() {
+		final File dbStore = getDBStorePath();
+		final File[] dbDirs = dbStore.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(final File inFile) {
 				return inFile.isDirectory();
 			}
 		});
-		if (lDBDirs == null) {
+		if (dbDirs == null) {
 			return false;
 		}
-		for (int i = 0; i < lDBDirs.length; i++) {
+		for (int i = 0; i < dbDirs.length; i++) {
 			if (RelationsConstants.DFT_DB_EMBEDDED
-			        .equals(lDBDirs[i].getName())) {
+					.equals(dbDirs[i].getName())) {
 				return true;
 			}
 		}
@@ -187,10 +187,10 @@ public class EmbeddedCatalogHelper {
 	 * do this in the next session during system start.
 	 */
 	public static void cleanUp() {
-		final File lDBStore = getDBStorePath();
-		cleanUp(lDBStore);
-		cleanUp(new File(lDBStore.getParentFile(),
-		        RelationsConstants.LUCENE_STORE));
+		final File dbStore = getDBStorePath();
+		cleanUp(dbStore);
+		cleanUp(new File(dbStore.getParentFile(),
+				RelationsConstants.LUCENE_STORE));
 	}
 
 	private static void cleanUp(final File inParent) {
@@ -209,7 +209,7 @@ public class EmbeddedCatalogHelper {
 				final String[] lContent = inFile.list(new FilenameFilter() {
 					@Override
 					public boolean accept(final File inArg,
-		                    final String inFileName) {
+							final String inFileName) {
 						return DELETED_MARKER.equals(inFileName);
 					}
 				});
@@ -255,9 +255,9 @@ public class EmbeddedCatalogHelper {
 	}
 
 	private static boolean deleteMarker(final String inCatalog,
-	        final String inMarkerFile) {
+			final String inMarkerFile) {
 		final File lMarker = new File(new File(getDBStorePath(), inCatalog),
-		        inMarkerFile);
+				inMarkerFile);
 		if (lMarker.exists()) {
 			return lMarker.delete();
 		}
@@ -275,7 +275,7 @@ public class EmbeddedCatalogHelper {
 	 *            {@link IEclipseContext}
 	 */
 	public static void reindexChecked(final IDBSettings lDBSettings,
-	        final IEclipseContext inContext) {
+			final IEclipseContext inContext) {
 
 		// return, if not embedded database
 		if (!lDBSettings.getDBConnectionConfig().isEmbedded()) {
@@ -292,7 +292,7 @@ public class EmbeddedCatalogHelper {
 		deleteMarker(lCatalog, REINDEX_MARKER);
 
 		final RelationsIndexer lIndexer = RelationsIndexerWithLanguage
-		        .createRelationsIndexer(inContext);
+				.createRelationsIndexer(inContext);
 		if (!lIndexer.isIndexAvailable()) {
 			try {
 				lIndexer.initializeIndex();
@@ -324,7 +324,7 @@ public class EmbeddedCatalogHelper {
 	 */
 	public static File getDBStorePath() {
 		final File lRoot = ResourcesPlugin.getWorkspace().getRoot()
-		        .getLocation().toFile();
+				.getLocation().toFile();
 		final File outStore = new File(lRoot, RelationsConstants.DERBY_STORE);
 		if (!outStore.exists()) {
 			outStore.mkdir();

@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -35,7 +35,7 @@ import org.hip.kernel.bom.impl.DefaultStatement;
 /**
  * Handler responsible for creating the tables of an embedded (i.e. Derby)
  * database.
- * 
+ *
  * @author Luthiger
  */
 @SuppressWarnings("restriction")
@@ -45,37 +45,37 @@ public class DbEmbeddedCreateHandler {
 	private Logger log;
 
 	@Execute
-	public void execute(final IDBSettings inDBSettings,
-	        final IEclipseContext inContext) {
-		createEmbedded(inDBSettings);
+	public void execute(final IDBSettings dbSettings,
+			final IEclipseContext inContext) {
+		createEmbedded(dbSettings);
 		prepareIndex(inContext);
 	}
 
-	private void createEmbedded(final IDBSettings inDBSettings) {
+	private void createEmbedded(final IDBSettings dbSettings) {
 		try {
-			final IDBObjectCreator lCreator = inDBSettings
-			        .getDBConnectionConfig().getCreator();
-			final DefaultStatement lStatement = new DefaultStatement();
-			for (final String lSQLCreate : lCreator
-			        .getCreateStatemens(Constants.XML_CREATE_OBJECTS)) {
-				lStatement.execute(lSQLCreate);
+			final IDBObjectCreator creator = dbSettings
+					.getDBConnectionConfig().getCreator();
+			final DefaultStatement statement = new DefaultStatement();
+			for (final String sqlCreate : creator
+					.getCreateStatemens(Constants.XML_CREATE_OBJECTS)) {
+				statement.execute(sqlCreate);
 			}
 		}
 		catch (final Exception exc) {
-			log.error(exc, exc.getMessage());
+			this.log.error(exc, exc.getMessage());
 		}
 	}
 
-	private void prepareIndex(final IEclipseContext inContext) {
+	private void prepareIndex(final IEclipseContext context) {
 		try {
-			final RelationsIndexer lIndexer = RelationsIndexerWithLanguage
-			        .createRelationsIndexer(inContext);
-			if (!lIndexer.isIndexAvailable()) {
-				lIndexer.initializeIndex();
+			final RelationsIndexer indexer = RelationsIndexerWithLanguage
+			        .createRelationsIndexer(context);
+			if (!indexer.isIndexAvailable()) {
+				indexer.initializeIndex();
 			}
 		}
 		catch (final IOException exc) {
-			log.error(exc, exc.getMessage());
+			this.log.error(exc, exc.getMessage());
 		}
 	}
 

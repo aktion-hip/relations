@@ -54,6 +54,16 @@
             <Column name="RelationID"/>
         </PrimaryKey>
     </Table>
+    <Table name="tblEventStore">
+    	<Field name="EventStoreID" auto_increment="yes" type="biginteger" nullable="no"/>
+    	<Field name="dtCreation" type="timestamp" default="0"/>
+    	<Field name="nType" type="tinyinteger" nullable="no"/>
+    	<Field name="sUniqueID" type="string" size="50" nullable="no"/>
+    	<Field name="sEvent" type="clob" nullable="no"/>
+        <PrimaryKey>
+            <Column name="EventStoreID"/>
+        </PrimaryKey>    	
+    </Table>
     <Index name="idxTerm_01" tablename="tblTerm">
         <Column name="sTitle"/>
     </Index>
@@ -97,5 +107,12 @@
     <Index name="idxRelation_02" tablename="tblRelation">
         <Column name="nType2"/>
         <Column name="nItem2"/>
+    </Index>
+    <Index name="idxEventStore_01" tablename="tblEventStore">
+    	<Column name="dtCreation"/>
+    </Index>
+    <Index name="idxEventStore_02" tablename="tblEventStore">
+    	<Column name="sUniqueID"/>
+    	<Column name="dtCreation"/>
     </Index>
 </Create>
