@@ -1,6 +1,17 @@
 HISTORY Relations
 =================
 
+Release 2.3.0:
+=============
+
+2018/11/02:
+	- Added export to cloud, i.e. Dropbox, MS Azure and Google Drive.
+	- Added /icons/message_info.png.
+	- Fixed bug when deleting items.
+	- org.elbe.relations.internal.backup.XMLExport.appendText: Setting export encoding to UTF8.
+	- Updated target to Eclipse 4.8 (Photon).
+	- Setting version number to 2.3.0.
+
 Release 2.2.0:
 =============
 2018/01/21:
