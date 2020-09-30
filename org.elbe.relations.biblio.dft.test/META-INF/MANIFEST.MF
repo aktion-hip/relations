@@ -6,6 +6,6 @@ Bundle-Version: 1.1.0.qualifier
 Bundle-Vendor: RelationWare
 Fragment-Host: org.elbe.relations.biblio.dft;bundle-version="1.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: org.junit,
- org.mockito.mockito-all;bundle-version="1.9.5"
+Require-Bundle: org.junit;bundle-version="[4.12.0,5.0.0)",
+ org.mockito.mockito-all;bundle-version="[1.9.5,2.0.0)"
 Import-Package: org.hip.kernel.bom.impl

@@ -71,205 +71,205 @@ import com.google.gson.JsonObject;
 @SuppressWarnings("restriction")
 public class ExportToCloudAction implements ICommand {
 
-	private LanguageService languageService;
-	private Logger log;
-	private RelationsStatusLineManager statusLine;
-	private IDataService dataService;
+    private LanguageService languageService;
+    private Logger log;
+    private RelationsStatusLineManager statusLine;
+    private IDataService dataService;
 
-	private CloudConfigRegistry cloudConfigRegistry;
+    private CloudConfigRegistry cloudConfigRegistry;
 
-	@Reference
-	void bindCloudProvider(final CloudConfigRegistry cloudConfigRegistry) {
-		this.cloudConfigRegistry = cloudConfigRegistry;
-	}
+    @Reference
+    void bindCloudProvider(final CloudConfigRegistry cloudConfigRegistry) {
+        this.cloudConfigRegistry = cloudConfigRegistry;
+    }
 
 
-	/**
-	 * Passing relevant objects to the action.
-	 *
-	 * @param context
-	 *            {@link IEclipseContext}
-	 * @return {@link ExportToCloudAction}
-	 */
-	public ExportToCloudAction initialize(final IEclipseContext context) {
-		this.languageService = context.get(LanguageService.class);
-		this.log = context.get(Logger.class);
-		this.statusLine = context.get(RelationsStatusLineManager.class);
-		this.dataService = context.get(IDataService.class);
-		return this;
-	}
+    /**
+     * Passing relevant objects to the action.
+     *
+     * @param context
+     *            {@link IEclipseContext}
+     * @return {@link ExportToCloudAction}
+     */
+    public ExportToCloudAction initialize(final IEclipseContext context) {
+        this.languageService = context.get(LanguageService.class);
+        this.log = context.get(Logger.class);
+        this.statusLine = context.get(RelationsStatusLineManager.class);
+        this.dataService = context.get(IDataService.class);
+        return this;
+    }
 
-	@Override
-	public void execute() {
-		final IEclipsePreferences store = RelationsPreferences.getPreferences();
-		final ICloudProviderConfig cloudProviderConfig = getActiveCloudProviderConfig(
-				store);
-		if (cloudProviderConfig == null) {
-			MessageDialog.openInformation(Display.getDefault().getActiveShell(),
-					RelationsMessages.getString("ExportToCloudAction.problem.title"), //$NON-NLS-1$
-					RelationsMessages.getString("ExportToCloudAction.problem.msg")); //$NON-NLS-1$
-			return;
-		}
+    @Override
+    public void execute() {
+        final IEclipsePreferences store = RelationsPreferences.getPreferences();
+        final ICloudProviderConfig cloudProviderConfig = getActiveCloudProviderConfig(
+                store);
+        if (cloudProviderConfig == null) {
+            MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+                    RelationsMessages.getString("ExportToCloudAction.problem.title"), //$NON-NLS-1$
+                    RelationsMessages.getString("ExportToCloudAction.problem.msg")); //$NON-NLS-1$
+            return;
+        }
 
-		final ExportToCloudDialog dialog = new ExportToCloudDialog(
-				cloudProviderConfig, this.dataService.getNumberOfEvents() > 0);
-		if (dialog.open() == Window.OK) {
-			final IRunnableWithProgress operation = dialog.isIncremental()
-					? new ExportToCloudIncremental(
-							cloudProviderConfig.getProvider(),
-							createJson(
-									CloudConfigPrefPage.getKey(
-											cloudProviderConfig.getName()),
-									store),
-							this.languageService, this.log, this.statusLine)
-							: new ExportToCloudFull(cloudProviderConfig.getProvider(),
-									createJson(
-											CloudConfigPrefPage.getKey(
-													cloudProviderConfig.getName()),
-											store),
-									this.languageService, this.log, this.statusLine,
-									this.dataService.getNumberOfItems()
-									+ this.dataService.getNumberOfRelations());
+        final ExportToCloudDialog dialog = new ExportToCloudDialog(
+                cloudProviderConfig, this.dataService.getNumberOfEvents() > 0);
+        if (dialog.open() == Window.OK) {
+            final IRunnableWithProgress operation = dialog.isIncremental()
+                    ? new ExportToCloudIncremental(
+                            cloudProviderConfig.getProvider(),
+                            createJson(
+                                    CloudConfigPrefPage.getKey(
+                                            cloudProviderConfig.getName()),
+                                    store),
+                            this.languageService, this.log, this.statusLine)
+                            : new ExportToCloudFull(cloudProviderConfig.getProvider(),
+                                    createJson(
+                                            CloudConfigPrefPage.getKey(
+                                                    cloudProviderConfig.getName()),
+                                            store),
+                                    this.languageService, this.log, this.statusLine,
+                                    this.dataService.getNumberOfItems()
+                                    + this.dataService.getNumberOfRelations());
 
-							try {
-								new ProgressMonitorDialog(Display.getDefault().getActiveShell())
-								.run(true, true, operation);
-							}
-							catch (InvocationTargetException | InterruptedException exc) {
-								this.log.error(exc, "Error during export to cloud!"); //$NON-NLS-1$
-							}
-		}
-	}
+                            try {
+                                new ProgressMonitorDialog(Display.getDefault().getActiveShell())
+                                .run(true, true, operation);
+                            }
+                            catch (InvocationTargetException | InterruptedException exc) {
+                                this.log.error(exc, "Error during export to cloud!"); //$NON-NLS-1$
+                            }
+        }
+    }
 
-	private JsonObject createJson(final String key,
-			final IEclipsePreferences store) {
-		final String jsonOfValues = store.get(key, "{}"); //$NON-NLS-1$
-		return new Gson().fromJson(jsonOfValues.isEmpty() ? "{}" : jsonOfValues, //$NON-NLS-1$
-				JsonObject.class);
-	}
+    private JsonObject createJson(final String key,
+            final IEclipsePreferences store) {
+        final String jsonOfValues = store.get(key, "{}"); //$NON-NLS-1$
+        return new Gson().fromJson(jsonOfValues.isEmpty() ? "{}" : jsonOfValues, //$NON-NLS-1$
+                JsonObject.class);
+    }
 
-	private ICloudProviderConfig getActiveCloudProviderConfig(
-			final IEclipsePreferences store) {
-		final String nameOfActive = store
-				.get(RelationsConstants.PREFS_CLOUD_ACTIVE, ""); //$NON-NLS-1$
-		if (nameOfActive.isEmpty()) {
-			return null;
-		}
-		for (final ICloudProviderConfig config : this.cloudConfigRegistry
-				.getConfigurations()) {
-			if (nameOfActive.equals(config.getName())) {
-				return config;
-			}
-		}
-		return null;
-	}
+    private ICloudProviderConfig getActiveCloudProviderConfig(
+            final IEclipsePreferences store) {
+        final String nameOfActive = store
+                .get(RelationsConstants.PREFS_CLOUD_ACTIVE, ""); //$NON-NLS-1$
+        if (nameOfActive.isEmpty()) {
+            return null;
+        }
+        for (final ICloudProviderConfig config : this.cloudConfigRegistry
+                .getConfigurations()) {
+            if (nameOfActive.equals(config.getName())) {
+                return config;
+            }
+        }
+        return null;
+    }
 
-	// ---
+    // ---
 
-	private static class ExportToCloudFull extends AbstractExportToCloudJob {
-		protected ExportToCloudFull(final ICloudProvider cloudProvider,
-				final JsonObject jsonObject,
-				final LanguageService languageService, final Logger log,
-				final RelationsStatusLineManager statusLine,
-				final int numberOfItems) {
-			super(cloudProvider, jsonObject, languageService, log, statusLine,
-					numberOfItems);
-			setFullExport(true);
-		}
+    private static class ExportToCloudFull extends AbstractExportToCloudJob {
+        protected ExportToCloudFull(final ICloudProvider cloudProvider,
+                final JsonObject jsonObject,
+                final LanguageService languageService, final Logger log,
+                final RelationsStatusLineManager statusLine,
+                final int numberOfItems) {
+            super(cloudProvider, jsonObject, languageService, log, statusLine,
+                    numberOfItems);
+            setFullExport(true);
+        }
 
-		@Override
-		protected String createTempFileName() {
-			return RelationsConstants.CLOUD_SYNC_FULL;
-		}
+        @Override
+        protected String createTempFileName() {
+            return RelationsConstants.CLOUD_SYNC_FULL;
+        }
 
-		@Override
-		protected void prepareContentForExport(final File tempExport,
-				final IProgressMonitor monitor) throws IOException {
-			try (XMLExport exporter = new ZippedXMLExport(
-					tempExport.getAbsolutePath(),
-					getAppLocale(), getNumberOfItems())) {
-				exporter.export(monitor);
-			}
-			catch (VException | SQLException exc) {
-				getLog().error(exc, exc.getMessage());
-			}
-		}
+        @Override
+        protected void prepareContentForExport(final File tempExport,
+                final IProgressMonitor monitor) throws IOException {
+            try (XMLExport exporter = new ZippedXMLExport(
+                    tempExport.getAbsolutePath(),
+                    getAppLocale(), getNumberOfItems())) {
+                exporter.export(monitor);
+            }
+            catch (VException | SQLException exc) {
+                getLog().error(exc, exc.getMessage());
+            }
+        }
 
-	}
+    }
 
-	private static class ExportToCloudIncremental
-	extends AbstractExportToCloudJob {
-		private static final String PATTERN = "yyyy-MM-dd-HHmmss"; //$NON-NLS-1$
+    private static class ExportToCloudIncremental
+    extends AbstractExportToCloudJob {
+        private static final String PATTERN = "yyyy-MM-dd-HHmmss"; //$NON-NLS-1$
 
-		protected ExportToCloudIncremental(final ICloudProvider cloudProvider,
-				final JsonObject jsonObject,
-				final LanguageService languageService, final Logger log,
-				final RelationsStatusLineManager statusLine) {
-			super(cloudProvider, jsonObject, languageService, log, statusLine,
-					0);
-		}
+        protected ExportToCloudIncremental(final ICloudProvider cloudProvider,
+                final JsonObject jsonObject,
+                final LanguageService languageService, final Logger log,
+                final RelationsStatusLineManager statusLine) {
+            super(cloudProvider, jsonObject, languageService, log, statusLine,
+                    0);
+        }
 
-		@Override
-		protected String createTempFileName() {
-			return String.format("%s%s", RelationsConstants.CLOUD_SYNC_DELTA, //$NON-NLS-1$
-					new SimpleDateFormat(PATTERN).format(new Date()));
-		}
+        @Override
+        protected String createTempFileName() {
+            return String.format("%s%s", RelationsConstants.CLOUD_SYNC_DELTA, //$NON-NLS-1$
+                    new SimpleDateFormat(PATTERN).format(new Date()));
+        }
 
-		@Override
-		protected void prepareContentForExport(final File tempExport,
-				final IProgressMonitor monitor) throws IOException {
-			try (XMLExport exporter = new EventStoreExport(
-					tempExport.getAbsolutePath(), getAppLocale())) {
-				exporter.export(monitor);
-			}
-			catch (VException | SQLException exc) {
-				getLog().error(exc, exc.getMessage());
-			}
-		}
+        @Override
+        protected void prepareContentForExport(final File tempExport,
+                final IProgressMonitor monitor) throws IOException {
+            try (XMLExport exporter = new EventStoreExport(
+                    tempExport.getAbsolutePath(), getAppLocale())) {
+                exporter.export(monitor);
+            }
+            catch (VException | SQLException exc) {
+                getLog().error(exc, exc.getMessage());
+            }
+        }
 
-	}
+    }
 
-	/**
-	 * Special exporter for only the entries in the EventStore.
-	 */
-	private static class EventStoreExport extends ZippedXMLExport {
-		private final static String NL = System.getProperty("line.separator"); //$NON-NLS-1$
-		private static final String NODE_EVENT_STORE = "EventStoreEntries"; //$NON-NLS-1$
+    /**
+     * Special exporter for only the entries in the EventStore.
+     */
+    private static class EventStoreExport extends ZippedXMLExport {
+        private final static String NL = System.getProperty("line.separator"); //$NON-NLS-1$
+        private static final String NODE_EVENT_STORE = "EventStoreEntries"; //$NON-NLS-1$
 
-		private final Locale appLocale;
+        private final Locale appLocale;
 
-		protected EventStoreExport(final String exportFileName,
-				final Locale appLocale) throws IOException {
-			super(exportFileName, appLocale, 0);
-			this.appLocale = appLocale;
-		}
+        protected EventStoreExport(final String exportFileName,
+                final Locale appLocale) throws IOException {
+            super(exportFileName, appLocale, 0);
+            this.appLocale = appLocale;
+        }
 
-		@Override
-		public int export(final IProgressMonitor monitor)
-				throws VException, SQLException, IOException {
-			final EventStoreHome home = BOMHelper.getEventStoreHome();
-			final int numberOfItems = home.getCount();
+        @Override
+        public int export(final IProgressMonitor monitor)
+                throws VException, SQLException, IOException {
+            final EventStoreHome home = BOMHelper.getEventStoreHome();
+            final int numberOfItems = home.getCount();
 
-			final SubMonitor progress = SubMonitor.convert(monitor);
-			int outExported = 0;
+            final SubMonitor progress = SubMonitor.convert(monitor);
+            int outExported = 0;
 
-			appendText("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NL); //$NON-NLS-1$
-			final DateFormat format = DateFormat.getDateTimeInstance(
-					DateFormat.MEDIUM, DateFormat.MEDIUM, this.appLocale);
-			appendText(String.format("<%s date=\"%s\" countAll=\"%s\">" + NL, //$NON-NLS-1$
-					NODE_ROOT, format.format(Calendar.getInstance().getTime()),
-					numberOfItems));
+            appendText("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NL); //$NON-NLS-1$
+            final DateFormat format = DateFormat.getDateTimeInstance(
+                    DateFormat.MEDIUM, DateFormat.MEDIUM, this.appLocale);
+            appendText(String.format("<%s date=\"%s\" countAll=\"%s\">" + NL, //$NON-NLS-1$
+                    NODE_ROOT, format.format(Calendar.getInstance().getTime()),
+                    numberOfItems));
 
-			outExported += processTable(
-					RelationsMessages.getString("XMLExport.export.events"), //$NON-NLS-1$
-					NODE_EVENT_STORE, home, progress);
-			if (monitor.isCanceled()) {
-				return outExported;
-			}
+            outExported += processTable(
+                    RelationsMessages.getString("XMLExport.export.events"), //$NON-NLS-1$
+                    NODE_EVENT_STORE, home, progress);
+            if (monitor.isCanceled()) {
+                return outExported;
+            }
 
-			appendEnd(NODE_ROOT);
-			return outExported;
-		}
-	}
+            appendEnd(NODE_ROOT);
+            return outExported;
+        }
+    }
 
 }
