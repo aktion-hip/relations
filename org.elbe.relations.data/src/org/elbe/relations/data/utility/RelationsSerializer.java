@@ -1,5 +1,6 @@
 package org.elbe.relations.data.utility;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -64,24 +65,26 @@ public class RelationsSerializer extends AbstractSerializer {
 
         final String lFormatPattern = property.getFormatPattern();
 
-        if (value == null)
+        if (value == null) {
             return;
+        }
 
         if ("none".equals(lFormatPattern)) { //$NON-NLS-1$
             emitText(property.getValue());
             return;
         }
 
-        if ((value instanceof Timestamp) || (value instanceof Date)
-                || (value instanceof Time)) {
+        if (value instanceof Timestamp || value instanceof Date
+                || value instanceof Time) {
             emitText(value.toString());
             return;
         }
 
         if (value instanceof Number) {
             if (lFormatPattern != null) {
-                if (lFormatPattern.equals(" ") && ((Number) value).intValue() == 0) //$NON-NLS-1$
+                if (lFormatPattern.equals(" ") && ((Number) value).intValue() == 0) {
                     return;
+                }
 
                 this.decimalFormat.applyPattern(lFormatPattern);
                 emitText(this.decimalFormat.format(value));
@@ -163,7 +166,8 @@ public class RelationsSerializer extends AbstractSerializer {
             processed = processed.replace(IN_EXPORTED_XML[i],
                     IN_DATABASE[i]);
         }
-        return processed;
+        // character encoding for text fields
+        return new String(processed.getBytes(), StandardCharsets.UTF_8);
     }
 
 }

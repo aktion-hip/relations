@@ -1,6 +1,12 @@
 CHANGES Relations
 =================
 
+Release 2.4.0:
+=============
+
+2020/10/02:
+	- org.elbe.relations.data.utility.RelationsSerializer.prepareForImport(): fixed unicode problem in import.
+
 Release 2.3.0:
 =============
 
