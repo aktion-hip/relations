@@ -18,7 +18,7 @@
  ***************************************************************************/
 package org.elbe.relations.data.db;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.elbe.relations.data.Constants;
 import org.elbe.relations.data.TestEmbeddedCreator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author lbenno

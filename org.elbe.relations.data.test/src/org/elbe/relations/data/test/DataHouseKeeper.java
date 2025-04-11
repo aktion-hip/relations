@@ -73,8 +73,7 @@ import org.xml.sax.SAXException;
 public enum DataHouseKeeper {
     INSTANCE;
 
-    private static final Logger LOG = LoggerFactory
-            .getLogger(DataHouseKeeper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DataHouseKeeper.class);
 
     // constants
     private static final String PROPERTIES_FILE = "relations_db.properties";
@@ -153,7 +152,8 @@ public enum DataHouseKeeper {
         // lConnection.commit();
         statement.close();
         connection.close();
-        Thread.currentThread().sleep(this.isEmbeddedDerby ? SLEEP_PERIOD_DERBY : SLEEP_PERIOD);
+        Thread.currentThread();
+        Thread.sleep(this.isEmbeddedDerby ? SLEEP_PERIOD_DERBY : SLEEP_PERIOD);
     }
 
     public void deleteAllFromTerm() throws SQLException, VException, InterruptedException {
@@ -220,7 +220,9 @@ public enum DataHouseKeeper {
             createEmbeddedTables();
         }
         catch (final Exception exc) {
-            LOG.error("Could not initialize the DataHouseKeeper for Derby!", exc);
+            // LOG.error("Could not initialize the DataHouseKeeper for Derby!", exc);
+            System.out.println("Could not initialize the DataHouseKeeper for Derby!");
+            exc.printStackTrace();
         }
     }
 

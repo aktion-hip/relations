@@ -1,8 +1,8 @@
 package org.elbe.relations.models;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
 import java.util.Locale;
@@ -21,137 +21,131 @@ import org.elbe.relations.db.IDataService;
 import org.elbe.relations.internal.bom.LightWeightPersonWithIcon;
 import org.elbe.relations.internal.bom.LightWeightTermWithIcon;
 import org.elbe.relations.internal.preferences.LanguageService;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * JUnit Plug-in test
- * 
+ *
  * @author lbenno
  */
 @SuppressWarnings("restriction")
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class AssociationsModelTest {
-	private static DataHouseKeeper data;
+    private static DataHouseKeeper data;
 
-	@Mock
-	private Device device;
-	@Mock
-	private IEventBroker eventBroker;
-	@Mock
-	private Logger log;
-	@Mock
-	private IDataService dataService;
+    @Mock
+    private Device device;
+    @Mock
+    private IEventBroker eventBroker;
+    @Mock
+    private Logger log;
+    @Mock
+    private IDataService dataService;
 
-	private Image image;
-	private LanguageService languages;
-	private IEclipseContext context;
+    private Image image;
+    private LanguageService languages;
+    private IEclipseContext context;
 
-	private IItem[] items;
-	private ItemAdapter center;
+    private IItem[] items;
+    private ItemAdapter center;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		data = DataHouseKeeper.INSTANCE;
-	}
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        data = DataHouseKeeper.INSTANCE;
+    }
 
-	@Before
-	public void setUp() throws Exception {
-		image = new Image(device, 1, 1);
-		languages = new LanguageService(Locale.ENGLISH.getLanguage());
+    @BeforeEach
+    public void setUp() throws Exception {
+        this.image = new Image(this.device, 1, 1);
+        this.languages = new LanguageService(Locale.ENGLISH.getLanguage());
 
-		context = EclipseContextFactory.create("test context");
-		context.set(Logger.class, log);
-		context.set(IEventBroker.class, eventBroker);
-		context.set(LanguageService.class, languages);
-		context.set(IDataService.class, dataService);
+        this.context = EclipseContextFactory.create("test context");
+        this.context.set(Logger.class, this.log);
+        this.context.set(IEventBroker.class, this.eventBroker);
+        this.context.set(LanguageService.class, this.languages);
+        this.context.set(IDataService.class, this.dataService);
 
-		items = new IItem[10];
-		items[0] = data.createTerm("Term1");
-		items[1] = data.createTerm("Term2");
-		items[2] = data.createTerm("Term3");
-		items[3] = data.createTerm("Term4");
-		items[4] = data.createTerm("Term5");
-		items[5] = data.createTerm("Term6");
-		items[6] = data.createPerson("Person1", "First1");
-		items[7] = data.createPerson("Person1", "First1");
-		items[8] = data.createPerson("Person1", "First1");
-		items[9] = data.createPerson("Person1", "First1");
-		data.createRelation(items[0], items[1]);
-		data.createRelation(items[0], items[2]);
-		data.createRelation(items[0], items[3]);
-		data.createRelation(items[0], items[5]);
-		data.createRelation(items[0], items[6]);
-		data.createRelation(items[0], items[9]);
+        this.items = new IItem[10];
+        this.items[0] = data.createTerm("Term1");
+        this.items[1] = data.createTerm("Term2");
+        this.items[2] = data.createTerm("Term3");
+        this.items[3] = data.createTerm("Term4");
+        this.items[4] = data.createTerm("Term5");
+        this.items[5] = data.createTerm("Term6");
+        this.items[6] = data.createPerson("Person1", "First1");
+        this.items[7] = data.createPerson("Person1", "First1");
+        this.items[8] = data.createPerson("Person1", "First1");
+        this.items[9] = data.createPerson("Person1", "First1");
+        data.createRelation(this.items[0], this.items[1]);
+        data.createRelation(this.items[0], this.items[2]);
+        data.createRelation(this.items[0], this.items[3]);
+        data.createRelation(this.items[0], this.items[5]);
+        data.createRelation(this.items[0], this.items[6]);
+        data.createRelation(this.items[0], this.items[9]);
 
-		center = new ItemAdapter(items[0], image, context);
-	}
+        this.center = new ItemAdapter(this.items[0], this.image, this.context);
+    }
 
-	@After
-	public void tearDown() throws Exception {
-		data.deleteAllInAll();
-	}
+    @AfterEach
+    public void tearDown() throws Exception {
+        data.deleteAllInAll();
+    }
 
-	@Test
-	public void testGetAllItems() throws Exception {
-		final CentralAssociationsModel lModel = CentralAssociationsModel
-		        .createCentralAssociationsModel(center, context);
-		assertTrue(lModel.getCenter().equals(new ItemAdapter(center, context)));
-		final Collection<ItemAdapter> lModelItems = lModel.getAllItems();
-		assertEquals(7, lModelItems.size());
-	}
+    @Test
+    public void testGetAllItems() throws Exception {
+        final CentralAssociationsModel lModel = CentralAssociationsModel
+                .createCentralAssociationsModel(this.center, this.context);
+        assertTrue(lModel.getCenter().equals(new ItemAdapter(this.center, this.context)));
+        final Collection<ItemAdapter> lModelItems = lModel.getAllItems();
+        assertEquals(7, lModelItems.size());
+    }
 
-	@Test
-	public void testGetElements() throws Exception {
-		final IAssociationsModel lAssociations = CentralAssociationsModel
-		        .createCentralAssociationsModel(center, context);
-		final Object[] lRelated = lAssociations.getElements();
-		assertEquals(6, lRelated.length);
-	}
+    @Test
+    public void testGetElements() throws Exception {
+        final IAssociationsModel lAssociations = CentralAssociationsModel
+                .createCentralAssociationsModel(this.center, this.context);
+        final Object[] lRelated = lAssociations.getElements();
+        assertEquals(6, lRelated.length);
+    }
 
-	@Test
-	public void testSelect() throws Exception {
-		final IAssociationsModel lAssociations = CentralAssociationsModel
-		        .createCentralAssociationsModel(center, context);
-		assertFalse(lAssociations.select(items[0].getLightWeight()));
-		assertFalse(lAssociations.select(items[1].getLightWeight()));
-		assertTrue(lAssociations.select(items[4].getLightWeight()));
-	}
+    @Test
+    public void testSelect() throws Exception {
+        final IAssociationsModel lAssociations = CentralAssociationsModel
+                .createCentralAssociationsModel(this.center, this.context);
+        assertFalse(lAssociations.select(this.items[0].getLightWeight()));
+        assertFalse(lAssociations.select(this.items[1].getLightWeight()));
+        assertTrue(lAssociations.select(this.items[4].getLightWeight()));
+    }
 
-	@Test
-	public void testManipulations() throws Exception {
-		final IAssociationsModel lAssociations = CentralAssociationsModel
-		        .createCentralAssociationsModel(center, context);
+    @Test
+    public void testManipulations() throws Exception {
+        final IAssociationsModel lAssociations = CentralAssociationsModel
+                .createCentralAssociationsModel(this.center, this.context);
 
-		final Object[] lAdd = {
-		        new LightWeightTermWithIcon(
-		                (LightWeightTerm) items[4].getLightWeight()),
-		        new LightWeightPersonWithIcon(
-		                (LightWeightPerson) items[6].getLightWeight()) };
-		lAssociations.addAssociations(lAdd);
-		assertFalse("Filter new related",
-		        lAssociations.select(items[4].getLightWeight()));
-		assertEquals("Number of related after add", 8,
-		        lAssociations.getElements().length);
+        final Object[] lAdd = {
+                new LightWeightTermWithIcon(
+                        (LightWeightTerm) this.items[4].getLightWeight()),
+                new LightWeightPersonWithIcon(
+                        (LightWeightPerson) this.items[6].getLightWeight()) };
+        lAssociations.addAssociations(lAdd);
+        assertFalse(lAssociations.select(this.items[4].getLightWeight()));
+        assertEquals(8,lAssociations.getElements().length);
 
-		final Object[] lRemove = { new ItemAdapter(items[4], image, context),
-		        new ItemAdapter(items[1], image, context),
-		        new ItemAdapter(items[2], image, context) };
-		lAssociations.removeAssociations(lRemove);
-		assertEquals("Number of related after remove", 5,
-		        lAssociations.getElements().length);
-		assertTrue("Filter new unrelated 1",
-		        lAssociations.select(items[4].getLightWeight()));
-		assertTrue("Filter new unrelated 2",
-		        lAssociations.select(items[1].getLightWeight()));
-		assertTrue("Filter new unrelated 3",
-		        lAssociations.select(items[2].getLightWeight()));
+        final Object[] lRemove = { new ItemAdapter(this.items[4], this.image, this.context),
+                new ItemAdapter(this.items[1], this.image, this.context),
+                new ItemAdapter(this.items[2], this.image, this.context) };
+        lAssociations.removeAssociations(lRemove);
+        assertEquals(5, lAssociations.getElements().length);
+        assertTrue(lAssociations.select(this.items[4].getLightWeight()));
+        assertTrue(lAssociations.select(this.items[1].getLightWeight()));
+        assertTrue(lAssociations.select(this.items[2].getLightWeight()));
 
-	}
+    }
 
 }

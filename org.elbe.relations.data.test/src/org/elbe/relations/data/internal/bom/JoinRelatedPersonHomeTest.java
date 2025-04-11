@@ -18,8 +18,8 @@
  ***************************************************************************/
 package org.elbe.relations.data.internal.bom;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,8 +31,7 @@ import org.elbe.relations.data.bom.RelationHome;
 import org.hip.kernel.bom.KeyObject;
 import org.hip.kernel.bom.impl.KeyObjectImpl;
 import org.hip.kernel.exc.VException;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -40,37 +39,33 @@ import org.junit.Test;
  */
 public class JoinRelatedPersonHomeTest {
 
-	@BeforeClass
-	public static void init() {
-	}
+    @Test
+    public void testCreateTestObjects() {
+        final String lExpected = "SELECT tblPerson.PERSONID, tblPerson.SNAME, tblPerson.SFIRSTNAME, tblPerson.STEXT, tblPerson.SFROM, tblPerson.STO, tblPerson.DTCREATION, tblPerson.DTMUTATION, tblRelation.RELATIONID, tblRelation.NITEM1, tblRelation.NTYPE1, tblRelation.NITEM2, tblRelation.NTYPE2 FROM tblRelation INNER JOIN tblPerson ON tblRelation.NITEM1 = tblPerson.PERSONID WHERE tblRelation.NITEM2 = 32 AND tblRelation.NTYPE2 = 1 AND tblRelation.NTYPE1 = 1";
+        final JoinRelatedPersonHome lHome = new JoinRelatedPersonHomeSub();
+        final Iterator<Object> lTest = lHome.getTestObjects();
+        assertEquals(lExpected, lTest.next());
+    }
 
-	@Test
-	public void testCreateTestObjects() {
-		final String lExpected = "SELECT tblPerson.PERSONID, tblPerson.SNAME, tblPerson.SFIRSTNAME, tblPerson.STEXT, tblPerson.SFROM, tblPerson.STO, tblPerson.DTCREATION, tblPerson.DTMUTATION, tblRelation.RELATIONID, tblRelation.NITEM1, tblRelation.NTYPE1, tblRelation.NITEM2, tblRelation.NTYPE2 FROM tblRelation INNER JOIN tblPerson ON tblRelation.NITEM1 = tblPerson.PERSONID WHERE tblRelation.NITEM2 = 32 AND tblRelation.NTYPE2 = 1 AND tblRelation.NTYPE1 = 1";
-		final JoinRelatedPersonHome lHome = new JoinRelatedPersonHomeSub();
-		final Iterator<Object> lTest = lHome.getTestObjects();
-		assertEquals("test sql", lExpected, lTest.next());
-	}
+    private class JoinRelatedPersonHomeSub extends JoinRelatedPerson1Home {
+        public JoinRelatedPersonHomeSub() {
+            super();
+        }
 
-	private class JoinRelatedPersonHomeSub extends JoinRelatedPerson1Home {
-		public JoinRelatedPersonHomeSub() {
-			super();
-		}
-
-		@Override
-		public List<Object> createTestObjects() {
-			final List<Object> outTest = new ArrayList<Object>();
-			try {
-				final KeyObject lKey = new KeyObjectImpl();
-				lKey.setValue(RelationHome.KEY_ITEM2, new Integer(32));
-				lKey.setValue(RelationHome.KEY_TYPE2, new Integer(1));
-				lKey.setValue(RelationHome.KEY_TYPE1, new Integer(1));
-				outTest.add(createSelectString(lKey));
-			} catch (final VException exc) {
-				fail(exc.getMessage());
-			}
-			return outTest;
-		}
-	}
+        @Override
+        public List<Object> createTestObjects() {
+            final List<Object> outTest = new ArrayList<Object>();
+            try {
+                final KeyObject lKey = new KeyObjectImpl();
+                lKey.setValue(RelationHome.KEY_ITEM2, new Integer(32));
+                lKey.setValue(RelationHome.KEY_TYPE2, new Integer(1));
+                lKey.setValue(RelationHome.KEY_TYPE1, new Integer(1));
+                outTest.add(createSelectString(lKey));
+            } catch (final VException exc) {
+                fail(exc.getMessage());
+            }
+            return outTest;
+        }
+    }
 
 }

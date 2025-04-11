@@ -18,16 +18,16 @@
  ***************************************************************************/
 package org.elbe.relations.data.utility;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.elbe.relations.data.TestEmbeddedCreator;
 import org.elbe.relations.data.bom.EventStoreHome;
 import org.elbe.relations.data.bom.IItem;
 import org.elbe.relations.data.test.DataHouseKeeper;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author lbenno
@@ -35,12 +35,12 @@ import org.junit.Test;
 public class EventStoreCheckerTest {
     private static DataHouseKeeper data;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         data = DataHouseKeeper.INSTANCE;
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         data.deleteAllFromEventStore();
     }

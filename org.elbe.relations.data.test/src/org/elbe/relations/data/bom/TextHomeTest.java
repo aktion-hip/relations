@@ -18,18 +18,18 @@
  ***************************************************************************/
 package org.elbe.relations.data.bom;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import org.elbe.relations.data.test.DataHouseKeeper;
 import org.hip.kernel.exc.VException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -38,17 +38,17 @@ import org.junit.Test;
 public class TextHomeTest {
     private static DataHouseKeeper data;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         data = DataHouseKeeper.INSTANCE;
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         // data.setUp();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         data.deleteAllInAll();
     }
@@ -63,16 +63,16 @@ public class TextHomeTest {
         assertEquals(0, home.getCount());
         assertEquals(0, storeHome.getCount());
 
-        final AbstractItem lText = home.newText("Book Title", "", "Author", "", "", "", "", "", new Integer(0),
-                new Integer(0), "", "", new Integer(1));
+        final AbstractItem lText = home.newText("Book Title", "", "Author", "", "", "", "", "", Integer.valueOf(0),
+                Integer.valueOf(0), "", "", Integer.valueOf(1));
         assertEquals(1, home.getCount());
         assertEquals(1, storeHome.getCount());
 
         final AbstractItem retrieved = home.getText(lText.getID());
         final long created = ((Timestamp) retrieved.get(TextHome.KEY_CREATED)).getTime();
         final long modified = ((Timestamp) retrieved.get(TextHome.KEY_MODIFIED)).getTime();
-        assertEquals("Created 1", created, modified);
-        assertTrue("Created 2", created >= now);
+        assertEquals(created, modified);
+        assertTrue(created >= now);
 
         home.deleteItem(lText.getID());
         assertEquals(0, home.getCount());
@@ -89,18 +89,19 @@ public class TextHomeTest {
         assertEquals(0, home.getCount());
         assertEquals(0, storeHome.getCount());
 
-        AbstractItem text = home.newText(title, "", author, "", "", "", "", "", new Integer(0), new Integer(0), "",
-                "", new Integer(1));
+        AbstractItem text = home.newText(title, "", author, "", "", "", "", "", Integer.valueOf(0), Integer.valueOf(0),
+                "",
+                "", Integer.valueOf(1));
         final long id = text.getID();
 
-        home.newText("another", "", "text", "", "", "", "", "", new Integer(0), new Integer(0), "", "",
-                new Integer(1));
+        home.newText("another", "", "text", "", "", "", "", "", Integer.valueOf(0), Integer.valueOf(0), "", "",
+                Integer.valueOf(1));
         assertEquals(2, home.getCount());
         assertEquals(2, storeHome.getCount());
 
         text = (AbstractItem) home.getItem(id);
-        assertEquals("title", title, text.getTitle());
-        assertEquals("author", author, text.get(TextHome.KEY_AUTHOR)
+        assertEquals("Book Title", title, text.getTitle());
+        assertEquals("Author", author, text.get(TextHome.KEY_AUTHOR)
                 .toString());
     }
 

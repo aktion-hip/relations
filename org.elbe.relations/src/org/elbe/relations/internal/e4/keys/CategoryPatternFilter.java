@@ -21,9 +21,9 @@ package org.elbe.relations.internal.e4.keys;
 import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.commands.common.NotDefinedException;
-import org.eclipse.e4.ui.workbench.swt.internal.copy.PatternFilter;
 import org.eclipse.jface.bindings.Binding;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.ui.dialogs.PatternFilter;
 import org.eclipse.ui.internal.keys.model.BindingElement;
 
 /**
@@ -33,74 +33,74 @@ import org.eclipse.ui.internal.keys.model.BindingElement;
  */
 @SuppressWarnings("restriction")
 class CategoryPatternFilter extends PatternFilter {
-	private boolean filterCategories;
-	final Category uncategorized;
+    private boolean filterCategories;
+    final Category uncategorized;
 
-	/**
-	 * CategoryPatternFilter constructor.
-	 *
-	 * @param filterCategories
-	 *            boolean
-	 * @param category
-	 *            {@link Category}
-	 */
-	public CategoryPatternFilter(final boolean filterCategories,
-	        final Category category) {
-		uncategorized = category;
-		filterCategories(filterCategories);
-	}
+    /**
+     * CategoryPatternFilter constructor.
+     *
+     * @param filterCategories
+     *            boolean
+     * @param category
+     *            {@link Category}
+     */
+    public CategoryPatternFilter(final boolean filterCategories,
+            final Category category) {
+        this.uncategorized = category;
+        filterCategories(filterCategories);
+    }
 
-	/**
-	 * Sets the filtering flag.
-	 *
-	 * @param filterCategories
-	 *            boolean
-	 */
-	public void filterCategories(final boolean filterCategories) {
-		this.filterCategories = filterCategories;
-		if (this.filterCategories) {
-			setPattern("org.eclipse.ui.keys.optimization.false"); //$NON-NLS-1$
-		} else {
-			setPattern("org.eclipse.ui.keys.optimization.true"); //$NON-NLS-1$
-		}
-	}
+    /**
+     * Sets the filtering flag.
+     *
+     * @param filterCategories
+     *            boolean
+     */
+    public void filterCategories(final boolean filterCategories) {
+        this.filterCategories = filterCategories;
+        if (this.filterCategories) {
+            setPattern("org.eclipse.ui.keys.optimization.false"); //$NON-NLS-1$
+        } else {
+            setPattern("org.eclipse.ui.keys.optimization.true"); //$NON-NLS-1$
+        }
+    }
 
-	/**
-	 *
-	 * @return boolean
-	 */
-	public boolean isFilteringCategories() {
-		return filterCategories;
-	}
+    /**
+     *
+     * @return boolean
+     */
+    public boolean isFilteringCategories() {
+        return this.filterCategories;
+    }
 
-	@Override
-	protected boolean isLeafMatch(final Viewer inViewer,
-	        final Object inElement) {
-		if (filterCategories) {
-			final ParameterizedCommand inCmd = getCommand(inElement);
-			try {
-				if (inCmd != null
-				        && inCmd.getCommand().getCategory() == uncategorized) {
-					return false;
-				}
-			}
-			catch (final NotDefinedException e) {
-				return false;
-			}
-		}
-		return super.isLeafMatch(inViewer, inElement);
-	}
+    @Override
+    protected boolean isLeafMatch(final Viewer inViewer,
+            final Object inElement) {
+        if (this.filterCategories) {
+            final ParameterizedCommand inCmd = getCommand(inElement);
+            try {
+                if (inCmd != null
+                        && inCmd.getCommand().getCategory() == this.uncategorized) {
+                    return false;
+                }
+            }
+            catch (final NotDefinedException e) {
+                return false;
+            }
+        }
+        return super.isLeafMatch(inViewer, inElement);
+    }
 
-	private ParameterizedCommand getCommand(final Object inElement) {
-		if (inElement instanceof BindingElement) {
-			final Object lModelObject = ((BindingElement) inElement)
-			        .getModelObject();
-			if (lModelObject instanceof Binding) {
-				return ((Binding) lModelObject).getParameterizedCommand();
-			} else if (lModelObject instanceof ParameterizedCommand) {
-				return (ParameterizedCommand) lModelObject;
-			}
-		}
-		return null;
-	}
+    private ParameterizedCommand getCommand(final Object inElement) {
+        if (inElement instanceof BindingElement) {
+            final Object lModelObject = ((BindingElement) inElement)
+                    .getModelObject();
+            if (lModelObject instanceof Binding) {
+                return ((Binding) lModelObject).getParameterizedCommand();
+            } else if (lModelObject instanceof ParameterizedCommand) {
+                return (ParameterizedCommand) lModelObject;
+            }
+        }
+        return null;
+    }
 }

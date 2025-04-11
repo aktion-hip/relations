@@ -19,16 +19,16 @@
 
 package org.elbe.relations.data.utility;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.elbe.relations.data.bom.TermHome;
 import org.elbe.relations.data.test.DataHouseKeeper;
 import org.hip.kernel.bom.AbstractSerializer;
 import org.hip.kernel.bom.DomainObject;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 /** JUnit test
@@ -49,12 +49,12 @@ public class RelationsSerializerTest {
     @Mock
     private IProgressMonitor monitor;
 
-    @BeforeClass
+    @BeforeAll
     public static void before() {
         data = DataHouseKeeper.INSTANCE;
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         data.deleteAllInAll();
     }

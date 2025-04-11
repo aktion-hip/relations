@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
-import org.eclipse.e4.ui.workbench.swt.internal.copy.FilteredTree;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -49,6 +48,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.activities.WorkbenchActivityHelper;
+import org.eclipse.ui.dialogs.FilteredTree;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.eclipse.ui.internal.dialogs.DialogUtil;
 import org.eclipse.ui.internal.dialogs.WizardActivityFilter;
@@ -71,419 +71,419 @@ import org.elbe.relations.internal.e4.wizards.util.WorkbenchWizardNode;
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractWizardNewPage
-        implements ISelectionChangedListener {
+implements ISelectionChangedListener {
 
-	private final static int SIZING_LISTS_HEIGHT = 200;
-	private final static int SIZING_VIEWER_WIDTH = 300;
+    private final static int SIZING_LISTS_HEIGHT = 200;
+    private final static int SIZING_VIEWER_WIDTH = 300;
 
-	private final AbstractExtensionWizardSelectionPage page;
+    private final AbstractExtensionWizardSelectionPage page;
 
-	private IWizardCategory wizardCategories;
-	private IWizardDescriptor[] primaryWizards;
-	private final WizardActivityFilter filter = new WizardActivityFilter();
-	private FilteredTree filteredTree;
-	private WizardPatternFilter filteredTreeFilter;
+    private IWizardCategory wizardCategories;
+    private IWizardDescriptor[] primaryWizards;
+    private final WizardActivityFilter filter = new WizardActivityFilter();
+    private FilteredTree filteredTree;
+    private WizardPatternFilter filteredTreeFilter;
 
-	private CLabel descImageCanvas;
-	private final Map<ImageDescriptor, Image> imageTable = new HashMap<ImageDescriptor, Image>();
+    private CLabel descImageCanvas;
+    private final Map<ImageDescriptor, Image> imageTable = new HashMap<ImageDescriptor, Image>();
 
-	// Keep track of the wizards we have previously selected
-	private final Map<IWizardDescriptor, WorkbenchWizardNode> selectedWizards = new HashMap<IWizardDescriptor, WorkbenchWizardNode>();
+    // Keep track of the wizards we have previously selected
+    private final Map<IWizardDescriptor, WorkbenchWizardNode> selectedWizards = new HashMap<IWizardDescriptor, WorkbenchWizardNode>();
 
-	private IWizardDescriptor selectedElement;
-	private final IEclipseContext context;
+    private IWizardDescriptor selectedElement;
+    private final IEclipseContext context;
 
-	/**
-	 * NewWizardNewPage constructor.
-	 *
-	 * @param inMainPage
-	 *            {@link AbstractExtensionWizardSelectionPage}
-	 * @param inContext
-	 *            {@link IEclipseContext}
-	 * @param inWizardCategories
-	 *            {@link IWizardCategory}
-	 * @param inPrimaryWizards
-	 *            IWizardDescriptor[]
-	 */
-	public AbstractWizardNewPage(
-	        final AbstractExtensionWizardSelectionPage inMainPage,
-	        IEclipseContext inContext, final IWizardCategory inWizardCategories,
-	        final IWizardDescriptor[] inPrimaryWizards) {
-		page = inMainPage;
-		context = inContext;
-		wizardCategories = inWizardCategories;
-		primaryWizards = inPrimaryWizards;
+    /**
+     * NewWizardNewPage constructor.
+     *
+     * @param inMainPage
+     *            {@link AbstractExtensionWizardSelectionPage}
+     * @param inContext
+     *            {@link IEclipseContext}
+     * @param inWizardCategories
+     *            {@link IWizardCategory}
+     * @param inPrimaryWizards
+     *            IWizardDescriptor[]
+     */
+    public AbstractWizardNewPage(
+            final AbstractExtensionWizardSelectionPage inMainPage,
+            final IEclipseContext inContext, final IWizardCategory inWizardCategories,
+            final IWizardDescriptor[] inPrimaryWizards) {
+        this.page = inMainPage;
+        this.context = inContext;
+        this.wizardCategories = inWizardCategories;
+        this.primaryWizards = inPrimaryWizards;
 
-		trimPrimaryWizards();
+        trimPrimaryWizards();
 
-		if (primaryWizards.length > 0) {
-			if (allPrimary(inWizardCategories)) {
-				wizardCategories = null; // dont bother considering the
-				                         // categories as all wizards are
-				                         // primary
-			} else {
-				allActivityEnabled(inWizardCategories);
-			}
-		} else {
-			allActivityEnabled(inWizardCategories);
-		}
-	}
+        if (this.primaryWizards.length > 0) {
+            if (allPrimary(inWizardCategories)) {
+                this.wizardCategories = null; // dont bother considering the
+                // categories as all wizards are
+                // primary
+            } else {
+                allActivityEnabled(inWizardCategories);
+            }
+        } else {
+            allActivityEnabled(inWizardCategories);
+        }
+    }
 
-	/**
-	 * Remove all primary wizards that are not in the wizard collection
-	 */
-	private void trimPrimaryWizards() {
-		final ArrayList<IWizardDescriptor> lPrimaryWizards = new ArrayList<IWizardDescriptor>(
-		        primaryWizards.length);
+    /**
+     * Remove all primary wizards that are not in the wizard collection
+     */
+    private void trimPrimaryWizards() {
+        final ArrayList<IWizardDescriptor> lPrimaryWizards = new ArrayList<IWizardDescriptor>(
+                this.primaryWizards.length);
 
-		if (wizardCategories == null) {
-			return;// No categories so nothing to trim
-		}
+        if (this.wizardCategories == null) {
+            return;// No categories so nothing to trim
+        }
 
-		for (final IWizardDescriptor lPrimary : primaryWizards) {
-			if (wizardCategories.findWizard(lPrimary.getId()) != null) {
-				lPrimaryWizards.add(lPrimary);
-			}
-		}
-		primaryWizards = lPrimaryWizards
-		        .toArray(new IWizardDescriptor[lPrimaryWizards.size()]);
-	}
+        for (final IWizardDescriptor lPrimary : this.primaryWizards) {
+            if (this.wizardCategories.findWizard(lPrimary.getId()) != null) {
+                lPrimaryWizards.add(lPrimary);
+            }
+        }
+        this.primaryWizards = lPrimaryWizards
+                .toArray(new IWizardDescriptor[lPrimaryWizards.size()]);
+    }
 
-	/**
-	 * @return boolean whether all wizards in the category are considered
-	 *         primary
-	 */
-	private boolean allPrimary(final IWizardCategory inWizardCategories) {
-		final IWizardDescriptor[] lWizards = inWizardCategories.getWizards();
-		for (int i = 0; i < lWizards.length; i++) {
-			final IWizardDescriptor lWizard = lWizards[i];
-			if (!isPrimary(lWizard)) {
-				return false;
-			}
-		}
+    /**
+     * @return boolean whether all wizards in the category are considered
+     *         primary
+     */
+    private boolean allPrimary(final IWizardCategory inWizardCategories) {
+        final IWizardDescriptor[] lWizards = inWizardCategories.getWizards();
+        for (int i = 0; i < lWizards.length; i++) {
+            final IWizardDescriptor lWizard = lWizards[i];
+            if (!isPrimary(lWizard)) {
+                return false;
+            }
+        }
 
-		final IWizardCategory[] lChildren = inWizardCategories.getCategories();
-		for (int i = 0; i < lChildren.length; i++) {
-			if (!allPrimary(lChildren[i])) {
-				return false;
-			}
-		}
-		return true;
-	}
+        final IWizardCategory[] lChildren = inWizardCategories.getCategories();
+        for (int i = 0; i < lChildren.length; i++) {
+            if (!allPrimary(lChildren[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	/**
-	 * @param inWizard
-	 * @return whether the given wizard is primary
-	 */
-	private boolean isPrimary(final IWizardDescriptor inWizard) {
-		for (final IWizardDescriptor lElement : primaryWizards) {
-			if (lElement.equals(inWizard)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    /**
+     * @param inWizard
+     * @return whether the given wizard is primary
+     */
+    private boolean isPrimary(final IWizardDescriptor inWizard) {
+        for (final IWizardDescriptor lElement : this.primaryWizards) {
+            if (lElement.equals(inWizard)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	/**
-	 * @param inWizardCategories
-	 *            the wizard category
-	 * @return whether all of the wizards in the category are enabled via
-	 *         activity filtering
-	 */
-	private boolean allActivityEnabled(
-	        final IWizardCategory inWizardCategories) {
-		final IWizardDescriptor[] lWizards = inWizardCategories.getWizards();
-		for (int i = 0; i < lWizards.length; i++) {
-			final IWizardDescriptor lWizard = lWizards[i];
-			if (WorkbenchActivityHelper.filterItem(lWizard)) {
-				return false;
-			}
-		}
+    /**
+     * @param inWizardCategories
+     *            the wizard category
+     * @return whether all of the wizards in the category are enabled via
+     *         activity filtering
+     */
+    private boolean allActivityEnabled(
+            final IWizardCategory inWizardCategories) {
+        final IWizardDescriptor[] lWizards = inWizardCategories.getWizards();
+        for (int i = 0; i < lWizards.length; i++) {
+            final IWizardDescriptor lWizard = lWizards[i];
+            if (WorkbenchActivityHelper.filterItem(lWizard)) {
+                return false;
+            }
+        }
 
-		final IWizardCategory[] lChildren = inWizardCategories.getCategories();
-		for (int i = 0; i < lChildren.length; i++) {
-			if (!allActivityEnabled(lChildren[i])) {
-				return false;
-			}
-		}
-		return true;
-	}
+        final IWizardCategory[] lChildren = inWizardCategories.getCategories();
+        for (int i = 0; i < lChildren.length; i++) {
+            if (!allActivityEnabled(lChildren[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	@Override
-	public void selectionChanged(final SelectionChangedEvent inEvent) {
-		page.setErrorMessage(null);
-		page.setMessage(null);
+    @Override
+    public void selectionChanged(final SelectionChangedEvent inEvent) {
+        this.page.setErrorMessage(null);
+        this.page.setMessage(null);
 
-		final Object lSelectedObject = getSingleSelection(
-		        (IStructuredSelection) inEvent.getSelection());
+        final Object lSelectedObject = getSingleSelection(
+                (IStructuredSelection) inEvent.getSelection());
 
-		if (lSelectedObject instanceof IWizardDescriptor) {
-			if (lSelectedObject == selectedElement) {
-				return;
-			}
-			updateWizardSelection((IWizardDescriptor) lSelectedObject);
-		} else {
-			selectedElement = null;
-			page.setHasPages(false);
-			page.setCanFinishEarly(false);
-			page.selectWizardNode(null);
-			updateDescription(null);
-		}
-	}
+        if (lSelectedObject instanceof IWizardDescriptor) {
+            if (lSelectedObject == this.selectedElement) {
+                return;
+            }
+            updateWizardSelection((IWizardDescriptor) lSelectedObject);
+        } else {
+            this.selectedElement = null;
+            this.page.setHasPages(false);
+            this.page.setCanFinishEarly(false);
+            this.page.selectWizardNode(null);
+            updateDescription(null);
+        }
+    }
 
-	/**
-	 * Returns the single selected object contained in the passed
-	 * selectionEvent, or <code>null</code> if the selectionEvent contains
-	 * either 0 or 2+ selected objects.
-	 */
-	protected Object getSingleSelection(
-	        final IStructuredSelection inSelection) {
-		return inSelection.size() == 1 ? inSelection.getFirstElement() : null;
-	}
+    /**
+     * Returns the single selected object contained in the passed
+     * selectionEvent, or <code>null</code> if the selectionEvent contains
+     * either 0 or 2+ selected objects.
+     */
+    protected Object getSingleSelection(
+            final IStructuredSelection inSelection) {
+        return inSelection.size() == 1 ? inSelection.getFirstElement() : null;
+    }
 
-	/**
-	 * @param inSelectedObject
-	 */
-	private void updateWizardSelection(
-	        final IWizardDescriptor inSelectedObject) {
-		selectedElement = inSelectedObject;
-		WorkbenchWizardNode lSelectedNode;
-		if (selectedWizards.containsKey(inSelectedObject)) {
-			lSelectedNode = selectedWizards.get(inSelectedObject);
-		} else {
-			lSelectedNode = createNode(page, inSelectedObject, context);
-			selectedWizards.put(inSelectedObject, lSelectedNode);
-		}
+    /**
+     * @param inSelectedObject
+     */
+    private void updateWizardSelection(
+            final IWizardDescriptor inSelectedObject) {
+        this.selectedElement = inSelectedObject;
+        WorkbenchWizardNode lSelectedNode;
+        if (this.selectedWizards.containsKey(inSelectedObject)) {
+            lSelectedNode = this.selectedWizards.get(inSelectedObject);
+        } else {
+            lSelectedNode = createNode(this.page, inSelectedObject, this.context);
+            this.selectedWizards.put(inSelectedObject, lSelectedNode);
+        }
 
-		page.setCanFinishEarly(inSelectedObject.canFinishEarly());
-		page.setHasPages(inSelectedObject.hasPages());
-		page.selectWizardNode(lSelectedNode);
+        this.page.setCanFinishEarly(inSelectedObject.canFinishEarly());
+        this.page.setHasPages(inSelectedObject.hasPages());
+        this.page.selectWizardNode(lSelectedNode);
 
-		updateDescription(inSelectedObject);
-	}
+        updateDescription(inSelectedObject);
+    }
 
-	protected abstract WorkbenchWizardNode createNode(
-	        final AbstractExtensionWizardSelectionPage inWizardPage,
-	        final IWizardDescriptor inElement, IEclipseContext inContext);
+    protected abstract WorkbenchWizardNode createNode(
+            final AbstractExtensionWizardSelectionPage inWizardPage,
+            final IWizardDescriptor inElement, IEclipseContext inContext);
 
-	/**
-	 * @param inSettings
-	 */
-	public void setDialogSettings(final IDialogSettings inSettings) {
-	}
+    /**
+     * @param inSettings
+     */
+    public void setDialogSettings(final IDialogSettings inSettings) {
+    }
 
-	protected Control createControl(final Composite inParent) {
-		final Font lWizardFont = inParent.getFont();
-		// top level group
-		final Composite lOuterContainer = new Composite(inParent, SWT.NONE);
-		GridLayout lLayout = new GridLayout();
-		lOuterContainer.setLayout(lLayout);
+    protected Control createControl(final Composite inParent) {
+        final Font lWizardFont = inParent.getFont();
+        // top level group
+        final Composite lOuterContainer = new Composite(inParent, SWT.NONE);
+        GridLayout lLayout = new GridLayout();
+        lOuterContainer.setLayout(lLayout);
 
-		final Label lWizardLabel = new Label(lOuterContainer, SWT.NONE);
-		GridData lData = new GridData(SWT.BEGINNING, SWT.FILL, false, true);
-		lOuterContainer.setLayoutData(lData);
-		lWizardLabel.setFont(lWizardFont);
-		lWizardLabel.setText(WorkbenchMessages.NewWizardNewPage_wizardsLabel);
+        final Label lWizardLabel = new Label(lOuterContainer, SWT.NONE);
+        GridData lData = new GridData(SWT.BEGINNING, SWT.FILL, false, true);
+        lOuterContainer.setLayoutData(lData);
+        lWizardLabel.setFont(lWizardFont);
+        lWizardLabel.setText(WorkbenchMessages.NewWizardNewPage_wizardsLabel);
 
-		final Composite lInnerContainer = new Composite(lOuterContainer,
-		        SWT.NONE);
-		lLayout = new GridLayout(2, false);
-		lLayout.marginHeight = 0;
-		lLayout.marginWidth = 0;
-		lInnerContainer.setLayout(lLayout);
-		lInnerContainer.setFont(lWizardFont);
-		lData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		lInnerContainer.setLayoutData(lData);
+        final Composite lInnerContainer = new Composite(lOuterContainer,
+                SWT.NONE);
+        lLayout = new GridLayout(2, false);
+        lLayout.marginHeight = 0;
+        lLayout.marginWidth = 0;
+        lInnerContainer.setLayout(lLayout);
+        lInnerContainer.setFont(lWizardFont);
+        lData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        lInnerContainer.setLayoutData(lData);
 
-		filteredTree = createFilteredTree(lInnerContainer);
-		createImage(lInnerContainer);
-		updateDescription(null);
+        this.filteredTree = createFilteredTree(lInnerContainer);
+        createImage(lInnerContainer);
+        updateDescription(null);
 
-		// // wizard actions pane...create SWT table directly to
-		// // get single selection mode instead of multi selection.
-		// restoreWidgetValues();
+        // // wizard actions pane...create SWT table directly to
+        // // get single selection mode instead of multi selection.
+        // restoreWidgetValues();
 
-		return lOuterContainer;
-	}
+        return lOuterContainer;
+    }
 
-	protected FilteredTree createFilteredTree(final Composite inParent) {
-		final Composite lComposite = new Composite(inParent, SWT.NONE);
-		final GridLayout lLayout = new GridLayout();
-		lLayout.marginHeight = 0;
-		lLayout.marginWidth = 0;
-		lComposite.setLayout(lLayout);
+    protected FilteredTree createFilteredTree(final Composite inParent) {
+        final Composite lComposite = new Composite(inParent, SWT.NONE);
+        final GridLayout lLayout = new GridLayout();
+        lLayout.marginHeight = 0;
+        lLayout.marginWidth = 0;
+        lComposite.setLayout(lLayout);
 
-		final GridData lData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		lData.widthHint = SIZING_VIEWER_WIDTH;
-		lData.horizontalSpan = 2;
-		lData.grabExcessHorizontalSpace = true;
-		lData.grabExcessVerticalSpace = true;
+        final GridData lData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        lData.widthHint = SIZING_VIEWER_WIDTH;
+        lData.horizontalSpan = 2;
+        lData.grabExcessHorizontalSpace = true;
+        lData.grabExcessVerticalSpace = true;
 
-		final boolean lNeedsHint = DialogUtil.inRegularFontMode(inParent);
+        final boolean lNeedsHint = DialogUtil.inRegularFontMode(inParent);
 
-		// Only give a height hint if the dialog is going to be too small
-		if (lNeedsHint) {
-			lData.heightHint = SIZING_LISTS_HEIGHT;
-		}
-		lComposite.setLayoutData(lData);
+        // Only give a height hint if the dialog is going to be too small
+        if (lNeedsHint) {
+            lData.heightHint = SIZING_LISTS_HEIGHT;
+        }
+        lComposite.setLayoutData(lData);
 
-		filteredTreeFilter = new WizardPatternFilter();
-		final FilteredTree outFilterTree = new FilteredTree(lComposite,
-		        SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER,
-		        filteredTreeFilter);
+        this.filteredTreeFilter = new WizardPatternFilter();
+        final FilteredTree outFilterTree = new FilteredTree(lComposite,
+                SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER,
+                this.filteredTreeFilter, true, true);
 
-		final TreeViewer lTreeViewer = outFilterTree.getViewer();
-		lTreeViewer.setContentProvider(new WizardContentProvider());
-		lTreeViewer.setLabelProvider(new WorkbenchLabelProvider());
-		lTreeViewer.setComparator(NewWizardCollectionComparator.getInstance());
-		lTreeViewer.addSelectionChangedListener(this);
+        final TreeViewer lTreeViewer = outFilterTree.getViewer();
+        lTreeViewer.setContentProvider(new WizardContentProvider());
+        lTreeViewer.setLabelProvider(new WorkbenchLabelProvider());
+        lTreeViewer.setComparator(NewWizardCollectionComparator.getInstance());
+        lTreeViewer.addSelectionChangedListener(this);
 
-		final ArrayList<Object> lInputArray = new ArrayList<Object>(
-		        Arrays.asList(primaryWizards));
+        final ArrayList<Object> lInputArray = new ArrayList<Object>(
+                Arrays.asList(this.primaryWizards));
 
-		boolean lExpandTop = false;
+        boolean lExpandTop = false;
 
-		if (wizardCategories != null) {
-			if (wizardCategories.getParent() == null) {
-				final IWizardCategory[] lChildren = wizardCategories
-				        .getCategories();
-				for (int i = 0; i < lChildren.length; i++) {
-					lInputArray.add(lChildren[i]);
-				}
-			} else {
-				lExpandTop = true;
-				lInputArray.add(wizardCategories);
-			}
-		}
+        if (this.wizardCategories != null) {
+            if (this.wizardCategories.getParent() == null) {
+                final IWizardCategory[] lChildren = this.wizardCategories
+                        .getCategories();
+                for (int i = 0; i < lChildren.length; i++) {
+                    lInputArray.add(lChildren[i]);
+                }
+            } else {
+                lExpandTop = true;
+                lInputArray.add(this.wizardCategories);
+            }
+        }
 
-		// ensure the category is expanded. If there is a remembered expansion
-		// it will be set later.
-		if (lExpandTop) {
-			lTreeViewer.setAutoExpandLevel(2);
-		}
+        // ensure the category is expanded. If there is a remembered expansion
+        // it will be set later.
+        if (lExpandTop) {
+            lTreeViewer.setAutoExpandLevel(2);
+        }
 
-		lTreeViewer.setInput(new AdaptableList(lInputArray));
+        lTreeViewer.setInput(new AdaptableList(lInputArray));
 
-		outFilterTree.setBackground(inParent.getDisplay()
-		        .getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-		lTreeViewer.getTree().setFont(inParent.getFont());
+        outFilterTree.setBackground(inParent.getDisplay()
+                .getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+        lTreeViewer.getTree().setFont(inParent.getFont());
 
-		lTreeViewer.addDoubleClickListener(new IDoubleClickListener() {
-			/*
-			 * (non-Javadoc)
-			 *
-			 * @see
-			 * org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org
-			 * .eclipse.jface.viewers.DoubleClickEvent)
-			 */
-			@Override
-			public void doubleClick(final DoubleClickEvent inEvent) {
-				final IStructuredSelection lSelection = (IStructuredSelection) inEvent
-		                .getSelection();
-				selectionChanged(new SelectionChangedEvent(inEvent.getViewer(),
-		                lSelection));
+        lTreeViewer.addDoubleClickListener(new IDoubleClickListener() {
+            /*
+             * (non-Javadoc)
+             *
+             * @see
+             * org.eclipse.jface.viewers.IDoubleClickListener#doubleClick(org
+             * .eclipse.jface.viewers.DoubleClickEvent)
+             */
+            @Override
+            public void doubleClick(final DoubleClickEvent inEvent) {
+                final IStructuredSelection lSelection = (IStructuredSelection) inEvent
+                        .getSelection();
+                selectionChanged(new SelectionChangedEvent(inEvent.getViewer(),
+                        lSelection));
 
-				final Object lElement = lSelection.getFirstElement();
-				if (lTreeViewer.isExpandable(lElement)) {
-					lTreeViewer.setExpandedState(lElement,
-		                    !lTreeViewer.getExpandedState(lElement));
-				} else if (lElement instanceof WorkbenchWizardElement) {
-					page.advanceToNextPageOrFinish();
-				}
-			}
-		});
+                final Object lElement = lSelection.getFirstElement();
+                if (lTreeViewer.isExpandable(lElement)) {
+                    lTreeViewer.setExpandedState(lElement,
+                            !lTreeViewer.getExpandedState(lElement));
+                } else if (lElement instanceof WorkbenchWizardElement) {
+                    AbstractWizardNewPage.this.page.advanceToNextPageOrFinish();
+                }
+            }
+        });
 
-		lTreeViewer.addFilter(filter);
+        lTreeViewer.addFilter(this.filter);
 
-		Dialog.applyDialogFont(outFilterTree);
-		return outFilterTree;
-	}
+        Dialog.applyDialogFont(outFilterTree);
+        return outFilterTree;
+    }
 
-	/**
-	 * Create the image controls.
-	 *
-	 * @param inParent
-	 *            the parent <code>Composite</code>.
-	 * @since 3.0
-	 */
-	private void createImage(final Composite inParent) {
-		descImageCanvas = new CLabel(inParent, SWT.NONE);
-		final GridData lData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING
-		        | GridData.VERTICAL_ALIGN_BEGINNING);
-		lData.widthHint = 0;
-		lData.heightHint = 0;
-		descImageCanvas.setLayoutData(lData);
+    /**
+     * Create the image controls.
+     *
+     * @param inParent
+     *            the parent <code>Composite</code>.
+     * @since 3.0
+     */
+    private void createImage(final Composite inParent) {
+        this.descImageCanvas = new CLabel(inParent, SWT.NONE);
+        final GridData lData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING
+                | GridData.VERTICAL_ALIGN_BEGINNING);
+        lData.widthHint = 0;
+        lData.heightHint = 0;
+        this.descImageCanvas.setLayoutData(lData);
 
-		// hook a listener to get rid of cached images.
-		descImageCanvas.addDisposeListener(new DisposeListener() {
-			@Override
-			public void widgetDisposed(final DisposeEvent inEvent) {
-				for (final Iterator<Image> lImages = imageTable.values()
-		                .iterator(); lImages.hasNext();) {
-					lImages.next().dispose();
-				}
-				imageTable.clear();
-			}
-		});
-	}
+        // hook a listener to get rid of cached images.
+        this.descImageCanvas.addDisposeListener(new DisposeListener() {
+            @Override
+            public void widgetDisposed(final DisposeEvent inEvent) {
+                for (final Iterator<Image> lImages = AbstractWizardNewPage.this.imageTable.values()
+                        .iterator(); lImages.hasNext();) {
+                    lImages.next().dispose();
+                }
+                AbstractWizardNewPage.this.imageTable.clear();
+            }
+        });
+    }
 
-	private void updateDescription(final IWizardDescriptor inSelectedObject) {
-		String lDescription = ""; //$NON-NLS-1$
-		if (inSelectedObject != null) {
-			lDescription = inSelectedObject.getDescription();
-		}
+    private void updateDescription(final IWizardDescriptor inSelectedObject) {
+        String lDescription = ""; //$NON-NLS-1$
+        if (inSelectedObject != null) {
+            lDescription = inSelectedObject.getDescription();
+        }
 
-		page.setDescription(lDescription);
+        this.page.setDescription(lDescription);
 
-		if (hasImage(inSelectedObject)) {
-			ImageDescriptor lDescriptor = null;
-			if (inSelectedObject != null) {
-				lDescriptor = inSelectedObject.getDescriptionImage();
-			}
+        if (hasImage(inSelectedObject)) {
+            ImageDescriptor lDescriptor = null;
+            if (inSelectedObject != null) {
+                lDescriptor = inSelectedObject.getDescriptionImage();
+            }
 
-			if (lDescriptor != null) {
-				final GridData lData = (GridData) descImageCanvas
-				        .getLayoutData();
-				lData.widthHint = SWT.DEFAULT;
-				lData.heightHint = SWT.DEFAULT;
-				Image lImage = imageTable.get(lDescriptor);
-				if (lImage == null) {
-					lImage = lDescriptor.createImage(false);
-					imageTable.put(lDescriptor, lImage);
-				}
-				descImageCanvas.setImage(lImage);
-			}
-		} else {
-			final GridData lData = (GridData) descImageCanvas.getLayoutData();
-			lData.widthHint = 0;
-			lData.heightHint = 0;
-			descImageCanvas.setImage(null);
-		}
+            if (lDescriptor != null) {
+                final GridData lData = (GridData) this.descImageCanvas
+                        .getLayoutData();
+                lData.widthHint = SWT.DEFAULT;
+                lData.heightHint = SWT.DEFAULT;
+                Image lImage = this.imageTable.get(lDescriptor);
+                if (lImage == null) {
+                    lImage = lDescriptor.createImage(false);
+                    this.imageTable.put(lDescriptor, lImage);
+                }
+                this.descImageCanvas.setImage(lImage);
+            }
+        } else {
+            final GridData lData = (GridData) this.descImageCanvas.getLayoutData();
+            lData.widthHint = 0;
+            lData.heightHint = 0;
+            this.descImageCanvas.setImage(null);
+        }
 
-		descImageCanvas.getParent().layout(true);
-		filteredTree.getViewer().getTree().showSelection();
+        this.descImageCanvas.getParent().layout(true);
+        this.filteredTree.getViewer().getTree().showSelection();
 
-		final IWizardContainer lContainer = page.getWizard().getContainer();
-		if (lContainer instanceof IWizardContainer2) {
-			((IWizardContainer2) lContainer).updateSize();
-		}
-	}
+        final IWizardContainer lContainer = this.page.getWizard().getContainer();
+        if (lContainer instanceof IWizardContainer2) {
+            ((IWizardContainer2) lContainer).updateSize();
+        }
+    }
 
-	/**
-	 * Tests whether the given wizard has an associated image.
-	 *
-	 * @param inSelectedObject
-	 *            the wizard to test
-	 * @return whether the given wizard has an associated image
-	 */
-	private boolean hasImage(final IWizardDescriptor inSelectedObject) {
-		if (inSelectedObject == null) {
-			return false;
-		}
-		if (inSelectedObject.getDescriptionImage() != null) {
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Tests whether the given wizard has an associated image.
+     *
+     * @param inSelectedObject
+     *            the wizard to test
+     * @return whether the given wizard has an associated image
+     */
+    private boolean hasImage(final IWizardDescriptor inSelectedObject) {
+        if (inSelectedObject == null) {
+            return false;
+        }
+        if (inSelectedObject.getDescriptionImage() != null) {
+            return true;
+        }
+        return false;
+    }
 
 }

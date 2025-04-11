@@ -32,106 +32,118 @@ import org.eclipse.e4.ui.model.application.commands.MCommandParameter;
  */
 public class TestCommand implements MCommand {
 
-	private String elementId;
+    private String elementId;
 
-	@Override
-	public String getElementId() {
-		return elementId;
-	}
+    @Override
+    public String getElementId() {
+        return this.elementId;
+    }
 
-	@Override
-	public void setElementId(String value) {
-		elementId = value;
-	}
+    @Override
+    public void setElementId(final String value) {
+        this.elementId = value;
+    }
 
-	@Override
-	public Map<String, String> getPersistedState() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Map<String, String> getPersistedState() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public List<String> getTags() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public List<String> getTags() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public String getContributorURI() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String getContributorURI() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public void setContributorURI(String value) {
-		// TODO Auto-generated method stub
+    @Override
+    public void setContributorURI(final String value) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public Map<String, Object> getTransientData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Map<String, Object> getTransientData() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public void updateLocalization() {
-		// TODO Auto-generated method stub
+    @Override
+    public void updateLocalization() {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public String getCommandName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String getCommandName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public void setCommandName(String value) {
-		// TODO Auto-generated method stub
+    @Override
+    public void setCommandName(final String value) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String getDescription() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public void setDescription(String value) {
-		// TODO Auto-generated method stub
+    @Override
+    public void setDescription(final String value) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public List<MCommandParameter> getParameters() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public List<MCommandParameter> getParameters() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public MCategory getCategory() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public MCategory getCategory() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public void setCategory(MCategory value) {
-		// TODO Auto-generated method stub
+    @Override
+    public void setCategory(final MCategory value) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public String getLocalizedCommandName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String getLocalizedCommandName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public String getLocalizedDescription() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String getLocalizedDescription() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getCommandIconURI() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void setCommandIconURI(final String value) {
+        // TODO Auto-generated method stub
+
+    }
 
 }

@@ -36,7 +36,6 @@ import org.elbe.relations.internal.controls.InspectorView;
  * 
  * @author Luthiger
  */
-@SuppressWarnings("restriction")
 public class InspectorSwitchHandler {
 
 	@Inject
@@ -46,7 +45,7 @@ public class InspectorSwitchHandler {
 	@Execute
 	void switchTextFieldAccess(
 			@Named(RelationsConstants.PARAMETER_INSPECTOR_TEXT_SWITCH) final String inSwitch) {
-		preferences.put(InspectorView.PREF_SWITCH_VALUE, inSwitch);
+		this.preferences.put(InspectorView.PREF_SWITCH_VALUE, inSwitch);
 	}
 
 	@CanExecute

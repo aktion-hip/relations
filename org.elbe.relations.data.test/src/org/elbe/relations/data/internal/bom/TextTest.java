@@ -18,9 +18,9 @@
  ***************************************************************************/
 package org.elbe.relations.data.internal.bom;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -30,7 +30,6 @@ import java.util.Collection;
 import org.elbe.relations.data.bom.AbstractItem;
 import org.elbe.relations.data.bom.AbstractText;
 import org.elbe.relations.data.bom.EventStoreHome;
-import org.elbe.relations.data.bom.IItem;
 import org.elbe.relations.data.bom.LightWeightText;
 import org.elbe.relations.data.bom.Text;
 import org.elbe.relations.data.bom.TextHome;
@@ -38,13 +37,12 @@ import org.elbe.relations.data.search.IndexerDocument;
 import org.elbe.relations.data.search.IndexerField;
 import org.elbe.relations.data.search.IndexerHelper;
 import org.elbe.relations.data.test.DataHouseKeeper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
- *
  * @author Luthiger
  */
 public class TextTest {
@@ -60,23 +58,23 @@ public class TextTest {
     private final String year = "1887";
     private final String publication = "pub";
     private final String pages = "1-2";
-    private final Integer volume = new Integer(88);
-    private final Integer number = new Integer(107);
+    private final Integer volume = Integer.valueOf(88);
+    private final Integer number = Integer.valueOf(107);
     private final String publisher = "Addison Wesley";
     private final String place = "London";
-    private final Integer type = new Integer(2);
+    private final Integer type = Integer.valueOf(2);
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         data = DataHouseKeeper.INSTANCE;
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         // data.setUp();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         data.deleteAllInAll();
     }
@@ -90,23 +88,23 @@ public class TextTest {
         final AbstractItem text = home.newText(this.title, this.textText, this.author,
                 this.coAuthor, this.subTitle, this.year, this.publication, this.pages, this.volume, this.number,
                 this.publisher, this.place, this.type);
-        assertEquals("number 1", 1, home.getCount());
+        assertEquals(1, home.getCount());
 
         final AbstractItem text2 = home.getText(text.getID());
         final LightWeightText lLightWeight = (LightWeightText) text2
                 .getLightWeight();
 
-        assertEquals("id", text.getID(), lLightWeight.getID());
-        assertEquals("title", this.title, lLightWeight.title);
-        assertEquals("text", this.textText, lLightWeight.text);
-        assertEquals("author", this.author, lLightWeight.author);
-        assertEquals("year", this.year, lLightWeight.year);
-        assertEquals("author", this.author, lLightWeight.author);
-        assertEquals("volume", this.volume.intValue(), lLightWeight.volume);
-        assertEquals("number", this.number.intValue(), lLightWeight.number);
-        assertEquals("publisher", this.publisher, lLightWeight.publisher);
-        assertEquals("place", this.place, lLightWeight.place);
-        assertEquals("type of text", this.type.intValue(), lLightWeight.type);
+        assertEquals(text.getID(), lLightWeight.getID());
+        assertEquals(this.title, lLightWeight.title);
+        assertEquals(this.textText, lLightWeight.text);
+        assertEquals(this.author, lLightWeight.author);
+        assertEquals(this.year, lLightWeight.year);
+        assertEquals(this.author, lLightWeight.author);
+        assertEquals(this.volume.intValue(), lLightWeight.volume);
+        assertEquals(this.number.intValue(), lLightWeight.number);
+        assertEquals(this.publisher, lLightWeight.publisher);
+        assertEquals(this.place, lLightWeight.place);
+        assertEquals(this.type.intValue(), lLightWeight.type);
     }
 
     @Test
@@ -129,28 +127,27 @@ public class TextTest {
 
         final AbstractText text2 = home.getText(text.getID());
         text2.save(this.title, this.textText, this.type, author, coAuthor, this.subTitle,
-                publisher, this.year, publication, this.pages, this.volume, new Integer(number), this.place);
+                publisher, this.year, publication, this.pages, this.volume, Integer.valueOf(number), this.place);
         assertEquals(2, storeHome.getCount());
 
         final AbstractItem text3 = home.getText(text.getID());
-        assertEquals("title 2", this.title, text3.getTitle());
-        assertEquals("author 2", author, text3.get(TextHome.KEY_AUTHOR));
-        assertEquals("co-author 2", coAuthor,
-                text3.get(TextHome.KEY_COAUTHORS));
-        assertEquals("publisher 2", publisher,
+        assertEquals(this.title, text3.getTitle());
+        assertEquals(author, text3.get(TextHome.KEY_AUTHOR));
+        assertEquals(coAuthor, text3.get(TextHome.KEY_COAUTHORS));
+        assertEquals(publisher,
                 text3.get(TextHome.KEY_PUBLISHER));
-        assertEquals("publication 2", publication,
+        assertEquals(publication,
                 text3.get(TextHome.KEY_PUBLICATION));
-        assertEquals("volume 2", this.volume.intValue(),
+        assertEquals(this.volume.intValue(),
                 ((BigDecimal) text3.get(TextHome.KEY_VOLUME)).intValue());
-        assertEquals("number 2", number,
+        assertEquals(number,
                 ((BigDecimal) text3.get(TextHome.KEY_NUMBER)).intValue());
 
-        assertTrue("compare timestamp",
+        assertTrue(
                 start < ((Timestamp) text3.get(TextHome.KEY_MODIFIED))
                 .getTime());
-        final String lCreated = ((IItem) text3).getCreated();
-        assertNotNull("created string exists", lCreated);
+        final String lCreated = text3.getCreated();
+        assertNotNull(lCreated);
         // the outcome of the following assertions depends on the -nl setting
         // e.g.
         // "Erzeugt:  May 6, 2007, 10:26:59 PM; Verändert: May 6, 2007, 10:26:59 PM."
@@ -191,27 +188,23 @@ public class TextTest {
         final TextHome lHome = data.getTextHome();
         Text lText = (Text) lHome.newText(this.title, this.textText, this.author, this.coAuthor,
                 this.subTitle, this.year, this.publication, this.pages, this.volume, this.number, this.publisher,
-                this.place, new Integer(AbstractText.TYPE_BOOK));
-        assertEquals("bibtex: book", lExpected1,
-                lText.getBibtexFormatted(new ArrayList<String>()));
+                this.place, Integer.valueOf(AbstractText.TYPE_BOOK));
+        assertEquals(lExpected1, lText.getBibtexFormatted(new ArrayList<String>()));
 
         lText = (Text) lHome.newText(this.title, this.textText, this.author, this.coAuthor,
                 this.subTitle, this.year, this.publication, this.pages, this.volume, this.number, this.publisher,
-                this.place, new Integer(AbstractText.TYPE_ARTICLE));
-        assertEquals("bibtex: article", lExpected2,
-                lText.getBibtexFormatted(new ArrayList<String>()));
+                this.place, Integer.valueOf(AbstractText.TYPE_ARTICLE));
+        assertEquals(lExpected2, lText.getBibtexFormatted(new ArrayList<String>()));
 
         lText = (Text) lHome.newText(this.title, this.textText, this.author, this.coAuthor,
                 this.subTitle, this.year, this.publication, this.pages, this.volume, this.number, this.publisher,
-                this.place, new Integer(AbstractText.TYPE_CONTRIBUTION));
-        assertEquals("bibtex: contribution", lExpected3,
-                lText.getBibtexFormatted(new ArrayList<String>()));
+                this.place, Integer.valueOf(AbstractText.TYPE_CONTRIBUTION));
+        assertEquals(lExpected3, lText.getBibtexFormatted(new ArrayList<String>()));
 
         lText = (Text) lHome.newText(this.title, this.textText, this.author, this.coAuthor,
                 this.subTitle, this.year, this.publication, this.pages, this.volume, this.number, this.publisher,
-                this.place, new Integer(AbstractText.TYPE_WEBPAGE));
-        assertEquals("bibtex: web page", lExpected4,
-                lText.getBibtexFormatted(new ArrayList<String>()));
+                this.place, Integer.valueOf(AbstractText.TYPE_WEBPAGE));
+        assertEquals(lExpected4, lText.getBibtexFormatted(new ArrayList<String>()));
 
         // article with co-authors
         String lExpected = "@ARTICLE{Riese:87,"
@@ -229,10 +222,9 @@ public class TextTest {
                         this.author,
                         "S. Ishikawa, M. Silverstein, M. Jacobson, I. Fisksdahl-King, S. Angel",
                         "Sub-Title", this.year, "Research policy", "88-93", this.volume,
-                        this.number, this.publisher, this.place, new Integer(
+                        this.number, this.publisher, this.place, Integer.valueOf(
                                 AbstractText.TYPE_ARTICLE));
-        assertEquals("article with co-authors", lExpected,
-                lText.getBibtexFormatted(new ArrayList<String>()));
+        assertEquals(lExpected, lText.getBibtexFormatted(new ArrayList<String>()));
 
         // contribution with editors
         lExpected = "@INCOLLECTION{Ishikawa:87,"
@@ -253,8 +245,8 @@ public class TextTest {
                 "Ishikawa, S., M. Silverstein",
                 "Jacobson, M., I. Fisksdahl-King, S. Angel", "Sub-Title", this.year,
                 "Research policy", "88-93", this.volume, this.number, this.publisher, this.place,
-                new Integer(AbstractText.TYPE_CONTRIBUTION));
-        assertEquals("contribution with editors", lExpected,
+                Integer.valueOf(AbstractText.TYPE_CONTRIBUTION));
+        assertEquals(lExpected,
                 lText.getBibtexFormatted(new ArrayList<String>()));
 
         // web page with URL
@@ -274,9 +266,9 @@ public class TextTest {
                 "Ishikawa, S., M. Silverstein",
                 "Jacobson, M., I. Fisksdahl-King, S. Angel", "Sub-Title", this.year,
                 "http://www.oreillynet.com/pub/wlg/7996", "88-93", this.volume,
-                this.number, this.publisher, "20.10.1999", new Integer(
+                this.number, this.publisher, "20.10.1999", Integer.valueOf(
                         AbstractText.TYPE_WEBPAGE));
-        assertEquals("web page with URL", lExpected,
+        assertEquals(lExpected,
                 lText.getBibtexFormatted(new ArrayList<String>()));
 
         // book with subtitle
@@ -288,8 +280,8 @@ public class TextTest {
                 + "}";
         lText = (Text) lHome.newText(this.title, this.textText, this.author, this.coAuthor,
                 "Sub-Title", this.year, this.publication, this.pages, this.volume, this.number,
-                this.publisher, this.place, new Integer(AbstractText.TYPE_BOOK));
-        assertEquals("book with subtitle", lExpected,
+                this.publisher, this.place, Integer.valueOf(AbstractText.TYPE_BOOK));
+        assertEquals(lExpected,
                 lText.getBibtexFormatted(new ArrayList<String>()));
 
         // uniqueness of label
@@ -308,18 +300,18 @@ public class TextTest {
         final Collection<String> lUnique = new ArrayList<>();
         lText = (Text) lHome.newText(this.title, this.textText, this.author, this.coAuthor,
                 this.subTitle, this.year, this.publication, this.pages, this.volume, this.number, this.publisher,
-                this.place, new Integer(AbstractText.TYPE_BOOK));
-        assertEquals("uniqueness of label 0", lExpected1,
+                this.place, Integer.valueOf(AbstractText.TYPE_BOOK));
+        assertEquals(lExpected1,
                 lText.getBibtexFormatted(lUnique));
         lText = (Text) lHome.newText(this.title + " (1)", this.textText, this.author,
                 this.coAuthor, this.subTitle, this.year, this.publication, this.pages, this.volume, this.number,
-                this.publisher, this.place, new Integer(AbstractText.TYPE_BOOK));
-        assertEquals("uniqueness of label 1", lExpected1a,
+                this.publisher, this.place, Integer.valueOf(AbstractText.TYPE_BOOK));
+        assertEquals(lExpected1a,
                 lText.getBibtexFormatted(lUnique));
         lText = (Text) lHome.newText(this.title + " (2)", this.textText, this.author,
                 this.coAuthor, this.subTitle, this.year, this.publication, this.pages, this.volume, this.number,
-                this.publisher, this.place, new Integer(AbstractText.TYPE_BOOK));
-        assertEquals("uniqueness of label 2", lExpected1b,
+                this.publisher, this.place, Integer.valueOf(AbstractText.TYPE_BOOK));
+        assertEquals(lExpected1b,
                 lText.getBibtexFormatted(lUnique));
 
         // quotations in title
@@ -333,9 +325,9 @@ public class TextTest {
                 + "}";
         lText = (Text) lHome.newText("Book with quoted title", this.textText,
                 this.author, this.coAuthor, "\"Whole title quoted.\"", this.year, this.publication,
-                this.pages, this.volume, this.number, this.publisher, this.place, new Integer(
+                this.pages, this.volume, this.number, this.publisher, this.place, Integer.valueOf(
                         AbstractText.TYPE_BOOK));
-        assertEquals("quotations in title 1", lExpected,
+        assertEquals(lExpected,
                 lText.getBibtexFormatted(new ArrayList<String>()));
 
         lExpected = "@BOOK{Riese:87,"
@@ -348,9 +340,9 @@ public class TextTest {
                 + "}";
         lText = (Text) lHome.newText("Book with quoted title", this.textText,
                 this.author, this.coAuthor, "a \"feel-good\" novel", this.year, this.publication,
-                this.pages, this.volume, this.number, this.publisher, this.place, new Integer(
+                this.pages, this.volume, this.number, this.publisher, this.place, Integer.valueOf(
                         AbstractText.TYPE_BOOK));
-        assertEquals("quotations in title 2", lExpected,
+        assertEquals(lExpected,
                 lText.getBibtexFormatted(new ArrayList<String>()));
 
         // umlaut in author's name
@@ -362,10 +354,9 @@ public class TextTest {
                 + "}";
         lText = (Text) lHome.newText("Umlaut in author's name", this.textText,
                 "Müller, P.", this.coAuthor, this.subTitle, this.year, this.publication, this.pages,
-                this.volume, this.number, this.publisher, this.place, new Integer(
+                this.volume, this.number, this.publisher, this.place, Integer.valueOf(
                         AbstractText.TYPE_BOOK));
-        assertEquals("umlaut in author's name", lExpected,
-                lText.getBibtexFormatted(new ArrayList<String>()));
+        assertEquals(lExpected, lText.getBibtexFormatted(new ArrayList<String>()));
 
         // text with ampersand somewhere
         lExpected = "@BOOK{Riese:87," + NL
@@ -376,9 +367,9 @@ public class TextTest {
                 + "}";
         lText = (Text) lHome.newText("text with ampersand somewhere", this.textText,
                 this.author, this.coAuthor, this.subTitle, this.year, this.publication, this.pages, this.volume,
-                this.number, "Harper & Row", this.place, new Integer(
+                this.number, "Harper & Row", this.place, Integer.valueOf(
                         AbstractText.TYPE_BOOK));
-        assertEquals("text with ampersand somewhere", lExpected,
+        assertEquals(lExpected,
                 lText.getBibtexFormatted(new ArrayList<String>()));
 
         // author in curley brackets
@@ -391,8 +382,8 @@ public class TextTest {
         lText = (Text) lHome.newText("author in curley brackets", this.textText,
                 "{Open Source Initiative}", this.coAuthor, this.subTitle, this.year,
                 this.publication, this.pages, this.volume, this.number, this.publisher, this.place,
-                new Integer(AbstractText.TYPE_BOOK));
-        assertEquals("author in curley brackets", lExpected,
+                Integer.valueOf(AbstractText.TYPE_BOOK));
+        assertEquals(lExpected,
                 lText.getBibtexFormatted(new ArrayList<String>()));
     }
 
@@ -406,30 +397,28 @@ public class TextTest {
                 this.publisher, this.place, this.type);
         ((Text) lText).indexContent(lIndexer);
 
-        assertEquals("number of index docs", 1, lIndexer.getDocuments().size());
+        assertEquals(1, lIndexer.getDocuments().size());
         final IndexerDocument lDocument = lIndexer.getDocuments().iterator()
                 .next();
         final Collection<IndexerField> lFields = lDocument.getFields();
 
-        assertEquals("number of index fields", 7, lFields.size());
+        assertEquals(7, lFields.size());
         final Collection<String> lFieldNames = new ArrayList<>();
         final Collection<String> lFieldFull = new ArrayList<>();
         for (final IndexerField lField : lDocument.getFields()) {
             lFieldNames.add(lField.getFieldName());
             lFieldFull.add(lField.toString());
         }
-        assertTrue("contains itemID", lFieldNames.contains("itemID"));
-        assertTrue("contains itemType", lFieldNames.contains("itemType"));
-        assertTrue("contains itemTitle", lFieldNames.contains("itemTitle"));
-        assertTrue("contains itemDateCreated",
+        assertTrue(lFieldNames.contains("itemID"));
+        assertTrue(lFieldNames.contains("itemType"));
+        assertTrue(lFieldNames.contains("itemTitle"));
+        assertTrue(
                 lFieldNames.contains("itemDateCreated"));
-        assertTrue("contains itemDateModified",
+        assertTrue(
                 lFieldNames.contains("itemDateModified"));
-        assertTrue("contains itemFull", lFieldNames.contains("itemFull"));
-        assertTrue("contains full 'itemType: 2'",
-                lFieldFull.contains("itemType: 2"));
-        assertTrue("contains full 'itemTitle: Book Title'",
-                lFieldFull.contains("itemTitle: Book Title"));
+        assertTrue(lFieldNames.contains("itemFull"));
+        assertTrue(lFieldFull.contains("itemType: 2"));
+        assertTrue(lFieldFull.contains("itemTitle: Book Title"));
     }
 
 }

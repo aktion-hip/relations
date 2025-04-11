@@ -18,7 +18,6 @@
  ***************************************************************************/
 package org.elbe.relations.internal.wizards;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -37,52 +36,54 @@ import org.elbe.relations.internal.actions.IDBChange;
 import org.elbe.relations.internal.utility.DBPreconditionException;
 import org.elbe.relations.internal.wizards.interfaces.INewWizard;
 
+import jakarta.annotation.PostConstruct;
+
 /**
  * Wizard to create a new embedded database.
  *
  * @author Luthiger
  */
 public class DBNewWizard extends Wizard implements INewWizard {
-	private DBNewWizardPage page;
+    private DBNewWizardPage page;
 
-	@Inject
-	private IEclipseContext context;
+    @Inject
+    private IEclipseContext context;
 
-	@Inject
-	@Named(IServiceConstants.ACTIVE_SHELL)
-	private Shell shell;
+    @Inject
+    @Named(IServiceConstants.ACTIVE_SHELL)
+    private Shell shell;
 
-	@PostConstruct
-	public void init(
-	        @Optional @Named(IServiceConstants.ACTIVE_SELECTION) final IStructuredSelection selection) {
-		setWindowTitle(RelationsMessages.getString("DBNewWizard.view.title")); //$NON-NLS-1$
-	}
+    @PostConstruct
+    public void init(
+            @Optional @Named(IServiceConstants.ACTIVE_SELECTION) final IStructuredSelection selection) {
+        setWindowTitle(RelationsMessages.getString("DBNewWizard.view.title")); //$NON-NLS-1$
+    }
 
-	@Override
-	public void addPages() {
-		this.page = ContextInjectionFactory.make(DBNewWizardPage.class, this.context);
-		addPage(this.page);
-	}
+    @Override
+    public void addPages() {
+        this.page = ContextInjectionFactory.make(DBNewWizardPage.class, this.context);
+        addPage(this.page);
+    }
 
-	@Override
-	public boolean performFinish() {
-		final IDBChange createDB = this.page.getResultObject();
-		try {
-			createDB.checkPreconditions();
-			BusyIndicator.showWhile(this.shell.getDisplay(), new Runnable() {
-				@Override
-				public void run() {
-					createDB.execute();
-				}
-			});
-			return true;
-		}
-		catch (final DBPreconditionException exc) {
-			MessageDialog.openError(new Shell(Display.getCurrent()),
-					RelationsMessages.getString("FormDBConnection.error.title"), //$NON-NLS-1$
-					exc.getMessage());
-		}
-		return false;
-	}
+    @Override
+    public boolean performFinish() {
+        final IDBChange createDB = this.page.getResultObject();
+        try {
+            createDB.checkPreconditions();
+            BusyIndicator.showWhile(this.shell.getDisplay(), new Runnable() {
+                @Override
+                public void run() {
+                    createDB.execute();
+                }
+            });
+            return true;
+        }
+        catch (final DBPreconditionException exc) {
+            MessageDialog.openError(new Shell(Display.getCurrent()),
+                    RelationsMessages.getString("FormDBConnection.error.title"), //$NON-NLS-1$
+                    exc.getMessage());
+        }
+        return false;
+    }
 
 }

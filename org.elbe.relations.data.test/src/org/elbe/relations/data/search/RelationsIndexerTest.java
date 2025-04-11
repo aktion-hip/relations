@@ -16,12 +16,11 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ***************************************************************************/
-
 package org.elbe.relations.data.search;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -33,93 +32,98 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.elbe.relations.data.internal.search.IndexerRegistration;
 import org.elbe.relations.data.test.DataHouseKeeper;
 import org.hip.kernel.exc.VException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  *
  * @author lbenno
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class RelationsIndexerTest {
-	private static DataHouseKeeper data;
+    private static DataHouseKeeper data;
 
-	@Mock
-	private IProgressMonitor monitor;
+    @Mock
+    private IProgressMonitor monitor;
 
-	private RelationsIndexer indexer;
+    private RelationsIndexer indexer;
 
-	@BeforeClass
-	public static void init() {
-		data = DataHouseKeeper.INSTANCE;
-	}
+    @BeforeAll
+    public static void init() {
+        data = DataHouseKeeper.INSTANCE;
+    }
 
-	@Before
-	public void setUp() {
-		indexer = new TestIndexer();
-	}
+    @BeforeEach
+    public void setUp() {
+        this.indexer = new TestIndexer();
+    }
 
-	@After
-	public void tearDown() throws Exception {
-		data.deleteAllInAll();
-	}
+    @AfterEach
+    public void tearDown() throws Exception {
+        data.deleteAllInAll();
+    }
 
-	@Test
-	public void testRefreshIndex() throws IOException, VException, Exception {
-		final IIndexer lIndexer1 = mock(IIndexer.class);
-		IndexerRegistration.INSTANCE.register(lIndexer1);
+    @Test
+    public void testRefreshIndex() throws IOException, VException, Exception {
+        final IIndexer lIndexer1 = mock(IIndexer.class);
+        IndexerRegistration.INSTANCE.register(lIndexer1);
 
-		int lIndexed = indexer.refreshIndex(monitor);
-		assertEquals(0, lIndexed);
-		verify(lIndexer1).initializeIndex(indexer.getIndexDir(), Locale.ENGLISH.getLanguage());
-		verify(lIndexer1, times(3)).processIndexer(any(IndexerHelper.class), eq(indexer.getIndexDir()),
-				eq(indexer.getLanguage()));
+        int lIndexed = this.indexer.refreshIndex(this.monitor);
+        assertEquals(0, lIndexed);
+        verify(lIndexer1).initializeIndex(this.indexer.getIndexDir(), Locale.ENGLISH.getLanguage());
+        verify(lIndexer1, times(3)).processIndexer(any(IndexerHelper.class), eq(this.indexer.getIndexDir()),
+                eq(this.indexer.getLanguage()));
 
-		// index term
-		final IIndexer lIndexer2 = mock(IIndexer.class);
-		IndexerRegistration.INSTANCE.register(lIndexer2);
-		data.createTerm("term for indexing");
-		lIndexed = indexer.refreshIndex(monitor);
-		assertEquals(1, lIndexed);
-		verify(lIndexer2, times(3)).processIndexer(any(IndexerHelper.class), eq(indexer.getIndexDir()),
-				eq(indexer.getLanguage()));
+        // index term
+        final IIndexer lIndexer2 = mock(IIndexer.class);
+        IndexerRegistration.INSTANCE.register(lIndexer2);
+        data.createTerm("term for indexing");
+        lIndexed = this.indexer.refreshIndex(this.monitor);
+        assertEquals(1, lIndexed);
+        verify(lIndexer2, times(3)).processIndexer(any(IndexerHelper.class), eq(this.indexer.getIndexDir()),
+                eq(this.indexer.getLanguage()));
 
-		// index person
-		final IIndexer lIndexer3 = mock(IIndexer.class);
-		IndexerRegistration.INSTANCE.register(lIndexer3);
-		data.createPerson("Doe", "Jane");
-		lIndexed = indexer.refreshIndex(monitor);
-		assertEquals(2, lIndexed);
-		verify(lIndexer3, times(3)).processIndexer(any(IndexerHelper.class), eq(indexer.getIndexDir()),
-				eq(indexer.getLanguage()));
+        // index person
+        final IIndexer lIndexer3 = mock(IIndexer.class);
+        IndexerRegistration.INSTANCE.register(lIndexer3);
+        data.createPerson("Doe", "Jane");
+        lIndexed = this.indexer.refreshIndex(this.monitor);
+        assertEquals(2, lIndexed);
+        verify(lIndexer3, times(3)).processIndexer(any(IndexerHelper.class), eq(this.indexer.getIndexDir()),
+                eq(this.indexer.getLanguage()));
 
-		// index text
-		final IIndexer lIndexer4 = mock(IIndexer.class);
-		IndexerRegistration.INSTANCE.register(lIndexer4);
-		data.createText("text for indexing", "Doe, Jane");
-		lIndexed = indexer.refreshIndex(monitor);
-		assertEquals(3, lIndexed);
-		verify(lIndexer4, times(3)).processIndexer(any(IndexerHelper.class), eq(indexer.getIndexDir()),
-				eq(indexer.getLanguage()));
-	}
+        // index text
+        final IIndexer lIndexer4 = mock(IIndexer.class);
+        IndexerRegistration.INSTANCE.register(lIndexer4);
+        data.createText("text for indexing", "Doe, Jane");
+        lIndexed = this.indexer.refreshIndex(this.monitor);
+        assertEquals(3, lIndexed);
+        verify(lIndexer4, times(3)).processIndexer(any(IndexerHelper.class), eq(this.indexer.getIndexDir()),
+                eq(this.indexer.getLanguage()));
+    }
 
-	// ---
+    // ---
 
-	private static class TestIndexer extends RelationsIndexer {
+    private static class TestIndexer extends RelationsIndexer {
 
-		public TestIndexer() {
-			super("test");
-		}
+        public TestIndexer() {
+            super("test");
+        }
 
-		@Override
-		protected String getLanguage() {
-			return "en";
-		}
-	}
+        @Override
+        protected String getLanguage() {
+            return "en";
+        }
+
+        @Override
+        protected DirectoryFactory getDirectoryFactory() {
+            return new TempDirectoryFactory();
+        }
+    }
 
 }

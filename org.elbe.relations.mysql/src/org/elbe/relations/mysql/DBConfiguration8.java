@@ -1,0 +1,62 @@
+/***************************************************************************
+ * This package is part of Relations application.
+ * Copyright (C) 2004-2020, Benno Luthiger
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ ***************************************************************************/
+package org.elbe.relations.mysql;
+
+import org.elbe.relations.data.db.IDBObjectCreator;
+import org.elbe.relations.services.IDBConnectionConfig;
+
+/**
+ * The OSGi provider for the
+ * <code>org.elbe.relations.services.IDBCreateService</code>.
+ *
+ * @author Luthiger
+ */
+public class DBConfiguration8 implements IDBConnectionConfig {
+
+    @Override
+    public String getName() {
+        return "com.mysql.jdbc.Driver/MySQL Connector/J/8.0.21"; //$NON-NLS-1$
+    }
+
+    @Override
+    public String getJDBCDriverClass() {
+        return "com.mysql.jdbc.Driver"; //$NON-NLS-1$
+    }
+
+    @Override
+    public String getSubprotocol() {
+        return "mysql"; //$NON-NLS-1$
+    }
+
+    @Override
+    public boolean isEmbedded() {
+        return false;
+    }
+
+    @Override
+    public IDBObjectCreator getCreator() {
+        return new MySQLCreator();
+    }
+
+    @Override
+    public boolean canSetIdentityField() {
+        return true;
+    }
+
+}

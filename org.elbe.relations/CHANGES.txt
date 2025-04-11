@@ -4,16 +4,9 @@ CHANGES Relations
 Release 2.4.0:
 =============
 
+2020/10/16:
+	- Fixed NPE in method org.elbe.relations.internal.forms.AbstractEditForm.STKeyListener.processStrokes().
+	- Added org.elbe.relations.mysql.DBConfiguration8 and org.elbe.relations.mysql/OSGI-INF/dbConfiguration8.xml.
+
 2020/10/02:
 	- org.elbe.relations.data.utility.RelationsSerializer.prepareForImport(): fixed unicode problem in import.
-
-Release 2.3.0:
-=============
-
-2018/11/02:
-	- Added export to cloud, i.e. Dropbox, MS Azure and Google Drive.
-	- Added /icons/message_info.png.
-	- Fixed bug when deleting items.
-	- org.elbe.relations.internal.backup.XMLExport.appendText: Setting export encoding to UTF8.
-	- Updated target to Eclipse 4.8 (Photon).
-	- Setting version number to 2.3.0.

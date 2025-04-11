@@ -20,7 +20,6 @@ package org.elbe.relations.internal.wizards;
 
 import java.sql.SQLException;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -47,6 +46,8 @@ import org.elbe.relations.models.LightWeightAdapter;
 import org.elbe.relations.services.IBrowserManager;
 import org.hip.kernel.exc.VException;
 
+import jakarta.annotation.PostConstruct;
+
 /**
  * Abstract wizard class to create new items.
  *
@@ -54,127 +55,127 @@ import org.hip.kernel.exc.VException;
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractNewWizard extends Wizard implements INewWizard {
-	protected final static String ERROR_DIALOG = RelationsMessages
-	        .getString("AbstractNewWizard.title.error"); //$NON-NLS-1$
+    protected final static String ERROR_DIALOG = RelationsMessages
+            .getString("AbstractNewWizard.title.error"); //$NON-NLS-1$
 
-	private RelationsNewWizardPage pageRelations;
-	private UnsavedAssociationsModel model = null;
+    private RelationsNewWizardPage pageRelations;
+    private UnsavedAssociationsModel model = null;
 
-	@Inject
-	private Logger log;
+    @Inject
+    private Logger log;
 
-	@Inject
-	private IEclipseContext context;
+    @Inject
+    private IEclipseContext context;
 
-	@Inject
-	private IBrowserManager browserManager;
+    @Inject
+    private IBrowserManager browserManager;
 
-	/**
-	 * AbstractNewWizard
-	 */
-	public AbstractNewWizard() {
-		super();
-	}
+    /**
+     * AbstractNewWizard
+     */
+    public AbstractNewWizard() {
+        super();
+    }
 
-	protected Logger log() {
-		return log;
-	}
+    protected Logger log() {
+        return this.log;
+    }
 
-	protected IEclipseContext getEclipseContext() {
-		return context;
-	}
+    protected IEclipseContext getEclipseContext() {
+        return this.context;
+    }
 
-	/**
-	 * Adds the <code>RelationsNewWizardPage</code> to this wizard.
-	 *
-	 * @param inTitle
-	 *            String to display
-	 * @param inDescription
-	 *            String to display
-	 */
-	protected void addPages(final String inTitle, final String inDescription) {
-		pageRelations = ContextInjectionFactory
-		        .make(RelationsNewWizardPage.class, context);
-		pageRelations.setTitle(inTitle);
-		pageRelations.setDescription(inDescription);
-		addPage(pageRelations);
-	}
+    /**
+     * Adds the <code>RelationsNewWizardPage</code> to this wizard.
+     *
+     * @param inTitle
+     *            String to display
+     * @param inDescription
+     *            String to display
+     */
+    protected void addPages(final String inTitle, final String inDescription) {
+        this.pageRelations = ContextInjectionFactory
+                .make(RelationsNewWizardPage.class, this.context);
+        this.pageRelations.setTitle(inTitle);
+        this.pageRelations.setDescription(inDescription);
+        addPage(this.pageRelations);
+    }
 
-	protected void prepareFinish(final AbstractRelationsWizardPage inPage,
-	        final Image inImage) {
-		inPage.setRelationsSaveHelper(new IRelationsSaveHelper() {
-			@Override
-			public void saveWith(final IItem inItem) throws BOMException {
-				model.replaceCenter(new ItemAdapter(inItem, inImage, context));
-				model.saveChanges();
-			}
-		});
-	}
+    protected void prepareFinish(final AbstractRelationsWizardPage inPage,
+            final Image inImage) {
+        inPage.setRelationsSaveHelper(new IRelationsSaveHelper() {
+            @Override
+            public void saveWith(final IItem inItem) throws BOMException {
+                AbstractNewWizard.this.model.replaceCenter(new ItemAdapter(inItem, inImage, AbstractNewWizard.this.context));
+                AbstractNewWizard.this.model.saveChanges();
+            }
+        });
+    }
 
-	/**
-	 * We use the workbench selection to suggest an initial association.
-	 *
-	 * @see org.elbe.relations.internal.wizards.interfaces.INewWizard#init(org.eclipse.jface.viewers.IStructuredSelection)
-	 */
-	@PostConstruct
-	public void init(
-	        @Named(IServiceConstants.ACTIVE_SELECTION) @Optional final IStructuredSelection inSelection) {
-		try {
-			ItemAdapter lSelected = null;
-			if ((inSelection != null) && !inSelection.isEmpty() && (inSelection
-			        .getFirstElement() instanceof IBrowserItem)) {
-				lSelected = (ItemAdapter) ((IBrowserItem) inSelection
-				        .getFirstElement()).getModel();
-			}
-			if (lSelected == null) {
-				lSelected = browserManager.getSelectedModel();
-			}
-			if (lSelected == null) {
-				model = UnsavedAssociationsModel.createModel(createDummy(),
-				        context, RelationsImages.TEXT.getImage());
-			} else {
-				model = UnsavedAssociationsModel.createModel(createDummy(),
-				        context, lSelected);
-			}
-		}
-		catch (final VException exc) {
-			log.error(exc, exc.getMessage());
-		}
-		catch (final SQLException exc) {
-			log.error(exc, exc.getMessage());
-		}
-		setWindowTitle(
-		        RelationsMessages.getString("AbstractNewWizard.view.title")); //$NON-NLS-1$
-	}
+    /**
+     * We use the workbench selection to suggest an initial association.
+     *
+     * @see org.elbe.relations.internal.wizards.interfaces.INewWizard#init(org.eclipse.jface.viewers.IStructuredSelection)
+     */
+    @PostConstruct
+    public void init(
+            @Named(IServiceConstants.ACTIVE_SELECTION) @Optional final IStructuredSelection inSelection) {
+        try {
+            ItemAdapter lSelected = null;
+            if (inSelection != null && !inSelection.isEmpty() && inSelection
+                    .getFirstElement() instanceof IBrowserItem) {
+                lSelected = (ItemAdapter) ((IBrowserItem) inSelection
+                        .getFirstElement()).getModel();
+            }
+            if (lSelected == null) {
+                lSelected = this.browserManager.getSelectedModel();
+            }
+            if (lSelected == null) {
+                this.model = UnsavedAssociationsModel.createModel(createDummy(),
+                        this.context, RelationsImages.TEXT.getImage());
+            } else {
+                this.model = UnsavedAssociationsModel.createModel(createDummy(),
+                        this.context, lSelected);
+            }
+        }
+        catch (final VException exc) {
+            this.log.error(exc, exc.getMessage());
+        }
+        catch (final SQLException exc) {
+            this.log.error(exc, exc.getMessage());
+        }
+        setWindowTitle(
+                RelationsMessages.getString("AbstractNewWizard.view.title")); //$NON-NLS-1$
+    }
 
-	private IItem createDummy() {
-		final ILightWeightItem lDummy = new ILightWeightItem() {
+    private IItem createDummy() {
+        final ILightWeightItem lDummy = new ILightWeightItem() {
 
-			@Override
-			public long getID() {
-				return 0;
-			}
+            @Override
+            public long getID() {
+                return 0;
+            }
 
-			@Override
-			public int getItemType() {
-				return 0;
-			}
+            @Override
+            public int getItemType() {
+                return 0;
+            }
 
-			@Override
-			public String getCreated() throws VException {
-				return null;
-			}
-		};
-		return new LightWeightAdapter(lDummy);
-	}
+            @Override
+            public String getCreated() throws VException {
+                return null;
+            }
+        };
+        return new LightWeightAdapter(lDummy);
+    }
 
-	/**
-	 * Returns this wizard's model for the newly created item's associations.
-	 *
-	 * @return IAssociationsModel
-	 */
-	public IAssociationsModel getNewModel() {
-		return model;
-	}
+    /**
+     * Returns this wizard's model for the newly created item's associations.
+     *
+     * @return IAssociationsModel
+     */
+    public IAssociationsModel getNewModel() {
+        return this.model;
+    }
 
 }

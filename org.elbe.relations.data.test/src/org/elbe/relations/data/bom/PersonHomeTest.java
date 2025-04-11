@@ -18,16 +18,16 @@
  ***************************************************************************/
 package org.elbe.relations.data.bom;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Timestamp;
 
 import org.elbe.relations.data.test.DataHouseKeeper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Luthiger
@@ -35,17 +35,17 @@ import org.junit.Test;
 public class PersonHomeTest {
     private static DataHouseKeeper data;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         data = DataHouseKeeper.INSTANCE;
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         // data.setUp();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         data.deleteAllInAll();
     }
@@ -67,8 +67,8 @@ public class PersonHomeTest {
         final AbstractPerson retrieved = home.getPerson(person.getID());
         final long created = ((Timestamp) retrieved.get(PersonHome.KEY_CREATED)).getTime();
         final long modified = ((Timestamp) retrieved.get(PersonHome.KEY_MODIFIED)).getTime();
-        assertEquals("Created 1", created, modified);
-        assertTrue("Created 2", created >= now);
+        assertEquals(created, modified);
+        assertTrue(created >= now);
 
         home.deleteItem(person.getID());
         assertEquals(0, home.getCount());
@@ -93,13 +93,13 @@ public class PersonHomeTest {
         assertEquals(2, storeHome.getCount());
 
         person = (AbstractPerson) home.getItem(id);
-        assertEquals("title", name + ", " + firstName, person.getTitle());
+        assertEquals(name + ", " + firstName, person.getTitle());
     }
 
     @Test
     public void testStructure() throws Exception {
         final PersonHome home = data.getPersonHome();
-        assertTrue("table structure", home.checkStructure(null));
+        assertTrue(home.checkStructure(null));
     }
 
 }

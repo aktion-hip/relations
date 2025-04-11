@@ -16,7 +16,7 @@ CREATE TABLE tblPerson (
   PRIMARY KEY (PersonID),
   INDEX idxPerson_01 (sName, sFirstname),
   INDEX idxPerson_02 (sFrom, sTo)
-);
+) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 
 DROP TABLE IF EXISTS tblRelation;
@@ -30,7 +30,7 @@ CREATE TABLE tblRelation (
   PRIMARY KEY (RelationID),
   INDEX idxRelation_01 (nType1, nItem1),
   INDEX idxRelation_02 (nType2, nItem2)
-);
+) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 DROP TABLE IF EXISTS tblTerm;
 
@@ -42,7 +42,7 @@ CREATE TABLE tblTerm (
   dtMutation	timestamp not null,
   PRIMARY KEY (TermID),
   INDEX idxTerm_01 (sTitle)
-);
+) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 DROP TABLE IF EXISTS tblText;
 
@@ -66,4 +66,19 @@ CREATE TABLE tblText (
   PRIMARY KEY (TextID),
   INDEX idxText_01 (sTitle),
   INDEX idxText_02 (sAuthor, sCoAuthors)
-);
+) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+
+DROP TABLE IF EXISTS tblEventStore;
+
+CREATE TABLE tblEventStore (
+   EventStoreID       BIGINT AUTO_INCREMENT,
+   dtCreation   TIMESTAMP not null,
+   nType        TINYINT  not null,
+   sUniqueID       VARCHAR(50) not null,
+   sEvent        TEXT,
+   PRIMARY KEY (EventStoreID),
+	INDEX idxEventStore_01 ON tblEventStore(dtCreation),
+	INDEX idxEventStore_02 ON tblEventStore(sUniqueID, dtCreation)
+ ) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+ 

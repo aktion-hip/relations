@@ -1,251 +1,251 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ***************************************************************************/
-
 package org.elbe.relations.biblio.dft;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import org.elbe.relations.data.bom.AbstractText;
 import org.elbe.relations.data.bom.Text;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 
 /**
- * 
  * @author lbenno
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class StandardEnTest {
-	private final static String NL = System.getProperty("line.separator");
+    private final static String NL = System.getProperty("line.separator");
 
-	@Mock
-	private Text text;
+    @Mock
+    private Text text;
 
-	@Before
-	public void setUp() throws Exception {
-		when(text.getCoAuthor()).thenReturn("");
-		when(text.getYear()).thenReturn("");
-		when(text.getSubtitle()).thenReturn("");
-		when(text.getPlace()).thenReturn("");
-		when(text.getPublisher()).thenReturn("");
-		when(text.getPublication()).thenReturn("");
-		when(text.getVolume()).thenReturn("");
-		when(text.getNumber()).thenReturn("");
-		when(text.getPages()).thenReturn("");
-	}
+    @BeforeEach
+    public void setUp() throws Exception {
+        when(this.text.getCoAuthor()).thenReturn("");
+        when(this.text.getYear()).thenReturn("");
+        when(this.text.getSubtitle()).thenReturn("");
+        when(this.text.getPlace()).thenReturn("");
+        when(this.text.getPublisher()).thenReturn("");
+        when(this.text.getPublication()).thenReturn("");
+        when(this.text.getVolume()).thenReturn("");
+        when(this.text.getNumber()).thenReturn("");
+        when(this.text.getPages()).thenReturn("");
+    }
 
-	@Test
-	public void testRenderTitle() throws Exception {
-		when(text.getTitle()).thenReturn("Title of document");
-		when(text.getText()).thenReturn("Remarks to text item");
-		when(text.getAuthor()).thenReturn("Doe, Jane");
+    @Test
+    public void testRenderTitle() throws Exception {
+        when(this.text.getTitle()).thenReturn("Title of document");
+        when(this.text.getText()).thenReturn("Remarks to text item");
+        when(this.text.getAuthor()).thenReturn("Doe, Jane");
 
-		// book
-		when(text.getType()).thenReturn(AbstractText.TYPE_BOOK);
-		final StandardEn lBiblio = new StandardEn();
-		assertEquals("Doe, Jane" + NL + "Title of document.",
-		        lBiblio.render(text));
+        // book
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_BOOK);
+        final StandardEn lBiblio = new StandardEn();
+        assertEquals("Doe, Jane" + NL + "Title of document.",
+                lBiblio.render(this.text));
 
-		// article
-		when(text.getType()).thenReturn(AbstractText.TYPE_ARTICLE);
-		assertEquals("Doe, Jane" + NL + "\"Title of document\".",
-		        lBiblio.render(text));
+        // article
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_ARTICLE);
+        assertEquals("Doe, Jane" + NL + "\"Title of document\".",
+                lBiblio.render(this.text));
 
-		// contribution
-		when(text.getType()).thenReturn(AbstractText.TYPE_CONTRIBUTION);
-		assertEquals("Doe, Jane" + NL + "\"Title of document\",",
-		        lBiblio.render(text));
+        // contribution
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_CONTRIBUTION);
+        assertEquals("Doe, Jane" + NL + "\"Title of document\",",
+                lBiblio.render(this.text));
 
-		// web page
-		when(text.getType()).thenReturn(AbstractText.TYPE_WEBPAGE);
-		assertEquals("Doe, Jane" + NL + "\"Title of document\",",
-		        lBiblio.render(text));
-	}
+        // web page
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_WEBPAGE);
+        assertEquals("Doe, Jane" + NL + "\"Title of document\",",
+                lBiblio.render(this.text));
+    }
 
-	@Test
-	public void testRenderAuthorsYear() throws Exception {
-		when(text.getTitle()).thenReturn("Title of document");
-		when(text.getText()).thenReturn("Remarks to text item");
-		when(text.getAuthor()).thenReturn("Doe, Jane");
-		when(text.getCoAuthor()).thenReturn("Albert Einstein");
-		when(text.getYear()).thenReturn("2006");
+    @Test
+    public void testRenderAuthorsYear() throws Exception {
+        when(this.text.getTitle()).thenReturn("Title of document");
+        when(this.text.getText()).thenReturn("Remarks to text item");
+        when(this.text.getAuthor()).thenReturn("Doe, Jane");
+        when(this.text.getCoAuthor()).thenReturn("Albert Einstein");
+        when(this.text.getYear()).thenReturn("2006");
 
-		// book
-		when(text.getType()).thenReturn(AbstractText.TYPE_BOOK);
-		final StandardEn lBiblio = new StandardEn();
-		assertEquals("Doe, Jane and Albert Einstein" + NL
-		        + "2006. Title of document.", lBiblio.render(text));
+        // book
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_BOOK);
+        final StandardEn lBiblio = new StandardEn();
+        assertEquals("Doe, Jane and Albert Einstein" + NL
+                + "2006. Title of document.", lBiblio.render(this.text));
 
-		// article
-		when(text.getType()).thenReturn(AbstractText.TYPE_ARTICLE);
-		assertEquals("Doe, Jane and Albert Einstein" + NL
-		        + "2006. \"Title of document\".", lBiblio.render(text));
+        // article
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_ARTICLE);
+        assertEquals("Doe, Jane and Albert Einstein" + NL
+                + "2006. \"Title of document\".", lBiblio.render(this.text));
 
-		// contribution
-		when(text.getType()).thenReturn(AbstractText.TYPE_CONTRIBUTION);
-		assertEquals("Doe, Jane" + NL
-		        + "2006. \"Title of document\", Eds. Albert Einstein,",
-		        lBiblio.render(text));
+        // contribution
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_CONTRIBUTION);
+        assertEquals("Doe, Jane" + NL
+                + "2006. \"Title of document\", Eds. Albert Einstein,",
+                lBiblio.render(this.text));
 
-		// web page
-		when(text.getType()).thenReturn(AbstractText.TYPE_WEBPAGE);
-		assertEquals("Doe, Jane and Albert Einstein" + NL
-		        + "2006. \"Title of document\",", lBiblio.render(text));
-	}
+        // web page
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_WEBPAGE);
+        assertEquals("Doe, Jane and Albert Einstein" + NL
+                + "2006. \"Title of document\",", lBiblio.render(this.text));
+    }
 
-	@Test
-	public void testRenderPublicationPlace() throws Exception {
-		when(text.getTitle()).thenReturn("Title of document");
-		when(text.getText()).thenReturn("Remarks to text item");
-		when(text.getAuthor()).thenReturn("Doe, Jane");
-		when(text.getCoAuthor()).thenReturn("Albert Einstein");
-		when(text.getYear()).thenReturn("2006");
-		when(text.getPublication()).thenReturn("Scientific American");
-		when(text.getPlace()).thenReturn("London");
-		when(text.getPublisher()).thenReturn("Publisher");
+    @Test
+    public void testRenderPublicationPlace() throws Exception {
+        when(this.text.getTitle()).thenReturn("Title of document");
+        when(this.text.getText()).thenReturn("Remarks to text item");
+        when(this.text.getAuthor()).thenReturn("Doe, Jane");
+        when(this.text.getCoAuthor()).thenReturn("Albert Einstein");
+        when(this.text.getYear()).thenReturn("2006");
+        when(this.text.getPublication()).thenReturn("Scientific American");
+        when(this.text.getPlace()).thenReturn("London");
+        when(this.text.getPublisher()).thenReturn("Publisher");
 
-		// book
-		when(text.getType()).thenReturn(AbstractText.TYPE_BOOK);
-		final StandardEn lBiblio = new StandardEn();
-		assertEquals("Doe, Jane and Albert Einstein" + NL
-		        + "2006. Title of document. London: Publisher.",
-		        lBiblio.render(text));
+        // book
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_BOOK);
+        final StandardEn lBiblio = new StandardEn();
+        assertEquals("Doe, Jane and Albert Einstein" + NL
+                + "2006. Title of document. London: Publisher.",
+                lBiblio.render(this.text));
 
-		// article
-		when(text.getType()).thenReturn(AbstractText.TYPE_ARTICLE);
-		assertEquals("Doe, Jane and Albert Einstein" + NL
-		        + "2006. \"Title of document\". Scientific American.",
-		        lBiblio.render(text));
+        // article
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_ARTICLE);
+        assertEquals("Doe, Jane and Albert Einstein" + NL
+                + "2006. \"Title of document\". Scientific American.",
+                lBiblio.render(this.text));
 
-		// contribution
-		when(text.getType()).thenReturn(AbstractText.TYPE_CONTRIBUTION);
-		assertEquals(
-		        "Doe, Jane"
-		                + NL
-		                + "2006. \"Title of document\", in Scientific American. Eds. Albert Einstein, London: Publisher.",
-		        lBiblio.render(text));
+        // contribution
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_CONTRIBUTION);
+        assertEquals(
+                "Doe, Jane"
+                        + NL
+                        + "2006. \"Title of document\", in Scientific American. Eds. Albert Einstein, London: Publisher.",
+                        lBiblio.render(this.text));
 
-		// web page
-		when(text.getType()).thenReturn(AbstractText.TYPE_WEBPAGE);
-		assertEquals(
-		        "Doe, Jane and Albert Einstein"
-		                + NL
-		                + "2006. \"Title of document\", Scientific American. (accessed London)",
-		        lBiblio.render(text));
-	}
+        // web page
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_WEBPAGE);
+        assertEquals(
+                "Doe, Jane and Albert Einstein"
+                        + NL
+                        + "2006. \"Title of document\", Scientific American. (accessed London)",
+                        lBiblio.render(this.text));
+    }
 
-	@Test
-	public void testRenderSubtitle() throws Exception {
-		when(text.getTitle()).thenReturn("Title of document");
-		when(text.getText()).thenReturn("Remarks to text item");
-		when(text.getAuthor()).thenReturn("Doe, Jane");
-		when(text.getCoAuthor()).thenReturn("Albert Einstein");
-		when(text.getYear()).thenReturn("2006");
-		when(text.getPublication()).thenReturn("Scientific American");
-		when(text.getPlace()).thenReturn("London");
-		when(text.getPublisher()).thenReturn("Publisher");
-		when(text.getSubtitle()).thenReturn("The document's subtitle");
-		when(text.getPages()).thenReturn("55-67");
+    @Test
+    public void testRenderSubtitle() throws Exception {
+        when(this.text.getTitle()).thenReturn("Title of document");
+        when(this.text.getText()).thenReturn("Remarks to text item");
+        when(this.text.getAuthor()).thenReturn("Doe, Jane");
+        when(this.text.getCoAuthor()).thenReturn("Albert Einstein");
+        when(this.text.getYear()).thenReturn("2006");
+        when(this.text.getPublication()).thenReturn("Scientific American");
+        when(this.text.getPlace()).thenReturn("London");
+        when(this.text.getPublisher()).thenReturn("Publisher");
+        when(this.text.getSubtitle()).thenReturn("The document's subtitle");
+        when(this.text.getPages()).thenReturn("55-67");
 
-		// book
-		when(text.getType()).thenReturn(AbstractText.TYPE_BOOK);
-		final StandardEn lBiblio = new StandardEn();
-		assertEquals(
-		        "Doe, Jane and Albert Einstein"
-		                + NL
-		                + "2006. Title of document. The document's subtitle. London: Publisher.",
-		        lBiblio.render(text));
+        // book
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_BOOK);
+        final StandardEn lBiblio = new StandardEn();
+        assertEquals(
+                "Doe, Jane and Albert Einstein"
+                        + NL
+                        + "2006. Title of document. The document's subtitle. London: Publisher.",
+                        lBiblio.render(this.text));
 
-		// article
-		when(text.getType()).thenReturn(AbstractText.TYPE_ARTICLE);
-		assertEquals("Doe, Jane and Albert Einstein" + NL
-		        + "2006. \"Title of document\". Scientific American 55-67.",
-		        lBiblio.render(text));
+        // article
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_ARTICLE);
+        assertEquals("Doe, Jane and Albert Einstein" + NL
+                + "2006. \"Title of document\". Scientific American 55-67.",
+                lBiblio.render(this.text));
 
-		// contribution
-		when(text.getType()).thenReturn(AbstractText.TYPE_CONTRIBUTION);
-		assertEquals(
-		        "Doe, Jane"
-		                + NL
-		                + "2006. \"Title of document\", in Scientific American. Eds. Albert Einstein, pp. 55-67. London: Publisher.",
-		        lBiblio.render(text));
+        // contribution
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_CONTRIBUTION);
+        assertEquals(
+                "Doe, Jane"
+                        + NL
+                        + "2006. \"Title of document\", in Scientific American. Eds. Albert Einstein, pp. 55-67. London: Publisher.",
+                        lBiblio.render(this.text));
 
-		// web page
-		when(text.getType()).thenReturn(AbstractText.TYPE_WEBPAGE);
-		assertEquals(
-		        "Doe, Jane and Albert Einstein"
-		                + NL
-		                + "2006. \"Title of document. The document's subtitle\", Scientific American. (accessed London)",
-		        lBiblio.render(text));
-	}
+        // web page
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_WEBPAGE);
+        assertEquals(
+                "Doe, Jane and Albert Einstein"
+                        + NL
+                        + "2006. \"Title of document. The document's subtitle\", Scientific American. (accessed London)",
+                        lBiblio.render(this.text));
+    }
 
-	@Test
-	public void testRenderVolume() throws Exception {
-		when(text.getTitle()).thenReturn("Title of document");
-		when(text.getText()).thenReturn("Remarks to text item");
-		when(text.getAuthor()).thenReturn("Doe, Jane");
-		when(text.getCoAuthor()).thenReturn("Albert Einstein");
-		when(text.getYear()).thenReturn("2006");
-		when(text.getPublication()).thenReturn("Scientific American");
-		when(text.getPlace()).thenReturn("London");
-		when(text.getPublisher()).thenReturn("Publisher");
-		when(text.getSubtitle()).thenReturn("The document's subtitle");
-		when(text.getPages()).thenReturn("55-67");
-		when(text.getVolume()).thenReturn("90");
-		when(text.getNumber()).thenReturn("4");
+    @Test
+    public void testRenderVolume() throws Exception {
+        when(this.text.getTitle()).thenReturn("Title of document");
+        when(this.text.getText()).thenReturn("Remarks to text item");
+        when(this.text.getAuthor()).thenReturn("Doe, Jane");
+        when(this.text.getCoAuthor()).thenReturn("Albert Einstein");
+        when(this.text.getYear()).thenReturn("2006");
+        when(this.text.getPublication()).thenReturn("Scientific American");
+        when(this.text.getPlace()).thenReturn("London");
+        when(this.text.getPublisher()).thenReturn("Publisher");
+        when(this.text.getSubtitle()).thenReturn("The document's subtitle");
+        when(this.text.getPages()).thenReturn("55-67");
+        when(this.text.getVolume()).thenReturn("90");
+        when(this.text.getNumber()).thenReturn("4");
 
-		// book
-		when(text.getType()).thenReturn(AbstractText.TYPE_BOOK);
-		final StandardEn lBiblio = new StandardEn();
-		assertEquals(
-		        "Doe, Jane and Albert Einstein"
-		                + NL
-		                + "2006. Title of document. The document's subtitle. London: Publisher.",
-		        lBiblio.render(text));
+        // book
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_BOOK);
+        final StandardEn lBiblio = new StandardEn();
+        assertEquals(
+                "Doe, Jane and Albert Einstein"
+                        + NL
+                        + "2006. Title of document. The document's subtitle. London: Publisher.",
+                        lBiblio.render(this.text));
 
-		// article
-		when(text.getType()).thenReturn(AbstractText.TYPE_ARTICLE);
-		assertEquals(
-		        "Doe, Jane and Albert Einstein"
-		                + NL
-		                + "2006. \"Title of document\". Scientific American 90:4, 55-67.",
-		        lBiblio.render(text));
+        // article
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_ARTICLE);
+        assertEquals(
+                "Doe, Jane and Albert Einstein"
+                        + NL
+                        + "2006. \"Title of document\". Scientific American 90:4, 55-67.",
+                        lBiblio.render(this.text));
 
-		// contribution
-		when(text.getType()).thenReturn(AbstractText.TYPE_CONTRIBUTION);
-		assertEquals(
-		        "Doe, Jane"
-		                + NL
-		                + "2006. \"Title of document\", in Scientific American. Eds. Albert Einstein, pp. 55-67. London: Publisher.",
-		        lBiblio.render(text));
+        // contribution
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_CONTRIBUTION);
+        assertEquals(
+                "Doe, Jane"
+                        + NL
+                        + "2006. \"Title of document\", in Scientific American. Eds. Albert Einstein, pp. 55-67. London: Publisher.",
+                        lBiblio.render(this.text));
 
-		// web page
-		when(text.getType()).thenReturn(AbstractText.TYPE_WEBPAGE);
-		assertEquals(
-		        "Doe, Jane and Albert Einstein"
-		                + NL
-		                + "2006. \"Title of document. The document's subtitle\", Scientific American. (accessed London)",
-		        lBiblio.render(text));
-	}
+        // web page
+        when(this.text.getType()).thenReturn(AbstractText.TYPE_WEBPAGE);
+        assertEquals(
+                "Doe, Jane and Albert Einstein"
+                        + NL
+                        + "2006. \"Title of document. The document's subtitle\", Scientific American. (accessed London)",
+                        lBiblio.render(this.text));
+    }
 
 }

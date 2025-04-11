@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.xml.transform.Result;
@@ -72,25 +73,25 @@ public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
     @Override
     public Collection<String> getCreateStatemens(final String xmlName)
             throws IOException, TransformerFactoryConfigurationError, TransformerException {
-        final XMLHandler handler = new XMLHandler();
+        final Optional<URL> entry = getModelXML(xmlName);
+        if (entry.isPresent()) {
+            final XMLHandler handler = new XMLHandler();
+            try (InputStream xml = entry.get().openStream()) {
+                final Source xmlSource = new StreamSource(xml);
+                try (InputStream xsl = getXSL().openStream()) {
+                    final Source xslSource = new StreamSource(xsl);
 
-        final URL entry = getModelXML(xmlName);
-        if (entry == null) {
+                    // transform xml
+                    final Templates templates = TransformerFactory.newInstance().newTemplates(xslSource);
+                    final Transformer transformer = templates.newTransformer();
+                    final Result result = new SAXResult(handler);
+                    transformer.transform(xmlSource, result);
+                }
+            }
+            return handler.getStatements();
+        } else {
             return Collections.emptyList();
         }
-        try (InputStream xml = entry.openStream()) {
-            final Source xmlSource = new StreamSource(xml);
-            try (InputStream xsl = getXSL().openStream()) {
-                final Source xslSource = new StreamSource(xsl);
-
-                // transform xml
-                final Templates templates = TransformerFactory.newInstance().newTemplates(xslSource);
-                final Transformer transformer = templates.newTransformer();
-                final Result result = new SAXResult(handler);
-                transformer.transform(xmlSource, result);
-            }
-        }
-        return handler.getStatements();
     }
 
     @Override
@@ -100,8 +101,8 @@ public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
         return statements.stream().filter(st -> st.contains(TBL_EVENT_STORE)).collect(Collectors.toList());
     }
 
-    protected URL getModelXML(final String xmlName) {
-        return bundle == null ? null : bundle.getEntry(RESOURCES_DIR + xmlName);
+    protected Optional<URL> getModelXML(final String xmlName) {
+        return bundle == null ? Optional.empty() : Optional.ofNullable(bundle.getEntry(RESOURCES_DIR + xmlName));
     }
 
     protected abstract URL getXSL();

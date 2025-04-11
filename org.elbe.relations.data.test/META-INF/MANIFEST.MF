@@ -4,15 +4,18 @@ Bundle-Name: The unit test bundle for the Relations data model bundle.
 Bundle-SymbolicName: org.elbe.relations.data.test
 Bundle-Version: 1.1.0.qualifier
 Fragment-Host: org.elbe.relations.data;bundle-version="1.1"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8,
- JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Vendor: RelationWare
 Import-Package: com.mysql.jdbc,
  com.mysql.jdbc.jdbc2.optional,
  org.apache.derby.jdbc,
  org.hip.kernel.dbaccess;version="[1.0.0,2.0.0)",
  org.osgi.service.jdbc;version="[1.0.0,2.0.0)"
-Require-Bundle: org.mockito.mockito-all;bundle-version="1.9.5",
- org.junit;bundle-version="4.12.0"
+Require-Bundle: junit-jupiter-api;bundle-version="[5.11.3,6.0.0)",
+ junit-jupiter-engine;bundle-version="[5.11.3,6.0.0)",
+ org.mockito.mockito-core;bundle-version="[5.14.2,6.0.0)",
+ org.mockito.junit-jupiter;bundle-version="[5.14.2,6.0.0)",
+ net.bytebuddy.byte-buddy;bundle-version="[1.15.10,2.0.0)",
+ net.bytebuddy.byte-buddy-agent;bundle-version="[1.15.10,2.0.0)"
 Export-Package: org.elbe.relations.data.test;version="1.0.0"
 Automatic-Module-Name: org.elbe.relations.data.test

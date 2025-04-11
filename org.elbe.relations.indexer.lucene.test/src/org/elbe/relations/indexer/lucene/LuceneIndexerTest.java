@@ -16,12 +16,11 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ***************************************************************************/
-
 package org.elbe.relations.indexer.lucene;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,23 +32,22 @@ import org.elbe.relations.data.search.IIndexer;
 import org.elbe.relations.data.search.IndexerDocument;
 import org.elbe.relations.data.search.IndexerField;
 import org.elbe.relations.data.search.IndexerHelper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
- *
  * @author lbenno
  */
 public class LuceneIndexerTest {
 	private final IndexHouseKeeper housekeeper = new IndexHouseKeeper();
 
-	@Before
+	@BeforeEach
 	public void setUp() throws IOException {
 		housekeeper.setUp();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws IOException {
 		housekeeper.tearDown();
 	}
@@ -75,7 +73,7 @@ public class LuceneIndexerTest {
 		final IIndexer lIndexer = new LuceneIndexer();
 
 		lIndexer.processIndexer(getDocIndexer(), directory, IndexHouseKeeper.LANGUAGE);
-		assertEquals("one document indexed", 1, lIndexer.numberOfIndexed(directory));
+		assertEquals( 1, lIndexer.numberOfIndexed(directory));
 
 		// initialize
 		lIndexer.initializeIndex(directory, IndexHouseKeeper.LANGUAGE);
@@ -98,14 +96,14 @@ public class LuceneIndexerTest {
 	@Test
 	public void testInitializeIndex() throws IOException {
 		final File lDir = IndexHouseKeeper.getDirectory();
-		assertTrue("index dir exists", lDir.exists());
+		assertTrue( lDir.exists());
 		final String[] lContent = lDir.list();
-		assertNotNull("the directory contains files", lContent);
+		assertNotNull( lContent);
 		boolean lStartsWithSegments = false;
 		for (final String lFileName : lContent) {
 			lStartsWithSegments = lStartsWithSegments || lFileName.startsWith("segments");
 		}
-		assertTrue("at least on containing file starts with 'segments'", lStartsWithSegments);
+		assertTrue( lStartsWithSegments);
 	}
 
 	@Test
@@ -119,10 +117,10 @@ public class LuceneIndexerTest {
 
 		final IIndexer lIndexer = new LuceneIndexer();
 		lIndexer.processIndexer(lDocIndexer, luceneDir, IndexHouseKeeper.LANGUAGE);
-		assertEquals("two documents in index", 2, lIndexer.numberOfIndexed(luceneDir));
+		assertEquals( 2, lIndexer.numberOfIndexed(luceneDir));
 
 		lIndexer.deleteItemInIndex(lUniqueID, lFieldName, luceneDir, IndexHouseKeeper.LANGUAGE);
-		assertEquals("one document in index", 1, lIndexer.numberOfIndexed(luceneDir));
+		assertEquals( 1, lIndexer.numberOfIndexed(luceneDir));
 	}
 
 }

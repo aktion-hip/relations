@@ -18,17 +18,17 @@
  ***************************************************************************/
 package org.elbe.relations.data.bom;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import org.elbe.relations.data.test.DataHouseKeeper;
 import org.hip.kernel.exc.VException;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Luthiger
@@ -36,12 +36,12 @@ import org.junit.Test;
 public class TermHomeTest {
     private static DataHouseKeeper data;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         data = DataHouseKeeper.INSTANCE;
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         data.deleteAllInAll();
     }
@@ -77,17 +77,17 @@ public class TermHomeTest {
         final String text = "This Text";
         final TermHome home = data.getTermHome();
 
-        assertEquals("number 0", 0, home.getCount());
+        assertEquals(0, home.getCount());
 
         AbstractTerm term = home.newTerm(title, text);
         final long id = term.getID();
 
         term = home.newTerm("next", "next");
-        assertEquals("number 1", 2, home.getCount());
+        assertEquals(2, home.getCount());
 
         term = (AbstractTerm) home.getItem(id);
-        assertEquals("title", title, term.getTitle());
-        assertEquals("text", text, term.get(TermHome.KEY_TEXT).toString());
+        assertEquals("ThisTitle", title, term.getTitle());
+        assertEquals("This Text", text, term.get(TermHome.KEY_TEXT).toString());
     }
 
 }

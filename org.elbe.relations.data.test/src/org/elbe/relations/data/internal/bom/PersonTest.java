@@ -18,9 +18,9 @@
  ***************************************************************************/
 package org.elbe.relations.data.internal.bom;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -30,7 +30,6 @@ import java.util.Collection;
 import org.elbe.relations.data.bom.AbstractPerson;
 import org.elbe.relations.data.bom.BOMException;
 import org.elbe.relations.data.bom.EventStoreHome;
-import org.elbe.relations.data.bom.IItem;
 import org.elbe.relations.data.bom.LightWeightPerson;
 import org.elbe.relations.data.bom.Person;
 import org.elbe.relations.data.bom.PersonHome;
@@ -39,10 +38,10 @@ import org.elbe.relations.data.search.IndexerField;
 import org.elbe.relations.data.search.IndexerHelper;
 import org.elbe.relations.data.test.DataHouseKeeper;
 import org.hip.kernel.exc.VException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -57,17 +56,17 @@ public class PersonTest {
     private final String from = "1.1.2000";
     private final String to = "31.12.2010";
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         data = DataHouseKeeper.INSTANCE;
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         // data.setUp();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         data.deleteAllInAll();
     }
@@ -76,20 +75,20 @@ public class PersonTest {
     public void testGetLightWeight() throws Exception {
         final PersonHome lHome = data.getPersonHome();
 
-        assertEquals("number 0", 0, lHome.getCount());
+        assertEquals(0, lHome.getCount());
 
         final AbstractPerson lPerson = lHome.newPerson(this.name, this.firstName, this.from, this.to, this.text);
-        assertEquals("number 1", 1, lHome.getCount());
+        assertEquals(1, lHome.getCount());
 
         final AbstractPerson lPerson2 = lHome.getPerson(lPerson.getID());
         final LightWeightPerson lLightWeight = (LightWeightPerson) lPerson2.getLightWeight();
 
-        assertEquals("id", lPerson.getID(), lLightWeight.getID());
-        assertEquals("name", this.name, lLightWeight.name);
-        assertEquals("firstName", this.firstName, lLightWeight.firstname);
-        assertEquals("text", this.text, lLightWeight.text);
-        assertEquals("from", this.from, lLightWeight.from);
-        assertEquals("to", this.to, lLightWeight.to);
+        assertEquals(lPerson.getID(), lLightWeight.getID());
+        assertEquals(this.name, lLightWeight.name);
+        assertEquals(this.firstName, lLightWeight.firstname);
+        assertEquals(this.text, lLightWeight.text);
+        assertEquals(this.from, lLightWeight.from);
+        assertEquals(this.to, lLightWeight.to);
     }
 
     @Test
@@ -115,14 +114,14 @@ public class PersonTest {
 
         final AbstractPerson person3 = home.getPerson(lPerson.getID());
 
-        assertEquals("name", this.name, person3.get(PersonHome.KEY_NAME));
-        assertEquals("firstName", firstname2, person3.get(PersonHome.KEY_FIRSTNAME));
-        assertEquals("text", this.text, person3.get(PersonHome.KEY_TEXT));
-        assertEquals("to", to2, person3.get(PersonHome.KEY_TO));
+        assertEquals(this.name, person3.get(PersonHome.KEY_NAME));
+        assertEquals(firstname2, person3.get(PersonHome.KEY_FIRSTNAME));
+        assertEquals(this.text, person3.get(PersonHome.KEY_TEXT));
+        assertEquals(to2, person3.get(PersonHome.KEY_TO));
 
-        assertTrue("compare timestamp", start < ((Timestamp) person3.get(PersonHome.KEY_MODIFIED)).getTime());
-        final String created = ((IItem) person3).getCreated();
-        assertNotNull("created string exists", created);
+        assertTrue(start < ((Timestamp) person3.get(PersonHome.KEY_MODIFIED)).getTime());
+        final String created = person3.getCreated();
+        assertNotNull(created);
 
         String createdLbl = "Created:";
         String modifiedLbl = "Modified:";
@@ -130,8 +129,8 @@ public class PersonTest {
             createdLbl = "Erzeugt:";
             modifiedLbl = "Verändert:";
         }
-        assertTrue("Created:", created.indexOf(createdLbl) >= 0);
-        assertTrue("Modified:", created.indexOf(modifiedLbl) >= 0);
+        assertTrue(created.indexOf(createdLbl) >= 0);
+        assertTrue(created.indexOf(modifiedLbl) >= 0);
     }
 
     @Test
@@ -141,7 +140,7 @@ public class PersonTest {
         final AbstractPerson lPerson = home.newPerson(this.name, this.firstName, this.from, this.to, this.text);
         final AbstractPerson lPerson2 = home.getPerson(lPerson.getID());
 
-        assertEquals("title is name, firstName", this.name + ", " + this.firstName, lPerson2.getTitle());
+        assertEquals(this.name + ", " + this.firstName, lPerson2.getTitle());
     }
 
     @Test
@@ -152,24 +151,24 @@ public class PersonTest {
         final AbstractPerson person = home.newPerson(this.name, this.firstName, this.from, this.to, this.text);
         ((Person) person).indexContent(indexer);
 
-        assertEquals("number of index docs", 1, indexer.getDocuments().size());
+        assertEquals(1, indexer.getDocuments().size());
         final IndexerDocument lDocument = indexer.getDocuments().iterator().next();
         final Collection<IndexerField> lFields = lDocument.getFields();
-        assertEquals("number of index fields", 7, lFields.size());
+        assertEquals(7, lFields.size());
         final Collection<String> lFieldNames = new ArrayList<>();
         final Collection<String> lFieldFull = new ArrayList<>();
         for (final IndexerField lField : lDocument.getFields()) {
             lFieldNames.add(lField.getFieldName());
             lFieldFull.add(lField.toString());
         }
-        assertTrue("contains itemID", lFieldNames.contains("itemID"));
-        assertTrue("contains itemType", lFieldNames.contains("itemType"));
-        assertTrue("contains itemTitle", lFieldNames.contains("itemTitle"));
-        assertTrue("contains itemDateCreated", lFieldNames.contains("itemDateCreated"));
-        assertTrue("contains itemDateModified", lFieldNames.contains("itemDateModified"));
-        assertTrue("contains itemFull", lFieldNames.contains("itemFull"));
-        assertTrue("contains full 'itemType: 3'", lFieldFull.contains("itemType: 3"));
-        assertTrue("contains full 'itemTitle: Firstname Name'", lFieldFull.contains("itemTitle: Firstname Name"));
+        assertTrue(lFieldNames.contains("itemID"));
+        assertTrue(lFieldNames.contains("itemType"));
+        assertTrue(lFieldNames.contains("itemTitle"));
+        assertTrue(lFieldNames.contains("itemDateCreated"));
+        assertTrue(lFieldNames.contains("itemDateModified"));
+        assertTrue(lFieldNames.contains("itemFull"));
+        assertTrue(lFieldFull.contains("itemType: 3"));
+        assertTrue(lFieldFull.contains("itemTitle: Firstname Name"));
     }
 
 }

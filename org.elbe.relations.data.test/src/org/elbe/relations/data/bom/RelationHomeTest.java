@@ -18,17 +18,17 @@
  ***************************************************************************/
 package org.elbe.relations.data.bom;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.elbe.relations.data.internal.bom.Relation;
 import org.elbe.relations.data.test.DataHouseKeeper;
 import org.hip.kernel.bom.QueryResult;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -41,12 +41,12 @@ public class RelationHomeTest {
     private AbstractTerm term2;
     private AbstractPerson person;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         data = DataHouseKeeper.INSTANCE;
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         // data.setUp();
         this.term1 = data.createTerm("Term1");
@@ -54,7 +54,7 @@ public class RelationHomeTest {
         this.person = data.createPerson("Pan", "Peter");
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         data.deleteAllInAll();
     }
@@ -81,10 +81,10 @@ public class RelationHomeTest {
 
         // retrieve first relation
         lRelation = home.getRelation(lID);
-        assertEquals("id 1", lID1, lRelation.getItemId1());
-        assertEquals("id 2", lID2, lRelation.getItemId2());
-        assertEquals("type 1", IItem.TERM, lRelation.getItemType1());
-        assertEquals("type 2", IItem.PERSON, lRelation.getItemType2());
+        assertEquals(lID1, lRelation.getItemId1());
+        assertEquals(lID2, lRelation.getItemId2());
+        assertEquals(IItem.TERM, lRelation.getItemType1());
+        assertEquals(IItem.PERSON, lRelation.getItemType2());
 
         // delete first relation
         home.deleteRelation(lID);
@@ -95,12 +95,12 @@ public class RelationHomeTest {
     @Test
     public void testGetRelation() throws Exception {
         final RelationHome lHome = data.getRelationHome();
-        assertEquals("number 0", 0, lHome.getCount());
+        assertEquals(0, lHome.getCount());
 
         lHome.newRelation(this.term1, this.person);
         lHome.newRelation(this.term2, this.term1);
         lHome.newRelation(this.person, this.term2);
-        assertEquals("number 1", 3, lHome.getCount());
+        assertEquals(3, lHome.getCount());
 
         final QueryResult lResult = lHome.getRelations(this.term1);
         int lCount = 0;
@@ -108,7 +108,7 @@ public class RelationHomeTest {
             lResult.next();
             ++lCount;
         }
-        assertEquals("number of term 1", 2, lCount);
+        assertEquals(2, lCount);
     }
 
     @Test
@@ -119,13 +119,13 @@ public class RelationHomeTest {
 
         final Relation lRelation3 = lHome.getRelation(IItem.TERM,
                 this.term1.getID(), IItem.PERSON, this.person.getID());
-        assertEquals("retrieved 1", lRelation1.getID(), lRelation3.getID());
-        assertTrue("not equal", lRelation1.getID() != lRelation2.getID());
+        assertEquals(lRelation1.getID(), lRelation3.getID());
+        assertTrue(lRelation1.getID() != lRelation2.getID());
 
-        assertEquals("number before delete", 2, lHome.getCount());
+        assertEquals(2, lHome.getCount());
         lHome.deleteRelation(IItem.TERM, this.term1.getID(), IItem.PERSON,
                 this.person.getID());
-        assertEquals("number after delete", 1, lHome.getCount());
+        assertEquals(1, lHome.getCount());
         try {
             lHome.getRelation(IItem.TERM, this.term1.getID(), IItem.PERSON,
                     this.person.getID());

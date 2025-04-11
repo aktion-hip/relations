@@ -31,112 +31,106 @@ import org.elbe.relations.data.internal.search.IndexerRegistration;
  * @author Luthiger Created on 14.11.2006
  */
 public abstract class AbstractSearching {
-	public static final String ITEM_TYPE = "itemType"; //$NON-NLS-1$
-	public static final String ITEM_ID = "itemID"; //$NON-NLS-1$
-	public static final String UNIQUE_ID = "uniqueID"; //$NON-NLS-1$
-	public static final String TITLE = "itemTitle"; //$NON-NLS-1$
-	public static final String TEXT = "itemText"; //$NON-NLS-1$
-	public static final String CONTENT_FULL = "itemFull"; //$NON-NLS-1$
-	public static final String DATE_CREATED = "itemDateCreated"; //$NON-NLS-1$
-	public static final String DATE_MODIFIED = "itemDateModified"; //$NON-NLS-1$
+    public static final String ITEM_TYPE = "itemType"; //$NON-NLS-1$
+    public static final String ITEM_ID = "itemID"; //$NON-NLS-1$
+    public static final String UNIQUE_ID = "uniqueID"; //$NON-NLS-1$
+    public static final String TITLE = "itemTitle"; //$NON-NLS-1$
+    public static final String TEXT = "itemText"; //$NON-NLS-1$
+    public static final String CONTENT_FULL = "itemFull"; //$NON-NLS-1$
+    public static final String DATE_CREATED = "itemDateCreated"; //$NON-NLS-1$
+    public static final String DATE_MODIFIED = "itemDateModified"; //$NON-NLS-1$
 
-	private static DirectoryFactory cDirectoryFactory = null;
+    private static DirectoryFactory cDirectoryFactory = null;
 
-	private String indexName = ""; //$NON-NLS-1$
+    private String indexName = ""; //$NON-NLS-1$
 
-	/**
-	 * AbstractSearching constructor.
-	 *
-	 * @param inIndexDir
-	 *            String the name of the index, i.e. the directory where the
-	 *            index is stored.
-	 */
-	public AbstractSearching(final String inIndexDir) {
-		indexName = inIndexDir;
-	}
+    /**
+     * AbstractSearching constructor.
+     *
+     * @param inIndexDir
+     *            String the name of the index, i.e. the directory where the
+     *            index is stored.
+     */
+    public AbstractSearching(final String inIndexDir) {
+        this.indexName = inIndexDir;
+    }
 
-	protected File getIndexDir() throws IOException {
-		return getDirectoryFactory().getDirectory(indexName);
-	}
+    protected File getIndexDir() throws IOException {
+        return getDirectoryFactory().getDirectory(this.indexName);
+    }
 
-	protected File getIndexContainer() {
-		return getDirectoryFactory().getIndexContainer(indexName);
-	}
+    protected File getIndexContainer() {
+        return getDirectoryFactory().getIndexContainer(this.indexName);
+    }
 
-	protected DirectoryFactory getDirectoryFactory() {
-		if (cDirectoryFactory == null) {
-			try {
-				cDirectoryFactory = new FileSystemDirectoryFactory();
-			} catch (final IllegalStateException exc) {
-				// For testing purpose, we use an index stored in the temporary
-				// directory.
-				cDirectoryFactory = new TempDirectoryFactory();
-			}
-		}
-		return cDirectoryFactory;
-	}
+    protected DirectoryFactory getDirectoryFactory() {
+        if (cDirectoryFactory == null) {
+            cDirectoryFactory = new FileSystemDirectoryFactory();
+        }
+        return cDirectoryFactory;
+    }
 
-	/**
-	 * Returns the number of documents actually indexed.
-	 *
-	 * @return int Number of documents in the index.
-	 * @throws IOException
-	 */
-	public int numberOfIndexed() throws IOException {
-		return getIndexer().numberOfIndexed(getIndexDir());
-	}
+    /**
+     * Returns the number of documents actually indexed.
+     *
+     * @return int Number of documents in the index.
+     * @throws IOException
+     */
+    public int numberOfIndexed() throws IOException {
+        return getIndexer().numberOfIndexed(getIndexDir());
+    }
 
-	/**
-	 * @return IIndexer the actually registered <code>IIndexer</code>.
-	 */
-	protected IIndexer getIndexer() {
-		return IndexerRegistration.INSTANCE.getIndexer();
-	}
+    /**
+     * @return IIndexer the actually registered <code>IIndexer</code>.
+     */
+    protected IIndexer getIndexer() {
+        return IndexerRegistration.INSTANCE.getIndexer();
+    }
 
-	// --- inner classes ---
+    // --- inner classes ---
 
-	private interface DirectoryFactory {
-		File getDirectory(String inIndexName) throws IOException;
+    protected interface DirectoryFactory {
+        File getDirectory(String inIndexName) throws IOException;
 
-		File getIndexContainer(String inIndexName);
-	}
+        File getIndexContainer(String inIndexName);
+    }
 
-	private class FileSystemDirectoryFactory implements DirectoryFactory {
-		protected File root;
+    private class FileSystemDirectoryFactory implements DirectoryFactory {
+        protected File root;
 
-		public FileSystemDirectoryFactory() {
-			root = getRoot();
-		}
+        public FileSystemDirectoryFactory() {
+            this.root = getRoot();
+        }
 
-		@Override
-		public File getDirectory(final String inIndexName) throws IOException {
-			final File lIndexContainer = checkDir(new File(root, Constants.LUCENE_STORE));
-			return checkDir(new File(lIndexContainer, inIndexName));
-		}
+        @Override
+        public File getDirectory(final String inIndexName) throws IOException {
+            final File lIndexContainer = checkDir(new File(this.root, Constants.LUCENE_STORE));
+            return checkDir(new File(lIndexContainer, inIndexName));
+        }
 
-		private File checkDir(final File inFileToCheck) {
-			if (!inFileToCheck.exists()) {
-				inFileToCheck.mkdir();
-			}
-			return inFileToCheck;
-		}
+        private File checkDir(final File inFileToCheck) {
+            if (!inFileToCheck.exists()) {
+                inFileToCheck.mkdir();
+            }
+            return inFileToCheck;
+        }
 
-		protected File getRoot() {
-			return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
-		}
+        protected File getRoot() {
+            return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
+        }
 
-		@Override
-		public File getIndexContainer(final String inIndexName) {
-			final File lIndexContainer = checkDir(new File(root, Constants.LUCENE_STORE));
-			return checkDir(new File(lIndexContainer, inIndexName));
-		}
-	}
+        @Override
+        public File getIndexContainer(final String inIndexName) {
+            final File lIndexContainer = checkDir(new File(this.root, Constants.LUCENE_STORE));
+            return checkDir(new File(lIndexContainer, inIndexName));
+        }
+    }
 
-	protected class TempDirectoryFactory extends FileSystemDirectoryFactory {
-		@Override
-		public File getRoot() {
-			return new File(System.getProperty("java.io.tmpdir")); //$NON-NLS-1$
-		}
-	}
+    protected class TempDirectoryFactory extends FileSystemDirectoryFactory {
+        @Override
+        public File getRoot() {
+            return new File(System.getProperty("java.io.tmpdir")); //$NON-NLS-1$
+        }
+    }
 
 }

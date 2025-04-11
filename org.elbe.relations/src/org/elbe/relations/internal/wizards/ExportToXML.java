@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -43,6 +42,8 @@ import org.elbe.relations.internal.preferences.LanguageService;
 import org.elbe.relations.internal.wizards.interfaces.IExportWizard;
 import org.hip.kernel.exc.VException;
 
+import jakarta.annotation.PostConstruct;
+
 /**
  * Wizard to export/backup the actual database.
  *
@@ -50,110 +51,110 @@ import org.hip.kernel.exc.VException;
  */
 @SuppressWarnings("restriction")
 public class ExportToXML extends Wizard implements IExportWizard {
-	private final static String STATUS_MSG = RelationsMessages
-			.getString("ExportToXML.msg.status"); //$NON-NLS-1$
+    private final static String STATUS_MSG = RelationsMessages
+            .getString("ExportToXML.msg.status"); //$NON-NLS-1$
 
-	@Inject
-	private Logger log;
+    @Inject
+    private Logger log;
 
-	@Inject
-	private DBSettings dbSettings;
+    @Inject
+    private DBSettings dbSettings;
 
-	@Inject
-	private IDataService dataService;
+    @Inject
+    private IDataService dataService;
 
-	@Inject
-	private RelationsStatusLineManager statusLine;
+    @Inject
+    private RelationsStatusLineManager statusLine;
 
-	@Inject
-	private LanguageService languageService;
+    @Inject
+    private LanguageService languageService;
 
-	@Inject
-	@Named(IServiceConstants.ACTIVE_SHELL)
-	private Shell shell;
+    @Inject
+    @Named(IServiceConstants.ACTIVE_SHELL)
+    private Shell shell;
 
-	private ExportToXMLPage page;
+    private ExportToXMLPage page;
 
-	@PostConstruct
-	public void init() {
-		setWindowTitle(RelationsMessages.getString("ExportToXML.window.title")); //$NON-NLS-1$
-	}
+    @PostConstruct
+    public void init() {
+        setWindowTitle(RelationsMessages.getString("ExportToXML.window.title")); //$NON-NLS-1$
+    }
 
-	@Override
-	public void addPages() {
-		this.page = new ExportToXMLPage("ExportToXMLPage"); //$NON-NLS-1$
-		addPage(this.page);
-	}
+    @Override
+    public void addPages() {
+        this.page = new ExportToXMLPage("ExportToXMLPage"); //$NON-NLS-1$
+        addPage(this.page);
+    }
 
-	@Override
-	public boolean performFinish() {
-		final String lCatalog = this.dbSettings.getCatalog();
-		final String lBackupFile = this.page.getFileName();
-		this.statusLine.showStatusLineMessage(
-				String.format(STATUS_MSG, lCatalog, lBackupFile));
+    @Override
+    public boolean performFinish() {
+        final String lCatalog = this.dbSettings.getCatalog();
+        final String lBackupFile = this.page.getFileName();
+        this.statusLine.showStatusLineMessage(
+                String.format(STATUS_MSG, lCatalog, lBackupFile));
 
-		final ProgressMonitorDialog lDialog = new ProgressMonitorDialog(this.shell);
-		lDialog.open();
+        final ProgressMonitorDialog lDialog = new ProgressMonitorDialog(this.shell);
+        lDialog.open();
 
-		final ExporterJob lJob = new ExporterJob(this.page.getFileName());
-		try {
-			lDialog.run(true, true, lJob);
-		}
-		catch (final InvocationTargetException exc) {
-			this.log.error(exc, exc.getMessage());
-		}
-		catch (final InterruptedException exc) {
-			this.log.error(exc, exc.getMessage());
-		}
-		finally {
-			lDialog.close();
-		}
-		return true;
-	}
+        final ExporterJob lJob = new ExporterJob(this.page.getFileName());
+        try {
+            lDialog.run(true, true, lJob);
+        }
+        catch (final InvocationTargetException exc) {
+            this.log.error(exc, exc.getMessage());
+        }
+        catch (final InterruptedException exc) {
+            this.log.error(exc, exc.getMessage());
+        }
+        finally {
+            lDialog.close();
+        }
+        return true;
+    }
 
-	@Override
-	public void dispose() {
-		if (this.page != null) {
-			this.page.dispose();
-		}
-		super.dispose();
-	}
+    @Override
+    public void dispose() {
+        if (this.page != null) {
+            this.page.dispose();
+        }
+        super.dispose();
+    }
 
-	// --- private classes ---
+    // --- private classes ---
 
-	private class ExporterJob implements IRunnableWithProgress {
-		private final String fileName;
+    private class ExporterJob implements IRunnableWithProgress {
+        private final String fileName;
 
-		public ExporterJob(final String inFileName) {
-			this.fileName = inFileName;
-		}
+        public ExporterJob(final String inFileName) {
+            this.fileName = inFileName;
+        }
 
-		@Override
-		public void run(final IProgressMonitor inMonitor) {
-			inMonitor.beginTask(
-					RelationsMessages.getString("ExportToXML.msg.job.start"), //$NON-NLS-1$
-					ExportToXML.this.dataService.getNumberOfItems());
+        @Override
+        public void run(final IProgressMonitor inMonitor) {
+            inMonitor.beginTask(
+                    RelationsMessages.getString("ExportToXML.msg.job.start"), //$NON-NLS-1$
+                    ExportToXML.this.dataService.getNumberOfItems());
 
-			try (XMLExport exporter = createExporter(this.fileName)) {
-				exporter.export(inMonitor);
-			}
-			catch (IOException | VException | SQLException exc) {
-				ExportToXML.this.log.error(exc, exc.getMessage());
-			}
-			finally {
-				inMonitor.done();
-			}
-		}
-	}
+            try (XMLExport exporter = createExporter(this.fileName)) {
+                exporter.export(inMonitor);
+            }
+            catch (IOException | VException | SQLException exc) {
+                ExportToXML.this.log.error(exc, exc.getMessage());
+            }
+            finally {
+                inMonitor.done();
+            }
+        }
+    }
 
-	private XMLExport createExporter(final String fileName) throws IOException {
-		final int count = this.dataService.getNumberOfItems()
-		        + this.dataService.getNumberOfRelations();
-		return fileName.endsWith(".zip") //$NON-NLS-1$
-				? new ZippedXMLExport(fileName,
-						ExportToXML.this.languageService.getAppLocale(), count)
-		        : new XMLExport(fileName,
-		                ExportToXML.this.languageService.getAppLocale(), count);
-	}
+    private XMLExport createExporter(final String fileName) throws IOException {
+        final int count = this.dataService.getNumberOfItems()
+                + this.dataService.getNumberOfRelations();
+        return fileName.endsWith(".zip") //$NON-NLS-1$
+                ? new ZippedXMLExport(fileName,
+                        ExportToXML.this.languageService.getAppLocale(), count)
+                        : new XMLExport(fileName,
+                                ExportToXML.this.languageService.getAppLocale(), count);
+    }
 
 }

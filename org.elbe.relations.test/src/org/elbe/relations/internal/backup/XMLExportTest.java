@@ -16,10 +16,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ***************************************************************************/
-
 package org.elbe.relations.internal.backup;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.util.Locale;
@@ -34,13 +33,13 @@ import javax.xml.xpath.XPathFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.elbe.relations.data.bom.IItem;
 import org.elbe.relations.data.test.DataHouseKeeper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.unitils.io.IOUnitils;
 import org.w3c.dom.Document;
 
@@ -49,7 +48,7 @@ import org.w3c.dom.Document;
  *
  * @author lbenno
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class XMLExportTest {
     private static final String FILE_NAME = "export.tmp";
 
@@ -62,12 +61,12 @@ public class XMLExportTest {
 
     private XMLExport exporter;
 
-    @BeforeClass
+    @BeforeAll
     public static void before() {
         data = DataHouseKeeper.INSTANCE;
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         final IItem lTerm = data.createTerm("test term",
                 "the test term's description");
@@ -78,7 +77,7 @@ public class XMLExportTest {
         this.exportFile = IOUnitils.createTempFile(FILE_NAME);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         data.deleteAllInAll();
         IOUnitils.deleteTempFileOrDir(new File(FILE_NAME));

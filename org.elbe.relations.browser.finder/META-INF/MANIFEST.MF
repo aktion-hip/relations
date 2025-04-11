@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
+Automatic-Module-Name: org.elbe.relations.browser.finder
 Bundle-Name: %relations.finder.browser.name
 Bundle-SymbolicName: org.elbe.relations.browser.finder;singleton:=true
-Bundle-Version: 2.0.0.qualifier
+Bundle-Version: 2.0.1.qualifier
 Bundle-Activator: org.elbe.relations.browser.finder.Activator
 Bundle-Vendor: %relations.finder.browser.vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8,
- JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Import-Package: javax.annotation;version="1.1.0",
  javax.inject;version="1.0.0",
  org.eclipse.core.commands,

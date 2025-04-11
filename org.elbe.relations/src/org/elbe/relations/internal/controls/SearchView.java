@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -65,6 +64,8 @@ import org.elbe.relations.internal.controller.SearchController;
 import org.elbe.relations.internal.utility.DialogSettingHelper;
 import org.elbe.relations.search.RetrievedItemWithIcon;
 
+import jakarta.annotation.PostConstruct;
+
 /**
  * View to search items. By default, this view is configured as fast view (i.e.
  * is displayed minimized).
@@ -73,232 +74,232 @@ import org.elbe.relations.search.RetrievedItemWithIcon;
  */
 @SuppressWarnings("restriction")
 public class SearchView extends AbstractToolPart {
-	private static final String QUERY_HINT = RelationsMessages
-	        .getString("SearchView.tip.search"); //$NON-NLS-1$
-	private static final String DIALOG_TERM = "relations.search.memory"; //$NON-NLS-1$
+    private static final String QUERY_HINT = RelationsMessages
+            .getString("SearchView.tip.search"); //$NON-NLS-1$
+    private static final String DIALOG_TERM = "relations.search.memory"; //$NON-NLS-1$
 
-	@Inject
-	private ESelectionService selectionService;
+    @Inject
+    private ESelectionService selectionService;
 
-	@Inject
-	private SearchController searchController;
+    @Inject
+    private SearchController searchController;
 
-	private final Composite search;
-	private Combo input;
-	private Button button;
-	private TableViewer results;
+    private final Composite search;
+    private Combo input;
+    private Button button;
+    private TableViewer results;
 
-	private boolean initialized = false;
-	private DialogSettingHelper settings;
+    private boolean initialized = false;
+    private DialogSettingHelper settings;
 
-	/**
-	 * SearchView constructor, called through DI.
-	 *
-	 * @param inParent
-	 *            {@link Composite}
-	 */
-	@Inject
-	public SearchView(final Composite inParent) {
-		search = new Composite(inParent, SWT.NULL);
+    /**
+     * SearchView constructor, called through DI.
+     *
+     * @param inParent
+     *            {@link Composite}
+     */
+    @Inject
+    public SearchView(final Composite inParent) {
+        this.search = new Composite(inParent, SWT.NULL);
 
-		final int lIndent = createInputControl(search);
-		createButtonControl(search, lIndent);
-		createListControl(lIndent);
+        final int lIndent = createInputControl(this.search);
+        createButtonControl(this.search, lIndent);
+        createListControl(lIndent);
 
-		final GridLayout lGrid = new GridLayout(1, true);
-		lGrid.marginWidth = 2;
-		lGrid.verticalSpacing = 2;
-		search.setLayout(lGrid);
+        final GridLayout lGrid = new GridLayout(1, true);
+        lGrid.marginWidth = 2;
+        lGrid.verticalSpacing = 2;
+        this.search.setLayout(lGrid);
 
-		initialized = true;
-	}
+        this.initialized = true;
+    }
 
-	@PostConstruct
-	void afterInit(final MApplication inApplication,
-	        final EModelService inModelService, final MPart inPart,
-	        final EMenuService inService, final IEclipseContext inContext) {
-		afterInit(inPart, inService);
+    @PostConstruct
+    void afterInit(final MApplication inApplication,
+            final EModelService inModelService, final MPart inPart,
+            final EMenuService inService, final IEclipseContext inContext) {
+        afterInit(inPart, inService);
 
-		settings = new DialogSettingHelper(inPart, DIALOG_TERM);
-		input.setItems(settings.getRecentValues());
-	}
+        this.settings = new DialogSettingHelper(inPart, DIALOG_TERM);
+        this.input.setItems(this.settings.getRecentValues());
+    }
 
-	private int createInputControl(final Composite inSearch) {
-		input = new Combo(inSearch,
-		        SWT.BORDER | SWT.SINGLE | SWT.DROP_DOWN | SWT.SEARCH);
-		final ControlDecoration lDecoration = new ControlDecoration(input,
-		        SWT.LEFT | SWT.TOP);
-		final FieldDecoration lProposeDeco = FieldDecorationRegistry
-		        .getDefault().getFieldDecoration(
-		                FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
-		lProposeDeco.setDescription(QUERY_HINT);
-		lDecoration.setImage(lProposeDeco.getImage());
-		lDecoration.setDescriptionText(lProposeDeco.getDescription());
+    private int createInputControl(final Composite inSearch) {
+        this.input = new Combo(inSearch,
+                SWT.BORDER | SWT.SINGLE | SWT.DROP_DOWN | SWT.SEARCH);
+        final ControlDecoration lDecoration = new ControlDecoration(this.input,
+                SWT.LEFT | SWT.TOP);
+        final FieldDecoration lProposeDeco = FieldDecorationRegistry
+                .getDefault().getFieldDecoration(
+                        FieldDecorationRegistry.DEC_CONTENT_PROPOSAL);
+        lProposeDeco.setDescription(QUERY_HINT);
+        lDecoration.setImage(lProposeDeco.getImage());
+        lDecoration.setDescriptionText(lProposeDeco.getDescription());
 
-		final GridData lLayout = new GridData(GridData.FILL_HORIZONTAL);
-		final int outIndent = FieldDecorationRegistry.getDefault()
-		        .getMaximumDecorationWidth();
-		lLayout.horizontalIndent = outIndent;
-		input.setLayoutData(lLayout);
-		input.addModifyListener(new ModifyListener() {
-			@Override
-			public void modifyText(final ModifyEvent inEvent) {
-				if (!initialized) {
-					return;
-				}
-				final int lLength = ((Combo) inEvent.widget).getText().length();
-				if (lLength == 0) {
-					button.setEnabled(false);
-				} else {
-					button.setEnabled(true);
-				}
-			}
-		});
-		input.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(final FocusEvent inEvent) {
-				final String lSelection = (String) selectionService
-		                .getSelection(RelationsConstants.PART_INSPECTOR);
-				if (lSelection != null && !lSelection.isEmpty()) {
-					input.setText(lSelection);
-				} else {
-					input.setText(""); //$NON-NLS-1$
-				}
-			}
-		});
-		input.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetDefaultSelected(final SelectionEvent inEvent) {
-				searchFor(input.getText());
-			}
-		});
-		input.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent event) {
-				if (event.keyCode == SWT.Selection
-		                && !input.getText().isEmpty()) {
-					searchFor(input.getText());
-				}
-			}
-		});
-		return outIndent;
-	}
+        final GridData lLayout = new GridData(GridData.FILL_HORIZONTAL);
+        final int outIndent = FieldDecorationRegistry.getDefault()
+                .getMaximumDecorationWidth();
+        lLayout.horizontalIndent = outIndent;
+        this.input.setLayoutData(lLayout);
+        this.input.addModifyListener(new ModifyListener() {
+            @Override
+            public void modifyText(final ModifyEvent inEvent) {
+                if (!SearchView.this.initialized) {
+                    return;
+                }
+                final int lLength = ((Combo) inEvent.widget).getText().length();
+                if (lLength == 0) {
+                    SearchView.this.button.setEnabled(false);
+                } else {
+                    SearchView.this.button.setEnabled(true);
+                }
+            }
+        });
+        this.input.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(final FocusEvent inEvent) {
+                final String lSelection = (String) SearchView.this.selectionService
+                        .getSelection(RelationsConstants.PART_INSPECTOR);
+                if (lSelection != null && !lSelection.isEmpty()) {
+                    SearchView.this.input.setText(lSelection);
+                } else {
+                    SearchView.this.input.setText(""); //$NON-NLS-1$
+                }
+            }
+        });
+        this.input.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetDefaultSelected(final SelectionEvent inEvent) {
+                searchFor(SearchView.this.input.getText());
+            }
+        });
+        this.input.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(final KeyEvent event) {
+                if (event.keyCode == SWT.Selection
+                        && !SearchView.this.input.getText().isEmpty()) {
+                    searchFor(SearchView.this.input.getText());
+                }
+            }
+        });
+        return outIndent;
+    }
 
-	private void createButtonControl(final Composite inSearch,
-	        final int inIndent) {
-		button = new Button(search, SWT.PUSH);
-		button.setText(RelationsMessages.getString("SearchView.lbl.search")); //$NON-NLS-1$
-		button.setEnabled(false);
+    private void createButtonControl(final Composite inSearch,
+            final int inIndent) {
+        this.button = new Button(this.search, SWT.PUSH);
+        this.button.setText(RelationsMessages.getString("SearchView.lbl.search")); //$NON-NLS-1$
+        this.button.setEnabled(false);
 
-		button.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetDefaultSelected(final SelectionEvent inEvent) {
-				searchFor(input.getText());
-			}
+        this.button.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetDefaultSelected(final SelectionEvent inEvent) {
+                searchFor(SearchView.this.input.getText());
+            }
 
-			@Override
-			public void widgetSelected(final SelectionEvent inEvent) {
-				searchFor(input.getText());
-			}
-		});
+            @Override
+            public void widgetSelected(final SelectionEvent inEvent) {
+                searchFor(SearchView.this.input.getText());
+            }
+        });
 
-		final GridData lLayout = new GridData(SWT.BEGINNING, SWT.FILL, false,
-		        false);
-		lLayout.horizontalIndent = inIndent;
-		lLayout.widthHint = 60;
-		button.setLayoutData(lLayout);
-	}
+        final GridData lLayout = new GridData(SWT.BEGINNING, SWT.FILL, false,
+                false);
+        lLayout.horizontalIndent = inIndent;
+        lLayout.widthHint = 60;
+        this.button.setLayoutData(lLayout);
+    }
 
-	private void searchFor(final String inText) {
-		addUnique(inText);
+    private void searchFor(final String inText) {
+        addUnique(inText);
 
-		// we need this to reset the selection marker
-		results.setInput(searchController.emptyList());
+        // we need this to reset the selection marker
+        this.results.setInput(this.searchController.emptyList());
 
-		final Collection<RetrievedItemWithIcon> lSearchResult = searchController
-		        .search(inText);
-		if (lSearchResult.isEmpty()) {
-			return;
-		}
-		results.setInput(lSearchResult);
+        final Collection<RetrievedItemWithIcon> lSearchResult = this.searchController
+                .search(inText);
+        if (lSearchResult.isEmpty()) {
+            return;
+        }
+        this.results.setInput(lSearchResult);
 
-		final Table lTable = results.getTable();
-		lTable.setFocus();
-		lTable.select(0);
-		results.setSelection(results.getSelection());
-	}
+        final Table lTable = this.results.getTable();
+        lTable.setFocus();
+        lTable.select(0);
+        this.results.setSelection(this.results.getSelection());
+    }
 
-	private void addUnique(final String inText) {
-		final List<String> lItems = new ArrayList<String>(
-		        Arrays.asList(input.getItems()));
-		while (lItems.remove(inText)) {
-			// intentionally left empty
-		}
-		while (lItems.size() > RelationsConstants.DIALOG_HISTORY_LENGTH - 1) {
-			lItems.remove(lItems.size() - 1);
-		}
-		lItems.add(0, inText);
-		final String[] lNew = new String[lItems.size()];
-		System.arraycopy(lItems.toArray(), 0, lNew, 0, lNew.length);
-		input.setItems(lNew);
-		input.setText(inText);
-	}
+    private void addUnique(final String inText) {
+        final List<String> lItems = new ArrayList<String>(
+                Arrays.asList(this.input.getItems()));
+        while (lItems.remove(inText)) {
+            // intentionally left empty
+        }
+        while (lItems.size() > RelationsConstants.DIALOG_HISTORY_LENGTH - 1) {
+            lItems.remove(lItems.size() - 1);
+        }
+        lItems.add(0, inText);
+        final String[] lNew = new String[lItems.size()];
+        System.arraycopy(lItems.toArray(), 0, lNew, 0, lNew.length);
+        this.input.setItems(lNew);
+        this.input.setText(inText);
+    }
 
-	private void createListControl(final int inIndent) {
-		results = new TableViewer(search,
-		        SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.MULTI);
-		results.setContentProvider(new ObservableListContentProvider());
-		results.setLabelProvider(getLabelProvider());
+    private void createListControl(final int inIndent) {
+        this.results = new TableViewer(this.search,
+                SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.MULTI);
+        this.results.setContentProvider(new ObservableListContentProvider());
+        this.results.setLabelProvider(getLabelProvider());
 
-		results.addDoubleClickListener(getDoubleClickListener());
-		results.addDragSupport(DND.DROP_COPY, getDragTypes(),
-		        getDragSourceAdapter(results));
-		results.addSelectionChangedListener(getSelectionChangedListener());
+        this.results.addDoubleClickListener(getDoubleClickListener());
+        this.results.addDragSupport(DND.DROP_COPY, getDragTypes(),
+                getDragSourceAdapter(this.results));
+        this.results.addSelectionChangedListener(getSelectionChangedListener());
 
-		final Control lControl = results.getControl();
-		final GridData lLayout = new GridData(SWT.FILL, SWT.FILL, true, true);
-		lLayout.horizontalIndent = inIndent;
-		lControl.setLayoutData(lLayout);
-	}
+        final Control lControl = this.results.getControl();
+        final GridData lLayout = new GridData(SWT.FILL, SWT.FILL, true, true);
+        lLayout.horizontalIndent = inIndent;
+        lControl.setLayoutData(lLayout);
+    }
 
-	@Focus
-	public void setFocus() {
-		input.setFocus();
-	}
+    @Focus
+    public void setFocus() {
+        this.input.setFocus();
+    }
 
-	/**
-	 * Reset result list after a DB change.
-	 *
-	 * @param inEvent
-	 */
-	@Inject
-	void reset(
-	        @Optional @EventTopic(value = RelationsConstants.TOPIC_DB_CHANGED_INITIALZED) final String inEvent) {
-		final List<?> lInput = (List<?>) results.getInput();
-		if (lInput != null) {
-			lInput.clear();
-			searchController.reset();
-		}
-	}
+    /**
+     * Reset result list after a DB change.
+     *
+     * @param inEvent
+     */
+    @Inject
+    void reset(
+            @Optional @EventTopic(value = RelationsConstants.TOPIC_DB_CHANGED_INITIALZED) final String inEvent) {
+        final List<?> lInput = (List<?>) this.results.getInput();
+        if (lInput != null) {
+            lInput.clear();
+            this.searchController.reset();
+        }
+    }
 
-	@Override
-	protected Object getControl() {
-		return results.getControl();
-	}
+    @Override
+    protected Object getControl() {
+        return this.results.getControl();
+    }
 
-	@Override
-	protected String getContextMenuID() {
-		return RelationsConstants.POPUP_TOOLS_SEARCH;
-	}
+    @Override
+    protected String getContextMenuID() {
+        return RelationsConstants.POPUP_TOOLS_SEARCH;
+    }
 
-	@Override
-	public boolean hasSelection() {
-		return !results.getSelection().isEmpty();
-	}
+    @Override
+    public boolean hasSelection() {
+        return !this.results.getSelection().isEmpty();
+    }
 
-	@PersistState
-	void persist() {
-		settings.saveToHistory(input.getItems());
-	}
+    @PersistState
+    void persist() {
+        this.settings.saveToHistory(this.input.getItems());
+    }
 
 }

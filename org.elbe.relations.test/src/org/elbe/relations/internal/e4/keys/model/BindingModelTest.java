@@ -18,8 +18,8 @@
  ***************************************************************************/
 package org.elbe.relations.internal.e4.keys.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,102 +38,98 @@ import org.eclipse.jface.bindings.Scheme;
 import org.eclipse.jface.bindings.keys.KeyBinding;
 import org.eclipse.jface.bindings.keys.KeySequence;
 import org.elbe.relations.internal.e4.keys.KeyController;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * @author lbenno
- *
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class BindingModelTest {
-	private static final String[] COMMAND_IDS = { "aa", "bb", "cc" };
+    private static final String[] COMMAND_IDS = { "aa", "bb", "cc" };
 
-	@Mock
-	private KeyController controller;
+    @Mock
+    private KeyController controller;
 
-	private ContextManager contextManager;
-	private CommandManager commandManager;
-	private BindingManager bindingManager;
+    private ContextManager contextManager;
+    private CommandManager commandManager;
+    private BindingManager bindingManager;
 
-	private Command command1;
-	private Command command2;
-	private Command command3;
+    private Command command1;
+    private Command command2;
+    private Command command3;
 
-	private List<Binding> bindings;
+    private List<Binding> bindings;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		contextManager = new ContextManager();
-		commandManager = new CommandManager();
-		bindings = new ArrayList<Binding>();
+    @BeforeEach
+    public void setUp() throws Exception {
+        this.contextManager = new ContextManager();
+        this.commandManager = new CommandManager();
+        this.bindings = new ArrayList<Binding>();
 
-		command1 = commandManager.getCommand(COMMAND_IDS[0]);
-		command2 = commandManager.getCommand(COMMAND_IDS[1]);
-		command3 = commandManager.getCommand(COMMAND_IDS[2]);
-		bindings.add(createBinding(command1, "a", KeySequence.getInstance("M1+A")));
-		bindings.add(createBinding(command2, "b", KeySequence.getInstance("M1+B")));
-		bindings.add(createBinding(command3, "c", KeySequence.getInstance("M1+C")));
+        this.command1 = this.commandManager.getCommand(COMMAND_IDS[0]);
+        this.command2 = this.commandManager.getCommand(COMMAND_IDS[1]);
+        this.command3 = this.commandManager.getCommand(COMMAND_IDS[2]);
+        this.bindings.add(createBinding(this.command1, "a", KeySequence.getInstance("M1+A")));
+        this.bindings.add(createBinding(this.command2, "b", KeySequence.getInstance("M1+B")));
+        this.bindings.add(createBinding(this.command3, "c", KeySequence.getInstance("M1+C")));
 
-		bindingManager = new BindingManager(contextManager, commandManager);
-		bindingManager.addBinding(bindings.get(0));
-		bindingManager.addBinding(bindings.get(1));
-		bindingManager.addBinding(bindings.get(2));
-		final Scheme scheme = bindingManager.getScheme("default");
-		scheme.define("myScheme1", "My scheme for testing", null);
-		bindingManager.setActiveScheme(scheme);
-	}
+        this.bindingManager = new BindingManager(this.contextManager, this.commandManager);
+        this.bindingManager.addBinding(this.bindings.get(0));
+        this.bindingManager.addBinding(this.bindings.get(1));
+        this.bindingManager.addBinding(this.bindings.get(2));
+        final Scheme scheme = this.bindingManager.getScheme("default");
+        scheme.define("myScheme1", "My scheme for testing", null);
+        this.bindingManager.setActiveScheme(scheme);
+    }
 
-	private Binding createBinding(Command command, String contextId, KeySequence keySequence) {
-		return new KeyBinding(keySequence, new ParameterizedCommand(command, null), "default", contextId, null, null,
-				null, Binding.SYSTEM);
-	}
+    private Binding createBinding(final Command command, final String contextId, final KeySequence keySequence) {
+        return new KeyBinding(keySequence, new ParameterizedCommand(command, null), "default", contextId, null, null,
+                null, Binding.SYSTEM);
+    }
 
-	@Test
-	public void testInit() {
-		final ContextModel context = new ContextModel(controller);
-		context.init(TestBindingContext.createContexts());
+    @Test
+    public void testInit() {
+        final ContextModel context = new ContextModel(this.controller);
+        context.init(TestBindingContext.createContexts());
 
-		final BindingModel bindingModel = new BindingModel(controller);
-		bindingModel.init(bindingManager, commandManager, null, context);
+        final BindingModel bindingModel = new BindingModel(this.controller);
+        bindingModel.init(this.bindingManager, this.commandManager, null, context);
 
-		final Set<BindingElement> bindingElements = bindingModel.getBindings();
-		assertEquals(3, bindingElements.size());
-		final List<String> commandIds = Arrays.asList(COMMAND_IDS);
-		for (final BindingElement bindingEl : bindingElements) {
-			assertTrue(commandIds.contains(bindingEl.getId()));
-			System.out.println(bindingEl.getTrigger().toString());
-		}
+        final Set<BindingElement> bindingElements = bindingModel.getBindings();
+        assertEquals(3, bindingElements.size());
+        final List<String> commandIds = Arrays.asList(COMMAND_IDS);
+        for (final BindingElement bindingEl : bindingElements) {
+            assertTrue(commandIds.contains(bindingEl.getId()));
+            System.out.println(bindingEl.getTrigger().toString());
+        }
 
-		final Map<Binding, BindingElement> map = bindingModel.getBindingToElement();
-		for (final Binding binding : bindings) {
-			assertEquals(binding.getParameterizedCommand().getId(), map.get(binding).getId());
-		}
-	}
+        final Map<Binding, BindingElement> map = bindingModel.getBindingToElement();
+        for (final Binding binding : this.bindings) {
+            assertEquals(binding.getParameterizedCommand().getId(), map.get(binding).getId());
+        }
+    }
 
-	@Test
-	public void testRefresh() throws Exception {
-		final BindingModel bindingModel = new BindingModel(controller);
+    @Test
+    public void testRefresh() throws Exception {
+        final BindingModel bindingModel = new BindingModel(this.controller);
 
-		final List<MBindingContext> contexts = TestBindingContext.createContexts();
-		final ContextModel context1 = new ContextModel(controller);
-		context1.init(contexts);
-		bindingModel.init(bindingManager, commandManager, null, context1).refresh(context1);
-		Set<BindingElement> bindingElements = bindingModel.getBindings();
-		assertEquals(3, bindingElements.size());
+        final List<MBindingContext> contexts = TestBindingContext.createContexts();
+        final ContextModel context1 = new ContextModel(this.controller);
+        context1.init(contexts);
+        bindingModel.init(this.bindingManager, this.commandManager, null, context1).refresh(context1);
+        Set<BindingElement> bindingElements = bindingModel.getBindings();
+        assertEquals(3, bindingElements.size());
 
-		contexts.add(TestBindingContext.createBindingContext("new"));
-		bindingManager
-				.addBinding(createBinding(commandManager.getCommand("NN"), "nn", KeySequence.getInstance("M1+N")));
-		bindingModel.refresh(new ContextModel(controller).init(contexts));
-		bindingElements = bindingModel.getBindings();
-		assertEquals(4, bindingElements.size());
-	}
+        contexts.add(TestBindingContext.createBindingContext("new"));
+        this.bindingManager
+        .addBinding(createBinding(this.commandManager.getCommand("NN"), "nn", KeySequence.getInstance("M1+N")));
+        bindingModel.refresh(new ContextModel(this.controller).init(contexts));
+        bindingElements = bindingModel.getBindings();
+        assertEquals(4, bindingElements.size());
+    }
 
 }

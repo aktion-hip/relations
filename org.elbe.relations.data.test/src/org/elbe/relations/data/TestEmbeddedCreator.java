@@ -21,6 +21,9 @@ package org.elbe.relations.data;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
 
 import org.elbe.relations.data.db.AbstractDBObjectCreator;
 
@@ -36,15 +39,23 @@ public class TestEmbeddedCreator extends AbstractDBObjectCreator {
     }
 
     @Override
-    protected URL getModelXML(final String xmlName) {
-        final File parent = new File(AbstractDBObjectCreator.class.getResource("/").getPath()).getParentFile();
-        final File xml = new File(parent, "resources/" + xmlName);
+    protected Optional<URL> getModelXML(final String xmlName) {
+        final File xml = new File(getDataRoot(), "resources/" + xmlName);
         try {
-            return xml.toURI().toURL();
+            return Optional.of(xml.toURI().toURL());
         } catch (final MalformedURLException exc) {
             // intentionally left empty
         }
-        return null;
+        return Optional.empty();
+    }
+
+    private File getDataRoot() {
+        final File start = new File(AbstractDBObjectCreator.class.getResource(".").getPath());
+        Path segment = Paths.get(start.getAbsolutePath());
+        while (!segment.endsWith("bin")) {
+            segment = segment.getParent();
+        }
+        return segment.getParent().toFile();
     }
 
 }

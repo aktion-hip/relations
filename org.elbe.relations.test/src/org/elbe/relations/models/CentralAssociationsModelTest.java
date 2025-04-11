@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
  * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -19,10 +19,10 @@
 
 package org.elbe.relations.models;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
 import java.sql.SQLException;
@@ -52,406 +52,400 @@ import org.elbe.relations.services.IBrowserManager;
 import org.hip.kernel.bom.DomainObject;
 import org.hip.kernel.bom.QueryResult;
 import org.hip.kernel.exc.VException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * JUnit Plug-in test
- * 
+ *
  * @author lbenno
  */
 @SuppressWarnings("restriction")
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CentralAssociationsModelTest {
-	private static DataHouseKeeper data;
+    private static DataHouseKeeper data;
 
-	@Mock
-	private Device device;
-	@Mock
-	private IEventBroker eventBroker;
-	@Mock
-	private Logger log;
-	@Mock
-	private IDataService dataService;
-	@Mock
-	private IBrowserManager browserManager;
+    @Mock
+    private Device device;
+    @Mock
+    private IEventBroker eventBroker;
+    @Mock
+    private Logger log;
+    @Mock
+    private IDataService dataService;
+    @Mock
+    private IBrowserManager browserManager;
 
-	private Image image;
-	private LanguageService languages;
-	private IEclipseContext context;
+    private Image image;
+    private LanguageService languages;
+    private IEclipseContext context;
 
-	private AbstractTerm term1;
-	private AbstractTerm term2;
-	private AbstractPerson person1;
-	private AbstractPerson person2;
-	private AbstractPerson person3;
+    private AbstractTerm term1;
+    private AbstractTerm term2;
+    private AbstractPerson person1;
+    private AbstractPerson person2;
+    private AbstractPerson person3;
 
-	private IAssociationsModel model;
+    private IAssociationsModel model;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		data = DataHouseKeeper.INSTANCE;
-	}
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        data = DataHouseKeeper.INSTANCE;
+    }
 
-	@Before
-	public void setUp() throws Exception {
-		image = new Image(device, 1, 1);
-		languages = new LanguageService(Locale.ENGLISH.getLanguage());
+    @BeforeEach
+    public void setUp() throws Exception {
+        this.image = new Image(this.device, 1, 1);
+        this.languages = new LanguageService(Locale.ENGLISH.getLanguage());
 
-		context = EclipseContextFactory.create("test context");
-		context.set(Logger.class, log);
-		context.set(IEventBroker.class, eventBroker);
-		context.set(LanguageService.class, languages);
-		context.set(IDataService.class, dataService);
-		context.set(IBrowserManager.class, browserManager);
+        this.context = EclipseContextFactory.create("test context");
+        this.context.set(Logger.class, this.log);
+        this.context.set(IEventBroker.class, this.eventBroker);
+        this.context.set(LanguageService.class, this.languages);
+        this.context.set(IDataService.class, this.dataService);
+        this.context.set(IBrowserManager.class, this.browserManager);
 
-		term1 = data.createTerm("term 1");
-		term2 = data.createTerm("term 2");
-		person1 = data.createPerson("person1", "1");
-		person2 = data.createPerson("person2", "2");
-		person3 = data.createPerson("person3", "3");
-	}
+        this.term1 = data.createTerm("term 1");
+        this.term2 = data.createTerm("term 2");
+        this.person1 = data.createPerson("person1", "1");
+        this.person2 = data.createPerson("person2", "2");
+        this.person3 = data.createPerson("person3", "3");
+    }
 
-	@After
-	public void tearDown() throws Exception {
-		data.deleteAllInAll();
-	}
+    @AfterEach
+    public void tearDown() throws Exception {
+        data.deleteAllInAll();
+    }
 
-	@Test
-	public void testSaveChanges() throws Exception {
-		final int lType = IItem.PERSON;
-		final UniqueID lTerm2 = new UniqueID(term2.getItemType(), term2.getID());
-		final UniqueID lPerson1 = new UniqueID(lType, person1.getID());
-		final UniqueID lPerson2 = new UniqueID(lType, person2.getID());
-		final UniqueID lPerson3 = new UniqueID(lType, person3.getID());
+    @Test
+    public void testSaveChanges() throws Exception {
+        final int lType = IItem.PERSON;
+        final UniqueID lTerm2 = new UniqueID(this.term2.getItemType(), this.term2.getID());
+        final UniqueID lPerson1 = new UniqueID(lType, this.person1.getID());
+        final UniqueID lPerson2 = new UniqueID(lType, this.person2.getID());
+        final UniqueID lPerson3 = new UniqueID(lType, this.person3.getID());
 
-		when(dataService.retrieveItem(lPerson1)).thenReturn(
-		        new ItemAdapter(person1, image, context));
-		when(dataService.retrieveItem(lPerson2)).thenReturn(
-		        new ItemAdapter(person2, image, context));
-		when(dataService.retrieveItem(lPerson3)).thenReturn(
-		        new ItemAdapter(person3, image, context));
-		when(dataService.retrieveItem(lTerm2)).thenReturn(
-		        new ItemAdapter(term2, image, context));
+        when(this.dataService.retrieveItem(lPerson1)).thenReturn(
+                new ItemAdapter(this.person1, this.image, this.context));
+        when(this.dataService.retrieveItem(lPerson2)).thenReturn(
+                new ItemAdapter(this.person2, this.image, this.context));
+        when(this.dataService.retrieveItem(lPerson3)).thenReturn(
+                new ItemAdapter(this.person3, this.image, this.context));
+        when(this.dataService.retrieveItem(lTerm2)).thenReturn(
+                new ItemAdapter(this.term2, this.image, this.context));
 
-		model = CentralAssociationsModel.createCentralAssociationsModel(
-		        new ItemAdapter(term1, image, context), context);
+        this.model = CentralAssociationsModel.createCentralAssociationsModel(
+                new ItemAdapter(this.term1, this.image, this.context), this.context);
 
-		final RelationHome lHome = data.getRelationHome();
-		assertEquals(0, lHome.getCount());
+        final RelationHome lHome = data.getRelationHome();
+        assertEquals(0, lHome.getCount());
 
-		assertEquals("Number of associated 1", 0, model.getElements().length);
+        assertEquals(0, this.model.getElements().length);
 
-		UniqueID[] lAdd = new UniqueID[] { lPerson1, lPerson2, lPerson3 };
-		model.addAssociations(lAdd);
-		assertEquals("Number of associated 2", 3, model.getElements().length);
+        UniqueID[] lAdd = new UniqueID[] { lPerson1, lPerson2, lPerson3 };
+        this.model.addAssociations(lAdd);
+        assertEquals(3, this.model.getElements().length);
 
-		UniqueID[] lRemove = new UniqueID[] { lPerson2 };
-		model.removeAssociations(lRemove);
-		assertEquals("Number of associated 3", 2, model.getElements().length);
+        UniqueID[] lRemove = new UniqueID[] { lPerson2 };
+        this.model.removeAssociations(lRemove);
+        assertEquals(2, this.model.getElements().length);
 
-		lAdd = new UniqueID[] { lTerm2 };
-		model.addAssociations(lAdd);
-		assertEquals("Number of associated 4", 3, model.getElements().length);
+        lAdd = new UniqueID[] { lTerm2 };
+        this.model.addAssociations(lAdd);
+        assertEquals(3, this.model.getElements().length);
 
-		model.saveChanges();
-		assertEquals("Count relations 1", 3, lHome.getCount());
-		assertRelations("Relations 1", lHome.getRelations(term1),
-		        new UniqueID[] { lPerson1, lPerson3, lTerm2 });
+        this.model.saveChanges();
+        assertEquals(3, lHome.getCount());
+        assertRelations(lHome.getRelations(this.term1),
+                new UniqueID[] { lPerson1, lPerson3, lTerm2 });
 
-		lRemove = new UniqueID[] { lPerson1 };
-		model.removeAssociations(lRemove);
-		model.saveChanges();
-		assertEquals("Count relations 2", 2, lHome.getCount());
-		assertRelations("Relations 2", lHome.getRelations(term1),
-		        new UniqueID[] { lPerson3, lTerm2 });
+        lRemove = new UniqueID[] { lPerson1 };
+        this.model.removeAssociations(lRemove);
+        this.model.saveChanges();
+        assertEquals(2, lHome.getCount());
+        assertRelations(lHome.getRelations(this.term1),
+                new UniqueID[] { lPerson3, lTerm2 });
 
-		lAdd = new UniqueID[] { lPerson1, lPerson2 };
-		model.addAssociations(lAdd);
-		model.saveChanges();
-		assertEquals("Count relations 3", 4, lHome.getCount());
-		assertRelations("Relations 3", lHome.getRelations(term1),
-		        new UniqueID[] { lPerson1, lPerson2, lPerson3, lTerm2 });
-	}
+        lAdd = new UniqueID[] { lPerson1, lPerson2 };
+        this.model.addAssociations(lAdd);
+        this.model.saveChanges();
+        assertEquals(4, lHome.getCount());
+        assertRelations(lHome.getRelations(this.term1),
+                new UniqueID[] { lPerson1, lPerson2, lPerson3, lTerm2 });
+    }
 
-	private void assertRelations(final String inComment,
-	        final QueryResult inResult, final UniqueID[] inExpected)
-	        throws VException, SQLException {
-		while (inResult.hasMoreElements()) {
-			final DomainObject lRelation = (DomainObject) inResult.next();
-			assertRelation(inComment,
-			        new UniqueID(lRelation.get(RelationHome.KEY_TYPE1) + ":"
-			                + lRelation.get(RelationHome.KEY_ITEM1)),
-			        new UniqueID(lRelation.get(RelationHome.KEY_TYPE2) + ":"
-			                + lRelation.get(RelationHome.KEY_ITEM2)),
-			        inExpected);
-		}
-	}
+    private void assertRelations(final QueryResult inResult, final UniqueID[] inExpected)
+            throws VException, SQLException {
+        while (inResult.hasMoreElements()) {
+            final DomainObject lRelation = (DomainObject) inResult.next();
+            assertRelation(new UniqueID(lRelation.get(RelationHome.KEY_TYPE1) + ":"
+                    + lRelation.get(RelationHome.KEY_ITEM1)),
+                    new UniqueID(lRelation.get(RelationHome.KEY_TYPE2) + ":"
+                            + lRelation.get(RelationHome.KEY_ITEM2)),
+                    inExpected);
+        }
+    }
 
-	private void assertRelation(final String inComment, final UniqueID inItem1,
-	        final UniqueID inItem2, final UniqueID[] inExpected) {
-		for (int i = 0; i < inExpected.length; i++) {
-			if (inExpected[i].equals(inItem1)) {
-				return;
-			}
-			if (inExpected[i].equals(inItem2)) {
-				return;
-			}
-		}
-		fail(inComment);
-	}
+    private void assertRelation(final UniqueID inItem1,
+            final UniqueID inItem2, final UniqueID[] inExpected) {
+        for (int i = 0; i < inExpected.length; i++) {
+            if (inExpected[i].equals(inItem1)) {
+                return;
+            }
+            if (inExpected[i].equals(inItem2)) {
+                return;
+            }
+        }
+        fail();
+    }
 
-	@Test
-	public void testUndoChanges() throws Exception {
-		final int lType = IItem.PERSON;
-		final UniqueID lTerm2 = new UniqueID(term2.getItemType(), term2.getID());
-		final UniqueID lPerson1 = new UniqueID(lType, person1.getID());
-		final UniqueID lPerson2 = new UniqueID(lType, person2.getID());
-		final UniqueID lPerson3 = new UniqueID(lType, person3.getID());
+    @Test
+    public void testUndoChanges() throws Exception {
+        final int lType = IItem.PERSON;
+        final UniqueID lTerm2 = new UniqueID(this.term2.getItemType(), this.term2.getID());
+        final UniqueID lPerson1 = new UniqueID(lType, this.person1.getID());
+        final UniqueID lPerson2 = new UniqueID(lType, this.person2.getID());
+        final UniqueID lPerson3 = new UniqueID(lType, this.person3.getID());
 
-		model = CentralAssociationsModel.createCentralAssociationsModel(
-		        new ItemAdapter(term1, image, context), context);
+        this.model = CentralAssociationsModel.createCentralAssociationsModel(
+                new ItemAdapter(this.term1, this.image, this.context), this.context);
 
-		when(dataService.retrieveItem(lPerson1)).thenReturn(
-		        new ItemAdapter(person1, image, context));
-		when(dataService.retrieveItem(lPerson2)).thenReturn(
-		        new ItemAdapter(person2, image, context));
-		when(dataService.retrieveItem(lPerson3)).thenReturn(
-		        new ItemAdapter(person3, image, context));
-		when(dataService.retrieveItem(lTerm2)).thenReturn(
-		        new ItemAdapter(term2, image, context));
+        when(this.dataService.retrieveItem(lPerson1)).thenReturn(
+                new ItemAdapter(this.person1, this.image, this.context));
+        when(this.dataService.retrieveItem(lPerson2)).thenReturn(
+                new ItemAdapter(this.person2, this.image, this.context));
+        when(this.dataService.retrieveItem(lPerson3)).thenReturn(
+                new ItemAdapter(this.person3, this.image, this.context));
+        when(this.dataService.retrieveItem(lTerm2)).thenReturn(
+                new ItemAdapter(this.term2, this.image, this.context));
 
-		final RelationHome lHome = data.getRelationHome();
-		assertEquals(0, model.getElements().length);
+        final RelationHome lHome = data.getRelationHome();
+        assertEquals(0, this.model.getElements().length);
 
-		final UniqueID[] lAdd = new UniqueID[] { lPerson1, lPerson2, lPerson3 };
-		model.addAssociations(lAdd);
-		assertEquals(3, model.getElements().length);
+        final UniqueID[] lAdd = new UniqueID[] { lPerson1, lPerson2, lPerson3 };
+        this.model.addAssociations(lAdd);
+        assertEquals(3, this.model.getElements().length);
 
-		model.saveChanges();
-		assertEquals(3, lHome.getCount());
-		assertRelations("Relations 1", lHome.getRelations(term1), lAdd);
+        this.model.saveChanges();
+        assertEquals(3, lHome.getCount());
+        assertRelations(lHome.getRelations(this.term1), lAdd);
 
-		when(dataService.retrieveItem(lPerson2)).thenReturn(
-		        getRelatedPersons(term1).get(1));
-		final UniqueID[] lRemove = new UniqueID[] { lPerson2 };
-		model.removeAssociations(lRemove);
-		assertEquals(2, model.getElements().length);
-		model.undoChanges();
-		assertEquals(3, model.getElements().length);
-		assertRelations("Relations 2", lHome.getRelations(term1), lAdd);
+        when(this.dataService.retrieveItem(lPerson2)).thenReturn(
+                getRelatedPersons(this.term1).get(1));
+        final UniqueID[] lRemove = new UniqueID[] { lPerson2 };
+        this.model.removeAssociations(lRemove);
+        assertEquals(2, this.model.getElements().length);
+        this.model.undoChanges();
+        assertEquals(3, this.model.getElements().length);
+        assertRelations(lHome.getRelations(this.term1), lAdd);
 
-		final UniqueID[] lAdd2 = new UniqueID[] { lTerm2 };
-		model.addAssociations(lAdd2);
-		assertEquals(4, model.getElements().length);
-		model.undoChanges();
-		assertEquals(3, model.getElements().length);
-		assertRelations("Relations 3", lHome.getRelations(term1), lAdd);
-	}
+        final UniqueID[] lAdd2 = new UniqueID[] { lTerm2 };
+        this.model.addAssociations(lAdd2);
+        assertEquals(4, this.model.getElements().length);
+        this.model.undoChanges();
+        assertEquals(3, this.model.getElements().length);
+        assertRelations(lHome.getRelations(this.term1), lAdd);
+    }
 
-	@Test
-	public void testIsAssociatedUniqueIDArray() throws Exception {
-		final int lType = IItem.PERSON;
-		final UniqueID lTerm2 = new UniqueID(term2.getItemType(), term2.getID());
-		final UniqueID lPerson1 = new UniqueID(lType, person1.getID());
-		final UniqueID lPerson2 = new UniqueID(lType, person2.getID());
-		final UniqueID lPerson3 = new UniqueID(lType, person3.getID());
+    @Test
+    public void testIsAssociatedUniqueIDArray() throws Exception {
+        final int lType = IItem.PERSON;
+        final UniqueID lTerm2 = new UniqueID(this.term2.getItemType(), this.term2.getID());
+        final UniqueID lPerson1 = new UniqueID(lType, this.person1.getID());
+        final UniqueID lPerson2 = new UniqueID(lType, this.person2.getID());
+        final UniqueID lPerson3 = new UniqueID(lType, this.person3.getID());
 
-		model = CentralAssociationsModel.createCentralAssociationsModel(
-		        new ItemAdapter(term1, image, context), context);
+        this.model = CentralAssociationsModel.createCentralAssociationsModel(
+                new ItemAdapter(this.term1, this.image, this.context), this.context);
 
-		final RelationHome lHome = data.getRelationHome();
-		final UniqueID[] lAdd = new UniqueID[] { lPerson1, lPerson2, lPerson3 };
-		model.addAssociations(lAdd);
-		model.saveChanges();
-		assertEquals(3, lHome.getCount());
+        final RelationHome lHome = data.getRelationHome();
+        final UniqueID[] lAdd = new UniqueID[] { lPerson1, lPerson2, lPerson3 };
+        this.model.addAssociations(lAdd);
+        this.model.saveChanges();
+        assertEquals(3, lHome.getCount());
 
-		assertTrue(model.isAssociated(lPerson1));
-		assertTrue(model.isAssociated(lAdd));
+        assertTrue(this.model.isAssociated(lPerson1));
+        assertTrue(this.model.isAssociated(lAdd));
 
-		assertFalse(model.isAssociated(lTerm2));
-		assertFalse(model.isAssociated(new UniqueID[] { lPerson1, lPerson2,
-		        lPerson3, lTerm2 }));
-	}
+        assertFalse(this.model.isAssociated(lTerm2));
+        assertFalse(this.model.isAssociated(new UniqueID[] { lPerson1, lPerson2,
+                lPerson3, lTerm2 }));
+    }
 
-	@Test
-	public void testRemoveRelation() throws Exception {
-		final RelationHome lHome = data.getRelationHome();
-		lHome.newRelation(term1, term2);
-		lHome.newRelation(term1, person1);
-		lHome.newRelation(term1, person2);
-		lHome.newRelation(term1, person3);
-		lHome.newRelation(term2, person3);
+    @Test
+    public void testRemoveRelation() throws Exception {
+        final RelationHome lHome = data.getRelationHome();
+        lHome.newRelation(this.term1, this.term2);
+        lHome.newRelation(this.term1, this.person1);
+        lHome.newRelation(this.term1, this.person2);
+        lHome.newRelation(this.term1, this.person3);
+        lHome.newRelation(this.term2, this.person3);
 
-		model = CentralAssociationsModel.createCentralAssociationsModel(
-		        new ItemAdapter(term1, image, context), context);
+        this.model = CentralAssociationsModel.createCentralAssociationsModel(
+                new ItemAdapter(this.term1, this.image, this.context), this.context);
 
-		Object[] lAssociated = model.getElements();
-		assertEquals("number of associated 1", 4, lAssociated.length);
+        Object[] lAssociated = this.model.getElements();
+        assertEquals(4, lAssociated.length);
 
-		final List<IRelation> lRelations = ((CentralAssociationsModel) model)
-		        .getCenter().getSources();
-		assertEquals("number of relations 1", 4, lRelations.size());
+        final List<IRelation> lRelations = ((CentralAssociationsModel) this.model)
+                .getCenter().getSources();
+        assertEquals(4, lRelations.size());
 
-		final IRelation lToDelete = lRelations.get(1);
-		assertTrue(
-		        "source is term1",
-		        lToDelete.getSourceItem().equals(
-		                new ItemAdapter(term1, image, context)));
-		assertTrue(
-		        "target is person1",
-		        lToDelete.getTargetItem().equals(
-		                new ItemAdapter(person1, image, context)));
-		assertTrue("person1 is element",
-		        Arrays.asList(lAssociated).contains(person1));
+        final IRelation lToDelete = lRelations.get(1);
+        assertTrue(lToDelete.getSourceItem().equals(
+                new ItemAdapter(this.term1, this.image, this.context)));
+        assertTrue(lToDelete.getTargetItem().equals(
+                new ItemAdapter(this.person1, this.image, this.context)));
+        assertTrue(
+                Arrays.asList(lAssociated).contains(this.person1));
 
-		model.removeRelation(lToDelete);
+        this.model.removeRelation(lToDelete);
 
-		lAssociated = model.getElements();
-		assertEquals("number of associated 2", 3, lAssociated.length);
-		assertFalse("person1 is not element", Arrays.asList(lAssociated)
-		        .contains(person1));
-	}
+        lAssociated = this.model.getElements();
+        assertEquals(3, lAssociated.length);
+        assertFalse(Arrays.asList(lAssociated)
+                .contains(this.person1));
+    }
 
-	@Test
-	public void testRemoveAssociations() throws Exception {
-		final RelationHome lHome = data.getRelationHome();
-		lHome.newRelation(term1, term2);
-		lHome.newRelation(term1, person1);
-		lHome.newRelation(term1, person2);
-		lHome.newRelation(term1, person3);
-		lHome.newRelation(term2, person3);
+    @Test
+    public void testRemoveAssociations() throws Exception {
+        final RelationHome lHome = data.getRelationHome();
+        lHome.newRelation(this.term1, this.term2);
+        lHome.newRelation(this.term1, this.person1);
+        lHome.newRelation(this.term1, this.person2);
+        lHome.newRelation(this.term1, this.person3);
+        lHome.newRelation(this.term2, this.person3);
 
-		// refresh with new relations
-		model = CentralAssociationsModel.createCentralAssociationsModel(
-		        new ItemAdapter(term1, image, context), context);
+        // refresh with new relations
+        this.model = CentralAssociationsModel.createCentralAssociationsModel(
+                new ItemAdapter(this.term1, this.image, this.context), this.context);
 
-		Object[] lAssociated = model.getElements();
-		assertEquals("number of associated 1", 4, lAssociated.length);
+        Object[] lAssociated = this.model.getElements();
+        assertEquals(4, lAssociated.length);
 
-		List<Object> lAsList = Arrays.asList(lAssociated);
-		assertTrue("person1 is element", lAsList.contains(person1));
-		assertTrue("person2 is element", lAsList.contains(person2));
+        List<Object> lAsList = Arrays.asList(lAssociated);
+        assertTrue(lAsList.contains(this.person1));
+        assertTrue(lAsList.contains(this.person2));
 
-		final ItemAdapter[] lToDelete = new ItemAdapter[] {
-		        new ItemAdapter(person2, image, context),
-		        new ItemAdapter(person1, image, context) };
-		model.removeAssociations(lToDelete);
-		lAssociated = model.getElements();
-		assertEquals("number of associated 2", 2, lAssociated.length);
+        final ItemAdapter[] lToDelete = new ItemAdapter[] {
+                new ItemAdapter(this.person2, this.image, this.context),
+                new ItemAdapter(this.person1, this.image, this.context) };
+        this.model.removeAssociations(lToDelete);
+        lAssociated = this.model.getElements();
+        assertEquals(2, lAssociated.length);
 
-		lAsList = Arrays.asList(lAssociated);
-		assertFalse("person1 is not element", lAsList.contains(person1));
-		assertFalse("person2 is not element", lAsList.contains(person2));
-		assertTrue("term2 is element", lAsList.contains(term2));
-		assertTrue("person3 is element", lAsList.contains(person3));
+        lAsList = Arrays.asList(lAssociated);
+        assertFalse(lAsList.contains(this.person1));
+        assertFalse(lAsList.contains(this.person2));
+        assertTrue(lAsList.contains(this.term2));
+        assertTrue(lAsList.contains(this.person3));
 
-		final UniqueID[] lToDelete2 = new UniqueID[] {
-		        new UniqueID(person3.getItemType(), person3.getID()),
-		        new UniqueID(term2.getItemType(), term2.getID()) };
-		when(dataService.retrieveItem(lToDelete2[0])).thenReturn(
-		        getRelatedPersons(term1).get(2));
-		when(dataService.retrieveItem(lToDelete2[1])).thenReturn(
-		        getRelatedTerms(term1).get(0));
-		model.removeAssociations(lToDelete2);
+        final UniqueID[] lToDelete2 = new UniqueID[] {
+                new UniqueID(this.person3.getItemType(), this.person3.getID()),
+                new UniqueID(this.term2.getItemType(), this.term2.getID()) };
+        when(this.dataService.retrieveItem(lToDelete2[0])).thenReturn(
+                getRelatedPersons(this.term1).get(2));
+        when(this.dataService.retrieveItem(lToDelete2[1])).thenReturn(
+                getRelatedTerms(this.term1).get(0));
+        this.model.removeAssociations(lToDelete2);
 
-		lAssociated = model.getElements();
-		assertEquals("number of associated 3", 0, lAssociated.length);
-	}
+        lAssociated = this.model.getElements();
+        assertEquals(0, lAssociated.length);
+    }
 
-	@Test
-	public void testGetAssociationsModel() throws Exception {
-		final RelationHome lHome = data.getRelationHome();
-		lHome.newRelation(term1, term2);
-		lHome.newRelation(term1, person1);
-		lHome.newRelation(term1, person2);
-		lHome.newRelation(term1, person3);
-		lHome.newRelation(term2, person3);
+    @Test
+    public void testGetAssociationsModel() throws Exception {
+        final RelationHome lHome = data.getRelationHome();
+        lHome.newRelation(this.term1, this.term2);
+        lHome.newRelation(this.term1, this.person1);
+        lHome.newRelation(this.term1, this.person2);
+        lHome.newRelation(this.term1, this.person3);
+        lHome.newRelation(this.term2, this.person3);
 
-		// refresh with new relations
-		model = CentralAssociationsModel.createCentralAssociationsModel(
-		        new ItemAdapter(term1, image, context), context);
+        // refresh with new relations
+        this.model = CentralAssociationsModel.createCentralAssociationsModel(
+                new ItemAdapter(this.term1, this.image, this.context), this.context);
 
-		Object[] lAssociated = model.getElements();
-		assertEquals("number of associated 1", 4, lAssociated.length);
+        Object[] lAssociated = this.model.getElements();
+        assertEquals(4, lAssociated.length);
 
-		final IAssociationsModel lModel2 = ((CentralAssociationsModel) model)
-		        .getAssociationsModel(new ItemAdapter(term2, image, context));
-		lAssociated = lModel2.getElements();
-		assertEquals("number of associated 2", 2, lAssociated.length);
+        final IAssociationsModel lModel2 = ((CentralAssociationsModel) this.model)
+                .getAssociationsModel(new ItemAdapter(this.term2, this.image, this.context));
+        lAssociated = lModel2.getElements();
+        assertEquals(2, lAssociated.length);
 
-		final List<Object> lAsList = Arrays.asList(lAssociated);
-		assertTrue("term1 is element", lAsList.contains(term1));
-		assertTrue("person3 is element", lAsList.contains(person3));
-	}
+        final List<Object> lAsList = Arrays.asList(lAssociated);
+        assertTrue(lAsList.contains(this.term1));
+        assertTrue(lAsList.contains(this.person3));
+    }
 
-	@Test
-	public void testEquals() throws Exception {
-		final RelationHome lHome = data.getRelationHome();
-		lHome.newRelation(term1, term2);
-		lHome.newRelation(term1, person1);
-		lHome.newRelation(term1, person2);
-		lHome.newRelation(term1, person3);
-		lHome.newRelation(term2, person3);
+    @Test
+    public void testEquals() throws Exception {
+        final RelationHome lHome = data.getRelationHome();
+        lHome.newRelation(this.term1, this.term2);
+        lHome.newRelation(this.term1, this.person1);
+        lHome.newRelation(this.term1, this.person2);
+        lHome.newRelation(this.term1, this.person3);
+        lHome.newRelation(this.term2, this.person3);
 
-		final CentralAssociationsModel lModel1 = CentralAssociationsModel
-		        .createCentralAssociationsModel(new ItemAdapter(term1, image,
-		                context), context);
-		final CentralAssociationsModel lModel2 = CentralAssociationsModel
-		        .createCentralAssociationsModel(new ItemAdapter(term2, image,
-		                context), context);
-		final CentralAssociationsModel lModel3 = CentralAssociationsModel
-		        .createCentralAssociationsModel(new ItemAdapter(term1, image,
-		                context), context);
+        final CentralAssociationsModel lModel1 = CentralAssociationsModel
+                .createCentralAssociationsModel(new ItemAdapter(this.term1, this.image,
+                        this.context), this.context);
+        final CentralAssociationsModel lModel2 = CentralAssociationsModel
+                .createCentralAssociationsModel(new ItemAdapter(this.term2, this.image,
+                        this.context), this.context);
+        final CentralAssociationsModel lModel3 = CentralAssociationsModel
+                .createCentralAssociationsModel(new ItemAdapter(this.term1, this.image,
+                        this.context), this.context);
 
-		assertTrue("model equals self", lModel1.equals(lModel1));
-		assertTrue("hashCode equals self",
-		        lModel1.hashCode() == lModel1.hashCode());
-		assertFalse("model not equals null", lModel1.equals(null));
-		assertFalse("model not equals String",
-		        lModel1.equals(lModel1.toString()));
-		assertFalse("String not equals model", "model".equals(lModel1));
-		assertFalse("model not equals term model", lModel1.equals(term1));
-		assertFalse("model 1 not equals term model 2", lModel1.equals(lModel2));
-		assertTrue("model 1 equals model 3", lModel1.equals(lModel3));
-		assertTrue("model 3 equals model 1", lModel3.equals(lModel1));
-		assertEquals("hashCode 1 equals hashCode 3", lModel1.hashCode(),
-		        lModel3.hashCode());
+        assertTrue(lModel1.equals(lModel1));
+        assertTrue(
+                lModel1.hashCode() == lModel1.hashCode());
+        assertFalse(lModel1.equals(null));
+        assertFalse(
+                lModel1.equals(lModel1.toString()));
+        assertFalse("model".equals(lModel1));
+        assertFalse(lModel1.equals(this.term1));
+        assertFalse(lModel1.equals(lModel2));
+        assertTrue(lModel1.equals(lModel3));
+        assertTrue(lModel3.equals(lModel1));
+        assertEquals(lModel1.hashCode(),
+                lModel3.hashCode());
 
-		final UniqueID lPersonID = new UniqueID(person2.getItemType(),
-		        person2.getID());
-		when(dataService.retrieveItem(lPersonID)).thenReturn(
-		        new ItemAdapter(person2, image, context));
+        final UniqueID lPersonID = new UniqueID(this.person2.getItemType(),
+                this.person2.getID());
+        when(this.dataService.retrieveItem(lPersonID)).thenReturn(
+                new ItemAdapter(this.person2, this.image, this.context));
 
-		lModel3.removeAssociations(new UniqueID[] { lPersonID });
-		assertFalse("model 1 not equals model 3 after remove",
-		        lModel1.equals(lModel3));
-	}
+        lModel3.removeAssociations(new UniqueID[] { lPersonID });
+        assertFalse(
+                lModel1.equals(lModel3));
+    }
 
-	private List<IItemModel> getRelatedPersons(final IItem inItem)
-	        throws Exception {
-		final ItemAdapter lItem = new ItemAdapter(inItem, image, context);
-		return getRelatedItems(RelatedItemHelper.getRelatedPersons(lItem));
-	}
+    private List<IItemModel> getRelatedPersons(final IItem inItem)
+            throws Exception {
+        final ItemAdapter lItem = new ItemAdapter(inItem, this.image, this.context);
+        return getRelatedItems(RelatedItemHelper.getRelatedPersons(lItem));
+    }
 
-	private List<IItemModel> getRelatedTerms(final IItem inItem)
-	        throws Exception {
-		final ItemAdapter lItem = new ItemAdapter(inItem, image, context);
-		return getRelatedItems(RelatedItemHelper.getRelatedTerms(lItem));
-	}
+    private List<IItemModel> getRelatedTerms(final IItem inItem)
+            throws Exception {
+        final ItemAdapter lItem = new ItemAdapter(inItem, this.image, this.context);
+        return getRelatedItems(RelatedItemHelper.getRelatedTerms(lItem));
+    }
 
-	private List<IItemModel> getRelatedItems(
-	        final Collection<ItemWithIcon> inRelated) {
-		final List<IItemModel> out = new ArrayList<IItemModel>();
-		for (final ItemWithIcon lRelated : inRelated) {
-			out.add(new ItemAdapter(lRelated.getItem(), image, context));
-		}
-		return out;
-	}
+    private List<IItemModel> getRelatedItems(
+            final Collection<ItemWithIcon> inRelated) {
+        final List<IItemModel> out = new ArrayList<IItemModel>();
+        for (final ItemWithIcon lRelated : inRelated) {
+            out.add(new ItemAdapter(lRelated.getItem(), this.image, this.context));
+        }
+        return out;
+    }
 
 }

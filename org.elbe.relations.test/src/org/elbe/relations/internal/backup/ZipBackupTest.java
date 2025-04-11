@@ -16,12 +16,11 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  ***************************************************************************/
-
 package org.elbe.relations.internal.backup;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.util.Arrays;
@@ -34,11 +33,11 @@ import java.util.zip.ZipFile;
 import org.eclipse.e4.core.services.log.Logger;
 import org.elbe.relations.ZipHouseKeeper;
 import org.elbe.relations.internal.utility.ZipRestore;
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * JUnit test
@@ -46,13 +45,13 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author lbenno
  */
 @SuppressWarnings("restriction")
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ZipBackupTest {
 
     @Mock
     private Logger log;
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         ZipHouseKeeper.deleteTestFiles(ZipHouseKeeper.ROOT);
     }
@@ -69,15 +68,15 @@ public class ZipBackupTest {
                 backupFile.getCanonicalPath());
         backup.backup();
 
-        assertTrue("backup file exists", backupFile.exists());
+        assertTrue(backupFile.exists());
 
         final ZipFile zip = new ZipFile(backupFile);
-        assertEquals("number of entries", 4, zip.size());
+        assertEquals(4, zip.size());
         for (final Enumeration<? extends ZipEntry> entries = zip.entries(); entries
                 .hasMoreElements();) {
             final ZipEntry entry = entries.nextElement();
             final String name = entry.getName();
-            assertTrue("containes " + name, expectedList.contains(name));
+            assertTrue(expectedList.contains(name));
         }
         zip.close();
         ZipHouseKeeper.ensureDelete(backupFile);
@@ -92,7 +91,7 @@ public class ZipBackupTest {
                 backupFile.getCanonicalPath());
         backup.backup();
 
-        assertTrue("backup file exists", backupFile.exists());
+        assertTrue(backupFile.exists());
         ZipHouseKeeper.deleteTestFiles(ZipHouseKeeper.ROOT);
 
         // after creating the Zip file, we can test expanding it and restoring
@@ -104,14 +103,14 @@ public class ZipBackupTest {
         // check the extracted files
         // content of test root
         root = new File(ZipHouseKeeper.ROOT);
-        assertTrue("root exists", root.exists());
-        assertTrue("root is directory", root.isDirectory());
+        assertTrue(root.exists());
+        assertTrue(root.isDirectory());
 
         File[] childs = root.listFiles();
         Collection<String> childList = ZipHouseKeeper.getChildNames(childs);
-        assertTrue("root contains parent",
+        assertTrue(
                 childList.contains(ZipHouseKeeper.PARENT));
-        assertTrue("root contains child1",
+        assertTrue(
                 childList.contains(ZipHouseKeeper.FILE1));
 
         File child = ZipHouseKeeper
@@ -123,11 +122,11 @@ public class ZipBackupTest {
         root = ZipHouseKeeper.getChildFile(childs, ZipHouseKeeper.PARENT);
         childs = root.listFiles();
         childList = ZipHouseKeeper.getChildNames(childs);
-        assertTrue("parent contains sub",
+        assertTrue(
                 childList.contains(ZipHouseKeeper.CHILD));
-        assertTrue("parent contains child2",
+        assertTrue(
                 childList.contains(ZipHouseKeeper.FILE2));
-        assertTrue("parent contains child4",
+        assertTrue(
                 childList.contains(ZipHouseKeeper.FILE4));
 
         child = ZipHouseKeeper.getChildFile(childs, ZipHouseKeeper.FILE2);
@@ -141,7 +140,7 @@ public class ZipBackupTest {
         root = ZipHouseKeeper.getChildFile(childs, ZipHouseKeeper.CHILD);
         childs = root.listFiles();
         childList = ZipHouseKeeper.getChildNames(childs);
-        assertTrue("sub contains child3",
+        assertTrue(
                 childList.contains(ZipHouseKeeper.FILE3));
 
         child = ZipHouseKeeper.getChildFile(childs, ZipHouseKeeper.FILE3);
@@ -160,17 +159,16 @@ public class ZipBackupTest {
                 backupFile.getCanonicalPath());
         backup.backup();
 
-        assertTrue("backup file exists", backupFile.exists());
+        assertTrue(backupFile.exists());
         ZipHouseKeeper.deleteTestFiles(ZipHouseKeeper.ROOT);
 
         // after creating the Zip file, we can test expanding it and restoring
         // it's content.
         final ZipRestore restore = new ZipRestore(root.getParentFile(),
                 backupFile.getCanonicalPath(), this.log);
-        assertTrue(ZipHouseKeeper.ROOT + " is ok",
-                restore.checkArchive(ZipHouseKeeper.ROOT));
-        assertFalse("something is not ok", restore.checkArchive("something"));
-        assertFalse("shortened root is not ok",
+        assertTrue(restore.checkArchive(ZipHouseKeeper.ROOT));
+        assertFalse(restore.checkArchive("something"));
+        assertFalse(
                 restore.checkArchive(ZipHouseKeeper.ROOT.substring(0,
                         ZipHouseKeeper.ROOT.length() - 1)));
 

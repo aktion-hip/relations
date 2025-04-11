@@ -1,8 +1,8 @@
 package org.elbe.relations.internal.utility;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 
@@ -10,35 +10,35 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.RelationsMessages;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * JUnit Plug-in test
  *
  * @author lbenno
  */
-@Ignore
+@Disabled
 public class EmbeddedCatalogHelperTest {
     private final static String[] CATALOGS = new String[] { "catalog1",
             "catalog2", "catalog3" };
     private static File STORE_DIR;
 
-    @BeforeClass
+    @BeforeAll
     public static void before() {
         STORE_DIR = new File(ResourcesPlugin.getWorkspace().getRoot()
                 .getLocation().toFile(), RelationsConstants.DERBY_STORE);
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         createCatalogs(STORE_DIR);
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         deleteCatalogs();
     }
@@ -65,7 +65,7 @@ public class EmbeddedCatalogHelperTest {
     @Test
     public void testGetCatalogs() throws Exception {
         String[] lCatalogs = EmbeddedCatalogHelper.getCatalogs();
-        assertEquals("number of catalogs 1", 3, lCatalogs.length);
+        assertEquals(3, lCatalogs.length);
         for (int i = 0; i < lCatalogs.length; i++) {
             assertEquals("catalog " + i, CATALOGS[i], lCatalogs[i]);
         }
@@ -77,23 +77,20 @@ public class EmbeddedCatalogHelperTest {
         lMarker.createNewFile();
 
         lCatalogs = EmbeddedCatalogHelper.getCatalogs();
-        assertEquals("number of catalogs 2", 2, lCatalogs.length);
+        assertEquals(2, lCatalogs.length);
         assertEquals("catalog a", CATALOGS[0], lCatalogs[0]);
         assertEquals("catalog b", CATALOGS[2], lCatalogs[1]);
 
         EmbeddedCatalogHelper.deleteMarker(CATALOGS[1]);
-        assertEquals("number of catalogs 3", 3,
-                EmbeddedCatalogHelper.getCatalogs().length);
+        assertEquals(3, EmbeddedCatalogHelper.getCatalogs().length);
     }
 
     @Test
     public void testHasDefaultEmbedded() throws Exception {
-        assertFalse("no default catalog",
-                EmbeddedCatalogHelper.hasDefaultEmbedded());
+        assertFalse(EmbeddedCatalogHelper.hasDefaultEmbedded());
 
         createCatalog(STORE_DIR, RelationsConstants.DFT_DB_EMBEDDED);
-        assertTrue("default catalog found",
-                EmbeddedCatalogHelper.hasDefaultEmbedded());
+        assertTrue(EmbeddedCatalogHelper.hasDefaultEmbedded());
     }
 
     private void createCatalogs(final File inStore) {

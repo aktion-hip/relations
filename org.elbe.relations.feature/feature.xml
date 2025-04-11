@@ -2,7 +2,7 @@
 <feature
       id="org.elbe.relations.feature"
       label="%featureName"
-      version="2.3.0.qualifier"
+      version="2.4.0.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -258,7 +258,6 @@ POSSIBILITY OF SUCH DAMAGES.
       <import plugin="org.eclipse.e4.ui.model.workbench" version="2.0.0" match="compatible"/>
       <import plugin="org.eclipse.e4.ui.services" version="1.2.0" match="compatible"/>
       <import plugin="org.eclipse.e4.ui.workbench" version="1.3.0" match="compatible"/>
-      <import plugin="org.eclipse.e4.core.commands" version="0.11.0" match="compatible"/>
       <import plugin="org.eclipse.e4.ui.bindings" version="0.11.0" match="compatible"/>
       <import plugin="org.eclipse.e4.ui.di" version="1.1.0" match="compatible"/>
       <import plugin="org.eclipse.e4.ui.workbench.swt" version="0.13.0" match="compatible"/>
@@ -271,11 +270,8 @@ POSSIBILITY OF SUCH DAMAGES.
       <import plugin="org.eclipse.equinox.p2.core" version="2.4.0" match="compatible"/>
       <import plugin="org.eclipse.equinox.p2.operations" version="2.4.100" match="compatible"/>
       <import plugin="org.eclipse.equinox.p2.repository" version="2.3.100" match="compatible"/>
-      <import plugin="org.eclipse.equinox.ds" version="1.5.0" match="compatible"/>
       <import plugin="org.eclipse.equinox.event" version="1.4.0" match="compatible"/>
       <import plugin="com.google.gson"/>
-      <import plugin="javax.annotation"/>
-      <import plugin="javax.inject" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.equinox.preferences"/>
       <import plugin="org.eclipse.e4.ui.workbench.addons.swt"/>
       <import plugin="org.eclipse.emf.common"/>
@@ -283,7 +279,6 @@ POSSIBILITY OF SUCH DAMAGES.
       <import plugin="org.eclipse.equinox.app"/>
       <import plugin="org.eclipse.equinox.p2.metadata" version="2.3.0" match="compatible"/>
       <import plugin="org.eclipse.jface.databinding" version="1.6.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.osgi.services"/>
       <import plugin="org.eclipse.core.expressions" version="3.4.401" match="greaterOrEqual"/>
       <import plugin="org.eclipse.osgi"/>
       <import plugin="org.eclipse.core.resources" version="3.13.0" match="compatible"/>
@@ -305,10 +300,7 @@ POSSIBILITY OF SUCH DAMAGES.
       <import plugin="org.eclipse.help.base" version="4.2.0" match="compatible"/>
       <import plugin="com.fasterxml.jackson.core.jackson-core"/>
       <import plugin="org.eclipse.ui.forms"/>
-      <import plugin="javax.servlet"/>
       <import plugin="org.mortbay.jetty.server"/>
-      <import feature="org.eclipse.e4.rcp" version="1.6.1.v20170928-1359"/>
-      <import plugin="javax.xml"/>
       <import plugin="org.eclipse.core.runtime" version="3.9.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.e4.core.di" version="1.3.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.e4.ui.model.workbench" version="1.0.0" match="greaterOrEqual"/>
@@ -318,152 +310,95 @@ POSSIBILITY OF SUCH DAMAGES.
       <import plugin="org.eclipse.core.commands" version="3.7.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.help.ui"/>
       <import plugin="org.eclipse.help.webapp"/>
+      <import plugin="jakarta.annotation-api"/>
+      <import plugin="jakarta.servlet-api"/>
+      <import plugin="jakarta.inject.jakarta.inject-api"/>
+      <import plugin="org.eclipse.e4.core.commands"/>
+      <import feature="org.eclipse.e4.rcp" version="4.34.0.v20241113-2009"/>
    </requires>
 
    <plugin
          id="org.elbe.relations"
-         download-size="0"
-         install-size="0"
          version="0.0.0"/>
 
    <plugin
          id="org.elbe.relations.biblio.dft"
-         download-size="6"
-         install-size="6"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.elbe.relations.biblio.meta"
-         download-size="931"
-         install-size="931"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.elbe.relations.data"
-         download-size="96"
-         install-size="96"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.elbe.relations.defaultBrowser"
-         download-size="48"
-         install-size="48"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.elbe.relations.derby"
-         download-size="4"
-         install-size="4"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.elbe.relations.indexer.lucene"
-         download-size="870"
-         install-size="870"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.elbe.relations.mysql"
-         download-size="4"
-         install-size="4"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.elbe.relations.print.dft"
-         download-size="6"
-         install-size="6"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.elbe.relations.print.odt"
-         download-size="18"
-         install-size="18"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.hip.vif.dbaccess.derby"
-         download-size="6"
-         install-size="6"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.hip.vif.dbaccess.mysql"
-         download-size="4"
-         install-size="4"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.hip.viffw"
-         download-size="353"
-         install-size="353"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.elbe.relations.browser.finder"
-         download-size="32"
-         install-size="32"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.elbe.relations.help"
-         download-size="699"
-         install-size="699"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.elbe.relations.print.doc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.elbe.relations.cloud.azure"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.elbe.relations.cloud.dropbox"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.elbe.relations.cloud.google"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="org.elbe.relations.help.base"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="com.opcoach.e4.preferences"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
 </feature>

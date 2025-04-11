@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Relations" uid="org.elbe.relations.product" id="org.elbe.relations.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="2.3.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Relations" uid="org.elbe.relations.product" id="org.elbe.relations.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="2.4.0.qualifier" type="features" includeLaunchers="true" autoIncludeRequirements="true">
 
    <aboutInfo>
       <image path="/org.elbe.relations/icons/aboutRelations.png"/>
@@ -10,7 +10,7 @@
 
 The Relations application is a tool for knowledge management.
 
-Version: 2.3.0
+Version: 2.4.0
 
 (c) Copyright: RelationWare, B. Luthiger.
 Visit http://relations-rcp.sourceforge.net/
@@ -49,9 +49,9 @@ see http://www.eclipse.org/
    <intro introId="org.eclipse.ui.intro.universal"/>
 
    <vm>
-      <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</linux>
-      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</macos>
-      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</windows>
+      <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17</linux>
+      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17</macos>
+      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17</windows>
    </vm>
 
    <license>
@@ -291,27 +291,11 @@ POSSIBILITY OF SUCH DAMAGES.
    </plugins>
 
    <features>
-      <feature id="org.elbe.relations.feature" version="2.3.0.qualifier"/>
-      <feature id="org.elbe.relations.add.feature" version="2.1.0.qualifier"/>
-      <feature id="com.opcoach.e4.preferences.feature" version="1.1.0.201710152105"/>
-      <feature id="org.eclipse.emf.ecore"/>
-      <feature id="org.eclipse.emf.common"/>
-      <feature id="org.eclipse.e4.rcp"/>
-      <feature id="org.eclipse.rcp" version="4.8.0.v20180611-0656"/>
-      <feature id="org.eclipse.platform" version="4.8.0.v20180611-0656"/>
-      <feature id="org.eclipse.equinox.p2.user.ui"/>
-      <feature id="org.eclipse.ecf.filetransfer.httpclient4.feature"/>
-      <feature id="org.eclipse.help"/>
-      <feature id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature"/>
-      <feature id="org.eclipse.equinox.p2.extras.feature"/>
-      <feature id="org.eclipse.equinox.p2.core.feature"/>
-      <feature id="org.eclipse.ecf.core.feature"/>
-      <feature id="org.eclipse.equinox.p2.rcp.feature"/>
-      <feature id="org.eclipse.ecf.filetransfer.feature"/>
-      <feature id="org.eclipse.ecf.core.ssl.feature"/>
-      <feature id="org.eclipse.ecf.filetransfer.ssl.feature"/>
-      <feature id="org.eclipse.e4.rcp.source" version="1.6.100.v20180611-0422"/>
-      <feature id="org.eclipse.equinox.core.feature" version="1.5.0.v20180502-1828"/>
+      <feature id="org.elbe.relations.feature" installMode="root"/>
+      <feature id="org.elbe.relations.add.feature" installMode="root"/>
+      <feature id="org.eclipse.emf.ecore" installMode="root"/>
+      <feature id="org.eclipse.emf.common" installMode="root"/>
+      <feature id="org.eclipse.e4.rcp" installMode="root"/>
    </features>
 
    <configurations>
@@ -339,9 +323,7 @@ POSSIBILITY OF SUCH DAMAGES.
    </configurations>
 
    <repositories>
-      <repository location="http://relations-rcp.sourceforge.net/updates/" enabled="true" />
-      <repository location="http://relations-rcp.sourceforge.net/updates/" enabled="true" />
-      <repository location="http://relations-rcp.sourceforge.net/updates/" enabled="true" />
+      <repository location="http://relations-rcp.sourceforge.net/updates/" name="" enabled="true" />
    </repositories>
 
    <preferencesInfo>

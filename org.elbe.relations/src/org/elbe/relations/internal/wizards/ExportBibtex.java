@@ -20,7 +20,6 @@ package org.elbe.relations.internal.wizards;
 
 import java.text.MessageFormat;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
@@ -34,6 +33,8 @@ import org.elbe.relations.internal.data.DBSettings;
 import org.elbe.relations.internal.utility.BibtexExporter;
 import org.elbe.relations.internal.wizards.interfaces.IExportWizard;
 
+import jakarta.annotation.PostConstruct;
+
 /**
  * Wizard to export the content of all text items to a file in BibTEX format.
  *
@@ -41,64 +42,64 @@ import org.elbe.relations.internal.wizards.interfaces.IExportWizard;
  */
 @SuppressWarnings("restriction")
 public class ExportBibtex extends Wizard implements IExportWizard {
-	private final static MessageFormat SUCCESS_MSG = new MessageFormat(
-	        RelationsMessages.getString("ExportBibtex.feedback.success")); //$NON-NLS-1$
-	private final static MessageFormat PROBLEMS_MSG = new MessageFormat(
-	        RelationsMessages.getString("ExportBibtex.feedback.problems")); //$NON-NLS-1$
+    private final static MessageFormat SUCCESS_MSG = new MessageFormat(
+            RelationsMessages.getString("ExportBibtex.feedback.success")); //$NON-NLS-1$
+    private final static MessageFormat PROBLEMS_MSG = new MessageFormat(
+            RelationsMessages.getString("ExportBibtex.feedback.problems")); //$NON-NLS-1$
 
-	@Inject
-	private IEclipseContext context;
+    @Inject
+    private IEclipseContext context;
 
-	@Inject
-	private Logger log;
+    @Inject
+    private Logger log;
 
-	@Inject
-	private DBSettings dbSettings;
+    @Inject
+    private DBSettings dbSettings;
 
-	@Inject
-	private RelationsStatusLineManager statusLine;
+    @Inject
+    private RelationsStatusLineManager statusLine;
 
-	private ExportBibtexPage page;
+    private ExportBibtexPage page;
 
-	@PostConstruct
-	public void init() {
-		setWindowTitle(
-		        RelationsMessages.getString("ExportBibtex.window.title")); //$NON-NLS-1$
-		setNeedsProgressMonitor(true);
-	}
+    @PostConstruct
+    public void init() {
+        setWindowTitle(
+                RelationsMessages.getString("ExportBibtex.window.title")); //$NON-NLS-1$
+        setNeedsProgressMonitor(true);
+    }
 
-	@Override
-	public void addPages() {
-		page = new ExportBibtexPage("ExportBibtexPage"); //$NON-NLS-1$
-		addPage(page);
-	}
+    @Override
+    public void addPages() {
+        this.page = new ExportBibtexPage("ExportBibtexPage"); //$NON-NLS-1$
+        addPage(this.page);
+    }
 
-	@Override
-	public boolean performFinish() {
-		try {
-			page.saveToHistory();
+    @Override
+    public boolean performFinish() {
+        try {
+            this.page.saveToHistory();
 
-			final BibtexExporter lExporter = ContextInjectionFactory
-			        .make(BibtexExporter.class, context);
-			lExporter.setFileName(page.getFileName());
-			lExporter.export();
-			statusLine.showStatusLineMessage(SUCCESS_MSG
-			        .format(new String[] { dbSettings.getCatalog() }));
-		}
-		catch (final Exception exc) {
-			MessageDialog.openError(getShell(),
-			        RelationsMessages.getString("ExportBibtex.error"), //$NON-NLS-1$
-			        PROBLEMS_MSG
-			                .format(new String[] { dbSettings.getCatalog() }));
-			log.error(exc, exc.getMessage());
-		}
-		return true;
-	}
+            final BibtexExporter lExporter = ContextInjectionFactory
+                    .make(BibtexExporter.class, this.context);
+            lExporter.setFileName(this.page.getFileName());
+            lExporter.export();
+            this.statusLine.showStatusLineMessage(SUCCESS_MSG
+                    .format(new String[] { this.dbSettings.getCatalog() }));
+        }
+        catch (final Exception exc) {
+            MessageDialog.openError(getShell(),
+                    RelationsMessages.getString("ExportBibtex.error"), //$NON-NLS-1$
+                    PROBLEMS_MSG
+                    .format(new String[] { this.dbSettings.getCatalog() }));
+            this.log.error(exc, exc.getMessage());
+        }
+        return true;
+    }
 
-	@Override
-	public void dispose() {
-		page.dispose();
-		super.dispose();
-	}
+    @Override
+    public void dispose() {
+        this.page.dispose();
+        super.dispose();
+    }
 
 }

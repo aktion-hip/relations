@@ -18,7 +18,7 @@
  ***************************************************************************/
 package org.elbe.relations.data.bom;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Timestamp;
 import java.util.regex.Matcher;
@@ -31,9 +31,9 @@ import org.hip.kernel.bom.DomainObject;
 import org.hip.kernel.bom.KeyObject;
 import org.hip.kernel.bom.impl.KeyObjectImpl;
 import org.hip.kernel.exc.VException;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author lbenno
@@ -43,12 +43,12 @@ public class EventStoreHomeTest {
     private static final String PATTERN = "type=\"Timestamp\">([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{1,3})";
     private static DataHouseKeeper data;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         data = DataHouseKeeper.INSTANCE;
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         data.deleteAllInAll();
     }

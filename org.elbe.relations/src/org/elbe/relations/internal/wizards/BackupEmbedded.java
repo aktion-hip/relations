@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.e4.core.services.log.Logger;
@@ -35,6 +34,8 @@ import org.elbe.relations.internal.data.DBSettings;
 import org.elbe.relations.internal.utility.EmbeddedCatalogHelper;
 import org.elbe.relations.internal.wizards.interfaces.IExportWizard;
 
+import jakarta.annotation.PostConstruct;
+
 /**
  * Wizard to backup the embedded database.
  *
@@ -42,70 +43,70 @@ import org.elbe.relations.internal.wizards.interfaces.IExportWizard;
  */
 @SuppressWarnings("restriction")
 public class BackupEmbedded extends Wizard implements IExportWizard {
-	private final static MessageFormat SUCCESS_MSG = new MessageFormat(
-	        RelationsMessages.getString("BackupEmbedded.feedback.success")); //$NON-NLS-1$
-	private final static MessageFormat PROBLEMS_MSG = new MessageFormat(
-	        RelationsMessages.getString("BackupEmbedded.feedback.problems")); //$NON-NLS-1$
-	private final static String NO_OP_MESSAGE = RelationsMessages
-	        .getString("BackupEmbedded.message.noop"); //$NON-NLS-1$
+    private final static MessageFormat SUCCESS_MSG = new MessageFormat(
+            RelationsMessages.getString("BackupEmbedded.feedback.success")); //$NON-NLS-1$
+    private final static MessageFormat PROBLEMS_MSG = new MessageFormat(
+            RelationsMessages.getString("BackupEmbedded.feedback.problems")); //$NON-NLS-1$
+    private final static String NO_OP_MESSAGE = RelationsMessages
+            .getString("BackupEmbedded.message.noop"); //$NON-NLS-1$
 
-	@Inject
-	private Logger log;
+    @Inject
+    private Logger log;
 
-	@Inject
-	private DBSettings dbSettings;
+    @Inject
+    private DBSettings dbSettings;
 
-	@Inject
-	private RelationsStatusLineManager statusLine;
+    @Inject
+    private RelationsStatusLineManager statusLine;
 
-	private BackupEmbeddedPage page;
+    private BackupEmbeddedPage page;
 
-	@PostConstruct
-	public void init() {
-		setWindowTitle(
-		        RelationsMessages.getString("BackupEmbedded.page.title")); //$NON-NLS-1$
-	}
+    @PostConstruct
+    public void init() {
+        setWindowTitle(
+                RelationsMessages.getString("BackupEmbedded.page.title")); //$NON-NLS-1$
+    }
 
-	@Override
-	public void addPages() {
-		// if the actual data store is an external database, we don't offer
-		// backup functionality
-		if (!dbSettings.getDBConnectionConfig().isEmbedded()) {
-			addPage(new NoOpPage("DontBackupPage", NO_OP_MESSAGE)); //$NON-NLS-1$
-			return;
-		}
+    @Override
+    public void addPages() {
+        // if the actual data store is an external database, we don't offer
+        // backup functionality
+        if (!this.dbSettings.getDBConnectionConfig().isEmbedded()) {
+            addPage(new NoOpPage("DontBackupPage", NO_OP_MESSAGE)); //$NON-NLS-1$
+            return;
+        }
 
-		page = new BackupEmbeddedPage("BackupEmbeddedPage"); //$NON-NLS-1$
-		addPage(page);
-	}
+        this.page = new BackupEmbeddedPage("BackupEmbeddedPage"); //$NON-NLS-1$
+        addPage(this.page);
+    }
 
-	@Override
-	public boolean performFinish() {
-		final String lCatalog = dbSettings.getCatalog();
-		try {
-			final String lDataDirectory = EmbeddedCatalogHelper.getDBStorePath()
-			        .getCanonicalPath() + File.separator + lCatalog;
-			final ZipBackup lBackup = new ZipBackup(lDataDirectory,
-			        page.getFileName());
-			lBackup.backup();
-			statusLine.showStatusLineMessage(
-			        SUCCESS_MSG.format(new String[] { lCatalog }));
-		}
-		catch (final IOException exc) {
-			MessageDialog.openError(getShell(),
-			        RelationsMessages.getString("BackupEmbedded.error"), //$NON-NLS-1$
-			        PROBLEMS_MSG.format(new String[] { lCatalog }));
-			log.error(exc, exc.getMessage());
-		}
-		return true;
-	}
+    @Override
+    public boolean performFinish() {
+        final String lCatalog = this.dbSettings.getCatalog();
+        try {
+            final String lDataDirectory = EmbeddedCatalogHelper.getDBStorePath()
+                    .getCanonicalPath() + File.separator + lCatalog;
+            final ZipBackup lBackup = new ZipBackup(lDataDirectory,
+                    this.page.getFileName());
+            lBackup.backup();
+            this.statusLine.showStatusLineMessage(
+                    SUCCESS_MSG.format(new String[] { lCatalog }));
+        }
+        catch (final IOException exc) {
+            MessageDialog.openError(getShell(),
+                    RelationsMessages.getString("BackupEmbedded.error"), //$NON-NLS-1$
+                    PROBLEMS_MSG.format(new String[] { lCatalog }));
+            this.log.error(exc, exc.getMessage());
+        }
+        return true;
+    }
 
-	@Override
-	public void dispose() {
-		if (page != null) {
-			page.dispose();
-		}
-		super.dispose();
-	}
+    @Override
+    public void dispose() {
+        if (this.page != null) {
+            this.page.dispose();
+        }
+        super.dispose();
+    }
 
 }

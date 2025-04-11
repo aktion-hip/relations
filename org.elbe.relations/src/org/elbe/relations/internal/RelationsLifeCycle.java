@@ -23,7 +23,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 
-import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.xml.transform.TransformerException;
 
@@ -67,6 +66,8 @@ import org.hip.kernel.dbaccess.DBAccessConfiguration;
 import org.hip.kernel.dbaccess.DataSourceRegistry;
 import org.osgi.service.prefs.BackingStoreException;
 
+import jakarta.annotation.PreDestroy;
+
 /**
  * This application's life cycle handler.
  *
@@ -82,183 +83,183 @@ import org.osgi.service.prefs.BackingStoreException;
 @SuppressWarnings("restriction")
 public class RelationsLifeCycle {
 
-	private RelationsBrowserManager browserManager;
+    private RelationsBrowserManager browserManager;
 
-	@Inject
-	private Logger log;
+    @Inject
+    private Logger log;
 
-	@Inject
-	private IDBController dbController;
+    @Inject
+    private IDBController dbController;
 
-	@Inject
-	private DBSettings dbSettings;
+    @Inject
+    private DBSettings dbSettings;
 
-	@Inject
-	@Preference(nodePath = RelationsConstants.PREFERENCE_NODE)
-	private IEclipsePreferences preferences;
+    @Inject
+    @Preference(nodePath = RelationsConstants.PREFERENCE_NODE)
+    private IEclipsePreferences preferences;
 
-	@PostContextCreate
-	void initializeApp(final IEclipseContext context,
-			final IEventBroker eventBroker) {
+    @PostContextCreate
+    void initializeApp(final IEclipseContext context,
+            final IEventBroker eventBroker) {
 
-		// set db settings and controller to workspace context
-		if (this.dbSettings != null && context.get(DBSettings.class) == null) {
-			context.set(DBSettings.class, this.dbSettings);
-		}
-		ContextInjectionFactory.inject(this.dbController, context);
+        // set db settings and controller to workspace context
+        if (this.dbSettings != null && context.get(DBSettings.class) == null) {
+            context.set(DBSettings.class, this.dbSettings);
+        }
+        ContextInjectionFactory.inject(this.dbController, context);
 
-		// set DataSourceRegistry to eclipse context to make instance available
-		// in application
-		final DataSourceRegistry dbAccess = DataSourceRegistry.INSTANCE;
-		context.set(RelationsConstants.DB_ACCESS_HANDLER, dbAccess);
+        // set DataSourceRegistry to eclipse context to make instance available
+        // in application
+        final DataSourceRegistry dbAccess = DataSourceRegistry.INSTANCE;
+        context.set(RelationsConstants.DB_ACCESS_HANDLER, dbAccess);
 
-		// do some cleanup of former sessions
-		EmbeddedCatalogHelper.cleanUp();
+        // do some cleanup of former sessions
+        EmbeddedCatalogHelper.cleanUp();
 
-		// set language service to the context
-		context.set(LanguageService.class,
-				ContextInjectionFactory.make(LanguageService.class, context));
+        // set language service to the context
+        context.set(LanguageService.class,
+                ContextInjectionFactory.make(LanguageService.class, context));
 
-		// set a suitable implementation of the IDataService to the context
-		final DataService dataService = ContextInjectionFactory
-				.make(DataService.class, context);
-		context.set(IDataService.class, dataService);
+        // set a suitable implementation of the IDataService to the context
+        final DataService dataService = ContextInjectionFactory
+                .make(DataService.class, context);
+        context.set(IDataService.class, dataService);
 
-		// set a suitable implementation of the IBrowserManager to the context
-		this.browserManager = ContextInjectionFactory
-				.make(RelationsBrowserManager.class, context);
-		context.set(IBrowserManager.class, this.browserManager);
+        // set a suitable implementation of the IBrowserManager to the context
+        this.browserManager = ContextInjectionFactory
+                .make(RelationsBrowserManager.class, context);
+        context.set(IBrowserManager.class, this.browserManager);
 
-		// register a special event handler
-		eventBroker.subscribe(ShowTextItemForm.TOPIC, new ShowTextItemForm());
+        // register a special event handler
+        eventBroker.subscribe(ShowTextItemForm.TOPIC, new ShowTextItemForm());
 
-		boolean isDBConfigured = false;
-		if (this.dbSettings != null && this.dbSettings.getDBConnectionConfig() != null
-				&& this.dbSettings.getDBConnectionConfig().isEmbedded()
-				&& RelationsConstants.DFT_DBCONFIG_PLUGIN_ID
-				.equals(this.dbSettings.getDBConnectionConfig().getName())) {
-			// check existence of default database and create one, if needed
-			if (!EmbeddedCatalogHelper.hasDefaultEmbedded()) { // NOPMD
-				if (this.dbController.checkEmbedded()) {
-					dbAccess.setActiveConfiguration(
-							createDftDBAccessConfiguration());
-					isDBConfigured = true;
-					final DbEmbeddedCreateHandler lDBCreate = ContextInjectionFactory
-							.make(DbEmbeddedCreateHandler.class, context);
-					lDBCreate.execute(this.dbSettings, context);
+        boolean isDBConfigured = false;
+        if (this.dbSettings != null && this.dbSettings.getDBConnectionConfig() != null
+                && this.dbSettings.getDBConnectionConfig().isEmbedded()
+                && RelationsConstants.DFT_DBCONFIG_PLUGIN_ID
+                .equals(this.dbSettings.getDBConnectionConfig().getName())) {
+            // check existence of default database and create one, if needed
+            if (!EmbeddedCatalogHelper.hasDefaultEmbedded()) { // NOPMD
+                if (this.dbController.checkEmbedded()) {
+                    dbAccess.setActiveConfiguration(
+                            createDftDBAccessConfiguration());
+                    isDBConfigured = true;
+                    final DbEmbeddedCreateHandler lDBCreate = ContextInjectionFactory
+                            .make(DbEmbeddedCreateHandler.class, context);
+                    lDBCreate.execute(this.dbSettings, context);
 
-				} else {
-					MessageDialog.openError(new Shell(Display.getDefault()),
-							RelationsMessages.getString(
-									"relations.life.cycle.db.open.error.title"), //$NON-NLS-1$
-							RelationsMessages.getString(
-									"relations.life.cycle.db.open.error.msg")); //$NON-NLS-1$
-				}
-			}
-		}
-		if (!isDBConfigured) {
-			dbAccess.setActiveConfiguration(
-					ActionHelper.createDBConfiguration(this.dbSettings));
-		}
-		// schema upgrade: checked creation of EventStore table
-		try {
-			new EventStoreChecker().createEventStoreChecked(
-					this.dbSettings.getDBConnectionConfig().getCreator());
-		}
-		catch (IOException | TransformerException | SQLException exc) {
-			this.log.error(exc, "Unable to create the EventStore table!"); //$NON-NLS-1$
-		}
+                } else {
+                    MessageDialog.openError(new Shell(Display.getDefault()),
+                            RelationsMessages.getString(
+                                    "relations.life.cycle.db.open.error.title"), //$NON-NLS-1$
+                            RelationsMessages.getString(
+                                    "relations.life.cycle.db.open.error.msg")); //$NON-NLS-1$
+                }
+            }
+        }
+        if (!isDBConfigured) {
+            dbAccess.setActiveConfiguration(
+                    ActionHelper.createDBConfiguration(this.dbSettings));
+        }
+        // schema upgrade: checked creation of EventStore table
+        try {
+            new EventStoreChecker().createEventStoreChecked(
+                    this.dbSettings.getDBConnectionConfig().getCreator());
+        }
+        catch (IOException | TransformerException | SQLException exc) {
+            this.log.error(exc, "Unable to create the EventStore table!"); //$NON-NLS-1$
+        }
 
-		dataService.loadData(RelationsConstants.TOPIC_DB_CHANGED_RELOAD);
+        dataService.loadData(RelationsConstants.TOPIC_DB_CHANGED_RELOAD);
 
-		if (this.dbSettings != null) {
-			EmbeddedCatalogHelper.reindexChecked(this.dbSettings, context);
-		}
-	}
+        if (this.dbSettings != null) {
+            EmbeddedCatalogHelper.reindexChecked(this.dbSettings, context);
+        }
+    }
 
-	private DBAccessConfiguration createDftDBAccessConfiguration() {
-		return new DBAccessConfiguration(
-				RelationsConstants.DFT_DBCONFIG_PLUGIN_ID,
-				"./" //$NON-NLS-1$
-				+ RelationsConstants.DERBY_STORE + "/" //$NON-NLS-1$
-				+ RelationsConstants.DFT_DB_EMBEDDED,
-				EmbeddedCatalogHelper.getEmbeddedDftDBChecked(), "", ""); //$NON-NLS-1$ //$NON-NLS-2$
-	}
+    private DBAccessConfiguration createDftDBAccessConfiguration() {
+        return new DBAccessConfiguration(
+                RelationsConstants.DFT_DBCONFIG_PLUGIN_ID,
+                "./" //$NON-NLS-1$
+                + RelationsConstants.DERBY_STORE + "/" //$NON-NLS-1$
+                + RelationsConstants.DFT_DB_EMBEDDED,
+                EmbeddedCatalogHelper.getEmbeddedDftDBChecked(), "", ""); //$NON-NLS-1$ //$NON-NLS-2$
+    }
 
-	@ProcessAdditions
-	void doRestore(final MApplication application) {
-		this.browserManager.restoreState(this.preferences);
-		checkBindings(application);
-	}
+    @ProcessAdditions
+    void doRestore(final MApplication application) {
+        this.browserManager.restoreState(this.preferences);
+        checkBindings(application);
+    }
 
-	private void checkBindings(final MApplication application) {
-		for (final MBindingTable bindingTable : application
-				.getBindingTables()) {
-			checkBindings(bindingTable);
-		}
-	}
+    private void checkBindings(final MApplication application) {
+        for (final MBindingTable bindingTable : application
+                .getBindingTables()) {
+            checkBindings(bindingTable);
+        }
+    }
 
-	private void checkBindings(final MBindingTable bindingTable) {
-		final DuplicateFixer fixer = new DuplicateFixer();
-		for (final MKeyBinding binding : bindingTable.getBindings()) {
-			fixer.add(binding.getKeySequence());
-		}
-		if (fixer.hasDuplicates()) {
-			fixer.fixDuplicates(bindingTable);
-		}
-	}
+    private void checkBindings(final MBindingTable bindingTable) {
+        final DuplicateFixer fixer = new DuplicateFixer();
+        for (final MKeyBinding binding : bindingTable.getBindings()) {
+            fixer.add(binding.getKeySequence());
+        }
+        if (fixer.hasDuplicates()) {
+            fixer.fixDuplicates(bindingTable);
+        }
+    }
 
-	@ProcessRemovals
-	void preRendering(final IProvisioningAgent agent) {
-		addRepository(agent);
-	}
+    @ProcessRemovals
+    void preRendering(final IProvisioningAgent agent) {
+        addRepository(agent);
+    }
 
-	private void addRepository(final IProvisioningAgent agent) {
-		final IMetadataRepositoryManager metadataManager = (IMetadataRepositoryManager) agent
-				.getService(IMetadataRepositoryManager.SERVICE_NAME);
-		final IArtifactRepositoryManager artifactManager = (IArtifactRepositoryManager) agent
-				.getService(IArtifactRepositoryManager.SERVICE_NAME);
-		if (metadataManager == null || artifactManager == null) {
-			this.log.warn("P2 metadata/artifact manager is null!"); //$NON-NLS-1$
-			return;
-		}
+    private void addRepository(final IProvisioningAgent agent) {
+        final IMetadataRepositoryManager metadataManager = (IMetadataRepositoryManager) agent
+                .getService(IMetadataRepositoryManager.SERVICE_NAME);
+        final IArtifactRepositoryManager artifactManager = (IArtifactRepositoryManager) agent
+                .getService(IArtifactRepositoryManager.SERVICE_NAME);
+        if (metadataManager == null || artifactManager == null) {
+            this.log.warn("P2 metadata/artifact manager is null!"); //$NON-NLS-1$
+            return;
+        }
 
-		try {
-			final URI uri = new URI(RelationsConstants.UPDATE_SITE);
-			metadataManager.addRepository(uri);
-			artifactManager.addRepository(uri);
-		}
-		catch (final URISyntaxException exc) {
-			this.log.error(exc, exc.getMessage());
-		}
-	}
+        try {
+            final URI uri = new URI(RelationsConstants.UPDATE_SITE);
+            metadataManager.addRepository(uri);
+            artifactManager.addRepository(uri);
+        }
+        catch (final URISyntaxException exc) {
+            this.log.error(exc, exc.getMessage());
+        }
+    }
 
-	/**
-	 * Save db settings and browser state to preferences.
-	 *
-	 * @param application
-	 *            {@link MApplication}
-	 */
-	@SuppressWarnings("unchecked")
-	@PreDestroy
-	void saveApp(final MApplication application,
-			final EModelService modelService) {
-		// save browser id
-		final MElementContainer<MUIElement> browserStack = (MElementContainer<MUIElement>) modelService
-				.find(RelationsConstants.PART_STACK_BROWSERS, application);
-		final MUIElement browser = browserStack.getSelectedElement();
-		this.preferences.put(RelationsConstants.ACTIVE_BROWSER_ID,
-				browser.getElementId());
+    /**
+     * Save db settings and browser state to preferences.
+     *
+     * @param application
+     *            {@link MApplication}
+     */
+    @SuppressWarnings("unchecked")
+    @PreDestroy
+    void saveApp(final MApplication application,
+            final EModelService modelService) {
+        // save browser id
+        final MElementContainer<MUIElement> browserStack = (MElementContainer<MUIElement>) modelService
+                .find(RelationsConstants.PART_STACK_BROWSERS, application);
+        final MUIElement browser = browserStack.getSelectedElement();
+        this.preferences.put(RelationsConstants.ACTIVE_BROWSER_ID,
+                browser.getElementId());
 
-		// save browser model
-		this.browserManager.saveState(this.preferences);
-		// flush preferences
-		try {
-			this.preferences.flush();
-		}
-		catch (final BackingStoreException exc) {
-			this.log.error(exc, exc.getMessage());
-		}
-	}
+        // save browser model
+        this.browserManager.saveState(this.preferences);
+        // flush preferences
+        try {
+            this.preferences.flush();
+        }
+        catch (final BackingStoreException exc) {
+            this.log.error(exc, exc.getMessage());
+        }
+    }
 
 }

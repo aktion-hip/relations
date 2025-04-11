@@ -33,7 +33,6 @@ import org.elbe.relations.internal.controller.LastChangesController;
  * 
  * @author Luthiger
  */
-@SuppressWarnings("restriction")
 public class LastChangesSwitchHandler {
 
 	@Inject
@@ -43,7 +42,7 @@ public class LastChangesSwitchHandler {
 	@Execute
 	void switchView(
 			@Named(RelationsConstants.PARAMETER_LAST_CHANGES) final String inSwitch) {
-		preferences.put(LastChangesController.LAST_CHANGES_VIEW_TYPE, inSwitch);
+		this.preferences.put(LastChangesController.LAST_CHANGES_VIEW_TYPE, inSwitch);
 	}
 
 }

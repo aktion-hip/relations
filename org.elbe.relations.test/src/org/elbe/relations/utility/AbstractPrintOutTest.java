@@ -18,119 +18,105 @@
  ***************************************************************************/
 package org.elbe.relations.utility;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author lbenno
- *
  */
 public class AbstractPrintOutTest {
-	private static final String NL = "\n";
-	private static final String XML1 = "<para><b>Dynamic Services (OSGI DS)</b> in Relations-RCP:" + NL
-			+ "Wenn eine neue Komponente erzeugt worden ist, muss Inhalt von C:/Data/eclipse/workbenches/Relations/.metadata.pluginsorg.eclipse.pde.core/relations.product gelöscht werden (<b>ausser</b> <i>config.ini</i>), damit die neue Komponente vom System erkannt wird.</para>"
-			+ NL
-			+ "<para>Wird DS verwendet, so ist es vorteilhaft, wenn die Service-Konsumenten laufen, bevor die Service-Provider gestartet werden:"
-			+ NL + "Beispiele:</para>";
-	private static final String XML2 = "<para>Wird DS verwendet, so ist es vorteilhaft, wenn die Service-Konsumenten laufen, bevor die Service-Provider gestartet werden:"
-			+ NL + "Beispiele:</para>";
-	private static final String XML3 = "<para>$> tar czvf Relations-x.y.z_gtk.x86.tgz Relations/*</para>";
-	private static final String XML4 = "<ul indent=\"0\"><li>111</li>" + NL + "<li>222</li>" + NL + "<li>333" + NL
-			+ "<ul indent=\"1\"><li>aaa" + NL + "<ul indent=\"2\"><li>bbb</li>" + NL + "</ul></li><li>ccc</li>" + NL
-			+ "<li>444</li>" + NL + "</ul></li><li>555</li>" + NL + "</ul>";
+    private static final String NL = "\n";
+    private static final String XML1 = "<para><b>Dynamic Services (OSGI DS)</b> in Relations-RCP:" + NL
+            + "Wenn eine neue Komponente erzeugt worden ist, muss Inhalt von C:/Data/eclipse/workbenches/Relations/.metadata.pluginsorg.eclipse.pde.core/relations.product gelöscht werden (<b>ausser</b> <i>config.ini</i>), damit die neue Komponente vom System erkannt wird.</para>"
+            + NL
+            + "<para>Wird DS verwendet, so ist es vorteilhaft, wenn die Service-Konsumenten laufen, bevor die Service-Provider gestartet werden:"
+            + NL + "Beispiele:</para>";
+    private static final String XML2 = "<para>Wird DS verwendet, so ist es vorteilhaft, wenn die Service-Konsumenten laufen, bevor die Service-Provider gestartet werden:"
+            + NL + "Beispiele:</para>";
+    private static final String XML3 = "<para>$> tar czvf Relations-x.y.z_gtk.x86.tgz Relations/*</para>";
+    private static final String XML4 = "<ul indent=\"0\"><li>111</li>" + NL + "<li>222</li>" + NL + "<li>333" + NL
+            + "<ul indent=\"1\"><li>aaa" + NL + "<ul indent=\"2\"><li>bbb</li>" + NL + "</ul></li><li>ccc</li>" + NL
+            + "<li>444</li>" + NL + "</ul></li><li>555</li>" + NL + "</ul>";
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-	}
+    @Test
+    public void testPrepareItemXML() {
+        final String expected1 = "<para><b>Dynamic Services (OSGI DS)</b> in Relations-RCP:<br/>Wenn eine neue Komponente erzeugt worden ist, muss Inhalt von C:/Data/eclipse/workbenches/Relations/.metadata.pluginsorg.eclipse.pde.core/relations.product gelöscht werden (<b>ausser</b> <i>config.ini</i>), damit die neue Komponente vom System erkannt wird.</para><para>Wird DS verwendet, so ist es vorteilhaft, wenn die Service-Konsumenten laufen, bevor die Service-Provider gestartet werden:<br/>Beispiele:</para>";
+        final String expected2 = "<para>Wird DS verwendet, so ist es vorteilhaft, wenn die Service-Konsumenten laufen, bevor die Service-Provider gestartet werden:<br/>Beispiele:</para>";
+        final String expected3 = "<para>$> tar czvf Relations-x.y.z_gtk.x86.tgz Relations/*</para>";
+        final String expected4 = "";
 
-	/**
-	 * Test method for
-	 * {@link org.elbe.relations.utility.AbstractPrintOut#prepareItemXML(java.lang.String)}
-	 * .
-	 */
-	@Test
-	public void testPrepareItemXML() {
-		final String expected1 = "<para><b>Dynamic Services (OSGI DS)</b> in Relations-RCP:<br/>Wenn eine neue Komponente erzeugt worden ist, muss Inhalt von C:/Data/eclipse/workbenches/Relations/.metadata.pluginsorg.eclipse.pde.core/relations.product gelöscht werden (<b>ausser</b> <i>config.ini</i>), damit die neue Komponente vom System erkannt wird.</para><para>Wird DS verwendet, so ist es vorteilhaft, wenn die Service-Konsumenten laufen, bevor die Service-Provider gestartet werden:<br/>Beispiele:</para>";
-		final String expected2 = "<para>Wird DS verwendet, so ist es vorteilhaft, wenn die Service-Konsumenten laufen, bevor die Service-Provider gestartet werden:<br/>Beispiele:</para>";
-		final String expected3 = "<para>$> tar czvf Relations-x.y.z_gtk.x86.tgz Relations/*</para>";
-		final String expected4 = "";
+        final TestPrintOut printOut = new TestPrintOut();
+        assertEquals("", printOut.prepareItemXML(""));
+        assertEquals(expected1, printOut.prepareItemXML(XML1));
+        assertEquals("aaa " + expected1 + " bbb", printOut.prepareItemXML("aaa " + XML1 + " bbb"));
+        assertEquals(expected2, printOut.prepareItemXML(XML2));
+        assertEquals("aaa " + expected2 + " bbb", printOut.prepareItemXML("aaa " + XML2 + " bbb"));
+        assertEquals("<para>123</para>", printOut.prepareItemXML("<para>123</para>"));
+        assertEquals("<para></para>", printOut.prepareItemXML("<para></para>"));
+        assertEquals(expected3, printOut.prepareItemXML(XML3));
+        assertEquals(expected4, printOut.prepareItemXML(XML4));
+    }
 
-		final TestPrintOut printOut = new TestPrintOut();
-		assertEquals("", printOut.prepareItemXML(""));
-		assertEquals(expected1, printOut.prepareItemXML(XML1));
-		assertEquals("aaa " + expected1 + " bbb", printOut.prepareItemXML("aaa " + XML1 + " bbb"));
-		assertEquals(expected2, printOut.prepareItemXML(XML2));
-		assertEquals("aaa " + expected2 + " bbb", printOut.prepareItemXML("aaa " + XML2 + " bbb"));
-		assertEquals("<para>123</para>", printOut.prepareItemXML("<para>123</para>"));
-		assertEquals("<para></para>", printOut.prepareItemXML("<para></para>"));
-		assertEquals(expected3, printOut.prepareItemXML(XML3));
-		assertEquals(expected4, printOut.prepareItemXML(XML4));
-	}
+    //
+    private class TestPrintOut extends AbstractPrintOut {
 
-	//
-	private class TestPrintOut extends AbstractPrintOut {
+        @Override
+        protected String prepareItemXML(final String itemXML) {
+            return super.prepareItemXML(itemXML);
+        }
 
-		@Override
-		protected String prepareItemXML(String itemXML) {
-			return super.prepareItemXML(itemXML);
-		}
+        @Override
+        public boolean isAvailable() {
+            // TODO Auto-generated method stub
+            return false;
+        }
 
-		@Override
-		public boolean isAvailable() {
-			// TODO Auto-generated method stub
-			return false;
-		}
+        @Override
+        protected String getXSLNameBody() {
+            // TODO Auto-generated method stub
+            return null;
+        }
 
-		@Override
-		protected String getXSLNameBody() {
-			// TODO Auto-generated method stub
-			return null;
-		}
+        @Override
+        protected String getXSLNameContent() {
+            // TODO Auto-generated method stub
+            return null;
+        }
 
-		@Override
-		protected String getXSLNameContent() {
-			// TODO Auto-generated method stub
-			return null;
-		}
+        @Override
+        protected void manageAfterOpenNew(final File inPrintOut) throws IOException {
+            // TODO Auto-generated method stub
 
-		@Override
-		protected void manageAfterOpenNew(File inPrintOut) throws IOException {
-			// TODO Auto-generated method stub
+        }
 
-		}
+        @Override
+        protected void manageAfterReopen(final File inPrintOut) throws IOException {
+            // TODO Auto-generated method stub
 
-		@Override
-		protected void manageAfterReopen(File inPrintOut) throws IOException {
-			// TODO Auto-generated method stub
+        }
 
-		}
+        @Override
+        protected void manageBeforeClose(final File inPrintOut) throws IOException {
+            // TODO Auto-generated method stub
 
-		@Override
-		protected void manageBeforeClose(File inPrintOut) throws IOException {
-			// TODO Auto-generated method stub
+        }
 
-		}
+        @Override
+        protected void insertSection(final String inSection) throws IOException {
+            // TODO Auto-generated method stub
 
-		@Override
-		protected void insertSection(String inSection) throws IOException {
-			// TODO Auto-generated method stub
+        }
 
-		}
+        @Override
+        protected void insertDocBody(final String inXML) throws IOException {
+            // TODO Auto-generated method stub
 
-		@Override
-		protected void insertDocBody(String inXML) throws IOException {
-			// TODO Auto-generated method stub
+        }
 
-		}
-
-	}
+    }
 
 }
