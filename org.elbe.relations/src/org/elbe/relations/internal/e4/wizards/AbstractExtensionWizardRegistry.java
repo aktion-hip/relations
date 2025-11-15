@@ -18,7 +18,7 @@
  ***************************************************************************/
 package org.elbe.relations.internal.e4.wizards;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.e4.core.contexts.IEclipseContext;

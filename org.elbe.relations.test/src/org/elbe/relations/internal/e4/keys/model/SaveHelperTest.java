@@ -31,31 +31,31 @@ import java.util.Set;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.CommandManager;
 import org.eclipse.core.commands.ParameterizedCommand;
-import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.e4.core.commands.ECommandService;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.bindings.EBindingService;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.commands.MBindingTable;
 import org.eclipse.e4.ui.model.application.commands.MCommand;
 import org.eclipse.e4.ui.model.application.commands.MKeyBinding;
 import org.eclipse.jface.bindings.Binding;
+import org.eclipse.jface.bindings.BindingManager;
 import org.eclipse.jface.bindings.keys.KeyBinding;
 import org.eclipse.jface.bindings.keys.KeySequence;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.ui.internal.util.PrefUtil;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * @author lbenno
  */
 @ExtendWith(MockitoExtension.class)
-public class SaveHelperTest {
+class SaveHelperTest {
     private static final String BINDING_CONTEXT_ID = "ctxID";
 
     private CommandManager commandManager;
@@ -66,19 +66,27 @@ public class SaveHelperTest {
     @Mock
     private MApplication application;
 
-    @InjectMocks
+    @Mock
+    private ECommandService commandService;
+
+    @Mock
+    private Logger log;
+
+    @Mock
+    private BindingManager manager;
+
     private SaveHelper helper;
 
     @BeforeEach
     public void setUp() throws Exception {
+        this.helper = new SaveHelper(this.application, this.commandService, this.log, this.manager);
         this.commandManager = new CommandManager();
-        MockitoAnnotations.initMocks(this);
-
         this.bindingTable = new TestBindingTable();
     }
 
+    @SuppressWarnings("restriction")
     @Test
-    public void testAddBinding() throws Exception {
+    void testAddBinding() throws Exception {
         this.command1 = this.commandManager.getCommand("aa");
         final Binding binding = createBinding(this.command1, BINDING_CONTEXT_ID, KeySequence.getInstance("M1+A"));
         MKeyBinding keyBinding = this.helper.addBinding(binding);
@@ -110,7 +118,7 @@ public class SaveHelperTest {
         PrefUtil.setUICallback(new PrefUtil.ICallback() {
             @Override
             public IPreferenceStore getPreferenceStore() {
-                return new ScopedPreferenceStore(DefaultScope.INSTANCE, "test");
+                return new PreferenceStore();
             }
 
             @Override

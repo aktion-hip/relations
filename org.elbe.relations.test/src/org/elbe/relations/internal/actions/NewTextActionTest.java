@@ -49,6 +49,7 @@ public class NewTextActionTest {
 
     @Mock
     private Logger log;
+
     @Mock
     private IDataService dataService;
 
@@ -60,19 +61,19 @@ public class NewTextActionTest {
     }
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() {
         this.context = EclipseContextFactory.create("test context");
         this.context.set(Logger.class, this.log);
         this.context.set(IDataService.class, this.dataService);
     }
 
     @AfterEach
-    public void tearDown() throws Exception {
+    void tearDown() throws Exception {
         data.deleteAllInAll();
     }
 
     @Test
-    public void testExecute() throws Exception {
+    void testExecute() throws Exception {
         final TextHome lHome = data.getTextHome();
         assertEquals(0, lHome.getCount());
 

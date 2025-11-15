@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Locale;
 
 import org.elbe.relations.parsing.ExtractedData;
@@ -26,7 +27,7 @@ public class OOExtractorTest {
     private Locale localeOld;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws FileNotFoundException {
         this.localeOld = Locale.getDefault();
         Locale.setDefault(Locale.US);
 
@@ -42,7 +43,7 @@ public class OOExtractorTest {
     }
 
     @Test
-    public final void testAcceptsFile() {
+    final void testAcceptsFile() {
         final OOExtractor lExtractor = new OOExtractor();
         assertTrue(lExtractor.acceptsFile(this.file));
 
@@ -51,13 +52,13 @@ public class OOExtractorTest {
     }
 
     @Test
-    public void testProcess() throws Exception {
+    void testProcess() throws IOException {
         final OOExtractor lExtractor = new OOExtractor();
-        final ExtractedData lExtracted = lExtractor.process(this.file);
-        assertEquals("Test of Relations Extractor", lExtracted.getTitle());
+        final ExtractedData extracted = lExtractor.process(this.file);
+        assertEquals("Test of Relations Extractor", extracted.getTitle());
 
-        lExtracted.setFilePath("");
-        final String lExpected = "This comments the Test of Relations Extractor"
+        extracted.setFilePath("");
+        final String expected = "This comments the Test of Relations Extractor"
                 + NL
                 + "This is the Subject: Test"
                 + NL
@@ -69,10 +70,11 @@ public class OOExtractorTest {
                 + NL
                 + "Type: application/open-office-1.x;"
                 + NL
-                + "Created: January 24, 2010, 12:05:30 AM CET;"
+                + "Created: January 24, 2010, 12:05:30%sAM CET;"
                 + NL
-                + "Last Modified: September 29, 2020, 1:36:53 PM CEST</i>]";
-        assertEquals(lExpected, lExtracted.getText());
+                + "Last Modified: XXX</i>]";
+        assertEquals(String.format(expected, TestUtil.NBSP),
+                extracted.getText().replaceAll(TestUtil.REGEX, TestUtil.REPLACEMENT));
     }
 
 }

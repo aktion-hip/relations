@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2018, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -29,28 +29,17 @@ import com.google.gson.JsonObject;
  *
  * @author lbenno
  */
-@SuppressWarnings("restriction")
 public interface ICloudProvider {
 
-	/**
-	 * Executed the upload to the cloud.
-	 *
-	 * @param toExport
-	 *            {@link File} the file containing the content to upload to the
-	 *            cloud
-	 * @param fileName
-	 *            String the name of the export file in the cloud
-	 * @param configuration
-	 *            {@link JsonObject} the cloud provider configuration
-	 * @param isFullExport
-	 *            boolean <code>true</code> in case of full export,
-	 *            <code>false</code> in case of incremental export
-	 * @param log
-	 *            {@link Logger}
-	 * @return boolean <code>true</code> if the content has been successfully
-	 *         uploaded
-	 */
-	boolean upload(File toExport, String fileName, JsonObject configuration,
-	        boolean isFullExport, Logger log);
+    /** Executed the upload to the cloud.
+     *
+     * @param toExport {@link File} the file containing the content to upload to the cloud
+     * @param fileName String the name of the export file in the cloud
+     * @param configuration {@link JsonObject} the cloud provider configuration
+     * @param isFullExport boolean <code>true</code> in case of full export, <code>false</code> in case of incremental
+     *            export
+     * @param log {@link Logger}
+     * @return boolean <code>true</code> if the content has been successfully uploaded */
+    boolean upload(File toExport, String fileName, JsonObject configuration, boolean isFullExport, Logger log);
 
 }

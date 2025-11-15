@@ -18,7 +18,9 @@
  ***************************************************************************/
 package org.elbe.relations.browser.finder.internal;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -54,6 +56,7 @@ import org.elbe.relations.browser.finder.internal.dnd.DragAndDropHelper;
 import org.elbe.relations.models.ItemAdapter;
 import org.elbe.relations.utility.BrowserPopupStateController;
 import org.elbe.relations.utility.BrowserPopupStateController.State;
+import org.elbe.relations.utility.FontUtil;
 import org.hip.kernel.exc.VException;
 
 /**
@@ -62,357 +65,342 @@ import org.hip.kernel.exc.VException;
  * @author Luthiger
  */
 public class FinderPane {
-	private static final long TIME_LONG = 0xFFFFFFFFL;
-	private static final int ITEM_WIDTH_MIN = 170;
-	private static final int ITEM_HEIGHT_MIN = 7; // 5
-	private static final Display DISPLAY = Display.getCurrent();
-	private static final Color COLOR_BACK_FOCUS_ON = DISPLAY.getSystemColor(SWT.COLOR_BLUE);
-	private static final Color COLOR_BACK_FOCUS_OFF = DISPLAY.getSystemColor(SWT.COLOR_GRAY);
-	private static final Color COLOR_TEXT_SELECTION_ON = DISPLAY.getSystemColor(SWT.COLOR_WHITE);
-	private static final Color COLOR_TEXT_SELECTION_OFF = DISPLAY.getSystemColor(SWT.COLOR_BLACK);
+    private static final long TIME_LONG = 0xFFFFFFFFL;
+    private static final int ITEM_WIDTH_MIN = 170;
+    private static final int ITEM_HEIGHT_MIN = 5;
+    private static final Display DISPLAY = Display.getCurrent();
+    private static final Color COLOR_BACK_FOCUS_ON = DISPLAY.getSystemColor(SWT.COLOR_BLUE);
+    private static final Color COLOR_BACK_FOCUS_OFF = DISPLAY.getSystemColor(SWT.COLOR_GRAY);
+    private static final Color COLOR_TEXT_SELECTION_ON = DISPLAY.getSystemColor(SWT.COLOR_WHITE);
+    private static final Color COLOR_TEXT_SELECTION_OFF = DISPLAY.getSystemColor(SWT.COLOR_BLACK);
 
-	private final Gallery gallery;
-	private GalleryItem lastSelected = null;
-	private final DragSource dndSource;
-	private final DropTarget dndTarget;
-	private SearchListHelper items = new SearchListHelper();
-	private final IBrowserCallback callback;
+    private final Gallery gallery;
+    private GalleryItem lastSelected = null;
+    private final DragSource dndSource;
+    private final DropTarget dndTarget;
+    private SearchListHelper items = new SearchListHelper();
+    private final IBrowserCallback callback;
 
-	/**
-	 * FinderPane constructor.
-	 *
-	 * @param inParent
-	 *            {@link Composite}
-	 * @param inService
-	 *            {@link EMenuService}
-	 * @param inApplication
-	 *            {@link MApplication}
-	 * @param inCallback
-	 *            {@link IBrowserCallback} the callback to the bundle's browser
-	 *            part
-	 * @param inContext
-	 *            {@link IEclipseContext}
-	 * @param inShowScrollbar
-	 *            boolean <code>true</code> if the pane should display
-	 *            scrollbars, <code>false</code> if not
-	 */
-	public FinderPane(final Composite inParent, final EMenuService inService, final MApplication inApplication,
-			final IBrowserCallback inCallback, final IEclipseContext inContext, final boolean inShowScrollbar) {
-		callback = inCallback;
-		gallery = inShowScrollbar ? new Gallery(inParent, SWT.H_SCROLL | SWT.BORDER) : new NoScrollGallery(inParent);
-		gallery.setGroupRenderer(createGroupRenderer());
-		gallery.setItemRenderer(createItemRenderer());
-		setFontSize(getPreferenceFontSize());
-		inService.registerContextMenu(gallery, Constants.BROWSER_POPUP);
+    /** FinderPane constructor.
+     *
+     * @param parent {@link Composite}
+     * @param service {@link EMenuService}
+     * @param application {@link MApplication}
+     * @param callback {@link IBrowserCallback} the callback to the bundle's browser part
+     * @param context {@link IEclipseContext}
+     * @param showScrollbar boolean <code>true</code> if the pane should display scrollbars, <code>false</code> if
+     *            not */
+    public FinderPane(final Composite parent, final EMenuService service, final MApplication application,
+            final IBrowserCallback callback, final IEclipseContext context, final boolean showScrollbar) {
+        this.callback = callback;
+        this.gallery = showScrollbar ? new Gallery(parent, SWT.H_SCROLL | SWT.BORDER) : new NoScrollGallery(parent);
+        this.gallery.setGroupRenderer(createGroupRenderer());
+        this.gallery.setItemRenderer(createItemRenderer());
+        getPreferenceFont().ifPresent(f -> setFont(f));
+        service.registerContextMenu(this.gallery, Constants.BROWSER_POPUP);
 
-		gallery.addFocusListener(new PaneFocusListener());
-		gallery.addKeyListener(new PaneKeyListener());
-		gallery.addMouseListener(new PaneMouseAdapter(inApplication));
+        this.gallery.addFocusListener(new PaneFocusListener());
+        this.gallery.addKeyListener(new PaneKeyListener());
+        this.gallery.addMouseListener(new PaneMouseAdapter(application));
 
-		dndSource = DragAndDropHelper.createDragSource(gallery, !inShowScrollbar);
-		dndTarget = DragAndDropHelper.createDropTarget(gallery, !inShowScrollbar, inContext);
-	}
+        this.dndSource = DragAndDropHelper.createDragSource(this.gallery, !showScrollbar);
+        this.dndTarget = DragAndDropHelper.createDropTarget(this.gallery, !showScrollbar, context);
+    }
 
-	/**
-	 * Places the cursor on the gallery's selected (or first) item.
-	 */
-	public void setFocus() {
-		if (items.isEmpty()) {
-			return;
-		}
-		if (gallery.getSelectionCount() == 0) {
-			lastSelected = gallery.getItem(0).getItem(0);
-			gallery.setSelection(new GalleryItem[] { lastSelected });
-		}
-		gallery.setFocus();
-	}
+    /**
+     * Places the cursor on the gallery's selected (or first) item.
+     */
+    public void setFocus() {
+        if (this.items.isEmpty()) {
+            return;
+        }
+        if (this.gallery.getSelectionCount() == 0) {
+            this.lastSelected = this.gallery.getItem(0).getItem(0);
+            this.gallery.setSelection(new GalleryItem[] { this.lastSelected });
+        }
+        this.gallery.setFocus();
+    }
 
-	public void setFocusEnforced() {
-		gallery.setFocus();
-	}
+    public void setFocusEnforced() {
+        this.gallery.setFocus();
+    }
 
-	private int getPreferenceFontSize() {
-		final IEclipsePreferences lStore = InstanceScope.INSTANCE.getNode(RelationsConstants.PREFERENCE_NODE);
-		final int outSize = lStore.getInt(FinderBrowserPart.class.getName(), RelationsConstants.DFT_TEXT_FONT_SIZE);
-		return outSize;
-	}
+    private Optional<Font> getPreferenceFont() {
+        final IEclipsePreferences store = InstanceScope.INSTANCE.getNode(RelationsConstants.PREFERENCE_NODE);
+        return FontUtil.createOrGetFont(
+                store.getInt(FinderBrowserPart.class.getName(), RelationsConstants.DFT_TEXT_FONT_SIZE));
+    }
 
-	private AbstractGalleryGroupRenderer createGroupRenderer() {
-		final NoGroupRenderer outRenderer = new NoGroupRenderer();
-		outRenderer.setExpanded(false);
-		outRenderer.setAutoMargin(true);
-		return outRenderer;
-	}
+    private AbstractGalleryGroupRenderer createGroupRenderer() {
+        final NoGroupRenderer outRenderer = new NoGroupRenderer();
+        outRenderer.setExpanded(false);
+        outRenderer.setAutoMargin(true);
+        return outRenderer;
+    }
 
-	private AbstractGalleryItemRenderer createItemRenderer() {
-		final ListItemRenderer outRenderer = new ListItemRenderer();
-		outRenderer.setShowRoundedSelectionCorners(false);
-		outRenderer.setSelectionForegroundColor(COLOR_TEXT_SELECTION_ON);
-		return outRenderer;
-	}
+    private AbstractGalleryItemRenderer createItemRenderer() {
+        final ListItemRenderer renderer = new ListItemRenderer();
+        renderer.setShowRoundedSelectionCorners(false);
+        renderer.setSelectionForegroundColor(COLOR_TEXT_SELECTION_ON);
+        return renderer;
+    }
 
-	/**
-	 * Dispose this pane.
-	 */
-	public void dispose() {
-		gallery.removeAll();
-		gallery.dispose();
-		if (dndSource != null) {
-			dndSource.dispose();
-		}
-		if (dndTarget != null) {
-			dndTarget.dispose();
-		}
-		items = null;
-	}
+    /**
+     * Dispose this pane.
+     */
+    public void dispose() {
+        this.gallery.removeAll();
+        this.gallery.dispose();
+        if (this.dndSource != null) {
+            this.dndSource.dispose();
+        }
+        if (this.dndTarget != null) {
+            this.dndTarget.dispose();
+        }
+        this.items = null;
+    }
 
-	/**
-	 * Update the (single item) list with the specified item.
-	 *
-	 * @param inItem
-	 *            {@link ItemAdapter} the new item to display in the list.
-	 * @throws VException
-	 */
-	public void update(final ItemAdapter inItem) throws VException {
-		final GalleryItem lRoot = prepareGallery();
-		addItem(lRoot, inItem);
-		gallery.redraw();
-	}
+    /** Update the (single item) list with the specified item.
+     *
+     * @param item {@link ItemAdapter} the new item to display in the list.
+     * @throws VException */
+    public void update(final ItemAdapter item) throws VException {
+        final GalleryItem root = prepareGallery(this.gallery);
+        addItem(root, item);
+        this.gallery.redraw();
+    }
 
-	/**
-	 * Update the displayed content with the specified list of items.
-	 *
-	 * @param inItems
-	 *            {@link List<ItemAdapter>} the new list to display.
-	 * @throws VException
-	 */
-	public void update(final List<ItemAdapter> inItems) throws VException {
-		final GalleryItem lRoot = prepareGallery();
-		for (final ItemAdapter lItem : inItems) {
-			addItem(lRoot, lItem);
-		}
-		gallery.redraw();
-	}
+    /** Update the displayed content with the specified list of items.
+     *
+     * @param items {@link List<ItemAdapter>} the new list to display.
+     * @throws VException */
+    public void update(final List<ItemAdapter> items) throws VException {
+        final GalleryItem root = prepareGallery(this.gallery);
+        for (final ItemAdapter item : items) {
+            addItem(root, item);
+        }
+        this.gallery.redraw();
+    }
 
-	/**
-	 * Clears the content and show an empty pane.
-	 */
-	public void clear() {
-		gallery.removeAll();
-		gallery.redraw();
-		items = null;
-	}
+    /**
+     * Clears the content and show an empty pane.
+     */
+    public void clear() {
+        this.gallery.removeAll();
+        this.gallery.redraw();
+        this.items = null;
+    }
 
-	private GalleryItem prepareGallery() {
-		items = new SearchListHelper();
-		gallery.removeAll();
-		return new GalleryItem(gallery, SWT.NONE);
-	}
+    private GalleryItem prepareGallery(final Gallery gallery) {
+        this.items = new SearchListHelper();
+        gallery.removeAll();
+        return new GalleryItem(gallery, SWT.NONE);
+    }
 
-	private void addItem(final GalleryItem inRootItem, final ItemAdapter inItem) throws VException {
-		final GalleryItemAdapter lItem = new GalleryItemAdapter(inRootItem, inItem);
-		lItem.setFont(gallery.getFont());
-		items.add(inItem);
-	}
+    private void addItem(final GalleryItem rootItem, final ItemAdapter item) throws VException {
+        final GalleryItemAdapter adapted = new GalleryItemAdapter(rootItem, item);
+        adapted.setFont(this.gallery.getFont());
+        this.items.add(item);
+    }
 
-	/**
-	 * Returns this gallery's selected item.
-	 *
-	 * @return {@link GalleryItemAdapter} the selected item, may be
-	 *         <code>null</code> if the gallery contains no items
-	 */
-	public GalleryItemAdapter getSelected() {
-		if (gallery.getSelectionCount() == 0) {
-			lastSelected = null;
-			return null;
-		}
-		lastSelected = gallery.getSelection()[0];
-		return (GalleryItemAdapter) lastSelected;
-	}
+    /**
+     * Returns this gallery's selected item.
+     *
+     * @return {@link GalleryItemAdapter} the selected item, may be
+     *         <code>null</code> if the gallery contains no items
+     */
+    public GalleryItemAdapter getSelected() {
+        if (this.gallery.getSelectionCount() == 0) {
+            this.lastSelected = null;
+            return null;
+        }
+        this.lastSelected = this.gallery.getSelection()[0];
+        return (GalleryItemAdapter) this.lastSelected;
+    }
 
-	protected boolean checkSelctionChanged() {
-		if (gallery.getSelectionCount() == 0) {
-			return false;
-		}
-		return lastSelected != gallery.getSelection()[0];
-	}
+    protected boolean checkSelctionChanged() {
+        if (this.gallery.getSelectionCount() == 0) {
+            return false;
+        }
+        return this.lastSelected != this.gallery.getSelection()[0];
+    }
 
-	/**
-	 * Returns the specified item's representation in the gallery.
-	 *
-	 * @param inSelected
-	 *            {@link ItemAdapter}
-	 * @return {@link GalleryItemAdapter} or <code>null</code> if specified item
-	 *         is not element of the gallery.
-	 * @throws VException
-	 */
-	public GalleryItemAdapter getSelected(final ItemAdapter inSelected) throws VException {
-		final int lIndex = items.indexOf(inSelected.getUniqueID());
-		if (lIndex == -1) {
-			lastSelected = null;
-			return null;
-		}
+    /** Returns the specified item's representation in the gallery.
+     *
+     * @param selected {@link ItemAdapter}
+     * @return {@link GalleryItemAdapter} or <code>null</code> if specified item is not element of the gallery. */
+    public GalleryItemAdapter getSelected(final ItemAdapter selected) {
+        final int index = this.items.indexOf(selected.getUniqueID());
+        if (index == -1) {
+            this.lastSelected = null;
+            return null;
+        }
 
-		final GalleryItem lSelected = gallery.getItem(0).getItem(lIndex);
-		gallery.setSelection(new GalleryItem[] { lSelected });
-		lastSelected = lSelected;
-		return (GalleryItemAdapter) lSelected;
-	}
+        final GalleryItem selectedItem = this.gallery.getItem(0).getItem(index);
+        this.gallery.setSelection(new GalleryItem[] { selectedItem });
+        this.lastSelected = selectedItem;
+        return (GalleryItemAdapter) selectedItem;
+    }
 
-	/**
-	 * Sets the gallery's font to the specified size.
-	 *
-	 * @param inFontSize
-	 *            int the font size (pt)
-	 */
-	@SuppressWarnings("deprecation")
-	public void setFontSize(final int inFontSize) {
-		final FontData lData = gallery.getFont().getFontData()[0];
-		lData.setHeight(inFontSize);
-		((AbstractGridGroupRenderer) gallery.getGroupRenderer()).setItemSize(calculateWidth(inFontSize),
-				calculateHeight(inFontSize));
-		final Font lNewFont = new Font(Display.getCurrent(), lData);
-		gallery.setFont(lNewFont);
-		((ListItemRenderer) gallery.getItemRenderer()).setTextFont(lNewFont);
-	}
+    /** Sets the gallery's font to the font with new size.
+     *
+     * @param fontSize int the font size (pt) */
+    public void setFont(final Font newFont) {
+        final int fontSize = newFont.getFontData()[0].getHeight();
+        final FontData data = this.gallery.getFont().getFontData()[0];
+        data.setHeight(fontSize);
+        ((AbstractGridGroupRenderer) this.gallery.getGroupRenderer()).setItemSize(calculateWidth(fontSize),
+                calculateHeight(fontSize));
+        this.gallery.setFont(newFont);
+        // see @ListItemRenderer.draw() for a version not using *textFont* anymore
+        ((ListItemRenderer) this.gallery.getItemRenderer()).setTextFont(newFont);
+        // setFontToItems(this.gallery, newFont);
+    }
 
-	private int calculateWidth(final int inFontSize) {
-		return ITEM_WIDTH_MIN + 7 * inFontSize;
-	}
+    private void setFontToItems(final Gallery gallery, final Font font) {
+        if (gallery.getItemCount() > 0) {
+            final GalleryItem[] children = this.gallery.getItem(0).getItems();
+            Arrays.stream(children).forEach(i -> i.setFont(font));
+        }
+    }
 
-	private int calculateHeight(final int inFontSize) {
-		return ITEM_HEIGHT_MIN + 2 * inFontSize;
-		// return Math.round(ITEM_HEIGHT_MIN + 2 * inFontSize);
-	}
+    private int calculateWidth(final int fontSize) {
+        return ITEM_WIDTH_MIN + 7 * fontSize;
+    }
 
-	// --- private classes ---
+    private int calculateHeight(final int fontSize) {
+        return ITEM_HEIGHT_MIN + 3 * fontSize;
+    }
 
-	public static class GalleryItemAdapter extends GalleryItem {
-		private final ItemAdapter adapted;
+    // --- private classes ---
 
-		GalleryItemAdapter(final GalleryItem inParent, final ItemAdapter inItem) throws VException {
-			super(inParent, SWT.NONE);
-			adapted = inItem;
-			setText(inItem.getTitle());
-			setImage(inItem.getImage());
-		}
+    public static class GalleryItemAdapter extends GalleryItem {
+        private final ItemAdapter item;
 
-		public ItemAdapter getRelationsItem() {
-			return adapted;
-		}
-	}
+        GalleryItemAdapter(final GalleryItem parent, final ItemAdapter item) throws VException {
+            super(parent, SWT.NONE);
+            this.item = item;
+            setText(item.getTitle());
+            setImage(item.getImage());
+        }
 
-	private class PaneFocusListener implements FocusListener {
-		@Override
-		public void focusGained(final FocusEvent inEvent) {
-			setSelectionColor(COLOR_TEXT_SELECTION_ON, COLOR_BACK_FOCUS_ON);
-			final GalleryItemAdapter lSelected = getSelected();
-			if (lSelected != null) {
-				callback.selectionChange(lSelected.getRelationsItem());
-			}
-		}
+        public ItemAdapter getRelationsItem() {
+            return this.item;
+        }
+    }
 
-		@Override
-		public void focusLost(final FocusEvent inEvent) {
-			setSelectionColor(COLOR_TEXT_SELECTION_OFF, COLOR_BACK_FOCUS_OFF);
-		}
+    private class PaneFocusListener implements FocusListener {
+        @Override
+        public void focusGained(final FocusEvent event) {
+            setSelectionColor(COLOR_TEXT_SELECTION_ON, COLOR_BACK_FOCUS_ON);
+            final GalleryItemAdapter selected = getSelected();
+            if (selected != null) {
+                FinderPane.this.callback.selectionChange(selected.getRelationsItem());
+            }
+        }
 
-		private void setSelectionColor(final Color inTextColor, final Color inBgColor) {
-			final ListItemRenderer lRenderer = (ListItemRenderer) gallery.getItemRenderer();
-			lRenderer.setSelectionForegroundColor(inTextColor);
-			lRenderer.setSelectionBackgroundColor(inBgColor);
+        @Override
+        public void focusLost(final FocusEvent event) {
+            setSelectionColor(COLOR_TEXT_SELECTION_OFF, COLOR_BACK_FOCUS_OFF);
+        }
 
-			final GalleryItem[] lSelection = gallery.getSelection();
-			if (lSelection.length > 0) {
-				gallery.redraw(gallery.getSelection()[0]);
-			}
-		}
-	}
+        private void setSelectionColor(final Color inTextColor, final Color inBgColor) {
+            final ListItemRenderer lRenderer = (ListItemRenderer) FinderPane.this.gallery.getItemRenderer();
+            lRenderer.setSelectionForegroundColor(inTextColor);
+            lRenderer.setSelectionBackgroundColor(inBgColor);
 
-	private class PaneKeyListener extends KeyAdapter {
-		@Override
-		public void keyPressed(final KeyEvent inEvent) {
-			switch (inEvent.keyCode) {
-			case SWT.TAB:
-				callback.focusPassOver(FinderPane.this);
-				break;
-			case SWT.CR:
-				callback.centerSelected(FinderPane.this);
-				break;
-			default:
-				if (items == null) {
-					return;
-				}
-				// handle selection change by arrow up/down etc.
-				if (checkSelctionChanged()) {
-					handleSelection(getSelected());
-				}
-				// handle selection change by first chars
-				final int lIndex = items.search(inEvent.character, getSelected(), inEvent.time & TIME_LONG);
-				if (lIndex >= 0) {
-					handleSelection(gallery.getItem(0).getItem(lIndex));
-				}
-				break;
-			}
-		}
+            final GalleryItem[] selection = FinderPane.this.gallery.getSelection();
+            if (selection.length > 0) {
+                FinderPane.this.gallery.redraw(FinderPane.this.gallery.getSelection()[0]);
+            }
+        }
+    }
 
-		private void handleSelection(final GalleryItem inSelected) {
-			gallery.setSelection(new GalleryItem[] { inSelected });
-			callback.selectionChange(((GalleryItemAdapter) inSelected).getRelationsItem());
-		}
-	}
+    private class PaneKeyListener extends KeyAdapter {
+        @Override
+        public void keyPressed(final KeyEvent event) {
+            switch (event.keyCode) {
+                case SWT.TAB:
+                    FinderPane.this.callback.focusPassOver(FinderPane.this);
+                    break;
+                case SWT.CR:
+                    FinderPane.this.callback.centerSelected(FinderPane.this);
+                    break;
+                default:
+                    if (FinderPane.this.items == null) {
+                        return;
+                    }
+                    // handle selection change by arrow up/down etc.
+                    if (checkSelctionChanged()) {
+                        handleSelection(getSelected());
+                    }
+                    // handle selection change by first chars
+                    final int lIndex = FinderPane.this.items.search(event.character, getSelected(),
+                            event.time & TIME_LONG);
+                    if (lIndex >= 0) {
+                        handleSelection(FinderPane.this.gallery.getItem(0).getItem(lIndex));
+                    }
+                    break;
+            }
+        }
 
-	private class PaneMouseAdapter extends MouseAdapter {
-		private final MApplication application;
+        private void handleSelection(final GalleryItem selected) {
+            FinderPane.this.gallery.setSelection(new GalleryItem[] { selected });
+            FinderPane.this.callback.selectionChange(((GalleryItemAdapter) selected).getRelationsItem());
+        }
+    }
 
-		PaneMouseAdapter(final MApplication inApplication) {
-			application = inApplication;
-		}
+    private class PaneMouseAdapter extends MouseAdapter {
+        private final MApplication application;
 
-		@Override
-		public void mouseDown(final MouseEvent inEvent) {
-			final GalleryItem lItem = gallery.getItem(new Point(inEvent.x, inEvent.y));
-			if (inEvent.button == 3) {
-				if (lItem == null) {
-					BrowserPopupStateController.setState(State.DISABLED, application);
-					return;
-				} else {
-					callback.focusRequest(FinderPane.this);
-				}
-			}
-			// we ensure a proper item is selected
-			if (lItem != null) {
-				handleSelection(lItem);
-			} else {
-				if (lastSelected != null) {
-					handleSelection(lastSelected);
-				}
-			}
-		}
+        PaneMouseAdapter(final MApplication application) {
+            this.application = application;
+        }
 
-		@Override
-		public void mouseDoubleClick(final MouseEvent inEvent) {
-			callback.editSelected(FinderPane.this);
-		}
+        @Override
+        public void mouseDown(final MouseEvent event) {
+            final GalleryItem item = FinderPane.this.gallery.getItem(new Point(event.x, event.y));
+            if (event.button == 3) {
+                if (item == null) {
+                    BrowserPopupStateController.setState(State.DISABLED, this.application);
+                    return;
+                } else {
+                    FinderPane.this.callback.focusRequest(FinderPane.this);
+                }
+            }
+            // we ensure a proper item is selected
+            if (item != null) {
+                handleSelection(item);
+            } else {
+                if (FinderPane.this.lastSelected != null) {
+                    handleSelection(FinderPane.this.lastSelected);
+                }
+            }
+        }
 
-		private void handleSelection(final GalleryItem inSelected) {
-			gallery.setSelection(new GalleryItem[] { inSelected });
-			callback.selectionChange(((GalleryItemAdapter) inSelected).getRelationsItem());
-		}
-	}
+        @Override
+        public void mouseDoubleClick(final MouseEvent event) {
+            FinderPane.this.callback.editSelected(FinderPane.this);
+        }
 
-	// ---
+        private void handleSelection(final GalleryItem selected) {
+            FinderPane.this.gallery.setSelection(new GalleryItem[] { selected });
+            FinderPane.this.callback.selectionChange(((GalleryItemAdapter) selected).getRelationsItem());
+        }
+    }
 
-	private class NoScrollGallery extends Gallery {
-		public NoScrollGallery(final Composite inParent) {
-			super(inParent, SWT.BORDER);
-		}
+    // ---
 
-		@Override
-		protected void updateScrollBarsProperties() {
-			// we don't do any scrolling
-			translate = 0;
-		}
-	}
+    private class NoScrollGallery extends Gallery {
+        public NoScrollGallery(final Composite inParent) {
+            super(inParent, SWT.BORDER);
+        }
+
+        @Override
+        protected void updateScrollBarsProperties() {
+            // we don't do any scrolling
+            this.translate = 0;
+        }
+    }
 
 }

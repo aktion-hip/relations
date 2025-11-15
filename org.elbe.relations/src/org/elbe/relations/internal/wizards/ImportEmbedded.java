@@ -21,7 +21,7 @@ package org.elbe.relations.internal.wizards;
 import java.io.File;
 import java.io.IOException;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;

@@ -18,7 +18,7 @@
  ***************************************************************************/
 package org.elbe.relations.handlers.item;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;

@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2018, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -49,89 +49,83 @@ import com.google.gson.JsonObject;
  *
  * @author lbenno
  */
-@SuppressWarnings("restriction")
 public class CloudConfigurationHelperDialog extends TitleAreaDialog {
 
-	private final List<ICloudProviderConfigurationHelper> helpers;
-	private final Logger log;
+    private final List<ICloudProviderConfigurationHelper> helpers;
+    private final Logger log;
 
-	/**
-	 * @param parentShell
-	 *            {@link Shell}
-	 * @param helpers
-	 *            List&lt;ICloudProviderConfigurationHelper>
-	 */
-	public CloudConfigurationHelperDialog(final Shell parentShell,
-			final List<ICloudProviderConfigurationHelper> helpers,
-			final Logger log) {
-		super(parentShell);
-		this.helpers = helpers;
-		this.log = log;
-	}
+    /** @param parentShell {@link Shell}
+     * @param helpers List&lt;ICloudProviderConfigurationHelper> */
+    public CloudConfigurationHelperDialog(final Shell parentShell,
+            final List<ICloudProviderConfigurationHelper> helpers, final Logger log) {
+        super(parentShell);
+        this.helpers = helpers;
+        this.log = log;
+    }
 
-	@Override
-	public void create() {
-		super.create();
-		setTitle(RelationsMessages.getString("CloudConfigurationHelperDialog.config.title")); //$NON-NLS-1$
-	}
+    @Override
+    public void create() {
+        super.create();
+        setTitle(RelationsMessages.getString("CloudConfigurationHelperDialog.config.title")); //$NON-NLS-1$
+    }
 
-	@Override
-	protected Control createDialogArea(final Composite parent) {
-		final Composite area = (Composite) super.createDialogArea(parent);
-		final CTabFolder tabFolder = new CTabFolder(area,
-				SWT.FLAT | SWT.BORDER);
-		tabFolder.setLayoutData(
-				GridDataFactory.fillDefaults().grab(true, true)
-				.create());
+    @Override
+    protected Control createDialogArea(final Composite parent) {
+        final Composite area = (Composite) super.createDialogArea(parent);
+        final CTabFolder tabFolder = new CTabFolder(area,
+                SWT.FLAT | SWT.BORDER);
+        tabFolder.setLayoutData(
+                GridDataFactory.fillDefaults().grab(true, true)
+                .create());
 
-		for (final ICloudProviderConfigurationHelper helper : this.helpers) {
-			final CTabItem item = new CTabItem(tabFolder, SWT.NONE);
-			item.setText(helper.getName());
+        for (final ICloudProviderConfigurationHelper helper : this.helpers) {
+            final CTabItem item = new CTabItem(tabFolder, SWT.NONE);
+            item.setText(helper.getName());
 
-			final Composite helperParent = createControl(tabFolder);
-			item.setControl(helperParent);
-			helper.createDialogArea(helperParent,
-					(json, feedback) -> store(json, feedback, helper.getName()),
-					this.log);
-		}
-		return area;
-	}
+            final Composite helperParent = createControl(tabFolder);
+            item.setControl(helperParent);
+            helper.createDialogArea(helperParent,
+                    (json, feedback) -> store(json, feedback, helper.getName()), this.log);
+        }
+        return area;
+    }
 
-	@Override
-	protected Control createButtonBar(final Composite parent) {
-		final Control composite = super.createButtonBar(parent);
-		getButton(IDialogConstants.OK_ID).setEnabled(false);
-		return composite;
-	}
+    @Override
+    protected Control createButtonBar(final Composite parent) {
+        final Control composite = super.createButtonBar(parent);
+        getButton(IDialogConstants.OK_ID).setEnabled(false);
+        return composite;
+    }
 
-	private void store(final JsonObject json, final Feedback feedback,
-			final String name) {
-		if (feedback.isSuccess()) {
-			final IEclipsePreferences store = RelationsPreferences.getPreferences();
-			final String key = CloudConfigPrefPage.getKey(name);
-			store.put(key, new GsonBuilder().create().toJson(json).toString());
-			setMessage(feedback.getMessage(), IMessageProvider.INFORMATION);
-			getButton(IDialogConstants.OK_ID).setEnabled(true);
-		} else {
-			setErrorMessage(feedback.getMessage());
-		}
-	}
+    private void store(final JsonObject json, final Feedback feedback, final String name) {
+        if (feedback.isSuccess()) {
+            setErrorMessage(null);
+            final IEclipsePreferences store = RelationsPreferences.getPreferences();
+            final String key = CloudConfigPrefPage.getKey(name);
+            store.put(key, new GsonBuilder().create().toJson(json).toString());
+            setMessage(feedback.getMessage(), IMessageProvider.INFORMATION);
+            getButton(IDialogConstants.OK_ID).setEnabled(true);
+        } else {
+            setErrorMessage(feedback.getMessage());
+            getButton(IDialogConstants.OK_ID).setEnabled(false);
+        }
+    }
 
-	private Composite createControl(final CTabFolder tabFolder) {
-		final Composite content = new Composite(tabFolder, SWT.NONE);
-		content.setLayout(
-				GridLayoutFactory.fillDefaults().margins(10, 7).create());
-		return content;
-	}
+    private Composite createControl(final CTabFolder tabFolder) {
+        final Composite content = new Composite(tabFolder, SWT.NONE);
+        content.setLayout(
+                GridLayoutFactory.fillDefaults().margins(10, 7).create());
+        return content;
+    }
 
-	@Override
-	protected boolean isResizable() {
-		return true;
-	}
+    @Override
+    protected boolean isResizable() {
+        return true;
+    }
 
-	@Override
-	protected Point getInitialSize() {
-		return new Point(600, 450);
-	}
+    @Override
+    protected Point getInitialSize() {
+        return new Point(600, 520);
+    }
 
 }

@@ -22,9 +22,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -59,6 +56,8 @@ import org.hip.kernel.bom.impl.UpdateStatement;
 import org.hip.kernel.exc.VException;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Wizard to import the database content from a (zipped) XML file.
@@ -312,38 +311,36 @@ public class ImportFromXML extends Wizard implements IImportWizard {
     }
 
     private int processRebind(
-            final Collection<RelationReplaceHelper> inRelationsToRebind,
-            final IProgressMonitor inMonitor)
+            final Collection<RelationReplaceHelper> relationsToRebind, final IProgressMonitor monitor)
                     throws InvocationTargetException, InterruptedException {
         int outNumberOfEntries = 0;
         final int CHUNK_LEN = 20;
-        final RelationHome lHome = BOMHelper.getRelationHome();
-        UpdateStatement lStatement;
+        final RelationHome home = BOMHelper.getRelationHome();
+        UpdateStatement statement;
 
         try {
-            final Collection<String> lUpdates = new ArrayList<String>(
-                    CHUNK_LEN);
-            for (final RelationReplaceHelper lRelationToRebind : inRelationsToRebind) {
-                createUpdates(lHome, lRelationToRebind, lUpdates);
+            final Collection<String> updates = new ArrayList<>(CHUNK_LEN);
+            for (final RelationReplaceHelper lRelationToRebind : relationsToRebind) {
+                createUpdates(home, lRelationToRebind, updates);
 
                 // update in chunks to improve performance
-                if (lUpdates.size() >= CHUNK_LEN) {
-                    lStatement = new UpdateStatement();
-                    lStatement.setUpdates(lUpdates);
-                    lStatement.executeUpdate();
-                    lUpdates.clear();
+                if (updates.size() >= CHUNK_LEN) {
+                    statement = new UpdateStatement();
+                    statement.setUpdates(updates);
+                    statement.executeUpdate();
+                    updates.clear();
                 }
-                inMonitor.worked(1);
+                monitor.worked(1);
                 outNumberOfEntries++;
-                if (inMonitor.isCanceled()) {
+                if (monitor.isCanceled()) {
                     throw new InterruptedException();
                 }
             }
             // update the last chunk
-            if (lUpdates.size() > 0) {
-                lStatement = new UpdateStatement();
-                lStatement.setUpdates(lUpdates);
-                lStatement.executeUpdate();
+            if (!updates.isEmpty()) {
+                statement = new UpdateStatement();
+                statement.setUpdates(updates);
+                statement.executeUpdate();
             }
         }
         catch (final InterruptedException exc) {
@@ -369,23 +366,17 @@ public class ImportFromXML extends Wizard implements IImportWizard {
             final Collection<String> inUpdates) throws VException {
         // item1
         KeyObject lChange = new KeyObjectImpl();
-        lChange.setValue(RelationHome.KEY_ITEM1,
-                new Long(inRelationToRebind.newID.itemID));
+        lChange.setValue(RelationHome.KEY_ITEM1, Long.valueOf(inRelationToRebind.newID.itemID));
         KeyObject lWhere = new KeyObjectImpl();
-        lWhere.setValue(RelationHome.KEY_TYPE1,
-                new Integer(inRelationToRebind.oldID.itemType));
-        lWhere.setValue(RelationHome.KEY_ITEM1,
-                new Long(inRelationToRebind.oldID.itemID));
+        lWhere.setValue(RelationHome.KEY_TYPE1, Integer.valueOf(inRelationToRebind.oldID.itemType));
+        lWhere.setValue(RelationHome.KEY_ITEM1, Long.valueOf(inRelationToRebind.oldID.itemID));
         inUpdates.add(inHome.createUpdateString(lChange, lWhere));
         // item2
         lChange = new KeyObjectImpl();
-        lChange.setValue(RelationHome.KEY_ITEM2,
-                new Long(inRelationToRebind.newID.itemID));
+        lChange.setValue(RelationHome.KEY_ITEM2, Long.valueOf(inRelationToRebind.newID.itemID));
         lWhere = new KeyObjectImpl();
-        lWhere.setValue(RelationHome.KEY_TYPE2,
-                new Integer(inRelationToRebind.oldID.itemType));
-        lWhere.setValue(RelationHome.KEY_ITEM2,
-                new Long(inRelationToRebind.oldID.itemID));
+        lWhere.setValue(RelationHome.KEY_TYPE2, Integer.valueOf(inRelationToRebind.oldID.itemType));
+        lWhere.setValue(RelationHome.KEY_ITEM2, Long.valueOf(inRelationToRebind.oldID.itemID));
         inUpdates.add(inHome.createUpdateString(lChange, lWhere));
     }
 

@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -19,8 +19,6 @@
 package org.elbe.relations.internal.controls;
 
 import java.io.IOException;
-
-import javax.inject.Inject;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -42,9 +40,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -63,11 +58,13 @@ import org.elbe.relations.internal.utility.FormUtility;
 import org.elbe.relations.internal.utility.InspectorViewVisitor;
 import org.elbe.relations.models.CentralAssociationsModel;
 import org.elbe.relations.models.ItemAdapter;
+import org.elbe.relations.utility.FontUtil;
 import org.elbe.relations.utility.SelectedItemChangeEvent;
 import org.hip.kernel.exc.VException;
 import org.xml.sax.SAXException;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 
 /**
  * View for the inspector part, i.e. view to display the content of the selected
@@ -82,24 +79,26 @@ public class InspectorView implements ISelectedTextProvider {
     private static final String SWITCH_VALUE_BIBLIO = "bibliography"; // "content" //$NON-NLS-1$
 
     private enum DisplayType {
-        NORMAL(new DisplayNormal()), DISABLED(new DisplayNone()), PERSON(
-                new DisplayPerson()), TEXT_BIBLIO(new DisplayTextBiblio()), TEXT_CONTENT(
-                        new DisplayTextContent());
+        // @formatter:off
+        NORMAL(new DisplayNormal()),
+        DISABLED(new DisplayNone()),
+        PERSON(new DisplayPerson()),
+        TEXT_BIBLIO(new DisplayTextBiblio()),
+        TEXT_CONTENT(new DisplayTextContent());
+        // @formatter:on
 
         private final IDisplay display;
 
-        DisplayType(final IDisplay inDisplay) {
-            this.display = inDisplay;
+        DisplayType(final IDisplay display) {
+            this.display = display;
         }
 
-        void refresh(final Text inText, final StyledTextComponent inStyled,
-                final InspectorViewVisitor inVisitor) throws IOException,
-        SAXException {
-            this.display.refresh(inText, inStyled, inVisitor);
+        void refresh(final Text text, final StyledTextComponent styled, final InspectorViewVisitor visitor)
+                throws IOException, SAXException {
+            this.display.refresh(text, styled, visitor);
         }
     }
 
-    private Composite inspector;
     private CheckDirtyServiceInspector checkDirtyService;
     private Text title;
     private ControlDecoration errorDeco;
@@ -110,147 +109,132 @@ public class InspectorView implements ISelectedTextProvider {
     private boolean isSaving = false;
     private DisplayType displayType = DisplayType.DISABLED;
     private String switchValue;
+
     private final IEclipseContext context;
+    private final java.util.Optional<MDirtyable> dirty;
+    private final IEventBroker eventBroker;
+    private final ESelectionService selectionService;
+    private final EPartService partService;
+    private final Logger log;
 
     @Inject
-    private MDirtyable dirty;
+    public InspectorView(final Composite parent, final IEclipseContext context, final MDirtyable dirty,
+            final EPartService partService, final ESelectionService selectionService, final IEventBroker eventBroker,
+            final Logger log) {
+        this.context = context;
+        this.dirty = java.util.Optional.ofNullable(dirty);
+        this.partService = partService;
+        this.selectionService = selectionService;
+        this.eventBroker = eventBroker;
+        this.log = log;
 
-    @Inject
-    private Logger log;
-
-    @Inject
-    private IEventBroker eventBroker;
-
-    @Inject
-    private ESelectionService selectionService;
-
-    @Inject
-    private EPartService partService;
-
-    @Inject
-    public InspectorView(final Composite inParent,
-            final IEclipseContext inContext) {
-        this.context = inContext;
-        initialize(inParent);
+        initialize(parent);
     }
 
-    private void initialize(final Composite inParent) {
-        this.inspector = new Composite(inParent, SWT.NULL);
+    private void initialize(final Composite parent) {
+        final Composite inspector = new Composite(parent, SWT.NULL);
 
-        this.checkDirtyService = new CheckDirtyServiceInspector();
+        this.checkDirtyService = new CheckDirtyServiceInspector(this.dirty);
 
-        this.title = new Text(this.inspector, SWT.BORDER | SWT.SINGLE);
+        this.title = new Text(inspector, SWT.BORDER | SWT.SINGLE);
 
         this.errorDeco = new ControlDecoration(this.title, SWT.LEFT | SWT.TOP);
-        final int lIndent = FieldDecorationRegistry.getDefault()
-                .getMaximumDecorationWidth();
+        final int indent = FieldDecorationRegistry.getDefault().getMaximumDecorationWidth();
         this.errorDeco.setImage(FormUtility.IMG_ERROR);
-        this.errorDeco.setDescriptionText(RelationsMessages
-                .getString("InspectorView.deco.empty")); //$NON-NLS-1$
+        this.errorDeco.setDescriptionText(RelationsMessages.getString("InspectorView.deco.empty")); //$NON-NLS-1$
         this.errorDeco.hide();
 
-        final GridData lGrid = new GridData(GridData.FILL_HORIZONTAL);
-        lGrid.horizontalIndent = lIndent;
-        this.title.setLayoutData(lGrid);
+        final GridData grid = new GridData(GridData.FILL_HORIZONTAL);
+        grid.horizontalIndent = indent;
+        this.title.setLayoutData(grid);
 
-        this.title.addModifyListener(new ModifyListener() {
-            @Override
-            public void modifyText(final ModifyEvent inEvent) {
-                if (!InspectorView.this.initialized) {
-                    return;
-                }
-                final int lLength = ((Text) inEvent.widget).getText().length();
-                if (lLength == 0) {
-                    InspectorView.this.errorDeco.show();
-                } else {
-                    InspectorView.this.errorDeco.hide();
-                }
+        this.title.addModifyListener(event -> {
+            if (!InspectorView.this.initialized) {
+                return;
+            }
+            if (((Text) event.widget).getText().isEmpty()) {
+                InspectorView.this.errorDeco.show();
+            } else {
+                InspectorView.this.errorDeco.hide();
             }
         });
         this.title.addFocusListener(new FocusListener() {
             @Override
-            public void focusGained(final FocusEvent inEvent) {
+            public void focusGained(final FocusEvent event) {
                 handleFocusGained(false);
             }
 
             @Override
-            public void focusLost(final FocusEvent inEvent) {
-                handleFocusLost(inEvent);
+            public void focusLost(final FocusEvent event) {
+                handleFocusLost(event);
             }
         });
 
         this.checkDirtyService.register(this.title);
 
-        this.styledText = StyledTextComponent.createStyledText(this.inspector, this.context);
+        this.styledText = StyledTextComponent.createStyledText(inspector, this.context);
         this.styledText.addFocusListener(new FocusListener() {
             @Override
-            public void focusGained(final FocusEvent inEvent) {
+            public void focusGained(final FocusEvent event) {
                 handleFocusGained(true);
             }
 
             @Override
-            public void focusLost(final FocusEvent inEvent) {
-                handleFocusLost(inEvent);
+            public void focusLost(final FocusEvent event) {
+                handleFocusLost(event);
             }
         });
         this.checkDirtyService.register(this.styledText);
         // aligning widget to indent caused by decoration in title
-        this.styledText.getLayoutData().horizontalIndent = lIndent;
+        this.styledText.getLayoutData().horizontalIndent = indent;
 
-        final GridLayout lLayout = new GridLayout(1, true);
-        lLayout.marginWidth = 2;
-        lLayout.verticalSpacing = 0;
-        this.inspector.setLayout(lLayout);
+        final GridLayout layout = new GridLayout(1, true);
+        layout.marginWidth = 2;
+        layout.verticalSpacing = 0;
+        inspector.setLayout(layout);
 
         this.title.setEditable(false);
         this.styledText.setDisabled();
     }
 
     /**
-     *
      * @param isTextField <code>true</code> styled text field, <code>false</code> title field
      */
     private void handleFocusGained(final boolean isTextField) {
         if (isTextField) {
             this.context.set(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE, "active"); //$NON-NLS-1$
         }
-        this.eventBroker.post(RelationsConstants.TOPIC_STYLE_ITEMS_FORM,
-                Boolean.TRUE);
+        this.eventBroker.post(RelationsConstants.TOPIC_STYLE_ITEMS_FORM, Boolean.TRUE);
     }
 
-    private void handleFocusLost(final FocusEvent inEvent) {
-        sendSelectionChecked(inEvent);
+    private void handleFocusLost(final FocusEvent event) {
+        sendSelectionChecked(event);
         this.context.remove(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE);
-        this.eventBroker.post(RelationsConstants.TOPIC_STYLE_ITEMS_FORM,
-                Boolean.FALSE);
-        // if the focus moved outside of the part, we ask for saving pending
-        // changes
-        if (this.checkDirtyService.isDirty()) {
-            if (this.partService.getActivePart() != this.partService // NOPMD
-                    .findPart(RelationsConstants.PART_INSPECTOR)) {
-                this.isSaving = true;
-                if (MessageDialog
-                        .openQuestion(
-                                Display.getCurrent().getActiveShell(),
-                                RelationsMessages
-                                .getString("InspectorView.dialog.title"), RelationsMessages.getString("InspectorView.dialog.msg"))) { //$NON-NLS-1$ //$NON-NLS-2$
-                    saveChanges();
-                }
-                this.isSaving = false;
+        this.eventBroker.post(RelationsConstants.TOPIC_STYLE_ITEMS_FORM, Boolean.FALSE);
+        // if the focus moved outside of the part, we ask for saving pending changes
+        if (this.checkDirtyService.isDirty() && this.partService.getActivePart() != this.partService // NOPMD
+                .findPart(RelationsConstants.PART_INSPECTOR)) {
+            this.isSaving = true;
+            if (MessageDialog.openQuestion(
+                    Display.getCurrent().getActiveShell(),
+                    RelationsMessages
+                    .getString("InspectorView.dialog.title"), RelationsMessages.getString("InspectorView.dialog.msg"))) { //$NON-NLS-1$ //$NON-NLS-2$
+                saveChanges();
             }
+            this.isSaving = false;
         }
     }
 
-    private void sendSelectionChecked(final FocusEvent inEvent) {
-        final Widget lWidget = inEvent.widget;
-        String lSelection = ""; //$NON-NLS-1$
-        if (lWidget instanceof Text) {
-            lSelection = ((Text) lWidget).getSelectionText();
-        } else if (lWidget instanceof StyledText) {
-            lSelection = ((StyledText) lWidget).getSelectionText();
+    private void sendSelectionChecked(final FocusEvent event) {
+        final Widget widget = event.widget;
+        String selection = ""; //$NON-NLS-1$
+        if (widget instanceof final Text txtWidget) {
+            selection = txtWidget.getSelectionText();
+        } else if (widget instanceof final StyledText styledWidget) {
+            selection = styledWidget.getSelectionText();
         }
-        if (!lSelection.isEmpty()) {
-            this.selectionService.setSelection(lSelection);
+        if (!selection.isEmpty()) {
+            this.selectionService.setSelection(selection);
         }
     }
 
@@ -267,18 +251,15 @@ public class InspectorView implements ISelectedTextProvider {
     }
 
     @PostConstruct
-    void afterInit(
-            final EMenuService inService,
-            final EPartService inPartService,
-            @Preference(value = RelationsConstants.ACTIVE_BROWSER_ID) @Optional final String inBrowserId) {
-        inService.registerContextMenu(this.styledText.getControl(),
-                RelationsConstants.POPUP_INSPECTOR);
+    void afterInit(final EMenuService service, final EPartService partService,
+            @Preference(value = RelationsConstants.ACTIVE_BROWSER_ID) @Optional final String browserId) {
+        service.registerContextMenu(this.styledText.getControl(), RelationsConstants.POPUP_INSPECTOR);
 
         // work around to have the application's focus on the browser stack
-        if (inBrowserId != null) {
-            final MPart lBrowser = inPartService.findPart(inBrowserId);
-            if (lBrowser != null) {
-                inPartService.activate(lBrowser, true);
+        if (browserId != null) {
+            final MPart browser = partService.findPart(browserId);
+            if (browser != null) {
+                partService.activate(browser, true);
             }
         }
     }
@@ -288,65 +269,59 @@ public class InspectorView implements ISelectedTextProvider {
         this.title.setFocus();
     }
 
-    /**
-     * We changed the selection in the browser, therefore, show the newly
-     * selected item in the inspector.
+    /** We changed the selection in the browser, therefore, show the newly selected item in the inspector.
      *
-     * @param inModel
-     *            {@link ItemAdapter}
-     */
+     * @param event {@link SelectedItemChangeEvent} */
     @Inject
     @Optional
     public void setSelected(
-            @UIEventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED) final SelectedItemChangeEvent inEvent) {
+            @UIEventTopic(RelationsConstants.TOPIC_TO_BROWSER_MANAGER_SET_SELECTED) final SelectedItemChangeEvent event) {
         if (!this.isSaving) {
-            setSelected(inEvent.getItem());
+            setSelected(event.getItem());
         }
     }
 
-    private void setSelected(final ItemAdapter inItem) {
+    private void setSelected(final ItemAdapter item) {
         this.initialized = true;
         try {
             this.context.remove(RelationsConstants.FLAG_INSPECTOR_TEXT_ACTIVE);
-            if (inItem == null) {
+            if (item == null) {
                 this.item = null;
                 this.displayType = DisplayType.DISABLED;
                 this.displayType.refresh(this.title, this.styledText, null);
                 clearDirty();
                 this.errorDeco.hide();
             } else {
-                this.displayType = getDisplayType(inItem);
-                refreshDisplay(inItem);
+                this.displayType = getDisplayType(item);
+                refreshDisplay(item);
             }
-        }
-        catch (IOException | SAXException | VException exc) {
+        } catch (IOException | SAXException | VException exc) {
             this.log.error(exc, exc.getMessage());
         }
     }
 
-    private void refreshDisplay(final ItemAdapter inModel) throws VException,
-    IOException, SAXException {
-        this.item = inModel;
+    private void refreshDisplay(final ItemAdapter model) throws VException, IOException, SAXException {
+        this.item = model;
         if (this.item == null) {
             return;
         }
 
-        final InspectorViewVisitor lVisitor = new InspectorViewVisitor();
-        this.item.visit(lVisitor);
-        this.displayType.refresh(this.title, this.styledText, lVisitor);
+        final InspectorViewVisitor visitor = new InspectorViewVisitor();
+        this.item.visit(visitor);
+        this.displayType.refresh(this.title, this.styledText, visitor);
         clearDirty();
     }
 
-    private DisplayType getDisplayType(final ItemAdapter inModel) {
-        DisplayType out = DisplayType.NORMAL;
-        if (inModel.getItemType() == IItem.PERSON) {
-            out = DisplayType.PERSON;
-        } else if (inModel.getItemType() == IItem.TEXT) {
+    private DisplayType getDisplayType(final ItemAdapter model) {
+        DisplayType type = DisplayType.NORMAL;
+        if (model.getItemType() == IItem.PERSON) {
+            type = DisplayType.PERSON;
+        } else if (model.getItemType() == IItem.TEXT) {
             this.context.set(RelationsConstants.FLAG_INSPECTOR_TEXT_ACTIVE, "active"); //$NON-NLS-1$
-            out = SWITCH_VALUE_BIBLIO.equals(this.switchValue) ? DisplayType.TEXT_BIBLIO
+            type = SWITCH_VALUE_BIBLIO.equals(this.switchValue) ? DisplayType.TEXT_BIBLIO
                     : DisplayType.TEXT_CONTENT;
         }
-        return out;
+        return type;
     }
 
     @Inject
@@ -356,30 +331,24 @@ public class InspectorView implements ISelectedTextProvider {
         setSelected(inModel == null ? null : inModel.getCenter());
     }
 
-    /**
-     * We have edited the item in the edit wizard, therefore, we have to
-     * synchronize the inspector content.
+    /** We have edited the item in the edit wizard, therefore, we have to synchronize the inspector content.
      *
-     * @param inItem
-     *            {@link ItemAdapter}
-     */
+     * @param item {@link ItemAdapter} */
     @Inject
     @Optional
     void updateEditChanges(
-            @UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_CONTENT) final ItemAdapter inItem) {
+            @UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_CONTENT) final ItemAdapter item) {
         if (this.isSending) {
             return;
         }
-        if (inItem == null || !inItem.equals(this.item)) {
+        if (item == null || !item.equals(this.item)) {
             return;
         }
 
-        final InspectorViewVisitor lVisitor = new InspectorViewVisitor();
-        try {
-            this.item.visit(lVisitor);
-            this.displayType.refresh(this.title, this.styledText, lVisitor);
-        }
-        catch (VException | IOException | SAXException exc) {
+        try (InspectorViewVisitor visitor = new InspectorViewVisitor()) {
+            this.item.visit(visitor);
+            this.displayType.refresh(this.title, this.styledText, visitor);
+        } catch (VException | IOException | SAXException exc) {
             this.log.error(exc, exc.getMessage());
         }
         clearDirty();
@@ -387,7 +356,7 @@ public class InspectorView implements ISelectedTextProvider {
 
     private void clearDirty() {
         this.checkDirtyService.freeze();
-        this.dirty.setDirty(false);
+        this.dirty.ifPresent(d -> d.setDirty(false));
     }
 
     public String getTitleText() {
@@ -400,18 +369,17 @@ public class InspectorView implements ISelectedTextProvider {
 
     @Inject
     void trackViewMenuSwitch(
-            @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = PREF_SWITCH_VALUE) final String inSwitchValue) {
-        if (inSwitchValue == null) {
+            @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = PREF_SWITCH_VALUE) final String switchValue) {
+        if (switchValue == null) {
             return;
         }
-        this.switchValue = inSwitchValue;
+        this.switchValue = switchValue;
         this.displayType = SWITCH_VALUE_BIBLIO.equals(this.switchValue) ? DisplayType.TEXT_BIBLIO
                 : DisplayType.TEXT_CONTENT;
         if (this.initialized && !this.title.isDisposed() && !this.styledText.isDisposed()) {
             try {
                 refreshDisplay(this.item);
-            }
-            catch (VException | IOException | SAXException exc) {
+            } catch (VException | IOException | SAXException exc) {
                 this.log.error(exc, exc.getMessage());
             }
         }
@@ -419,13 +387,12 @@ public class InspectorView implements ISelectedTextProvider {
 
     @Inject
     void trackFontSize(
-            @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_TEXT_FONT_SIZE) final Integer inFontSize) {
-        if (!this.title.isDisposed()) {
-            final Font lFont = this.title.getFont();
-            final FontData lData = lFont.getFontData()[0];
-            lData.setHeight(inFontSize);
-            final Font lNewFont = new Font(Display.getCurrent(), lData);
-            this.title.setFont(lNewFont);
+            @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_TEXT_FONT_SIZE) final Integer fontSize) {
+        if (!this.title.isDisposed() && !getTitleText().isEmpty()) {
+            final FontData data = this.title.getFont().getFontData()[0];
+            if (fontSize != data.getHeight()) {
+                FontUtil.createOrGetFont(fontSize).ifPresent(f -> this.title.setFont(f));
+            }
         }
     }
 
@@ -434,15 +401,12 @@ public class InspectorView implements ISelectedTextProvider {
         try {
             this.item.saveTitleText(getTitleText(), getContentText());
             this.isSending = true;
-            this.eventBroker.post(
-                    RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_CONTENT,
-                    this.item);
+            this.eventBroker.post(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_CONTENT, this.item);
             this.isSending = false;
 
             clearDirty();
-            this.dirty.setDirty(false);
-        }
-        catch (final BOMException exc) {
+            this.dirty.ifPresent(d -> d.setDirty(false));
+        } catch (final BOMException exc) {
             this.log.error(exc, exc.getMessage());
         }
     }
@@ -450,99 +414,94 @@ public class InspectorView implements ISelectedTextProvider {
     public void undoChanges() {
         this.checkDirtyService.undo();
         clearDirty();
-        this.dirty.setDirty(false);
+        this.dirty.ifPresent(d -> d.setDirty(false));
     }
 
     // --- private classes ---
 
+    /** CheckDirtyService for Inspector class. */
     private class CheckDirtyServiceInspector extends CheckDirtyService {
-        public CheckDirtyServiceInspector() {
+        private final java.util.Optional<MDirtyable> dirty;
+
+        public CheckDirtyServiceInspector(final java.util.Optional<MDirtyable> dirty) {
             super(null);
+            this.dirty = dirty;
         }
 
         @Override
-        public void notifyDirtySwitch(final boolean inIsDirty) {
-            if (this.isDirty ^ inIsDirty) {
+        public void notifyDirtySwitch(final boolean isDirty) {
+            if (this.isDirty ^ isDirty) {
                 // if there is a switch in one element, check whether this was
                 // the first clean or last dirty element
-                final boolean lIsDirty = getDirty();
-                if (this.isDirty ^ lIsDirty) {
+                final boolean localDirty = getDirty();
+                if (this.isDirty ^ localDirty) {
                     // the dialog's dirty status switched -> notification
-                    this.isDirty = lIsDirty;
-                    InspectorView.this.dirty.setDirty(inIsDirty);
+                    this.isDirty = localDirty;
+                    this.dirty.ifPresent(d -> d.setDirty(isDirty));
                 }
             }
         }
     }
 
+    /** Interface definition. */
     interface IDisplay {
-        void refresh(final Text inText, final StyledTextComponent inStyled,
-                InspectorViewVisitor inVisitor) throws IOException,
-        SAXException;
+        void refresh(final Text text, final StyledTextComponent styled, InspectorViewVisitor visitor)
+                throws IOException, SAXException;
     }
 
+    /** <code>IDisplay</code> implementations. */
     private static class DisplayNormal implements IDisplay {
         @Override
-        public void refresh(final Text inText,
-                final StyledTextComponent inStyled,
-                final InspectorViewVisitor inVisitor) throws IOException,
-        SAXException {
-            inText.setText(inVisitor.getTitle());
-            inText.setEditable(true);
-            inStyled.setTaggedText(inVisitor.getText());
-            inStyled.setEditable(true);
+        public void refresh(final Text text, final StyledTextComponent styled, final InspectorViewVisitor visitor)
+                throws IOException, SAXException {
+            text.setText(visitor.getTitle());
+            text.setEditable(true);
+            styled.setTaggedText(visitor.getText());
+            styled.setEditable(true);
         }
     }
 
     private static class DisplayNone implements IDisplay {
         @Override
-        public void refresh(final Text inText,
-                final StyledTextComponent inStyled,
-                final InspectorViewVisitor inVisitor) throws IOException,
-        SAXException {
-            inText.setText(""); //$NON-NLS-1$
-            inText.setEditable(false);
-            inStyled.setText(""); //$NON-NLS-1$
-            inStyled.setEditable(false);
+        public void refresh(final Text text, final StyledTextComponent styled, final InspectorViewVisitor visitor)
+                throws IOException, SAXException {
+            text.setText(""); //$NON-NLS-1$
+            text.setEditable(false);
+            styled.setText(""); //$NON-NLS-1$
+            styled.setEditable(false);
         }
     }
 
     private static class DisplayPerson implements IDisplay {
         @Override
-        public void refresh(final Text inText,
-                final StyledTextComponent inStyled,
-                final InspectorViewVisitor inVisitor) throws IOException,
-        SAXException {
-            inText.setText(inVisitor.getTitle());
-            inText.setEditable(false);
-            inStyled.setTaggedText(inVisitor.getText());
-            inStyled.setEditable(true);
+        public void refresh(final Text text, final StyledTextComponent styled, final InspectorViewVisitor visitor)
+                throws IOException, SAXException {
+            text.setText(visitor.getTitle());
+            text.setEditable(false);
+            styled.setTaggedText(visitor.getText());
+            styled.setEditable(true);
         }
     }
 
     private static class DisplayTextBiblio implements IDisplay {
         @Override
-        public void refresh(final Text inText,
-                final StyledTextComponent inStyled,
-                final InspectorViewVisitor inVisitor) throws IOException,
-        SAXException {
-            inText.setText(inVisitor.getTitle());
-            inText.setEditable(true);
-            inStyled.setTaggedText(inVisitor.getText());
-            inStyled.setEditable(false);
+        public void refresh(final Text text, final StyledTextComponent styled, final InspectorViewVisitor visitor)
+                throws IOException, SAXException {
+            text.setText(visitor.getTitle());
+            text.setEditable(true);
+            styled.setTaggedText(visitor.getText());
+            styled.setEditable(false);
         }
     }
 
     private static class DisplayTextContent implements IDisplay {
         @Override
-        public void refresh(final Text inText,
-                final StyledTextComponent inStyled,
-                final InspectorViewVisitor inVisitor) throws IOException,
-        SAXException {
-            inText.setText(inVisitor.getTitle());
-            inText.setEditable(true);
-            inStyled.setTaggedText(inVisitor.getRealText());
-            inStyled.setEditable(true);
+        public void refresh(final Text text, final StyledTextComponent styled, final InspectorViewVisitor visitor)
+                throws IOException, SAXException {
+            text.setText(visitor.getTitle());
+            text.setEditable(true);
+            styled.setTaggedText(visitor.getRealText());
+            styled.setEditable(true);
         }
     }
 

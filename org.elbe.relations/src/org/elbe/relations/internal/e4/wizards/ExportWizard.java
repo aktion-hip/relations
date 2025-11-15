@@ -18,8 +18,8 @@
  ***************************************************************************/
 package org.elbe.relations.internal.e4.wizards;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.elbe.relations.RelationsImages;

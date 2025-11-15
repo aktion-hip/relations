@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2018, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -24,8 +24,6 @@ import java.util.function.BiConsumer;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
@@ -51,21 +49,20 @@ import com.google.gson.JsonObject;
  * access code.
  *
  * @author lbenno */
-@SuppressWarnings("restriction")
 @Component
 public class DropboxConfigurationHelper implements ICloudProviderConfigurationHelper {
-    private static final String TEMPL = "<form>" + //$NON-NLS-1$
-            "<p><b>%1$s</b></p>" + //$NON-NLS-1$
-            "<li style=\"text\" value=\"1.\">%2$s<br />%3$s</li>" + //$NON-NLS-1$
-            "<li style=\"text\" value=\"2.\">%4$s</li>" + //$NON-NLS-1$
-            "<li style=\"text\" value=\"3.\">%5$s</li>" + //$NON-NLS-1$
-            "</form>"; //$NON-NLS-1$
+    private static final String TEMPL = """
+            <form>
+            <p><b>%1$s</b></p>
+            <li style="text" value="1.">%2$s<br />%3$s</li>
+            <li style="text" value="2.">%4$s</li>
+            <li style="text" value="3.">%5$s</li>
+            </form>
+            """;
     private static final String MSG1 = Messages.getString("DropboxConfigurationHelper.msg1"); //$NON-NLS-1$
     private static final String MSG2 = Messages.getString("DropboxConfigurationHelper.msg2"); //$NON-NLS-1$
     private static final String MSG4 = Messages.getString("DropboxConfigurationHelper.msg3"); //$NON-NLS-1$
     private static final String MSG5 = Messages.getString("DropboxConfigurationHelper.msg4"); //$NON-NLS-1$
-
-    private Text code;
 
     @Override
     public String getName() {
@@ -89,19 +86,14 @@ public class DropboxConfigurationHelper implements ICloudProviderConfigurationHe
                 }
             });
 
-            this.code = new Text(parent, SWT.BORDER | SWT.SINGLE);
-            this.code.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+            final var code = new Text(parent, SWT.BORDER | SWT.SINGLE);
+            code.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
             final Button process = new Button(parent, SWT.PUSH);
             process.setText(Messages.getString("DropboxConfigurationHelper.btn.lbl")); //$NON-NLS-1$
             process.setEnabled(false);
 
-            this.code.addModifyListener(new ModifyListener() {
-                @Override
-                public void modifyText(final ModifyEvent event) {
-                    process.setEnabled(!((Text) event.widget).getText().isEmpty());
-                }
-            });
+            code.addModifyListener(event -> process.setEnabled(!((Text) event.widget).getText().isEmpty()));
 
             final Label feedback = new Label(parent, SWT.NONE);
             feedback.setText(Messages.getString("DropboxConfigurationHelper.feedback.lbl")); //$NON-NLS-1$
@@ -116,7 +108,7 @@ public class DropboxConfigurationHelper implements ICloudProviderConfigurationHe
             // button process clicked
             process.addSelectionListener(SelectionListener.widgetSelectedAdapter(event -> {
                 try {
-                    store.accept(wrapper.finishFromCode(this.code.getText().trim(), token),
+                    store.accept(wrapper.finishFromCode(code.getText().trim(), token),
                             new Feedback(true, Messages.getString("DropboxConfigurationHelper.feedback.success"))); //$NON-NLS-1$
                     token.setVisible(true);
                     feedback.setVisible(true);
@@ -149,7 +141,7 @@ public class DropboxConfigurationHelper implements ICloudProviderConfigurationHe
         }
 
         protected String getAuthorizeUrl() {
-            return this.authorizeUrl; // .replace("&", "&amp;"); //$NON-NLS-1$ //$NON-NLS-2$
+            return this.authorizeUrl; // .replace("&", "&amp;");
         }
 
         protected JsonObject finishFromCode(final String code, final Text token) throws DbxException {

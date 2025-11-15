@@ -32,19 +32,18 @@ import java.util.Collection;
  * @author Luthiger
  */
 public class ZipHouseKeeper {
-    public final static String ROOT = "rt_data";
-    public final static String PARENT = "parent";
-    public final static String CHILD = "child";
-    public final static String FILE1 = "child1.txt";
-    public final static String FILE2 = "child2.txt";
-    public final static String FILE3 = "child3.txt";
-    public final static String FILE4 = "child4.txt";
-    public final static String ZIP_FILE = "backup_test.zip";
+    public static final String ROOT = "rt_data";
+    public static final String PARENT = "parent";
+    public static final String CHILD = "child";
+    public static final String FILE1 = "child1.txt";
+    public static final String FILE2 = "child2.txt";
+    public static final String FILE3 = "child3.txt";
+    public static final String FILE4 = "child4.txt";
+    public static final String ZIP_FILE = "backup_test.zip";
 
-    public final static String[] EXPECTED_NAMES = new String[] { ROOT + "\\child1.txt", ROOT + "\\parent\\child2.txt",
+    public static final String[] EXPECTED_NAMES = new String[] { ROOT + "\\child1.txt", ROOT + "\\parent\\child2.txt",
             ROOT + "\\parent\\child\\child3.txt", ROOT + "\\parent\\child4.txt" };
-
-    public final static String[] EXPECTED_CONTENT = new String[] {
+    public static final String[] EXPECTED_CONTENT = new String[] {
             FILE1 + " is contained in the test's root directory.",
             FILE2 + " is contained in the test's first sub-directory.",
             FILE3 + " is contained in the test's last sub-directory.",
@@ -66,8 +65,7 @@ public class ZipHouseKeeper {
         lSub.mkdir();
         createFile(new File(lSub, FILE2), EXPECTED_CONTENT[1]);
         createFile(new File(lSub, FILE4), EXPECTED_CONTENT[3]);
-        // create subdirectory of subdirectory and child3 as file contained in
-        // this directory
+        // create subdirectory of subdirectory and child3 as file contained in this directory
         final File lSubSub = new File(lSub, CHILD);
         lSubSub.mkdir();
         createFile(new File(lSubSub, FILE3), EXPECTED_CONTENT[2]);
@@ -79,28 +77,22 @@ public class ZipHouseKeeper {
         fillFile(inFile, inContent);
     }
 
-    private static void fillFile(final File inFile, final String inContent) throws IOException {
-        final FileWriter lWriter = new FileWriter(inFile);
-        final BufferedWriter lBuffer = new BufferedWriter(lWriter);
-        try {
-            lBuffer.write(inContent);
-        } finally {
-            lBuffer.close();
-            lWriter.close();
+    private static void fillFile(final File file, final String content) throws IOException {
+        try (FileWriter writer = new FileWriter(file)) {
+            final BufferedWriter buffer = new BufferedWriter(writer);
+            buffer.write(content);
+            buffer.close();
         }
     }
 
-    /**
-     * Deletes the specified directory structure.
+    /** Deletes the specified directory structure.
      *
-     * @param inRootName
-     *            String Path of root directory to delete with whole content.
-     */
-    public static void deleteTestFiles(final String inRootName) {
-        final File lRoot = new File(inRootName);
-        if (lRoot.exists()) {
-            traverse(lRoot);
-            ensureDelete(lRoot);
+     * @param rootName String Path of root directory to delete with whole content. */
+    public static void deleteTestFiles(final String rootName) {
+        final File root = new File(rootName);
+        if (root.exists()) {
+            traverse(root);
+            ensureDelete(root);
         }
     }
 
@@ -144,44 +136,31 @@ public class ZipHouseKeeper {
         return outChildNames;
     }
 
-    /**
-     * Asserts the specified file containing the specified text.
+    /** Asserts the specified file containing the specified text.
      *
-     * @param inMessage
-     *            String Message
-     * @param inFile
-     *            File to test
-     * @param inText
-     *            String Test to compare with file content.
-     * @throws IOException
-     */
-    public static void assertFileContent(final String inMessage, final File inFile, final String inText)
-            throws IOException {
-        final FileReader lReader = new FileReader(inFile);
-        final BufferedReader lBuffer = new BufferedReader(lReader);
-        String lRead = "";
-        try {
-            lRead = lBuffer.readLine();
-        } finally {
-            lBuffer.close();
-            lReader.close();
+     * @param message String Message
+     * @param file File to test
+     * @param text String Test to compare with file content.
+     * @throws IOException */
+    public static void assertFileContent(final String message, final File file, final String text) throws IOException {
+        // final FileReader lReader = new FileReader(file);
+        String read = "";
+        try (FileReader reader = new FileReader(file)) {
+            final BufferedReader buffer = new BufferedReader(reader);
+            read = buffer.readLine();
         }
-        assertEquals(inMessage, inText, lRead);
+        assertEquals(text, read, message);
     }
 
-    /**
-     * Returns the file with the specified name or <code>null</code>.
+    /** Returns the file with the specified name or <code>null</code>.
      *
-     * @param inChilds
-     *            File[] array to look up the file with the specified name.
-     * @param inName
-     *            File name
-     * @return File or <code>null</code>
-     */
-    public static File getChildFile(final File[] inChilds, final String inName) {
-        for (int i = 0; i < inChilds.length; i++) {
-            if (inName.equals(inChilds[i].getName())) {
-                return inChilds[i];
+     * @param children File[] array to look up the file with the specified name.
+     * @param name File name
+     * @return File or <code>null</code> */
+    public static File getChildFile(final File[] children, final String name) {
+        for (int i = 0; i < children.length; i++) {
+            if (name.equals(children[i].getName())) {
+                return children[i];
             }
         }
         return null;

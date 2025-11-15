@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -18,8 +18,6 @@
  ***************************************************************************/
 package org.elbe.relations.internal.controls;
 
-import javax.inject.Inject;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -35,15 +33,14 @@ import org.elbe.relations.data.Constants;
 import org.elbe.relations.db.IDataService;
 import org.elbe.relations.internal.utility.WizardHelper;
 
-import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 
-/**
- * The Relations application's status line.
+/** The Relations application's status line.<br>
+ * This control is defined in <code>Relations.e4xmi</code>.
  *
- * @author Luthiger
- */
+ * @author Luthiger */
 public class RelationsStatusLineManager {
-    private final static int DISPLAY_PERIOD = 5; // number of seconds
+    private static final int DISPLAY_PERIOD = 5; // number of seconds
 
     private final StatusLineContributionItem statusItemDBName;
     private final StatusLineContributionItem statusItemDBSize;
@@ -55,77 +52,58 @@ public class RelationsStatusLineManager {
      * RelationsStatusLineManager constructor.
      */
     public RelationsStatusLineManager() {
-        this.statusItemDBName = new StatusLineContributionItem(
-                Constants.STATUS_ITEM_DB_NAME, 36);
-        this.statusItemDBSize = new StatusLineContributionItem(
-                Constants.STATUS_ITEM_DB_SIZE, 25);
+        this.statusItemDBName = new StatusLineContributionItem(Constants.STATUS_ITEM_DB_NAME, 36);
+        this.statusItemDBSize = new StatusLineContributionItem(Constants.STATUS_ITEM_DB_SIZE, 25);
     }
 
-    @PostConstruct
-    void afterInit(final Composite inParent, final IEclipseContext inContext,
-            final IDataService inDataService) {
-        this.dataService = inDataService;
+    @Inject
+    void afterInit(final Composite parent, final IEclipseContext context, final IDataService dataService) {
+        this.dataService = dataService;
 
         this.statusLineManager = new StatusLineManager();
-        this.statusLineManager.createControl(inParent);
+        this.statusLineManager.createControl(parent);
 
-        this.statusLineManager.prependToGroup(StatusLineManager.BEGIN_GROUP,
-                this.statusItemDBName);
-        this.statusLineManager.insertAfter(Constants.STATUS_ITEM_DB_NAME,
-                this.statusItemDBSize);
+        this.statusLineManager.prependToGroup(StatusLineManager.BEGIN_GROUP, this.statusItemDBName);
+        this.statusLineManager.insertAfter(Constants.STATUS_ITEM_DB_NAME, this.statusItemDBSize);
 
         setData();
-        final IEclipseContext lContext = WizardHelper
-                .getWorkbenchContext(inContext);
-        lContext.set(IStatusLineManager.class, this.statusLineManager);
-        lContext.set(RelationsStatusLineManager.class, this);
+        final IEclipseContext wbContext = WizardHelper.getWorkbenchContext(context);
+        wbContext.set(IStatusLineManager.class, this.statusLineManager);
+        wbContext.set(RelationsStatusLineManager.class, this);
     }
 
     private void setData() {
-        setDBName(this.dataService.getDBName());
-        setDBSize(this.dataService.getNumberOfItems());
+        if (this.dataService != null) {
+            setDBName(this.dataService.getDBName());
+            setDBSize(this.dataService.getNumberOfItems());
+        }
     }
 
     private void setDBName(final String inDBName) {
         this.statusItemDBName.setText(inDBName);
     }
 
-    private void setDBSize(final int inDBSize) {
+    private void setDBSize(final int dbSize) {
         this.statusItemDBSize
         .setText(RelationsMessages
-                .getString(
-                        "RelationsStatusLineManager.lbl.number", new Object[] { new Integer(inDBSize) })); //$NON-NLS-1$
+                .getString("RelationsStatusLineManager.lbl.number", new Object[] { Integer.valueOf(dbSize) })); //$NON-NLS-1$
     }
 
-    /**
-     * Displays the specified text in the application's status line for 5
-     * seconds.
+    /** Displays the specified text in the application's status line for 5 seconds.
      *
-     * @param inText
-     *            String
-     */
-    public void showStatusLineMessage(final String inText) {
-        showStatusLineMessage(inText, DISPLAY_PERIOD);
+     * @param text String */
+    public void showStatusLineMessage(final String text) {
+        showStatusLineMessage(text, DISPLAY_PERIOD);
     }
 
-    /**
-     * Displays the specified text in the application's status line for the
-     * specified number of seconds.
+    /** Displays the specified text in the application's status line for the specified number of seconds.
      *
-     * @param inText
-     *            String
-     * @param inDisplayTime
-     *            long Number of seconds the messages is displayed.
-     */
-    public void showStatusLineMessage(final String inText,
-            final int inDisplayTime) {
-        this.statusLineManager.setMessage(inText);
-        Display.getCurrent().timerExec(inDisplayTime * 1000, new Runnable() {
-            @Override
-            public void run() {
-                RelationsStatusLineManager.this.statusLineManager.setMessage(null);
-            }
-        });
+     * @param text String
+     * @param displayTime long Number of seconds the messages is displayed. */
+    public void showStatusLineMessage(final String text, final int displayTime) {
+        this.statusLineManager.setMessage(text);
+        Display.getCurrent().timerExec(displayTime * 1000,
+                () -> RelationsStatusLineManager.this.statusLineManager.setMessage(null));
     }
 
     /**

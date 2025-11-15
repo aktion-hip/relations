@@ -19,11 +19,10 @@
 package org.elbe.relations.indexer.lucene;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -35,92 +34,81 @@ import org.elbe.relations.data.search.IndexerHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.CleanupMode;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
  * @author lbenno
  */
 public class LuceneIndexerTest {
-	private final IndexHouseKeeper housekeeper = new IndexHouseKeeper();
+    private final IndexHouseKeeper housekeeper = new IndexHouseKeeper();
 
-	@BeforeEach
-	public void setUp() throws IOException {
-		housekeeper.setUp();
-	}
+    @TempDir(cleanup = CleanupMode.ON_SUCCESS)
+    private Path tempDir;
 
-	@AfterEach
-	public void tearDown() throws IOException {
-		housekeeper.tearDown();
-	}
+    @BeforeEach
+    public void setUp() throws IOException {
+        this.housekeeper.setUp(this.tempDir);
+    }
 
-	@Test
-	public void testGetAnalyzerLanguages() {
-		final String[] lExpected = { "ar", "bg", "br", "ca", "cn", "cz", "da", "de", "el", "en", "es", "eu", "fa", "fi",
-				"fr", "gl", "hi", "hu", "hy", "id", "it", "lv", "nl", "no", "pt", "ro", "ru", "sv", "th", "tr" };
-		final Collection<String> lExpectedLanguages = Arrays.asList(lExpected);
+    @AfterEach
+    public void tearDown() throws IOException {
+        this.housekeeper.tearDown(this.tempDir);
+    }
 
-		final IIndexer lIndexer = new LuceneIndexer();
-		final Collection<String> lLanguages = lIndexer.getAnalyzerLanguages();
+    @Test
+    void testGetAnalyzerLanguages() {
+        final String[] expected = { "ar", "bg", "br", "ca", "cn", "cz", "da", "de", "el", "en", "es", "eu", "fa", "fi",
+                "fr", "gl", "hi", "hu", "hy", "id", "it", "lv", "nl", "no", "pt", "ro", "ru", "sv", "th", "tr" };
+        final Collection<String> expectedLanguages = Arrays.asList(expected);
 
-		assertEquals(lExpected.length, lLanguages.size());
-		for (final String lLanguage : lLanguages) {
-			assertTrue(lExpectedLanguages.contains(lLanguage));
-		}
-	}
+        final IIndexer indexer = new LuceneIndexer();
+        final Collection<String> languages = indexer.getAnalyzerLanguages();
 
-	@Test
-	public void testProcessIndexer() throws Exception {
-		final File directory = IndexHouseKeeper.getDirectory();
-		final IIndexer lIndexer = new LuceneIndexer();
+        assertEquals(expected.length, languages.size());
+        for (final String language : languages) {
+            assertTrue(expectedLanguages.contains(language));
+        }
+    }
 
-		lIndexer.processIndexer(getDocIndexer(), directory, IndexHouseKeeper.LANGUAGE);
-		assertEquals( 1, lIndexer.numberOfIndexed(directory));
+    @Test
+    void testProcessIndexer() throws Exception {
+        final IIndexer lIndexer = new LuceneIndexer();
 
-		// initialize
-		lIndexer.initializeIndex(directory, IndexHouseKeeper.LANGUAGE);
-		assertEquals(0, lIndexer.numberOfIndexed(directory));
-	}
+        lIndexer.processIndexer(getDocIndexer(), this.tempDir, IndexHouseKeeper.LANGUAGE);
+        assertEquals(1, lIndexer.numberOfIndexed(this.tempDir));
 
-	private IndexerHelper getDocIndexer() {
-		final IndexerHelper outIndexer = new IndexerHelper();
-		return addDocument(outIndexer, "name", "value", IndexerField.Type.FULL_TEXT);
-	}
+        // initialize
+        lIndexer.initializeIndex(this.tempDir, IndexHouseKeeper.LANGUAGE);
+        assertEquals(0, lIndexer.numberOfIndexed(this.tempDir));
+    }
 
-	private IndexerHelper addDocument(final IndexerHelper inIndexer, final String inName, final String inValue,
-			IndexerField.Type inType) {
-		final IndexerDocument lDocument = new IndexerDocument();
-		lDocument.addField(new IndexerField(inName, inValue, IndexerField.Store.YES, inType, 1.0f));
-		inIndexer.addDocument(lDocument);
-		return inIndexer;
-	}
+    @Test
+    void testDeleteItemInIndex() throws Exception {
+        final String lUniqueID = "2:987";
+        final String lFieldName = AbstractSearching.ITEM_ID;
 
-	@Test
-	public void testInitializeIndex() throws IOException {
-		final File lDir = IndexHouseKeeper.getDirectory();
-		assertTrue( lDir.exists());
-		final String[] lContent = lDir.list();
-		assertNotNull( lContent);
-		boolean lStartsWithSegments = false;
-		for (final String lFileName : lContent) {
-			lStartsWithSegments = lStartsWithSegments || lFileName.startsWith("segments");
-		}
-		assertTrue( lStartsWithSegments);
-	}
+        final IndexerHelper docIndexer = addDocument(getDocIndexer(), lFieldName, lUniqueID, IndexerField.Type.ID);
 
-	@Test
-	public void testDeleteItemInIndex() throws Exception {
-		final String lUniqueID = "2:987";
-		final String lFieldName = AbstractSearching.ITEM_ID;
-		final File luceneDir = IndexHouseKeeper.getDirectory();
+        final IIndexer lIndexer = new LuceneIndexer();
+        lIndexer.processIndexer(docIndexer, this.tempDir, IndexHouseKeeper.LANGUAGE);
+        assertEquals(2, lIndexer.numberOfIndexed(this.tempDir));
 
-		IndexerHelper lDocIndexer = getDocIndexer();
-		lDocIndexer = addDocument(lDocIndexer, lFieldName, lUniqueID, IndexerField.Type.ID);
+        lIndexer.deleteItemInIndex(lUniqueID, lFieldName, this.tempDir, IndexHouseKeeper.LANGUAGE);
+        assertEquals(1, lIndexer.numberOfIndexed(this.tempDir));
+    }
 
-		final IIndexer lIndexer = new LuceneIndexer();
-		lIndexer.processIndexer(lDocIndexer, luceneDir, IndexHouseKeeper.LANGUAGE);
-		assertEquals( 2, lIndexer.numberOfIndexed(luceneDir));
+    private IndexerHelper getDocIndexer() {
+        final IndexerHelper outIndexer = new IndexerHelper();
+        return addDocument(outIndexer, "name", "value", IndexerField.Type.FULL_TEXT);
+    }
 
-		lIndexer.deleteItemInIndex(lUniqueID, lFieldName, luceneDir, IndexHouseKeeper.LANGUAGE);
-		assertEquals( 1, lIndexer.numberOfIndexed(luceneDir));
-	}
+    private IndexerHelper addDocument(final IndexerHelper inIndexer, final String inName, final String inValue,
+            final IndexerField.Type inType) {
+        final IndexerDocument lDocument = new IndexerDocument();
+        lDocument.addField(new IndexerField(inName, inValue, IndexerField.Store.YES, inType, 1.0f));
+        inIndexer.addDocument(lDocument);
+        return inIndexer;
+    }
 
 }

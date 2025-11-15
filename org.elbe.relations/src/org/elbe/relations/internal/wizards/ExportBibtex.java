@@ -20,7 +20,7 @@ package org.elbe.relations.internal.wizards;
 
 import java.text.MessageFormat;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;

@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2018, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -32,27 +32,19 @@ import com.google.gson.JsonObject;
  *
  * @author lbenno
  */
-@SuppressWarnings("restriction")
 public interface ICloudProviderConfigurationHelper {
 
-	/**
-	 * @return String the name of the cloud provider this helper is for
-	 */
-	String getName();
+    /**
+     * @return String the name of the cloud provider this helper is for
+     */
+    String getName();
 
-	/**
-	 * Create the Control to display the helper's UI.
-	 *
-	 * @param parent
-	 *            {@link Composite}
-	 * @param store
-	 *            {@link BiConsumer}
-	 * @param log
-	 *            {@link Logger}
-	 */
-	void createDialogArea(Composite parent,
-			BiConsumer<JsonObject, Feedback> store,
-			Logger log);
+    /** Create the Control to display the helper's UI.
+     *
+     * @param parent {@link Composite}
+     * @param store {@link BiConsumer}
+     * @param log {@link Logger} */
+    void createDialogArea(Composite parent, BiConsumer<JsonObject, Feedback> store, Logger log);
 
 }
 

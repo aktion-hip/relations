@@ -23,18 +23,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * @author lbenno
  */
 @ExtendWith(MockitoExtension.class)
-public class StyleParserTest {
+class StyleParserTest {
     private final static String NL = System.getProperty("line.separator");
 
     private Composite parent;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.parent = new Shell(Display.getDefault());
     }
 
     @Test
-    public void test() throws Exception {
+    void test() throws Exception {
         final String lTest1 = "This is a <b>Test</b>, is'n it.";
         final String lTest2 = "Part of natural science."
                 + NL
@@ -115,12 +115,12 @@ public class StyleParserTest {
     }
 
     @Test
-    public void testXMLEntity() throws Exception {
+    void testXMLEntity() throws Exception {
         String lText = "Example of command: nohup command &";
         final StyledText lWidget = new StyledText(this.parent, SWT.NONE);
 
         StyleParser.getInstance().parseTagged(lText, lWidget);
-        assertEquals("parse &", lText, lWidget.getText());
+        assertEquals(lText, lWidget.getText());
 
         lText = "Example of entity: &amp;";
         StyleParser.getInstance().parseTagged(lText, lWidget);
@@ -128,13 +128,11 @@ public class StyleParserTest {
 
         lText = "Example of leq: <tag>1 &lt; 2</tag>";
         StyleParser.getInstance().parseTagged(lText, lWidget);
-        assertEquals("test '<' entity (1)", "Example of leq: 1 < 2" + NL,
-                lWidget.getText());
+        assertEquals("Example of leq: 1 < 2" + NL, lWidget.getText());
 
         lText = "Example: <i>1 &lt; 2</i>.";
         StyleParser.getInstance().parseTagged(lText, lWidget);
-        assertEquals("test '<' entity (2)", "Example: 1 < 2.",
-                lWidget.getText());
+        assertEquals("Example: 1 < 2.", lWidget.getText());
         final StyleRange[] lRanges = lWidget.getStyleRanges();
         assertEquals(1, lRanges.length);
         assertEquals(SWT.ITALIC, lRanges[0].fontStyle);
@@ -143,7 +141,7 @@ public class StyleParserTest {
     }
 
     @Test
-    public void testParseList() throws Exception {
+    void testParseList() throws Exception {
         final String lTestList1 = "line 1" + NL
                 + "<ol_number indent=\"0\"><li>line 2" + NL
                 + "<ol_upper indent=\"1\"><li>line 3</li>" + NL
@@ -184,8 +182,7 @@ public class StyleParserTest {
                 lBullet2, lBullet3, lBullet1, lBullet4, lBullet4, lBullet1,
                 null };
         for (int i = 0; i < lExpectedBullets.length; i++) {
-            assertEqualBullets("Bullet 1." + i, lExpectedBullets[i],
-                    lWidget.getLineBullet(i));
+            assertEqualBullets(lExpectedBullets[i], lWidget.getLineBullet(i));
         }
         assertEquals(lExpectedText, lWidget.getText());
 
@@ -198,8 +195,7 @@ public class StyleParserTest {
                 lBullet3, lBullet3, lBullet2, lBullet1, lBullet4, lBullet4,
                 lBullet1 };
         for (int i = 0; i < lExpectedBullets.length; i++) {
-            assertEqualBullets("Bullet 2." + i, lExpectedBullets[i],
-                    lWidget.getLineBullet(i));
+            assertEqualBullets(lExpectedBullets[i], lWidget.getLineBullet(i));
         }
         assertEquals(lExpectedText, lWidget.getText());
 
@@ -212,14 +208,12 @@ public class StyleParserTest {
         lExpectedBullets = new Bullet[] { null, lBullet1, lBullet1, lBullet1,
                 lBullet1, lBullet1, lBullet1, null };
         for (int i = 0; i < lExpectedBullets.length; i++) {
-            assertEqualBullets("Bullet 3." + i, lExpectedBullets[i],
-                    lWidget.getLineBullet(i));
+            assertEqualBullets(lExpectedBullets[i], lWidget.getLineBullet(i));
         }
         assertEquals(lExpectedText, lWidget.getText());
     }
 
-    private void assertEqualBullets(final String inMsg,
-            final Bullet inExpected, final Bullet inActual) {
+    private void assertEqualBullets(final Bullet inExpected, final Bullet inActual) {
         if (inExpected == null) {
             assertNull(inActual);
             return;
@@ -229,7 +223,7 @@ public class StyleParserTest {
     }
 
     @Test
-    public void testGetUntaggedText() throws Exception {
+    void testGetUntaggedText() throws Exception {
         final String lExpected = "This is a Test, is'n it.";
         final String lTest = "This is a <b>Test</b>, is'n it.";
 
@@ -240,7 +234,7 @@ public class StyleParserTest {
     }
 
     @Test
-    public void testGetTagged() throws Exception {
+    void testGetTagged() throws Exception {
         String lText = "This is a <b>Test</b>, is'n it.";
 
         StyledText lWidget = new StyledText(this.parent, SWT.NONE);
@@ -285,38 +279,33 @@ public class StyleParserTest {
     }
 
     @Test
-    public void testGetTaggedWithLT() throws Exception {
+    void testGetTaggedWithLT() {
         String lText = "text with lt character: 1 < 2";
         StyledText lWidget = new StyledText(this.parent, SWT.NONE);
         lWidget.setText(lText);
         String lTagged = StyleParser.getInstance().getTagged(lWidget);
-        assertEquals("handle 'lt' entity (1)",
-                "text with lt character: 1 &lt; 2", lTagged);
+        assertEquals("text with lt character: 1 &lt; 2", lTagged);
 
         lText = "Text with bold and 1 < 2";
         lWidget = new StyledText(this.parent, SWT.NONE);
         lWidget.setText(lText);
-        lTagged = StyleParser.getInstance().getTagged(lWidget);
         lWidget.setStyleRanges(new StyleRange[] { new StyleRange(10, 4, null,
                 null, SWT.BOLD) });
         lTagged = StyleParser.getInstance().getTagged(lWidget);
-        assertEquals("handle 'lt' entity (2)",
-                "Text with <b>bold</b> and 1 &lt; 2", lTagged);
+        assertEquals("Text with <b>bold</b> and 1 &lt; 2", lTagged);
 
         lText = "Text with bold and 1 < 2.";
         lWidget = new StyledText(this.parent, SWT.NONE);
         lWidget.setText(lText);
-        lTagged = StyleParser.getInstance().getTagged(lWidget);
         lWidget.setStyleRanges(new StyleRange[] {
                 new StyleRange(10, 4, null, null, SWT.BOLD),
                 new StyleRange(19, 5, null, null, SWT.ITALIC) });
         lTagged = StyleParser.getInstance().getTagged(lWidget);
-        assertEquals("handle 'lt' entity (3)",
-                "Text with <b>bold</b> and <i>1 &lt; 2</i>.", lTagged);
+        assertEquals("Text with <b>bold</b> and <i>1 &lt; 2</i>.", lTagged);
     }
 
     @Test
-    public void testGetTaggedList() throws Exception {
+    void testGetTaggedList() {
         final String lExpected1 = "line 1" + NL + "line 2" + NL + "line 3" + NL
                 + "<ul indent=\"0\"><li>line 4</li>" + NL + "<li>line 5</li>"
                 + NL + "<li>line 6</li>" + NL + "<li>line 7</li>" + NL
@@ -436,7 +425,7 @@ public class StyleParserTest {
      * (lRange.length <= 0) break;
      */
     @Test
-    public void testSWTError() throws Exception {
+    void testSWTError() {
         final String lText = "Part of natural science."
                 + NL
                 + "Physics is a fundamental science where other natural sciences can be built on."

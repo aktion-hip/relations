@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Relations" uid="org.elbe.relations.product" id="org.elbe.relations.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="2.4.0.qualifier" type="features" includeLaunchers="true" autoIncludeRequirements="true">
+<product name="Relations" uid="org.elbe.relations.product" id="org.elbe.relations.product" application="org.eclipse.ui.ide.workbench" version="2.4.0.qualifier" type="features" includeLaunchers="true" autoIncludeRequirements="true">
 
    <aboutInfo>
       <image path="/org.elbe.relations/icons/aboutRelations.png"/>
@@ -34,8 +34,8 @@ see http://www.eclipse.org/
 
    <splash
       location="org.elbe.relations"
-      startupProgressRect="3,275,449,15"
-      startupMessageRect="5,250,449,23"
+      startupProgressRect="3,284,449,12"
+      startupMessageRect="15,261,449,20"
       startupForegroundColor="FFFFFF" />
    <launcher name="Relations">
       <linux icon="/org.elbe.relations/icons/RelationsIcon.xpm"/>
@@ -51,7 +51,7 @@ see http://www.eclipse.org/
    <vm>
       <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17</linux>
       <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17</macos>
-      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17</windows>
+      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21</windows>
    </vm>
 
    <license>
@@ -292,10 +292,6 @@ POSSIBILITY OF SUCH DAMAGES.
 
    <features>
       <feature id="org.elbe.relations.feature" installMode="root"/>
-      <feature id="org.elbe.relations.add.feature" installMode="root"/>
-      <feature id="org.eclipse.emf.ecore" installMode="root"/>
-      <feature id="org.eclipse.emf.common" installMode="root"/>
-      <feature id="org.eclipse.e4.rcp" installMode="root"/>
    </features>
 
    <configurations>
@@ -307,6 +303,7 @@ POSSIBILITY OF SUCH DAMAGES.
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.ui.forms" autoStart="false" startLevel="0" />
       <plugin id="org.elbe.relations.biblio.dft" autoStart="true" startLevel="0" />
       <plugin id="org.elbe.relations.cloud.azure" autoStart="true" startLevel="0" />
       <plugin id="org.elbe.relations.cloud.dropbox" autoStart="true" startLevel="0" />
@@ -317,13 +314,12 @@ POSSIBILITY OF SUCH DAMAGES.
       <plugin id="org.elbe.relations.print.dft" autoStart="true" startLevel="0" />
       <plugin id="org.elbe.relations.print.doc" autoStart="true" startLevel="0" />
       <plugin id="org.elbe.relations.print.odt" autoStart="true" startLevel="0" />
-      <plugin id="org.hip.vif.dbaccess.derby" autoStart="true" startLevel="0" />
-      <plugin id="org.hip.vif.dbaccess.mysql" autoStart="true" startLevel="0" />
       <plugin id="org.hip.viffw" autoStart="true" startLevel="3" />
    </configurations>
 
    <repositories>
-      <repository location="http://relations-rcp.sourceforge.net/updates/" name="" enabled="true" />
+      <repository location="https://github.com/aktion-hip/relations" name="Source" enabled="true" />
+      <repository location="http://relations-rcp.sourceforge.net/updates/" name="Updates" enabled="true" />
    </repositories>
 
    <preferencesInfo>

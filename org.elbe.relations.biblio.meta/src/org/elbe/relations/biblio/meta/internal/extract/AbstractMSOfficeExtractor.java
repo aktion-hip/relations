@@ -15,7 +15,7 @@ General Public License for more details.
 You should have received a copy of the GNU General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ */
 package org.elbe.relations.biblio.meta.internal.extract;
 
 import java.io.File;
@@ -38,69 +38,57 @@ import org.elbe.relations.parsing.ExtractedData;
  */
 public abstract class AbstractMSOfficeExtractor extends AbstractExtractor {
 
-	protected static final String OLE_HEADER = "D0 CF 11 E0 A1 B1 1A E1"; //$NON-NLS-1$
+    protected static final String OLE_HEADER = "D0 CF 11 E0 A1 B1 1A E1"; //$NON-NLS-1$
 
-	public ExtractedData process(File inFile) throws IOException {
-		ExtractedData outExtracted = extractGenericData(inFile);
-		
-		FileInputStream lStream = null;
-		
-		POIFSReader lReader = new POIFSReader();
-		SummaryReader lListener = new SummaryReader(outExtracted);
-		lReader.registerListener(lListener);
-		
-		try {
-			lStream = new FileInputStream(inFile);
-			lReader.read(lStream);
-		}
-		finally {
-			if (lStream != null) {
-				lStream.close();
-			}
-		}
-		
-		return outExtracted;
-	}
-	
-// --- private classes ---
+    public ExtractedData process(final File inFile) throws IOException {
+        final ExtractedData outExtracted = extractGenericData(inFile);
+        final POIFSReader lReader = new POIFSReader();
+        final SummaryReader lListener = new SummaryReader(outExtracted);
+        lReader.registerListener(lListener);
+        try (FileInputStream lStream = new FileInputStream(inFile)) {
+            lReader.read(lStream);
+        }
+        return outExtracted;
+    }
 
-	class SummaryReader implements POIFSReaderListener {
+    // --- private classes ---
 
-		private ExtractedData extractedData;
+    class SummaryReader implements POIFSReaderListener {
 
-		SummaryReader(ExtractedData inExtracted) {
-			extractedData = inExtracted;
-		}
+        private final ExtractedData extractedData;
 
-		@Override
-		public void processPOIFSReaderEvent(POIFSReaderEvent inEvent) {
-			try {
-				PropertySet lPropertySet = PropertySetFactory.create(inEvent.getStream());
-				if (lPropertySet instanceof SummaryInformation) {
-					SummaryInformation lSummary = (SummaryInformation) lPropertySet;
-					extractedData.setTitle(lSummary.getTitle());
-					extractedData.setAuthor(lSummary.getAuthor());
-					extractedData.setDateCreated(lSummary.getCreateDateTime());
-					
-					//we process the document's subject, comments and keywords to a single comment
-					String lSubject = lSummary.getSubject();
-					String lComments = lSummary.getComments();
-					String lKeywords = lSummary.getKeywords();
-					
-					StringBuilder lComment = new StringBuilder();
-					addPart(lComment, lSubject);
-					addPart(lComment, lComments);
-					addPart(lComment, lKeywords);
-					String lText = new String(lComment).trim();
-					if (lText.length() > 0) {
-						extractedData.setComment(lText);
-					}
-				}
-			} 
-			catch (Exception exc) {
-				//intentionally left empty
-			} 
-		}
-	}
+        SummaryReader(final ExtractedData inExtracted) {
+            this.extractedData = inExtracted;
+        }
+
+        @Override
+        public void processPOIFSReaderEvent(final POIFSReaderEvent inEvent) {
+            try {
+                final PropertySet lPropertySet = PropertySetFactory.create(inEvent.getStream());
+                if (lPropertySet instanceof final SummaryInformation summary) {
+                    this.extractedData.setTitle(summary.getTitle());
+                    this.extractedData.setAuthor(summary.getAuthor());
+                    this.extractedData.setDateCreated(summary.getCreateDateTime());
+
+                    //we process the document's subject, comments and keywords to a single comment
+                    final String lSubject = summary.getSubject();
+                    final String lComments = summary.getComments();
+                    final String lKeywords = summary.getKeywords();
+
+                    final StringBuilder lComment = new StringBuilder();
+                    addPart(lComment, lSubject);
+                    addPart(lComment, lComments);
+                    addPart(lComment, lKeywords);
+                    final String lText = new String(lComment).trim();
+                    if (!lText.isBlank()) {
+                        this.extractedData.setComment(lText);
+                    }
+                }
+            }
+            catch (final Exception exc) {
+                //intentionally left empty
+            }
+        }
+    }
 
 }

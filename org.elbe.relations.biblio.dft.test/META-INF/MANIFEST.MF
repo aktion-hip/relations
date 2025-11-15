@@ -6,7 +6,7 @@ Bundle-SymbolicName: org.elbe.relations.biblio.dft.test
 Bundle-Version: 1.1.0.qualifier
 Bundle-Vendor: RelationWare
 Fragment-Host: org.elbe.relations.biblio.dft;bundle-version="1.1.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: junit-jupiter-api;bundle-version="[5.11.3,6.0.0)",
  org.mockito.mockito-core;bundle-version="[5.14.2,6.0.0)",
  org.mockito.junit-jupiter;bundle-version="[5.14.2,6.0.0)",

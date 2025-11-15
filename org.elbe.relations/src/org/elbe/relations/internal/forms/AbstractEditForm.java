@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2016, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.CommandManager;
@@ -53,8 +51,6 @@ import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.swt.util.ISWTResourceUtilities;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.action.ContributionItem;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
@@ -96,18 +92,17 @@ import org.elbe.relations.internal.style.Styles.StyleParameter;
 import org.elbe.relations.internal.utility.CheckDirtyService;
 import org.elbe.relations.internal.utility.CheckDirtyServiceNoop;
 
-/**
- * Base class for the edit forms to edit or create items, i.e. term, text or
- * person items.
+import jakarta.inject.Inject;
+
+/** Base class for the edit forms to edit or create items, i.e. term, text or person items.
  *
- * @author Luthiger
- */
+ * @author Luthiger */
 @SuppressWarnings("restriction")
 public abstract class AbstractEditForm {
     private static final String MUI_ID_STYLING_TOOLBAR = "relations.toolbar:text.styling"; //$NON-NLS-1$
 
-    private final static int DEFAULT_WIDTH = 100;
-    private final static int DEFAULT_HEIGHT = 80;
+    private static final int DEFAULT_WIDTH = 100;
+    private static final int DEFAULT_HEIGHT = 80;
 
     private FontMetrics fontMetrics;
 
@@ -135,282 +130,216 @@ public abstract class AbstractEditForm {
     @Inject
     private EBindingService bindingService;
 
-    /**
-     * Subclasses have to call immediately after object creation.
+    /** Subclasses have to call immediately after object creation.
      *
-     * @param inEditMode
-     *            boolean <code>true</code> if this form is in edit mode,
-     *            <code>false</code> for new mode
-     */
-    protected void setEditMode(final boolean inEditMode) {
-        this.editMode = inEditMode;
-        init(inEditMode);
+     * @param editMode boolean <code>true</code> if this form is in edit mode, <code>false</code> for new mode */
+    protected void setEditMode(final boolean editMode) {
+        this.editMode = editMode;
+        this.checkDirtyService = editMode ? new CheckDirtyService(this) : new CheckDirtyServiceNoop();
     }
 
-    private void init(final boolean inEditMode) {
-        if (inEditMode) {
-            this.checkDirtyService = new CheckDirtyService(this);
-        } else {
-            this.checkDirtyService = new CheckDirtyServiceNoop();
-        }
+    public abstract void initialize();
+
+    /** Notifies the observers.
+     *
+     * @param statuses IStatus[] */
+    protected void notifyAboutUpdate(final IStatus[] statuses) {
+        final MultiStatus multi = new MultiStatus(Activator.getSymbolicName(), 1, statuses, "", null); //$NON-NLS-1$
+        this.eventBroker.post(RelationsConstants.TOPIC_WIZARD_PAGE_STATUS, multi);
     }
 
-    abstract public void initialize();
-
-    /**
-     * Notifies the observers.
+    /** Subclasses must implement.
      *
-     * @param inStatuses
-     *            IStatus[]
-     */
-    protected void notifyAboutUpdate(final IStatus[] inStatuses) {
-        final MultiStatus lMulti = new MultiStatus(Activator.getSymbolicName(),
-                1, inStatuses, "", null); //$NON-NLS-1$
-        this.eventBroker.post(RelationsConstants.TOPIC_WIZARD_PAGE_STATUS, lMulti);
-    }
-
-    /**
-     * Subclasses must implement.
-     *
-     * @return IStatus[] Array of status information.
-     */
+     * @return IStatus[] Array of status information. */
     protected abstract IStatus[] getStatuses();
 
-    protected Label createLabel(final String inLabelValue,
-            final Composite inContainer) {
-        return createLabel(inLabelValue, inContainer, 1);
+    protected Label createLabel(final String labelValue, final Composite container) {
+        return createLabel(labelValue, container, 1);
     }
 
-    protected Label createLabel(final String inLabelValue,
-            final Composite inContainer, final int inNumColumns) {
-        final Label outLabel = new Label(inContainer, SWT.NULL);
-        outLabel.setText(inLabelValue);
+    protected Label createLabel(final String labelValue, final Composite container, final int numColumns) {
+        final Label label = new Label(container, SWT.NULL);
+        label.setText(labelValue);
 
-        final GridData lData = new GridData(SWT.FILL, SWT.NULL, false, false,
-                inNumColumns, SWT.NULL);
-        lData.widthHint = (int) (outLabel.computeSize(SWT.DEFAULT,
-                SWT.DEFAULT).x * 1.2);
-        outLabel.setLayoutData(lData);
-        return outLabel;
+        final GridData data = new GridData(SWT.FILL, SWT.NULL, false, false, numColumns, SWT.NULL);
+        data.widthHint = (int) (label.computeSize(SWT.DEFAULT, SWT.DEFAULT).x * 1.2);
+        label.setLayoutData(data);
+        return label;
     }
 
-    protected Text createText(final Composite inContainer,
-            final int inNumColumns) {
-        final Text outText = createText(inContainer);
-        outText.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false,
-                inNumColumns, SWT.NULL));
-        return outText;
+    protected Text createText(final Composite container, final int numColumns) {
+        final Text text = createText(container);
+        text.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false, numColumns, SWT.NULL));
+        return text;
     }
 
-    protected Text createText(final Composite inContainer) {
-        final Text outText = new Text(inContainer, SWT.BORDER | SWT.SINGLE);
-        return outText;
+    protected Text createText(final Composite container) {
+        return new Text(container, SWT.BORDER | SWT.SINGLE);
     }
 
-    protected StyledTextComponent createStyledText(
-            final Composite inContainer) {
-        return createStyledText(inContainer,
-                new GridData(SWT.FILL, SWT.FILL, true, true));
+    protected StyledTextComponent createStyledText(final Composite container) {
+        return createStyledText(container, new GridData(SWT.FILL, SWT.FILL, true, true));
     }
 
-    protected StyledTextComponent createStyledText(final Composite inContainer,
-            final int inNumColumns, final int inHeight) {
-        final GridData lData = new GridData(SWT.FILL, SWT.FILL, true, true,
-                inNumColumns, SWT.NULL);
-        lData.heightHint = inHeight;
-        return createStyledText(inContainer, lData);
+    protected StyledTextComponent createStyledText(final Composite container, final int numColumns,
+            final int height) {
+        final GridData data = new GridData(SWT.FILL, SWT.FILL, true, true, numColumns, SWT.NULL);
+        data.heightHint = height;
+        return createStyledText(container, data);
     }
 
-    /**
-     * Creates <code>StyledTextComponent</code> for the edit form. The widget is
-     * complete with a toolbar above displaying the style controls and a popup
-     * menu (displaying the style controls too).
+    /** Creates <code>StyledTextComponent</code> for the edit form. The widget is complete with a toolbar above
+     * displaying the style controls and a popup menu (displaying the style controls too).
      *
-     * @param inContainer
-     *            Composite parent widget
-     * @param inData
-     *            GridData layout data
-     * @return StyledTextComponent
-     */
-    private StyledTextComponent createStyledText(final Composite inContainer,
-            final GridData inData) {
-        this.styledContainer = new Composite(inContainer, SWT.NONE);
-        final GridLayout lLayout = new GridLayout(1, true);
-        lLayout.marginWidth = 0;
-        lLayout.marginTop = 0;
-        lLayout.verticalSpacing = 2;
-        this.styledContainer.setLayout(lLayout);
-        setDefaultSize(inData);
-        this.styledContainer.setLayoutData(inData);
+     * @param container Composite parent widget
+     * @param data GridData layout data
+     * @return StyledTextComponent */
+    private StyledTextComponent createStyledText(final Composite container, final GridData data) {
+        this.styledContainer = new Composite(container, SWT.NONE);
+        final GridLayout layout = new GridLayout(1, true);
+        layout.marginWidth = 0;
+        layout.marginTop = 0;
+        layout.verticalSpacing = 2;
+        this.styledContainer.setLayout(layout);
+        setDefaultSize(data);
+        this.styledContainer.setLayoutData(data);
 
-        final STKeyListener lSTListener = new STKeyListener(this.application);
-        final ContributionItemsFactory lStyleBarHelper = new ContributionItemsFactory(
-                this.application, this.modelService, this.bindingService);
-        final ToolBarManager lToolBarManager = new ToolBarManager(
-                SWT.FLAT | SWT.TRAIL);
-        addStyleControls(this.styledContainer, lToolBarManager, lStyleBarHelper,
-                lSTListener);
+        final STKeyListener listener = new STKeyListener(this.application);
+        final ContributionItemsFactory styleBarHelper = new ContributionItemsFactory(this.application,
+                this.modelService, this.bindingService);
+        final ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT | SWT.TRAIL);
+        addStyleControls(this.styledContainer, toolBarManager, styleBarHelper, listener);
 
-        final StyledTextComponent outStyled = StyledTextComponent
-                .createStyledText(this.styledContainer, this.context);
-        outStyled.addFocusListener(new FocusListener() {
+        final StyledTextComponent styled = StyledTextComponent.createStyledText(this.styledContainer, this.context);
+        styled.addFocusListener(new FocusListener() {
             @Override
-            public void focusGained(final FocusEvent inEvent) {
+            public void focusGained(final FocusEvent event) {
                 enableStylesMenu(true);
             }
 
             @Override
-            public void focusLost(final FocusEvent inEvent) {
+            public void focusLost(final FocusEvent event) {
                 enableStylesMenu(false);
             }
         });
-        outStyled.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        outStyled.setFormStyle(true);
-        hookContextMenu(outStyled, lStyleBarHelper);
+        styled.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        styled.setFormStyle(true);
+        hookContextMenu(styled, styleBarHelper);
 
-        lSTListener.unsetKeyBinding((StyledText) outStyled.getControl());
-        outStyled.getControl().addListener(SWT.KeyDown, lSTListener);
-        return outStyled;
+        listener.unsetKeyBinding((StyledText) styled.getControl());
+        styled.getControl().addListener(SWT.KeyDown, listener);
+        return styled;
     }
 
-    private void hookContextMenu(final StyledTextComponent inStyledText,
-            final ContributionItemsFactory inMenuHelper) {
-        final MenuManager lMenuManager = new MenuManager("#PopupMenuST"); //$NON-NLS-1$
-        lMenuManager.setRemoveAllWhenShown(true);
-        lMenuManager.addMenuListener(new IMenuListener() {
-            @Override
-            public void menuAboutToShow(final IMenuManager inManager) {
-                inManager.add(new Separator("style")); //$NON-NLS-1$
-                for (final StyleContributionItem lItem : inMenuHelper
-                        .getItems()) {
-                    inManager.add(lItem);
-                }
-                inManager.add(
-                        new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+    private void hookContextMenu(final StyledTextComponent styledText, final ContributionItemsFactory menuHelper) {
+        final MenuManager menuManager = new MenuManager("#PopupMenuST"); //$NON-NLS-1$
+        menuManager.setRemoveAllWhenShown(true);
+        menuManager.addMenuListener(manager -> {
+            manager.add(new Separator("style")); //$NON-NLS-1$
+            for (final StyleContributionItem item : menuHelper.getItems()) {
+                manager.add(item);
             }
+            manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
         });
-        inStyledText.setMenu(
-                lMenuManager.createContextMenu(inStyledText.getControl()));
-
+        styledText.setMenu(menuManager.createContextMenu(styledText.getControl()));
     }
 
-    private void addStyleControls(final Composite inParent,
-            final ToolBarManager inManager,
-            final ContributionItemsFactory inToolBarHelper,
-            final STKeyListener inSTListener) {
-        final ToolBar lToolBar = inManager.createControl(inParent);
+    private void addStyleControls(final Composite parent, final ToolBarManager manager,
+            final ContributionItemsFactory toolBarHelper, final STKeyListener stListener) {
+        final ToolBar lToolBar = manager.createControl(parent);
 
-        final ResizeFontContributionItem lResizeItem = new ResizeFontContributionItem();
-        ContextInjectionFactory.inject(lResizeItem, this.context);
-        inManager.add(lResizeItem);
-        lResizeItem.fill(lToolBar, 0);
+        final ResizeFontContributionItem resizeItem = ContextInjectionFactory.make(ResizeFontContributionItem.class,
+                this.context);
+        manager.add(resizeItem);
+        resizeItem.fill(lToolBar, 0);
 
-        for (final StyleContributionItem lItem : inToolBarHelper.getItems()) {
-            inManager.add(lItem);
-            lItem.fill(lToolBar, inSTListener);
+        for (final StyleContributionItem item : toolBarHelper.getItems()) {
+            manager.add(item);
+            item.fill(lToolBar, stListener);
         }
     }
 
-    private void enableStylesMenu(final boolean inIsEnabled) {
-        this.eventBroker.post(RelationsConstants.TOPIC_STYLE_ITEMS_FORM,
-                inIsEnabled ? Boolean.TRUE : Boolean.FALSE);
+    private void enableStylesMenu(final boolean isEnabled) {
+        this.eventBroker.post(RelationsConstants.TOPIC_STYLE_ITEMS_FORM, isEnabled ? Boolean.TRUE : Boolean.FALSE);
     }
 
-    private void setDefaultSize(final GridData inData) {
-        if (inData.widthHint == -1) {
-            inData.widthHint = DEFAULT_WIDTH;
+    private void setDefaultSize(final GridData data) {
+        if (data.widthHint == -1) {
+            data.widthHint = DEFAULT_WIDTH;
         }
-        if (inData.heightHint == -1) {
-            inData.heightHint = DEFAULT_HEIGHT;
+        if (data.heightHint == -1) {
+            data.heightHint = DEFAULT_HEIGHT;
         }
     }
 
     protected Font createBoldFont() {
-        final FontData[] lBoldData = JFaceResources.getBannerFont()
-                .getFontData();
-        for (int i = 0; i < lBoldData.length; i++) {
-            lBoldData[i].setHeight(lBoldData[i].getHeight() - 2);
+        final FontData[] boldData = JFaceResources.getBannerFont().getFontData();
+        for (int i = 0; i < boldData.length; i++) {
+            boldData[i].setHeight(boldData[i].getHeight() - 2);
         }
-        return new Font(Display.getCurrent(), lBoldData);
+        return new Font(Display.getCurrent(), boldData);
     }
 
-    protected Composite createComposite(final Composite inParent,
-            final int inNumColumns, final int inVerticalSpacing) {
-        final GridLayout lLayout = new GridLayout();
-        lLayout.numColumns = inNumColumns;
-        lLayout.verticalSpacing = inVerticalSpacing;
-        return createComposite(inParent, lLayout);
+    protected Composite createComposite(final Composite parent, final int numColumns, final int verticalSpacing) {
+        final GridLayout layout = new GridLayout();
+        layout.numColumns = numColumns;
+        layout.verticalSpacing = verticalSpacing;
+        return createComposite(parent, layout);
     }
 
-    protected Composite createComposite(final Composite inParent,
-            final int inNumColumns) {
-        final GridLayout lLayout = new GridLayout();
-        lLayout.numColumns = inNumColumns;
-        return createComposite(inParent, lLayout);
+    protected Composite createComposite(final Composite parent, final int numColumns) {
+        final GridLayout layout = new GridLayout();
+        layout.numColumns = numColumns;
+        return createComposite(parent, layout);
     }
 
-    private Composite createComposite(final Composite inParent,
-            final GridLayout inLayout) {
-        final Composite outContainer = new Composite(inParent, SWT.NULL);
-        outContainer.setLayout(inLayout);
-        return outContainer;
+    private Composite createComposite(final Composite parent, final GridLayout layout) {
+        final Composite created = new Composite(parent, SWT.NULL);
+        created.setLayout(layout);
+        return created;
     }
 
-    /**
-     * @see org.elbe.relations.wizards.IEditForm#setHeight(int)
-     */
-    public void setHeight(final int inHeight) {
-        ((GridData) this.styledContainer.getLayoutData()).heightHint = inHeight;
+    /** @see org.elbe.relations.wizards.IEditForm#setHeight(int) */
+    public void setHeight(final int height) {
+        ((GridData) this.styledContainer.getLayoutData()).heightHint = height;
     }
 
-    protected void setIndent(final int inIndent) {
-        ((GridData) this.styledContainer
-                .getLayoutData()).horizontalIndent = inIndent;
+    protected void setIndent(final int indent) {
+        ((GridData) this.styledContainer.getLayoutData()).horizontalIndent = indent;
     }
 
-    protected void setWidth(final Control inControl, final int inWidth) {
-        ((GridData) inControl.getLayoutData()).widthHint = inWidth;
+    protected void setWidth(final Control control, final int width) {
+        ((GridData) control.getLayoutData()).widthHint = width;
     }
 
-    protected int convertWidthInCharsToPixels(final Control inTestControl,
-            final int inCharsNumber) {
+    protected int convertWidthInCharsToPixels(final Control testControl, final int charsNumber) {
         if (this.fontMetrics == null) {
-            final GC lGC = new GC(inTestControl);
-            lGC.setFont(JFaceResources.getDialogFont());
-            this.fontMetrics = lGC.getFontMetrics();
-            lGC.dispose();
+            final GC gc = new GC(testControl);
+            gc.setFont(JFaceResources.getDialogFont());
+            this.fontMetrics = gc.getFontMetrics();
+            gc.dispose();
         }
-        return Dialog.convertWidthInCharsToPixels(this.fontMetrics, inCharsNumber);
+        return Dialog.convertWidthInCharsToPixels(this.fontMetrics, charsNumber);
     }
 
-    /**
-     * Returns the form's dirty status.
+    /** Returns the form's dirty status.
      *
-     * @return boolean <code>true</code> if at least on widget on the form is
-     *         dirty.
-     */
+     * @return boolean <code>true</code> if at least on widget on the form is dirty. */
     public boolean getDirty() {
         return this.checkDirtyService.isDirty();
     }
 
-    /**
-     * Signals if the page can be completed.
+    /** Signals if the page can be completed.
      *
-     * @return boolean <code>true</code> if the page is complete.
-     */
+     * @return boolean <code>true</code> if the page is complete. */
     public abstract boolean getPageComplete();
 
-    /**
-     * @return {@link Control}
-     */
+    /** @return {@link Control} */
     public Control getControl() {
         return this.container;
     }
 
-    /**
-     * Disposes of the operating system resources associated with the receiver
-     * and all its descendants.
-     */
+    /** Disposes of the operating system resources associated with the receiver and all its descendants. */
     public void dispose() {
         this.checkDirtyService.dispose();
         if (this.styledText != null && !this.styledText.isDisposed()) {
@@ -424,15 +353,11 @@ public abstract class AbstractEditForm {
         this.container.dispose();
     }
 
-    /**
-     * Notifies the user about this form's dirty status.
+    /** Notifies the user about this form's dirty status.
      *
-     * @param inIsDirty
-     *            boolean <code>true</code> if at least one widget on this form
-     *            is dirty.
-     */
-    public void notifyDirtySwitch(final boolean inIsDirty) {
-        if (inIsDirty) {
+     * @param isDirty boolean <code>true</code> if at least one widget on this form is dirty. */
+    public void notifyDirtySwitch(final boolean isDirty) {
+        if (isDirty) {
             getControl().getShell().setText("*" + getViewTitle()); //$NON-NLS-1$
         } else {
             getControl().getShell().setText(getViewTitle());
@@ -440,67 +365,56 @@ public abstract class AbstractEditForm {
     }
 
     private String getViewTitle() {
-        if (this.viewTitle.length() == 0) {
+        if (this.viewTitle.isEmpty()) {
             this.viewTitle = getControl().getShell().getText();
         }
         return this.viewTitle;
     }
 
-    protected IStatus createErrorStatus(final String inMsg) {
-        return new Status(IStatus.ERROR, Activator.getSymbolicName(), 1, inMsg,
-                null);
+    protected IStatus createErrorStatus(final String message) {
+        return new Status(IStatus.ERROR, Activator.getSymbolicName(), 1, message, null);
     }
 
-    protected void addCreatedLabel(final Composite inParent, final int inIndent,
-            final int inColspan) {
+    protected void addCreatedLabel(final Composite parent, final int indent, final int colspan) {
         if (this.editMode) {
-            this.labelCreated = new Label(inParent, SWT.NONE);
-            final GridData lLayout = new GridData(SWT.FILL, SWT.NULL, true,
-                    false, inColspan, SWT.NULL);
-            lLayout.horizontalIndent = inIndent;
-            this.labelCreated.setLayoutData(lLayout);
+            this.labelCreated = new Label(parent, SWT.NONE);
+            final GridData layout = new GridData(SWT.FILL, SWT.NULL, true, false, colspan, SWT.NULL);
+            layout.horizontalIndent = indent;
+            this.labelCreated.setLayoutData(layout);
         }
     }
 
-    protected void setCreatedInfo(final String inCreated) {
+    protected void setCreatedInfo(final String created) {
         if (this.editMode) {
-            this.labelCreated.setText(inCreated);
+            this.labelCreated.setText(created);
         }
     }
 
     // ---
 
-    /**
-     * Private class to create the contribution items for the form's style bar
-     * and the styled text's context menu. The data for the contribution items
-     * is extracted from the application's style bar definition (see
-     * <code>MUI_ID_STYLING_TOOLBAR</code>).
-     */
+    /** Private class to create the contribution items for the form's style bar and the styled text's context menu. The
+     * data for the contribution items is extracted from the application's style bar definition (see
+     * <code>MUI_ID_STYLING_TOOLBAR</code>). */
     private static class ContributionItemsFactory {
         private final List<StyleContributionItem> items;
 
-        ContributionItemsFactory(final MApplication inApplication,
-                final EModelService inModelService,
-                final EBindingService inBindingService) {
-            this.items = new ArrayList<StyleContributionItem>();
+        ContributionItemsFactory(final MApplication application, final EModelService modelService,
+                final EBindingService bindingService) {
+            this.items = new ArrayList<>();
 
-            final IEclipseContext lContext = inApplication.getContext();
-            final CommandManager lCommandManager = lContext
-                    .get(CommandManager.class);
-            final ISWTResourceUtilities lResourceUtility = (ISWTResourceUtilities) lContext
+            final IEclipseContext context = application.getContext();
+            final CommandManager commandManager = context.get(CommandManager.class);
+            final ISWTResourceUtilities resourceUtility = (ISWTResourceUtilities) context
                     .get(IResourceUtilities.class.getName());
-            final EHandlerService lHandlerService = lContext
-                    .get(EHandlerService.class);
+            final EHandlerService handlerService = context.get(EHandlerService.class);
 
-            final MToolBar lToolbar = (MToolBar) inModelService
-                    .find(MUI_ID_STYLING_TOOLBAR, inApplication);
-            for (final MToolBarElement lElement : lToolbar.getChildren()) {
-                if (lElement instanceof MHandledToolItem) {
-                    final StyleContributionItem lItem = new StyleContributionItem(
-                            (MHandledToolItem) lElement, lResourceUtility,
-                            inBindingService, lCommandManager, lHandlerService);
-                    ContextInjectionFactory.inject(lItem, lContext);
-                    this.items.add(lItem);
+            final MToolBar toolbar = (MToolBar) modelService.find(MUI_ID_STYLING_TOOLBAR, application);
+            for (final MToolBarElement element : toolbar.getChildren()) {
+                if (element instanceof final MHandledToolItem toolItem) {
+                    final StyleContributionItem item = new StyleContributionItem(toolItem, resourceUtility,
+                            bindingService, commandManager, handlerService);
+                    ContextInjectionFactory.inject(item, context);
+                    this.items.add(item);
                 }
             }
         }
@@ -510,10 +424,7 @@ public abstract class AbstractEditForm {
         }
     }
 
-    /**
-     * A special contribution item for the form's style bar and the styled
-     * text's context/popup menu.
-     */
+    /** A special contribution item for the form's style bar and the styled text's context/popup menu. */
     private static class StyleContributionItem extends ContributionItem {
         private final ImageDescriptor icon;
         private final String tooltip;
@@ -529,15 +440,12 @@ public abstract class AbstractEditForm {
         @Optional
         private IEclipseContext context;
 
-        protected StyleContributionItem(final MHandledToolItem inElement,
-                final ISWTResourceUtilities inUtility,
-                final EBindingService inBindingService,
-                final CommandManager inCommandManager,
+        protected StyleContributionItem(final MHandledToolItem inElement, final ISWTResourceUtilities inUtility,
+                final EBindingService inBindingService, final CommandManager inCommandManager,
                 final EHandlerService inHandlerService) {
             super(inElement.getElementId());
             this.handlerService = inHandlerService;
-            this.icon = inUtility.imageDescriptorFromURI(
-                    URI.createURI(inElement.getIconURI()));
+            this.icon = inUtility.imageDescriptorFromURI(URI.createURI(inElement.getIconURI()));
             this.tooltip = inElement.getLocalizedTooltip();
             this.command = createCommand(inElement.getCommand(), inCommandManager);
             this.sequence = inBindingService.getBestSequenceFor(this.command);
@@ -604,19 +512,16 @@ public abstract class AbstractEditForm {
 
         private Listener getItemListener() {
             if (this.menuItemListener == null) {
-                this.menuItemListener = new Listener() {
-                    @Override
-                    public void handleEvent(final Event inEvent) {
-                        switch (inEvent.type) {
-                            case SWT.Dispose:
-                                handleWidgetDispose(inEvent);
-                                break;
-                            case SWT.Selection:
-                                if (inEvent.widget != null) {
-                                    handleWidgetSelection(inEvent);
-                                }
-                                break;
-                        }
+                this.menuItemListener = event -> {
+                    switch (event.type) {
+                        case SWT.Dispose:
+                            handleWidgetDispose(event);
+                            break;
+                        case SWT.Selection:
+                            if (event.widget != null) {
+                                handleWidgetSelection(event);
+                            }
+                            break;
                     }
                 };
             }
@@ -624,7 +529,7 @@ public abstract class AbstractEditForm {
         }
 
         protected void handleWidgetSelection(final Event inEvent) {
-            final Map<String, String> lParameters = new HashMap<String, String>();
+            final Map<String, String> lParameters = new HashMap<>();
             if (inEvent.widget instanceof ToolItem) {
                 // click triggered on tool bar item
                 lParameters.put(RelationsConstants.PN_COMMAND_STYLE_SELECTION,
@@ -646,21 +551,20 @@ public abstract class AbstractEditForm {
                             out.getCategory(),
                             new IParameter[] { new ToolBarParameter() });
                 }
-            }
-            catch (final NotDefinedException exc) {
+            } catch (final NotDefinedException exc) {
                 // intentionally left empty
             }
             return out;
         }
 
-        protected void handleWidgetDispose(final Event inEvent) {
-            if (inEvent.widget == this.widgetMenu) {
+        protected void handleWidgetDispose(final Event event) {
+            if (event.widget == this.widgetMenu) {
                 this.widgetMenu.removeListener(SWT.Selection, getItemListener());
                 this.widgetMenu.removeListener(SWT.Dispose, getItemListener());
                 this.widgetMenu.getImage().dispose();
                 this.widgetMenu = null;
             }
-            if (inEvent.widget == this.widgetToolBar) {
+            if (event.widget == this.widgetToolBar) {
                 this.widgetToolBar.removeListener(SWT.Selection, getItemListener());
                 this.widgetToolBar.removeListener(SWT.Dispose, getItemListener());
                 this.widgetToolBar.getImage().dispose();
@@ -672,15 +576,14 @@ public abstract class AbstractEditForm {
         @Inject
         @Optional
         public void updateEnablement(
-                @UIEventTopic(RelationsConstants.TOPIC_STYLE_ITEMS_FORM) final Boolean inEnable) {
+                @UIEventTopic(RelationsConstants.TOPIC_STYLE_ITEMS_FORM) final boolean enable) {
             if (this.widgetToolBar != null) {
-                this.widgetToolBar.setEnabled(inEnable.booleanValue());
-                if (inEnable) {
-                    this.context.set(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE,
-                            "active"); //$NON-NLS-1$
+                this.widgetToolBar.setEnabled(enable);
+                if (enable) {
+                    this.context.set(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE, "active"); //$NON-NLS-1$
                 }
             }
-            if (!inEnable && this.context != null) {
+            if (!enable && this.context != null) {
                 this.context.remove(RelationsConstants.FLAG_STYLED_TEXT_ACTIVE);
             }
         }
@@ -688,13 +591,13 @@ public abstract class AbstractEditForm {
         @Inject
         @Optional
         public void updateToggleState(
-                @UIEventTopic(RelationsConstants.TOPIC_STYLE_CHANGED_FORM) final StyleParameter inStyleParameter) {
-            final Boolean lSelected = inStyleParameter.getIsToggeled(this.style);
+                @UIEventTopic(RelationsConstants.TOPIC_STYLE_CHANGED_FORM) final StyleParameter styleParameter) {
+            final Boolean selected = styleParameter.getIsToggeled(this.style);
             if (this.widgetToolBar != null) {
-                this.widgetToolBar.setSelection(lSelected);
+                this.widgetToolBar.setSelection(selected);
             }
             if (this.widgetMenu != null) {
-                this.widgetMenu.setSelection(lSelected);
+                this.widgetMenu.setSelection(selected);
             }
         }
 
@@ -707,41 +610,35 @@ public abstract class AbstractEditForm {
         }
     }
 
-    /**
-     * The contribution item to change the font size in the styled text field.
-     * This item delegates to <code>ResizeFontControl</code>.
-     */
+    /** The contribution item to change the font size in the styled text field. This item delegates to
+     * <code>ResizeFontControl</code>. */
     private static class ResizeFontContributionItem extends ContributionItem {
 
-        @Inject
-        private IEclipseContext context;
+        private final IEclipseContext context;
 
-        private ToolItem toolItem;
+        @Inject
+        public ResizeFontContributionItem(final IEclipseContext context) {
+            this.context = context;
+        }
 
         @Override
-        public void fill(final ToolBar inParent, final int inIndex) {
-            this.toolItem = new ToolItem(inParent, SWT.SEPARATOR, inIndex);
-            this.context.set(Composite.class, inParent);
-            final ResizeFontControl control = ContextInjectionFactory
-                    .make(ResizeFontControl.class, this.context);
-            control.createWidget(inParent);
-            this.toolItem.setWidth(control.getControl().computeSize(SWT.DEFAULT,
-                    SWT.DEFAULT, true).x);
-            this.toolItem.setControl(control.getControl());
+        public void fill(final ToolBar parent, final int index) {
+            final ToolItem toolItem = new ToolItem(parent, SWT.SEPARATOR, index);
+            this.context.set(Composite.class, parent);
+            final ResizeFontControl control = ContextInjectionFactory.make(ResizeFontControl.class, this.context);
+            toolItem.setWidth(control.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT, true).x);
+            toolItem.setControl(control.getControl());
         }
     }
 
-    /**
-     * Helper class to create a label - text widget.
+    /** Helper class to create a label - text widget.
      *
-     * @author Luthiger
-     */
+     * @author Luthiger */
     protected class WidgetCreator {
         private final Label label;
         private final Text text;
 
-        public WidgetCreator(final String inLabelValue,
-                final Composite inContainer, final int inNumColumns) {
+        public WidgetCreator(final String inLabelValue, final Composite inContainer, final int inNumColumns) {
             this.label = createLabel(inLabelValue, inContainer);
             this.text = createText(inContainer, inNumColumns - 1);
         }
@@ -755,11 +652,9 @@ public abstract class AbstractEditForm {
         }
     }
 
-    /**
-     * Helper class to create a label - styled text widget.
+    /** Helper class to create a label - styled text widget.
      *
-     * @author Luthiger
-     */
+     * @author Luthiger */
     protected class StyledTextCreator {
         private final Label label;
         private final StyledText text;
@@ -781,50 +676,42 @@ public abstract class AbstractEditForm {
         }
     }
 
-    /**
-     * Listener to process key binding.
+    /** Listener to process key binding.
      *
-     * @author Luthiger
-     */
+     * @author Luthiger */
     private static class STKeyListener implements Listener {
         private KeySequence state = KeySequence.getInstance();
 
-        private final Map<TriggerSequence, StyleContributionItem> commands = new HashMap<TriggerSequence, StyleContributionItem>();
+        private final Map<TriggerSequence, StyleContributionItem> commands = new HashMap<>();
         private final EHandlerService handlerService;
 
-        STKeyListener(final MApplication inApplication) {
-            this.handlerService = inApplication.getContext()
-                    .get(EHandlerService.class);
+        STKeyListener(final MApplication application) {
+            this.handlerService = application.getContext().get(EHandlerService.class);
         }
 
-        /**
-         * @param inToolItem
-         *            {@link StyleContributionItem}
-         */
+        /** @param inToolItem {@link StyleContributionItem} */
         void registerItem(final StyleContributionItem inToolItem) {
             this.commands.put(inToolItem.getSequence(), inToolItem);
         }
 
         @Override
-        public void handleEvent(final Event inEvent) {
+        public void handleEvent(final Event event) {
             /*
-             * Only process key strokes containing natural keys to trigger key
-             * bindings.
+             * Only process key strokes containing natural keys to trigger key bindings.
              */
-            if ((inEvent.keyCode & SWT.MODIFIER_MASK) != 0) {
+            if ((event.keyCode & SWT.MODIFIER_MASK) != 0) {
                 return;
             }
 
-            final List<KeyStroke> lKeyStrokes = KeyBindingDispatcher
-                    .generatePossibleKeyStrokes(inEvent);
-            if (lKeyStrokes.isEmpty()) {
+            final List<KeyStroke> keyStrokes = KeyBindingDispatcher.generatePossibleKeyStrokes(event);
+            if (keyStrokes.isEmpty()) {
                 return;
             }
 
-            if (processStrokes(lKeyStrokes)) {
-                inEvent.doit = false;
+            if (processStrokes(keyStrokes)) {
+                event.doit = false;
             }
-            inEvent.type = SWT.NONE;
+            event.type = SWT.NONE;
         }
 
         private boolean processStrokes(final List<KeyStroke> strokes) {
@@ -835,7 +722,7 @@ public abstract class AbstractEditForm {
                 final StyleContributionItem toolItem = this.commands
                         .get(sequenceAfterStroke);
                 if (toolItem != null) {
-                    final Map<String, String> parameters = new HashMap<String, String>();
+                    final Map<String, String> parameters = new HashMap<>();
                     parameters.put(
                             RelationsConstants.PN_COMMAND_STYLE_SELECTION,
                             toolItem.getSelection() ? "false" : "true"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -855,21 +742,21 @@ public abstract class AbstractEditForm {
             return !sequenceBeforeStroke.isEmpty();
         }
 
-        void unsetKeyBinding(final StyledText inText) {
-            for (final TriggerSequence lTrigger : this.commands.keySet()) {
-                inText.setKeyBinding(getKeyCode((KeySequence) lTrigger), 1);
+        void unsetKeyBinding(final StyledText text) {
+            for (final TriggerSequence trigger : this.commands.keySet()) {
+                text.setKeyBinding(getKeyCode((KeySequence) trigger), 1);
             }
         }
 
-        private int getKeyCode(final KeySequence inSequence) {
-            int out = 0;
-            if (inSequence == null) {
-                return out;
+        private int getKeyCode(final KeySequence sequence) {
+            int key = 0;
+            if (sequence == null) {
+                return key;
             }
-            for (final KeyStroke lStroke : inSequence.getKeyStrokes()) {
-                out |= lStroke.getModifierKeys() | lStroke.getNaturalKey();
+            for (final KeyStroke lStroke : sequence.getKeyStrokes()) {
+                key |= lStroke.getModifierKeys() | lStroke.getNaturalKey();
             }
-            return out;
+            return key;
         }
     }
 

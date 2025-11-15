@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2018, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -18,9 +18,6 @@
  ***************************************************************************/
 package org.elbe.relations.handlers;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.services.IServiceConstants;
@@ -29,6 +26,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.elbe.relations.internal.forms.CloudConfigurationHelperDialog;
 import org.elbe.relations.internal.services.CloudConfigurationHelperRegistry;
 
+import jakarta.inject.Named;
+
 /**
  * Handler to manage the <code>ICloudProviderConfigurationHelper</code>. This
  * class is starting a dialog displaying the registered classes that help to
@@ -36,22 +35,18 @@ import org.elbe.relations.internal.services.CloudConfigurationHelperRegistry;
  *
  * @author lbenno
  */
-@SuppressWarnings("restriction")
 public class CloudConfigurationHelper {
 
-	@Inject
-	private CloudConfigurationHelperRegistry helperRegistry;
+    @Execute
+    public void execute(
+            @Named(IServiceConstants.ACTIVE_SHELL) final Shell shell,
+            final CloudConfigurationHelperRegistry helperRegistry, final Logger log) {
+        final CloudConfigurationHelperDialog dialog = new CloudConfigurationHelperDialog(
+                shell, helperRegistry.getHelpers(), log);
+        if (dialog.open() == Window.OK) {
+            // dialog.getResult();
+        }
 
-	@Execute
-	public void execute(
-			@Named(IServiceConstants.ACTIVE_SHELL) final Shell shell,
-			final Logger log) {
-		final CloudConfigurationHelperDialog dialog = new CloudConfigurationHelperDialog(
-				shell, this.helperRegistry.getHelpers(), log);
-		if (dialog.open() == Window.OK) {
-			// dialog.getResult();
-		}
-
-	}
+    }
 
 }

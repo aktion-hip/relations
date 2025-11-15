@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -30,10 +31,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.SelectionEnabler;
 import org.eclipse.ui.internal.ISelectionConversionService;
 import org.eclipse.ui.internal.registry.IWorkbenchRegistryConstants;
 import org.eclipse.ui.internal.util.BundleUtility;
+import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.model.WorkbenchAdapter;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.elbe.relations.Activator;
@@ -47,310 +50,299 @@ import org.elbe.relations.RelationsMessages;
  */
 @SuppressWarnings("restriction")
 public class WorkbenchWizardElement extends WorkbenchAdapter
-        implements IAdaptable, IWizardDescriptor {
+implements IAdaptable, IWizardDescriptor {
 
-	private static final String[] EMPTY_TAGS = new String[0];
+    private static final String[] EMPTY_TAGS = new String[0];
 
-	private ImageDescriptor imageDescriptor;
-	private final IConfigurationElement configuration;
-	private final String id;
-	private ImageDescriptor descriptionImage;
+    private ImageDescriptor imageDescriptor;
+    private final IConfigurationElement configuration;
+    private final String id;
+    private ImageDescriptor descriptionImage;
 
-	private SelectionEnabler selectionEnabler;
+    private SelectionEnabler selectionEnabler;
 
-	private WizardCollectionElement parentCategory;
+    private WizardCollectionElement parentCategory;
 
-	private final IEclipseContext context;
+    private final IEclipseContext context;
 
-	/**
-	 * WorkbenchWizardElement constructor.
-	 *
-	 * @param inConfiguration
-	 *            {@link IConfigurationElement}
-	 * @param inContext
-	 *            {@link IEclipseContext}
-	 */
-	public WorkbenchWizardElement(final IConfigurationElement inConfiguration,
-	        final IEclipseContext inContext) {
-		configuration = inConfiguration;
-		context = inContext;
-		id = configuration.getAttribute(IWorkbenchRegistryConstants.ATT_ID);
-	}
+    /**
+     * WorkbenchWizardElement constructor.
+     *
+     * @param inConfiguration
+     *            {@link IConfigurationElement}
+     * @param inContext
+     *            {@link IEclipseContext}
+     */
+    public WorkbenchWizardElement(final IConfigurationElement inConfiguration,
+            final IEclipseContext inContext) {
+        this.configuration = inConfiguration;
+        this.context = inContext;
+        this.id = this.configuration.getAttribute(IWorkbenchRegistryConstants.ATT_ID);
+    }
 
-	private String getAttributeChecked(final String inAttributeName) {
-		final String out = configuration.getAttribute(inAttributeName);
-		return out == null ? "" : out; //$NON-NLS-1$
-	}
+    private String getAttributeChecked(final String inAttributeName) {
+        final String out = this.configuration.getAttribute(inAttributeName);
+        return out == null ? "" : out; //$NON-NLS-1$
+    }
 
-	@Override
-	public String getId() {
-		return id;
-	}
+    @Override
+    public String getId() {
+        return this.id;
+    }
 
-	@Override
-	public String getLabel() {
-		return getLabel(this);
-	}
+    @Override
+    public String getLabel() {
+        return getLabel(this);
+    }
 
-	@Override
-	public String getLabel(final Object inObject) {
-		return getAttributeChecked(IWorkbenchRegistryConstants.ATT_NAME);
-	}
+    @Override
+    public String getLabel(final Object inObject) {
+        return getAttributeChecked(IWorkbenchRegistryConstants.ATT_NAME);
+    }
 
-	@Override
-	public Object getAdapter(final Class inAdapter) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public <T> T getAdapter(final Class<T> adapter) {
+        if (adapter == IWorkbenchAdapter.class) {
+            return adapter.cast(this);
+        }
+        return Platform.getAdapterManager().getAdapter(this, adapter);
+    }
 
-	@Override
-	public ImageDescriptor getImageDescriptor(final Object inElement) {
-		return getImageDescriptor();
-	}
+    @Override
+    public ImageDescriptor getImageDescriptor(final Object inElement) {
+        return getImageDescriptor();
+    }
 
-	/**
-	 * Answer the icon of this element.
-	 */
-	@Override
-	public ImageDescriptor getImageDescriptor() {
-		if (imageDescriptor == null) {
-			final String iconName = configuration
-			        .getAttribute(IWorkbenchRegistryConstants.ATT_ICON);
-			if (iconName == null) {
-				return null;
-			}
-			imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
-			        configuration.getNamespaceIdentifier(), iconName);
-		}
-		return imageDescriptor;
-	}
+    /**
+     * Answer the icon of this element.
+     */
+    @Override
+    public ImageDescriptor getImageDescriptor() {
+        if (this.imageDescriptor == null) {
+            final String iconName = this.configuration
+                    .getAttribute(IWorkbenchRegistryConstants.ATT_ICON);
+            if (iconName == null) {
+                return null;
+            }
+            this.imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(
+                    this.configuration.getNamespaceIdentifier(), iconName);
+        }
+        return this.imageDescriptor;
+    }
 
-	@Override
-	public String getDescription() {
-		return Util.getDescription(configuration);
-	}
+    @Override
+    public String getDescription() {
+        return Util.getDescription(this.configuration);
+    }
 
-	@Override
-	public ImageDescriptor getDescriptionImage() {
-		if (descriptionImage == null) {
-			final String descImage = configuration.getAttribute(
-			        IWorkbenchRegistryConstants.ATT_DESCRIPTION_IMAGE);
-			if (descImage == null) {
-				return null;
-			}
-			descriptionImage = AbstractUIPlugin.imageDescriptorFromPlugin(
-			        configuration.getNamespaceIdentifier(), descImage);
-		}
-		return descriptionImage;
-	}
+    @Override
+    public ImageDescriptor getDescriptionImage() {
+        if (this.descriptionImage == null) {
+            final String descImage = this.configuration.getAttribute(
+                    IWorkbenchRegistryConstants.ATT_DESCRIPTION_IMAGE);
+            if (descImage == null) {
+                return null;
+            }
+            this.descriptionImage = AbstractUIPlugin.imageDescriptorFromPlugin(
+                    this.configuration.getNamespaceIdentifier(), descImage);
+        }
+        return this.descriptionImage;
+    }
 
-	@Override
-	public boolean canFinishEarly() {
-		return Boolean
-		        .valueOf(configuration.getAttribute(
-		                IWorkbenchRegistryConstants.ATT_CAN_FINISH_EARLY))
-		        .booleanValue();
-	}
+    @Override
+    public boolean canFinishEarly() {
+        return Boolean
+                .valueOf(this.configuration.getAttribute(
+                        IWorkbenchRegistryConstants.ATT_CAN_FINISH_EARLY))
+                .booleanValue();
+    }
 
-	@Override
-	public boolean hasPages() {
-		final String hasPagesString = configuration
-		        .getAttribute(IWorkbenchRegistryConstants.ATT_HAS_PAGES);
-		// default value is true
-		if (hasPagesString == null) {
-			return true;
-		}
-		return Boolean.valueOf(hasPagesString).booleanValue();
-	}
+    @Override
+    public boolean hasPages() {
+        final String hasPagesString = this.configuration
+                .getAttribute(IWorkbenchRegistryConstants.ATT_HAS_PAGES);
+        // default value is true
+        if (hasPagesString == null) {
+            return true;
+        }
+        return Boolean.valueOf(hasPagesString).booleanValue();
+    }
 
-	@Override
-	public IStructuredSelection adaptedSelection(
-	        final IStructuredSelection inSelection) {
-		if (canHandleSelection(inSelection)) {
-			return inSelection;
-		}
+    @Override
+    public IStructuredSelection adaptedSelection(final IStructuredSelection selection) {
+        if (canHandleSelection(selection)) {
+            return selection;
+        }
 
-		final IStructuredSelection adaptedSelection = convertToResources(
-		        inSelection);
-		if (canHandleSelection(adaptedSelection)) {
-			return adaptedSelection;
-		}
+        final IStructuredSelection adaptedSelection = convertToResources(selection);
+        if (canHandleSelection(adaptedSelection)) {
+            return adaptedSelection;
+        }
 
-		// Couldn't find one that works so just return
-		return StructuredSelection.EMPTY;
-	}
+        // Couldn't find one that works so just return
+        return StructuredSelection.EMPTY;
+    }
 
-	/**
-	 * Attempt to convert the elements in the passed selection into resources by
-	 * asking each for its IResource property (if it isn't already a resource).
-	 * If all elements in the initial selection can be converted to resources
-	 * then answer a new selection containing these resources; otherwise answer
-	 * an empty selection.
-	 *
-	 * @param inOriginalSelection
-	 *            the original selection
-	 * @return the converted selection or an empty selection
-	 */
-	private IStructuredSelection convertToResources(
-	        final IStructuredSelection inOriginalSelection) {
-		// TODO
-		// final Object lSelectionService =
-		// PlatformUI.getWorkbench().getService(
-		// ISelectionConversionService.class);
-		final Object lSelectionService = null;
-		if (lSelectionService == null || inOriginalSelection == null) {
-			return StructuredSelection.EMPTY;
-		}
-		return ((ISelectionConversionService) lSelectionService)
-		        .convertToResources(inOriginalSelection);
-	}
+    /** Attempt to convert the elements in the passed selection into resources by asking each for its IResource property
+     * (if it isn't already a resource). If all elements in the initial selection can be converted to resources then
+     * answer a new selection containing these resources; otherwise answer an empty selection.
+     *
+     * @param originalSelection the original selection
+     * @return the converted selection or an empty selection */
+    private IStructuredSelection convertToResources(final IStructuredSelection originalSelection) {
+        final Object selectionService = PlatformUI.getWorkbench().getService(ISelectionConversionService.class);
+        if (selectionService == null || originalSelection == null) {
+            return StructuredSelection.EMPTY;
+        }
+        return ((ISelectionConversionService) selectionService).convertToResources(originalSelection);
+    }
 
-	/**
-	 * Answer a boolean indicating whether the receiver is able to handle the
-	 * passed selection
-	 *
-	 * @return boolean
-	 * @param inSelection
-	 *            IStructuredSelection
-	 */
-	public boolean canHandleSelection(final IStructuredSelection inSelection) {
-		return getSelectionEnabler().isEnabledForSelection(inSelection);
-	}
+    /**
+     * Answer a boolean indicating whether the receiver is able to handle the
+     * passed selection
+     *
+     * @return boolean
+     * @param inSelection
+     *            IStructuredSelection
+     */
+    public boolean canHandleSelection(final IStructuredSelection inSelection) {
+        return getSelectionEnabler().isEnabledForSelection(inSelection);
+    }
 
-	/**
-	 * Answer self's action enabler, creating it first iff necessary
-	 */
-	protected SelectionEnabler getSelectionEnabler() {
-		if (selectionEnabler == null) {
-			selectionEnabler = new SelectionEnabler(configuration);
-		}
+    /**
+     * Answer self's action enabler, creating it first iff necessary
+     */
+    protected SelectionEnabler getSelectionEnabler() {
+        if (this.selectionEnabler == null) {
+            this.selectionEnabler = new SelectionEnabler(this.configuration);
+        }
 
-		return selectionEnabler;
-	}
+        return this.selectionEnabler;
+    }
 
-	@Override
-	public String[] getTags() {
-		return EMPTY_TAGS;
-	}
+    @Override
+    public String[] getTags() {
+        return EMPTY_TAGS;
+    }
 
-	@Override
-	public String getHelpHref() {
-		return configuration
-		        .getAttribute(IWorkbenchRegistryConstants.ATT_HELP_HREF);
-	}
+    @Override
+    public String getHelpHref() {
+        return this.configuration
+                .getAttribute(IWorkbenchRegistryConstants.ATT_HELP_HREF);
+    }
 
-	public void setParent(final WizardCollectionElement inParent) {
-		parentCategory = inParent;
-	}
+    public void setParent(final WizardCollectionElement inParent) {
+        this.parentCategory = inParent;
+    }
 
-	@Override
-	public Object getParent(final Object object) {
-		return parentCategory;
-	}
+    @Override
+    public Object getParent(final Object object) {
+        return this.parentCategory;
+    }
 
-	@Override
-	public IWizardCategory getCategory() {
-		return (IWizardCategory) getParent(this);
-	}
+    @Override
+    public IWizardCategory getCategory() {
+        return (IWizardCategory) getParent(this);
+    }
 
-	public void consolidateCategory(final WizardCollectionElement inWizards) {
-		final WizardCollectionElement lCategory = inWizards
-		        .findCategory(configuration.getAttribute(
-		                IWorkbenchRegistryConstants.ATT_CATEGORY));
-		lCategory.add(this);
-		setParent(lCategory);
-	}
+    public void consolidateCategory(final WizardCollectionElement inWizards) {
+        final WizardCollectionElement lCategory = inWizards
+                .findCategory(this.configuration.getAttribute(
+                        IWorkbenchRegistryConstants.ATT_CATEGORY));
+        lCategory.add(this);
+        setParent(lCategory);
+    }
 
-	/**
-	 * Keyword are not supported (for the moment).
-	 *
-	 * @return String[]
-	 */
-	public String[] getKeywordLabels() {
-		return EMPTY_TAGS;
-		// if (keywordLabels == null) {
-		// final IConfigurationElement[] lChildren = configuration
-		// .getChildren(IWorkbenchRegistryConstants.TAG_KEYWORD_REFERENCE);
-		// keywordLabels = new String[lChildren.length];
-		// final KeywordRegistry lRegistry = KeywordRegistry.getInstance();
-		// for (int i = 0; i < lChildren.length; i++) {
-		// final String lId = lChildren[i]
-		// .getAttribute(IWorkbenchRegistryConstants.ATT_ID);
-		// keywordLabels[i] = lRegistry.getKeywordLabel(lId);
-		// }
-		// }
-		// return keywordLabels;
-	}
+    /**
+     * Keyword are not supported (for the moment).
+     *
+     * @return String[]
+     */
+    public String[] getKeywordLabels() {
+        return EMPTY_TAGS;
+        // if (keywordLabels == null) {
+        // final IConfigurationElement[] lChildren = configuration
+        // .getChildren(IWorkbenchRegistryConstants.TAG_KEYWORD_REFERENCE);
+        // keywordLabels = new String[lChildren.length];
+        // final KeywordRegistry lRegistry = KeywordRegistry.getInstance();
+        // for (int i = 0; i < lChildren.length; i++) {
+        // final String lId = lChildren[i]
+        // .getAttribute(IWorkbenchRegistryConstants.ATT_ID);
+        // keywordLabels[i] = lRegistry.getKeywordLabel(lId);
+        // }
+        // }
+        // return keywordLabels;
+    }
 
-	@Override
-	public IWizard createWizard() throws CoreException {
-		return (IWizard) createExecutableExtension();
-	}
+    @Override
+    public IWizard createWizard() throws CoreException {
+        return (IWizard) createExecutableExtension();
+    }
 
-	/**
-	 * Create an the instance of the object described by the configuration
-	 * element. That is, create the instance of the class the isv supplied in
-	 * the extension point.
-	 *
-	 * @return Object the new object
-	 * @throws CoreException
-	 */
-	public Object createExecutableExtension() throws CoreException {
-		return createExtension(configuration,
-		        IWorkbenchRegistryConstants.ATT_CLASS);
-	}
+    /**
+     * Create an the instance of the object described by the configuration
+     * element. That is, create the instance of the class the isv supplied in
+     * the extension point.
+     *
+     * @return Object the new object
+     * @throws CoreException
+     */
+    public Object createExecutableExtension() throws CoreException {
+        return createExtension(this.configuration,
+                IWorkbenchRegistryConstants.ATT_CLASS);
+    }
 
-	private Object createExtension(final IConfigurationElement inElement,
-	        final String inClassAttribute) throws CoreException {
-		try {
-			if (BundleUtility.isActivated(inElement.getDeclaringExtension()
-			        .getNamespaceIdentifier())) {
-				return createExtension(inElement, inClassAttribute, context);
-			}
+    private Object createExtension(final IConfigurationElement inElement,
+            final String inClassAttribute) throws CoreException {
+        try {
+            if (BundleUtility.isActivated(inElement.getDeclaringExtension()
+                    .getNamespaceIdentifier())) {
+                return createExtension(inElement, inClassAttribute, this.context);
+            }
 
-			final Object[] out = new Object[1];
-			final CoreException[] exc = new CoreException[1];
-			BusyIndicator.showWhile(null, new Runnable() {
-				@Override
-				public void run() {
-					try {
-						out[0] = createExtension(inElement, inClassAttribute,
-			                    context);
-					}
-					catch (final CoreException e) {
-						exc[0] = e;
-					}
-				}
-			});
-			if (exc[0] != null) {
-				throw exc[0];
-			}
-			return out[0];
-		}
-		catch (final CoreException exc) {
-			throw exc;
-		}
-		catch (final Exception exc) {
-			throw new CoreException(
-			        new Status(IStatus.ERROR, Activator.getSymbolicName(),
-			                IStatus.ERROR, RelationsMessages.getString("WorkbenchWizardElement.failure.msg"), exc)); //$NON-NLS-1$
-		}
-	}
+            final Object[] out = new Object[1];
+            final CoreException[] exc = new CoreException[1];
+            BusyIndicator.showWhile(null, new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        out[0] = createExtension(inElement, inClassAttribute,
+                                WorkbenchWizardElement.this.context);
+                    }
+                    catch (final CoreException e) {
+                        exc[0] = e;
+                    }
+                }
+            });
+            if (exc[0] != null) {
+                throw exc[0];
+            }
+            return out[0];
+        }
+        catch (final CoreException exc) {
+            throw exc;
+        }
+        catch (final Exception exc) {
+            throw new CoreException(
+                    new Status(IStatus.ERROR, Activator.getSymbolicName(),
+                            IStatus.ERROR, RelationsMessages.getString("WorkbenchWizardElement.failure.msg"), exc)); //$NON-NLS-1$
+        }
+    }
 
-	private Object createExtension(final IConfigurationElement inElement,
-	        final String inClassAttribute, final IEclipseContext inContext)
-	                throws CoreException {
-		final Object out = inElement
-		        .createExecutableExtension(inClassAttribute);
-		ContextInjectionFactory.inject(out, inContext);
-		return out;
-	}
+    private Object createExtension(final IConfigurationElement inElement,
+            final String inClassAttribute, final IEclipseContext inContext)
+                    throws CoreException {
+        final Object out = inElement
+                .createExecutableExtension(inClassAttribute);
+        ContextInjectionFactory.inject(out, inContext);
+        return out;
+    }
 
-	/**
-	 * @return {@link IConfigurationElement}
-	 */
-	public IConfigurationElement getConfigurationElement() {
-		return configuration;
-	}
+    /**
+     * @return {@link IConfigurationElement}
+     */
+    public IConfigurationElement getConfigurationElement() {
+        return this.configuration;
+    }
 
 }

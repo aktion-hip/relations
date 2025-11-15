@@ -1,17 +1,17 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
- * 
+ * Copyright (C) 2004-2025, Benno Luthiger
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -31,30 +31,24 @@ import org.elbe.relations.RelationsConstants;
 
 /**
  * Handler to activate the relation browser views.
- * 
+ *
  * @author lbenno
  */
 public class ActivateViewBrowsers {
 
-	@Execute
-	void activate(final EPartService inPartService,
-	        final EModelService inModelService, final MApplication inApplication) {
-		// get browser stack
-		final MPartStack lStack = (MPartStack) inModelService.find(
-		        RelationsConstants.PART_STACK_BROWSERS, inApplication);
-		final Iterator<MStackElement> lParts = lStack.getChildren().iterator();
-		// iterate over children
-		while (lParts.hasNext()) {
-			final MStackElement lElement = lParts.next();
-			if (lElement instanceof MPart) {
-				final MPart lPart = (MPart) lElement;
-				// activate visible
-				if (inPartService.isPartVisible(lPart)) {
-					inPartService.activate(lPart, true);
-					break;
-				}
-			}
-		}
-	}
+    @Execute
+    void activate(final EPartService partService, final EModelService modelService, final MApplication application) {
+        // get browser stack
+        final MPartStack stack = (MPartStack) modelService.find(RelationsConstants.PART_STACK_BROWSERS, application);
+        final Iterator<MStackElement> parts = stack.getChildren().iterator();
+        // iterate over children
+        while (parts.hasNext()) {
+            if (parts.next() instanceof final MPart part && partService.isPartVisible(part)) {
+                partService.isPartOrPlaceholderInPerspective(null, null);
+                partService.activate(part, true);
+                break;
+            }
+        }
+    }
 
 }

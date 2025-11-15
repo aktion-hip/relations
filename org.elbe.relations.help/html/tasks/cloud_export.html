@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>Export to the Cloud</title>
-  <link rel="STYLESHEET" href="../css/book.css" charset="ISO-8859-1" type="text/css">
+  <link rel="STYLESHEET" href="../css/book.css" charset="UTF-8" type="text/css">
 </head>
 <body>
 <h1>Export to the Cloud</h1>
@@ -17,12 +17,12 @@ synchronization. This option only transfers the changes made since the last sync
 
 <p><img src="../img/whatsNew_23_1.png" alt="Export to Cloud" border="0" /></p>
 
-<p>For that you can upload to the cloud, you must first configure the access to your cloud provider. (<b>Utility -> Preferences... -> Cloud Configuration</b>)</p>
+<p>For that you can upload to the cloud, you must first configure the access to your cloud provider. (<b>Utility → Preferences... → Cloud Configuration</b>)</p>
 
 <p><img src="../img/task_cloudConfig.PNG" alt="Cloud provider configuration" border="0" /></p>
 
 <h3>Dropbox</h3>
-<p>Dropbox needs an access token. You can get this access token from within the Relations application (see <b>Help -> Cloud Configuration</b>).</p>
+<p>Dropbox needs an access token. You can get this access token from within the Relations application (see <b>Help → Cloud Configuration</b>).</p>
 <p>To start the workflow, you have to call the displayed authorization URL. This will lead you to a login page on Dropbox.
 Once you are logged into Dropbox, you will be presented with a screen to authorize the Relations application to access your Dropbox data.<br />
 After you have approved, you will be redirected to a page displaying the application's access code.</p>
@@ -39,7 +39,32 @@ You can enter the <em>protocol</em>, <em>account name</em> and <em>account key</
 as a whole into the field provided.</p>
 
 <h3>Google Drive</h3>
-<p>To export your Relations data to Google Drive, no access configuration is needed.</p>
+<p>To use your Google Drive as Cloud export, you first have to create and download the <i>OAuth 2.0</i> client secret file.
+You can get this file from within the Relations application (see <b>Help → Cloud Configuration</b>).</p>
+<p>To get the client secret file (with <i>JSON</i> content) you have to follow these steps:</p>
+<ol>
+<li>Go to <a href="https://console.cloud.google.com/apis/credentials">Google Cloud Console → Credentials page</a>.</li>
+<li>Click on <code>+Create credentials</code> and select <code>OAuth client ID</code>.</li>
+<li>Select <code>Desktop app</code> as <i>Application type</i> and give the client a meaningful name.</li>
+<li>Click <i>Create</i>.</li>
+</ol>
+<img src="../img/gdCredentials.png" alt="credentials.json">
+<p>In the dialog box that appears after filling this information, click <code>Download JSON</code> to save the desired <i>credentials.json</i> file.</p>
+<p>The content of the download has the following JSON structure:</p>
+<pre>
+{
+    "installed": {
+        "client_id": "123123123-6nv6jh52eui1airo45ek.apps.googleusercontent.com",
+        "project_id": "some-name-123",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_secret": "AAA-BBB-2euiRHE1a52eGui1Zair",
+        "redirect_uris": ["http://localhost"]
+    }
+}
+</pre>
+<p>Paste the JSON content from the downloaded file into the <i>credentials.json</i> field.</p>
 
 <p>&#160;</p>
 <img src="../img/ngrelt.png" alt="Related tasks"><br>

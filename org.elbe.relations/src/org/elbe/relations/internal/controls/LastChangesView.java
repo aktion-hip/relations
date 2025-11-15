@@ -21,7 +21,7 @@ package org.elbe.relations.internal.controls;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.e4.core.di.annotations.Optional;

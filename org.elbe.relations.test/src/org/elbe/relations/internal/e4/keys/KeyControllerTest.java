@@ -47,6 +47,7 @@ import org.elbe.relations.internal.e4.keys.model.BindingModel;
 import org.elbe.relations.internal.e4.keys.model.SaveHelper;
 import org.elbe.relations.internal.e4.keys.model.SchemeElement;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -58,7 +59,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * @author lbenno
  */
 @ExtendWith(MockitoExtension.class)
-public class KeyControllerTest {
+class KeyControllerTest {
     private static final String SCHEME_ID = "schemeID";
 
     private CommandManager commandManager;
@@ -81,7 +82,7 @@ public class KeyControllerTest {
     private KeyController keyController;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         this.contextManager = new ContextManager();
         this.commandManager = new CommandManager();
         this.bindingManager = new BindingManager(this.contextManager, this.commandManager);
@@ -96,7 +97,7 @@ public class KeyControllerTest {
     }
 
     @Test
-    public void testInit() {
+    void testInit() {
         this.keyController.init();
         assertTrue(this.keyController.initialized());
     }
@@ -107,7 +108,7 @@ public class KeyControllerTest {
      * .
      */
     @Test
-    public void testFirePropertyChange() {
+    void testFirePropertyChange() {
         final IPropertyChangeListener listener = new PropChangeListener();
         this.keyController.addPropertyChangeListener(listener);
         final BindingElement bindingEl = new BindingElement(this.keyController);
@@ -119,7 +120,7 @@ public class KeyControllerTest {
     }
 
     @Test
-    public void testUpdateTrigger() throws ParseException {
+    void testUpdateTrigger() throws ParseException {
         final BindingElement bindingEl = new BindingElement(this.keyController);
         final KeySequence oldKeys = KeySequence.getInstance(KeyStroke.getInstance("M1+A"));
         final KeySequence newKeys = KeySequence.getInstance(KeyStroke.getInstance("M1+B"));
@@ -149,7 +150,8 @@ public class KeyControllerTest {
      * .
      */
     @Test
-    public void testExportCSV() {
+    @Disabled("not yet implmentd")
+    void testExportCSV() {
         fail("Not yet implemented");
     }
 
@@ -158,7 +160,8 @@ public class KeyControllerTest {
      * {@link org.elbe.relations.internal.e4.keys.KeyController#saveBindings()}.
      */
     @Test
-    public void testSaveBindings() {
+    @Disabled("not yet implmentd")
+    void testSaveBindings() {
         fail("Not yet implemented");
     }
 
@@ -168,7 +171,8 @@ public class KeyControllerTest {
      * .
      */
     @Test
-    public void testSetDefaultBindings() {
+    @Disabled("not yet implmentd")
+    void testSetDefaultBindings() {
         fail("Not yet implemented");
     }
 

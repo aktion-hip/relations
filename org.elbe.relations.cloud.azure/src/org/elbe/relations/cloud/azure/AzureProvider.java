@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2018, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -38,7 +38,6 @@ import com.microsoft.azure.storage.file.ListFileItem;
 /** The MS Azure Provider component to upload a file to the Azure folder.
  *
  * @author lbenno */
-@SuppressWarnings("restriction")
 public class AzureProvider implements ICloudProvider {
     private static final String AZ_SHARE = "relations"; //$NON-NLS-1$
 
@@ -66,8 +65,8 @@ public class AzureProvider implements ICloudProvider {
                 final Iterable<ListFileItem> incrementalFiles = rootDir.listFilesAndDirectories("relations_delta_", //$NON-NLS-1$
                         null, null);
                 for (final ListFileItem incrementalFile : incrementalFiles) {
-                    if (incrementalFile instanceof CloudFile) {
-                        ((CloudFile) incrementalFile).delete();
+                    if (incrementalFile instanceof final CloudFile cloud) {
+                        cloud.delete();
                     }
                 }
             }

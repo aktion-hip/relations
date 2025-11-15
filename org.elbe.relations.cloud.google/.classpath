@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="libs/google-api-client-1.30.10.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/google-api-client-java6-1.30.10.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/google-api-services-drive-v3-rev197-1.25.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/google-http-client-1.36.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/google-http-client-jackson2-1.36.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/google-oauth-client-1.31.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/google-oauth-client-java6-1.31.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/google-oauth-client-jetty-1.31.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/google-auth-library-oauth2-http-1.23.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/grpc-api-1.60.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/grpc-context-1.60.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/opencensus-api-0.31.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/opencensus-contrib-http-util-0.31.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/guava-33.1.0-jre.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/gson-2.10.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/google-http-client-1.44.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/google-oauth-client-java6-1.36.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/google-oauth-client-1.36.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/google-api-client-2.6.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/google-api-services-drive-v3-rev20241014-2.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/google-http-client-gson-1.43.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/google-oauth-client-jetty-1.36.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21">
 		<attributes>
+			<attribute name="module" value="true"/>
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>

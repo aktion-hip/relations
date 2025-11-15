@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -59,9 +58,10 @@ import org.xml.sax.SAXException;
  * @author Luthiger
  */
 public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
-    private static Bundle bundle = FrameworkUtil.getBundle(Constants.class);
-    private static String RESOURCES_DIR = "resources/"; //$NON-NLS-1$
+    private static final String RESOURCES_DIR = "resources/"; //$NON-NLS-1$
     private static final String TBL_EVENT_STORE = "tblEventStore"; //$NON-NLS-1$
+
+    private static Bundle bundle = FrameworkUtil.getBundle(Constants.class);
 
     /** Returns the SQL statements based on the specified database model.
      *
@@ -98,7 +98,7 @@ public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
     public Collection<String> getCreateEventStoreStatements(final String xmlName)
             throws IOException, TransformerFactoryConfigurationError, TransformerException {
         final Collection<String> statements = getCreateStatemens(xmlName);
-        return statements.stream().filter(st -> st.contains(TBL_EVENT_STORE)).collect(Collectors.toList());
+        return statements.stream().filter(st -> st.contains(TBL_EVENT_STORE)).toList();
     }
 
     protected Optional<URL> getModelXML(final String xmlName) {
@@ -127,7 +127,7 @@ public abstract class AbstractDBObjectCreator implements IDBObjectCreator {
         public void endElement(final String inUri, final String inLocalName, final String inName) throws SAXException {
             if (Constants.NODE_NAME_CREATED_OBJECT.equals(inName)) {
                 final String lEntry = this.entry.toString().trim();
-                if (lEntry.length() > 0) {
+                if (!lEntry.isEmpty()) {
                     this.statements.add(lEntry);
                 }
                 this.isInEntry = false;

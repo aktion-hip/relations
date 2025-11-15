@@ -5,11 +5,12 @@ Bundle-Name: Bibliographical Metadata Test Fragment
 Bundle-SymbolicName: org.elbe.relations.biblio.meta.test
 Bundle-Version: 1.0.0.qualifier
 Fragment-Host: org.elbe.relations.biblio.meta;bundle-version="[1.1.0,2.0.0)"
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: junit-jupiter-api;bundle-version="[5.11.3,6.0.0)",
  org.mockito.junit-jupiter;bundle-version="[5.14.2,6.0.0)",
  org.mockito.mockito-core;bundle-version="[5.14.2,6.0.0)",
  org.apache.commons.math3;bundle-version="[3.6.1,4.0.0)",
  org.apache.commons.commons-collections4;bundle-version="[4.4.0,5.0.0)"
-Import-Package: org.eclipse.e4.core.services.log,
+Import-Package: org.apache.logging.log4j;version="[2.20.0,3.0.0)",
+ org.eclipse.e4.core.services.log,
  org.elbe.relations.db;version="2.0.0"

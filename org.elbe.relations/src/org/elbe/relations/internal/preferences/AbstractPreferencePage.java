@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2016, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -36,99 +36,85 @@ import org.eclipse.swt.widgets.Text;
  */
 public abstract class AbstractPreferencePage extends PreferencePage {
 
-	public AbstractPreferencePage() {
-		super();
-	}
+    protected AbstractPreferencePage() {
+        super();
+    }
 
-	public AbstractPreferencePage(final String inTitle) {
-		super(inTitle);
-	}
+    protected AbstractPreferencePage(final String title) {
+        super(title);
+    }
 
-	public AbstractPreferencePage(final String inTitle,
-	        final ImageDescriptor inImage) {
-		super(inTitle, inImage);
-	}
+    protected AbstractPreferencePage(final String title, final ImageDescriptor image) {
+        super(title, image);
+    }
 
-	/**
-	 * @see PreferencePage#doGetPreferenceStore
-	 */
-	@Override
-	protected IPreferenceStore doGetPreferenceStore() {
-		return null;
-		// return
-		// InstanceScope.INSTANCE.getNode(RelationsConstants.PREFERENCE_NODE);
-	}
+    /**
+     * @see PreferencePage#doGetPreferenceStore
+     */
+    @Override
+    protected IPreferenceStore doGetPreferenceStore() {
+        return null;
+        // return
+        // InstanceScope.INSTANCE.getNode(RelationsConstants.PREFERENCE_NODE);
+    }
 
-	/**
-	 * Utility method that creates a label instance and sets the default layout
-	 * data.
-	 *
-	 * @param inParent
-	 *            the inParent for the new label
-	 * @param inText
-	 *            the text for the new label
-	 * @return the new label
-	 */
-	protected Label createLabel(final Composite inParent, final String inText) {
-		final Label outLabel = new Label(inParent, SWT.LEFT);
-		outLabel.setText(inText);
-		final GridData lData = new GridData();
-		lData.horizontalAlignment = GridData.FILL;
-		lData.widthHint = convertWidthInCharsToPixels(22);
-		outLabel.setLayoutData(lData);
-		return outLabel;
-	}
+    /** Utility method that creates a label instance and sets the default layout data.
+     *
+     * @param parent the inParent for the new label
+     * @param text the text for the new label
+     * @return the new label */
+    protected Label createLabel(final Composite parent, final String text) {
+        final Label outLabel = new Label(parent, SWT.LEFT);
+        outLabel.setText(text);
+        final GridData lData = new GridData();
+        lData.horizontalAlignment = GridData.FILL;
+        lData.widthHint = convertWidthInCharsToPixels(22);
+        outLabel.setLayoutData(lData);
+        return outLabel;
+    }
 
-	protected Combo createCombo(final Composite inParent,
-	        final String[] inItems) {
-		final Combo outCombo = new Combo(inParent,
-		        SWT.DROP_DOWN | SWT.READ_ONLY | SWT.SIMPLE);
-		outCombo.setItems(inItems);
-		outCombo.setLayoutData(createGridData());
-		return outCombo;
-	}
+    protected Combo createCombo(final Composite parent, final String[] items) {
+        final Combo outCombo = new Combo(parent,
+                SWT.DROP_DOWN | SWT.READ_ONLY | SWT.SIMPLE);
+        outCombo.setItems(items);
+        outCombo.setLayoutData(createGridData());
+        return outCombo;
+    }
 
-	protected GridData createGridData() {
-		return new GridData(SWT.FILL, SWT.CENTER, true, false);
-	}
+    protected GridData createGridData() {
+        return new GridData(SWT.FILL, SWT.CENTER, true, false);
+    }
 
-	protected Combo createLabelCombo(final Composite inParent,
-	        final String inLabel, final String[] inItems) {
-		createLabel(inParent, inLabel);
-		return createCombo(inParent, inItems);
-	}
+    protected Combo createLabelCombo(final Composite parent, final String label, final String[] items) {
+        createLabel(parent, label);
+        return createCombo(parent, items);
+    }
 
-	protected Text createLabelText(final Composite inParent,
-	        final String inLabel) {
-		createLabel(inParent, inLabel);
-		return createText(inParent);
-	}
+    protected Text createLabelText(final Composite parent, final String label) {
+        createLabel(parent, label);
+        return createText(parent);
+    }
 
-	private Text createText(final Composite inParent) {
-		final Text outText = new Text(inParent, SWT.BORDER | SWT.SINGLE);
-		outText.setTextLimit(5);
-		outText.setLayoutData(createGridData());
-		return outText;
-	}
+    private Text createText(final Composite parent) {
+        final Text outText = new Text(parent, SWT.BORDER | SWT.SINGLE);
+        outText.setTextLimit(5);
+        outText.setLayoutData(createGridData());
+        return outText;
+    }
 
-	protected void createSeparator(final Composite inParent,
-	        final int inColumns) {
-		final Label lSeparator = new Label(inParent,
-		        SWT.SEPARATOR | SWT.HORIZONTAL);
-		lSeparator.setLayoutData(
-		        new GridData(SWT.FILL, SWT.NONE, true, false, inColumns, 1));
-	}
+    protected void createSeparator(final Composite parent, final int columns) {
+        final Label lSeparator = new Label(parent,
+                SWT.SEPARATOR | SWT.HORIZONTAL);
+        lSeparator.setLayoutData(
+                new GridData(SWT.FILL, SWT.NONE, true, false, columns, 1));
+    }
 
-	/**
-	 * @param inComposite
-	 * @param inColumns
-	 */
-	protected void setLayout(final Composite inComposite, final int inColumns) {
-		final GridLayout lLayout = new GridLayout();
-		lLayout.numColumns = inColumns;
-		lLayout.marginHeight = 0;
-		lLayout.marginWidth = 0;
-		inComposite.setLayout(lLayout);
-	}
+    protected void setLayout(final Composite composite, final int columns) {
+        final GridLayout lLayout = new GridLayout();
+        lLayout.numColumns = columns;
+        lLayout.marginHeight = 0;
+        lLayout.marginWidth = 0;
+        composite.setLayout(lLayout);
+    }
 
 }

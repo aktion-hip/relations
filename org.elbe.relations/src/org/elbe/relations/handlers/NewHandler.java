@@ -20,7 +20,7 @@ package org.elbe.relations.handlers;
 
 import java.lang.reflect.InvocationTargetException;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 import org.eclipse.e4.core.contexts.ContextFunction;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;

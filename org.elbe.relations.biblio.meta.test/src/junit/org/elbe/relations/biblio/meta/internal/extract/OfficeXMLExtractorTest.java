@@ -70,10 +70,11 @@ public class OfficeXMLExtractorTest {
                 + NL
                 + "Type: application/ms-office-1.x;"
                 + NL
-                + "Created: January 24, 2010, 9:56:00 PM CET;"
+                + "Created: January 24, 2010, 9:56:00%sPM CET;"
                 + NL
-                + "Last Modified: September 29, 2020, 1:36:53 PM CEST</i>]";
-        assertEquals(lExpected, lExtracted.getText());
+                + "Last Modified: XXX</i>]";
+        assertEquals(String.format(lExpected, TestUtil.NBSP),
+                lExtracted.getText().replaceAll(TestUtil.REGEX, TestUtil.REPLACEMENT));
 
     }
 

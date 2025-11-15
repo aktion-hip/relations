@@ -75,8 +75,8 @@ public class RelationsIndexerTest {
 
         int lIndexed = this.indexer.refreshIndex(this.monitor);
         assertEquals(0, lIndexed);
-        verify(lIndexer1).initializeIndex(this.indexer.getIndexDir(), Locale.ENGLISH.getLanguage());
-        verify(lIndexer1, times(3)).processIndexer(any(IndexerHelper.class), eq(this.indexer.getIndexDir()),
+        verify(lIndexer1).initializeIndex(this.indexer.getIndexPath(), Locale.ENGLISH.getLanguage());
+        verify(lIndexer1, times(3)).processIndexer(any(IndexerHelper.class), eq(this.indexer.getIndexPath()),
                 eq(this.indexer.getLanguage()));
 
         // index term
@@ -85,7 +85,7 @@ public class RelationsIndexerTest {
         data.createTerm("term for indexing");
         lIndexed = this.indexer.refreshIndex(this.monitor);
         assertEquals(1, lIndexed);
-        verify(lIndexer2, times(3)).processIndexer(any(IndexerHelper.class), eq(this.indexer.getIndexDir()),
+        verify(lIndexer2, times(3)).processIndexer(any(IndexerHelper.class), eq(this.indexer.getIndexPath()),
                 eq(this.indexer.getLanguage()));
 
         // index person
@@ -94,7 +94,7 @@ public class RelationsIndexerTest {
         data.createPerson("Doe", "Jane");
         lIndexed = this.indexer.refreshIndex(this.monitor);
         assertEquals(2, lIndexed);
-        verify(lIndexer3, times(3)).processIndexer(any(IndexerHelper.class), eq(this.indexer.getIndexDir()),
+        verify(lIndexer3, times(3)).processIndexer(any(IndexerHelper.class), eq(this.indexer.getIndexPath()),
                 eq(this.indexer.getLanguage()));
 
         // index text
@@ -103,7 +103,7 @@ public class RelationsIndexerTest {
         data.createText("text for indexing", "Doe, Jane");
         lIndexed = this.indexer.refreshIndex(this.monitor);
         assertEquals(3, lIndexed);
-        verify(lIndexer4, times(3)).processIndexer(any(IndexerHelper.class), eq(this.indexer.getIndexDir()),
+        verify(lIndexer4, times(3)).processIndexer(any(IndexerHelper.class), eq(this.indexer.getIndexPath()),
                 eq(this.indexer.getLanguage()));
     }
 

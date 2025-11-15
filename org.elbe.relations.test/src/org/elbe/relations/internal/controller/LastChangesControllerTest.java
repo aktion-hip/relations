@@ -37,21 +37,21 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * @author lbenno
  */
 @ExtendWith(MockitoExtension.class)
-public class LastChangesControllerTest {
+class LastChangesControllerTest {
     private static DataHouseKeeper data;
 
     @BeforeAll
-    public static void before() {
+    static void before() {
         data = DataHouseKeeper.INSTANCE;
     }
 
     @AfterEach
-    public void tearDown() throws Exception {
+    void tearDown() throws Exception {
         data.deleteAllInAll();
     }
 
     @Test
-    public void testLastChangedItems() throws Exception {
+    void testLastChangedItems() throws Exception {
         final String[] lExpectedLastCreated = { "Text 2", "Text 1", "Foo, Joe",
                 "Term 3", "Term 2", "Term 1", "Doe, Jane" };
         final String[] lExpectedLastModified = { "Term 3", "Text 2", "Text 1",
@@ -73,22 +73,18 @@ public class LastChangesControllerTest {
 
         final LastChangesController lController = new LastChangesController();
         lController.setViewState("true");
-        assertCollection("last created", lExpectedLastCreated,
-                lController.getLastChangedItems());
+        assertCollection(lExpectedLastCreated, lController.getLastChangedItems());
 
         lController.setViewState("false");
-        assertCollection("last modified 0", lExpectedLastCreated,
-                lController.getLastChangedItems());
+        assertCollection(lExpectedLastCreated, lController.getLastChangedItems());
         lToModify.save(lToModify.getTitle(), "modified");
-        assertCollection("last modified 1", lExpectedLastModified,
-                lController.getLastChangedItems());
+        assertCollection(lExpectedLastModified, lController.getLastChangedItems());
     }
 
-    private void assertCollection(final String inLabel,
-            final String[] inExpected, final Collection<AlternativeModel> lItems) {
+    private void assertCollection(final String[] inExpected, final Collection<AlternativeModel> lItems) {
         int i = 0;
         for (final AlternativeModel lItem : lItems) {
-            assertEquals(inLabel + " " + i, inExpected[i++], lItem.toString());
+            assertEquals(inExpected[i++], lItem.toString());
         }
     }
 

@@ -15,8 +15,7 @@ General Public License for more details.
 You should have received a copy of the GNU General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
-
+ */
 package org.elbe.relations.data.search;
 
 /**
@@ -25,67 +24,61 @@ package org.elbe.relations.data.search;
  * @author Luthiger
  */
 public class IndexerField {
-	public enum Store {
-		YES,
-		NO
-	};
+    public enum Store {
+        YES,
+        NO
+    }
 
-	public enum Type {
-		ID,
-		FULL_TEXT;
-	};
+    public enum Type {
+        ID,
+        FULL_TEXT;
+    }
 
-	private final String fieldName;
-	private final String value;
-	private final Store storeValue;
-	private final Type type;
-	private final float boost;
+    private final String fieldName;
+    private final String value;
+    private final Store storeValue;
+    private final Type type;
+    private final float boost;
 
-	/**
-	 * IndexerField constructor.
-	 *
-	 * @param inFieldName
-	 *            String
-	 * @param inValue
-	 *            String
-	 * @param inStore
-	 *            IndexerField.Store
-	 * @param inType
-	 *            IndexerField.Type
-	 * @param inBoost
-	 *            float
-	 */
-	public IndexerField(String inFieldName, String inValue, Store inStore, Type inType, float inBoost) {
-		fieldName = inFieldName;
-		value = inValue;
-		storeValue = inStore;
-		type = inType;
-		boost = inBoost;
-	}
+	/** IndexerField constructor.
+     *
+     * @param fieldName String
+     * @param value String
+     * @param store IndexerField.Store
+     * @param type IndexerField.Type
+     * @param boost float */
+    public IndexerField(final String fieldName, final String value, final Store store, final Type type,
+            final float boost) {
+        this.fieldName = fieldName;
+        this.value = value;
+        this.storeValue = store;
+        this.type = type;
+        this.boost = boost;
+    }
 
-	public String getFieldName() {
-		return fieldName;
-	}
+    public String getFieldName() {
+        return this.fieldName;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return this.value;
+    }
 
-	public Store getStoreValue() {
-		return storeValue;
-	}
+    public Store getStoreValue() {
+        return this.storeValue;
+    }
 
-	public Type getFieldType() {
-		return type;
-	}
+    public Type getFieldType() {
+        return this.type;
+    }
 
-	public float getBoost() {
-		return boost;
-	}
+    public float getBoost() {
+        return this.boost;
+    }
 
-	@Override
-	public String toString() {
-		return String.format("%s: %s", fieldName, value); //$NON-NLS-1$
-	}
+    @Override
+    public String toString() {
+        return String.format("%s: %s", this.fieldName, this.value); //$NON-NLS-1$
+    }
 
 }

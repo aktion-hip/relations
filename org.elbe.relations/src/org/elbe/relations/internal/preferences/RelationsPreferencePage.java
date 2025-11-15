@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2016, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -21,9 +21,9 @@ package org.elbe.relations.internal.preferences;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import javax.inject.Inject;
+import java.util.Optional;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -32,12 +32,14 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.RelationsMessages;
@@ -48,6 +50,9 @@ import org.elbe.relations.internal.controller.BrowserController.BrowserInfo;
 import org.elbe.relations.internal.utility.FormUtility;
 import org.elbe.relations.internal.wizards.IUpdateListener;
 import org.elbe.relations.services.IRelationsBrowser;
+import org.elbe.relations.utility.FontUtil;
+
+import jakarta.inject.Inject;
 
 /**
  * Display and manipulation of the Relations preferences, i.e. language
@@ -58,349 +63,329 @@ import org.elbe.relations.services.IRelationsBrowser;
  * @author Luthiger
  */
 public class RelationsPreferencePage extends AbstractPreferencePage {
-	private Combo biblioCombo;
-	private Text maxHits;
-	private Text maxLastChanged;
-	private BrowserViewsHelper browserFontSizes;
+    private Combo biblioCombo;
+    private Text maxHits;
+    private Text maxLastChanged;
+    private BrowserViewsHelper browserFontSizes;
 
-	@Inject
-	private BibliographyController biblioController;
-	@Inject
-	private BrowserController browserController;
-	@Inject
-	private IEventBroker eventBroker;
+    @Inject
+    private BibliographyController biblioController;
+    @Inject
+    private BrowserController browserController;
+    @Inject
+    private IEventBroker eventBroker;
 
-	/**
-	 * RelationsPreferencePage constructor
-	 */
-	public RelationsPreferencePage() {
-		super();
-	}
+    /**
+     * RelationsPreferencePage constructor
+     */
+    public RelationsPreferencePage() {
+        super();
+    }
 
-	/**
-	 * @param inTitle
-	 */
-	public RelationsPreferencePage(final String inTitle) {
-		super(inTitle);
-	}
+    /** @param title */
+    public RelationsPreferencePage(final String title) {
+        super(title);
+    }
 
-	/**
-	 * @param inTitle
-	 * @param inImage
-	 */
-	public RelationsPreferencePage(final String inTitle,
-			final ImageDescriptor inImage) {
-		super(inTitle, inImage);
-	}
+    /** @param title
+     * @param image */
+    public RelationsPreferencePage(final String title, final ImageDescriptor image) {
+        super(title, image);
+    }
 
-	@Override
-	protected Control createContents(final Composite inParent) {
-		final Composite outComposite = new Composite(inParent, SWT.NONE);
+    @Override
+    protected Control createContents(final Composite parent) {
+        final Composite outComposite = new Composite(parent, SWT.NONE);
 
-		final int lColumns = 2;
-		setLayout(outComposite, lColumns);
-		outComposite.setFont(inParent.getFont());
+        final int columns = 2;
+        setLayout(outComposite, columns);
+        outComposite.setFont(parent.getFont());
 
-		this.biblioCombo = createLabelCombo(outComposite,
-				RelationsMessages
-				.getString("RelationsPreferencePage.lbl.biblio"), //$NON-NLS-1$
-				new String[] {});
-		createSeparator(outComposite, lColumns);
+        this.biblioCombo = createLabelCombo(outComposite,
+                RelationsMessages.getString("RelationsPreferencePage.lbl.biblio"), //$NON-NLS-1$
+                new String[] {});
+        createSeparator(outComposite, columns);
 
-		// font sizes in browser views
-		final Label lLabel = createLabel(outComposite, RelationsMessages
-				.getString("RelationsPreferencePage.lbl.font.size")); //$NON-NLS-1$
-		((GridData) lLabel.getLayoutData()).horizontalSpan = lColumns;
+        // font sizes in browser views
+        final Label label = createLabel(outComposite,
+                RelationsMessages.getString("RelationsPreferencePage.lbl.font.size")); //$NON-NLS-1$
+        ((GridData) label.getLayoutData()).horizontalSpan = columns;
 
-		this.browserFontSizes = new BrowserViewsHelper(outComposite,
-				this.browserController.getBrowserInfos(), this.eventBroker);
+        this.browserFontSizes = new BrowserViewsHelper(outComposite, this.browserController.getBrowserInfos(),
+                this.eventBroker);
 
-		// Max number of search hits
-		createSeparator(outComposite, lColumns);
-		final Label lLabel2 = createLabel(outComposite, RelationsMessages
-				.getString("RelationsPreferencePage.title.fulltext.search")); // Volltext-Suche: //$NON-NLS-1$
-		((GridData) lLabel2.getLayoutData()).horizontalSpan = lColumns;
-		this.maxHits = createLabelText(outComposite, RelationsMessages
-				.getString("RelationsPreferencePage.lbl.fulltext.search")); // Max. //$NON-NLS-1$
-		// Anzahl
-		// Treffer
+        // Max number of search hits
+        createSeparator(outComposite, columns);
+        final Label label2 = createLabel(outComposite,
+                RelationsMessages.getString("RelationsPreferencePage.title.fulltext.search")); // Volltext-Suche: //$NON-NLS-1$
+        ((GridData) label2.getLayoutData()).horizontalSpan = columns;
+        this.maxHits = createLabelText(outComposite,
+                RelationsMessages.getString("RelationsPreferencePage.lbl.fulltext.search")); // Max. //$NON-NLS-1$
 
-		// Max number displayed of last changed items
-		final Label lLabel3 = createLabel(outComposite, RelationsMessages
-				.getString("RelationsPreferencePage.title.changed.items")); // Letzte //$NON-NLS-1$
-		// Änderungen:
-		((GridData) lLabel3.getLayoutData()).horizontalSpan = lColumns;
-		this.maxLastChanged = createLabelText(outComposite, RelationsMessages
-				.getString("RelationsPreferencePage.lbl.changed.items")); // Max. //$NON-NLS-1$
-		// Anzahl
-		// Einträge
+        // Max number displayed of last changed items
+        final Label label3 = createLabel(outComposite,
+                RelationsMessages.getString("RelationsPreferencePage.title.changed.items")); // Letzte //$NON-NLS-1$
+        // Änderungen:
+        ((GridData) label3.getLayoutData()).horizontalSpan = columns;
+        this.maxLastChanged = createLabelText(outComposite,
+                RelationsMessages.getString("RelationsPreferencePage.lbl.changed.items")); // Max. //$NON-NLS-1$
 
-		initializeValues();
-		return outComposite;
-	}
+        initializeValues();
+        return outComposite;
+    }
 
-	/**
-	 * Initializes states of the controls from the preference store.
-	 */
-	private void initializeValues() {
-		final IEclipsePreferences lStore = RelationsPreferences
-				.getPreferences();
-		this.biblioCombo.setItems(this.biblioController.getBiblioNames());
-		this.biblioCombo.select(this.biblioController.getSelectedIndex());
-		this.maxHits.setText(String
-				.valueOf(lStore.getInt(RelationsConstants.KEY_MAX_SEARCH_HITS,
-						RelationsConstants.DFT_MAX_SEARCH_HITS)));
-		this.maxLastChanged.setText(String
-				.valueOf(lStore.getInt(RelationsConstants.KEY_MAX_LAST_CHANGED,
-						RelationsConstants.DFT_MAX_LAST_CHANGED)));
-		this.browserFontSizes.initializeValues(lStore);
-	}
+    /**
+     * Initializes states of the controls from the preference store.
+     */
+    private void initializeValues() {
+        final IEclipsePreferences store = RelationsPreferences.getPreferences();
+        this.biblioCombo.setItems(this.biblioController.getBiblioNames());
+        this.biblioCombo.select(this.biblioController.getSelectedIndex());
+        this.maxHits.setText(String.valueOf(store.getInt(RelationsConstants.KEY_MAX_SEARCH_HITS,
+                RelationsConstants.DFT_MAX_SEARCH_HITS)));
+        this.maxLastChanged.setText(String.valueOf(store.getInt(RelationsConstants.KEY_MAX_LAST_CHANGED,
+                RelationsConstants.DFT_MAX_LAST_CHANGED)));
+        this.browserFontSizes.initializeValues(store);
+    }
 
-	/**
-	 * The default button has been pressed.
-	 */
-	@Override
-	protected void performDefaults() {
-		this.biblioCombo.setItems(this.biblioController.getBiblioNames());
-		this.biblioCombo.select(this.biblioController.getSelectedIndex());
-		this.browserFontSizes.setDefaults();
-		this.maxHits.setText(String.valueOf(RelationsConstants.DFT_MAX_SEARCH_HITS));
-		this.maxLastChanged.setText(
-				String.valueOf(RelationsConstants.DFT_MAX_LAST_CHANGED));
-		super.performDefaults();
-	}
+    /**
+     * The default button has been pressed.
+     */
+    @Override
+    protected void performDefaults() {
+        this.biblioCombo.setItems(this.biblioController.getBiblioNames());
+        this.biblioCombo.select(this.biblioController.getSelectedIndex());
+        this.browserFontSizes.setDefaults();
+        this.maxHits.setText(String.valueOf(RelationsConstants.DFT_MAX_SEARCH_HITS));
+        this.maxLastChanged.setText(String.valueOf(RelationsConstants.DFT_MAX_LAST_CHANGED));
+        super.performDefaults();
+    }
 
-	/**
-	 * The user has pressed Ok. Store/apply this page's values appropriately.
-	 */
-	@Override
-	public boolean performOk() {
-		return savePreferences();
-	}
+    /**
+     * The user has pressed Ok. Store/apply this page's values appropriately.
+     */
+    @Override
+    public boolean performOk() {
+        return savePreferences();
+    }
 
-	@Override
-	protected void performApply() {
-		savePreferences();
-	}
+    @Override
+    protected void performApply() {
+        savePreferences();
+    }
 
-	private boolean savePreferences() {
-		if (this.biblioCombo != null) {
-			final IEclipsePreferences lStore = RelationsPreferences
-			        .getPreferences();
-			lStore.put(RelationsConstants.KEY_BIBLIO_SCHEMA, this.biblioController
-					.getBibliography(this.biblioCombo.getSelectionIndex()).getId());
-			lStore.put(RelationsConstants.KEY_MAX_SEARCH_HITS,
-					this.maxHits.getText());
-			lStore.put(RelationsConstants.KEY_MAX_LAST_CHANGED,
-					this.maxLastChanged.getText());
-			this.browserFontSizes.savePreferences(lStore);
-		}
-		return true;
-	}
+    private boolean savePreferences() {
+        if (this.biblioCombo != null) {
+            final IEclipsePreferences store = RelationsPreferences.getPreferences();
+            store.put(RelationsConstants.KEY_BIBLIO_SCHEMA,
+                    this.biblioController.getBibliography(this.biblioCombo.getSelectionIndex()).getId());
+            store.put(RelationsConstants.KEY_MAX_SEARCH_HITS, this.maxHits.getText());
+            store.put(RelationsConstants.KEY_MAX_LAST_CHANGED, this.maxLastChanged.getText());
+            this.browserFontSizes.savePreferences(store);
+        }
+        return true;
+    }
 
-	/**
-	 * @see IUpdateListener#onUpdate(IStatus)
-	 */
-	public void onUpdate(final IStatus inStatus) {
-		setErrorMessage(FormUtility.getErrorMessage(inStatus));
-	}
+    /**
+     * @see IUpdateListener#onUpdate(IStatus)
+     */
+    public void onUpdate(final IStatus status) {
+        setErrorMessage(FormUtility.getErrorMessage(status));
+    }
 
-	// --- inner classes ---
+    // --- inner classes ---
 
-	/**
-	 * Helper class to set the font size of the registered browser views. We
-	 * have to treat them in a special way because they are registered
-	 * dynamically.
-	 */
-	private class BrowserViewsHelper {
-		private static final String SHORTCUT_CHAR = "&"; //$NON-NLS-1$
-		private static final String CHECK_BOX_ID = "makeFontEqual"; //$NON-NLS-1$
+    /**
+     * Helper class to set the font size of the registered browser views. We
+     * have to treat them in a special way because they are registered
+     * dynamically.
+     */
+    private class BrowserViewsHelper {
+        private static final String SHORTCUT_CHAR = "&"; //$NON-NLS-1$
+        private static final String CHECK_BOX_ID = "makeFontEqual"; //$NON-NLS-1$
 
-		private final IEventBroker eventBroker;
-		private final Collection<Class<IRelationsBrowser>> browserIds;
-		private final Map<Class<IRelationsBrowser>, Combo> browserCombos;
-		private Button equalCheckBox;
+        private final IEventBroker eventBroker;
+        private final List<Class<IRelationsBrowser>> browserIds;
+        private final Map<Class<IRelationsBrowser>, Combo> browserCombos = new HashMap<>();
+        private Button equalCheckBox;
 
-		@SuppressWarnings("unchecked")
-		BrowserViewsHelper(final Composite inComposite,
-				final Collection<BrowserInfo> inBrowsers,
-				final IEventBroker inEventBroker) {
-			this.eventBroker = inEventBroker;
-			this.browserIds = new ArrayList<>(
-					inBrowsers.size());
-			this.browserCombos = new HashMap<>();
-			boolean lFirst = true;
-			for (final BrowserInfo lBrowserInformation : inBrowsers) {
-				final Class<IRelationsBrowser> lId = (Class<IRelationsBrowser>) lBrowserInformation
-						.getBrowser();
-				this.browserIds.add(lId);
-				final Combo lCombo = createComboExtended(inComposite,
-						lBrowserInformation.getName(),
-						RelationsConstants.INIT_SIZES, lFirst);
-				this.browserCombos.put(lId, lCombo);
-				lFirst = false;
-			}
-		}
+        @SuppressWarnings("unchecked")
+        BrowserViewsHelper(final Composite composite, final Collection<BrowserInfo> browsers,
+                final IEventBroker eventBroker) {
+            this.eventBroker = eventBroker;
+            this.browserIds = new ArrayList<>(browsers.size());
+            boolean isFirst = true;
+            for (final BrowserInfo browserInformation : browsers) {
+                final Class<IRelationsBrowser> id = (Class<IRelationsBrowser>) browserInformation.getBrowser();
+                this.browserIds.add(id);
+                final Combo combo = createComboExtended(composite, browserInformation.getName(),
+                        RelationsConstants.INIT_SIZES, isFirst);
+                this.browserCombos.put(id, combo);
+                isFirst = false;
+            }
+        }
 
-		/**
-		 * Initializes the combo values from the specified preference store.
-		 *
-		 * @param inStore
-		 *            {@link IEclipsePreferences}
-		 */
-		public void initializeValues(final IEclipsePreferences inStore) {
-			for (final Class<IRelationsBrowser> lID : this.browserCombos.keySet()) {
-				final int lValue = inStore.getInt(lID.getName(),
-						RelationsConstants.DFT_TEXT_FONT_SIZE);
-				this.browserCombos.get(lID).select(getIndex(lValue));
-			}
-			final boolean lIsEqual = inStore.getBoolean(CHECK_BOX_ID, false);
-			handleEqualCheck(lIsEqual);
-			this.equalCheckBox.setSelection(lIsEqual);
-		}
+        /** Initializes the combo values from the specified preference store.
+         *
+         * @param store {@link IEclipsePreferences} */
+        public void initializeValues(final IEclipsePreferences store) {
+            this.browserCombos.forEach((k, v) -> {
+                final int size = store.getInt(k.getName(), RelationsConstants.DFT_TEXT_FONT_SIZE);
+                v.select(getIndex(size));
+            });
+            final boolean isEqual = store.getBoolean(CHECK_BOX_ID, false);
+            handleEqualCheck(isEqual);
+            this.equalCheckBox.setSelection(isEqual);
+        }
 
-		/**
-		 * Saves the values to the specified preference store.
-		 *
-		 * @param inStore
-		 *            {@link IEclipsePreferences}
-		 */
-		public void savePreferences(final IEclipsePreferences inStore) {
-			final int lDefault = RelationsConstants.DFT_TEXT_FONT_SIZE;
-			for (final Class<IRelationsBrowser> lID : this.browserCombos.keySet()) {
-				final Combo lCombo = this.browserCombos.get(lID);
-				final int lIndex = lCombo.getSelectionIndex();
-				final int lValue = lIndex == -1 ? lDefault
-						: Integer
-						.valueOf(RelationsConstants.INIT_SIZES[lIndex]);
-				inStore.putInt(lID.getName(), lValue);
-				this.eventBroker.post(getTopic(lID), lValue);
-			}
-			inStore.putBoolean(CHECK_BOX_ID, this.equalCheckBox.getSelection());
-		}
+        /** Saves the values to the specified preference store.
+         *
+         * @param store {@link IEclipsePreferences} */
+        public void savePreferences(final IEclipsePreferences store) {
+            final int defaultSize = RelationsConstants.DFT_TEXT_FONT_SIZE;
+            final boolean isEqualSize = this.equalCheckBox.getSelection();
+            store.putBoolean(CHECK_BOX_ID, isEqualSize);
 
-		private String getTopic(final Class<IRelationsBrowser> inID) {
-			return inID.getName().replaceAll("\\.", "_"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+            this.browserCombos.forEach((k, v) -> {
+                final int index = v.getSelectionIndex();
+                final int size = index == -1 ? defaultSize : Integer.valueOf(RelationsConstants.INIT_SIZES[index]);
+                store.putInt(k.getName(), size);
+                final Optional<Font> newFont = FontUtil.createOrGetFont(size);
+                newFont.ifPresent(f -> this.eventBroker.post(getTopic(k), f));
+            });
+            // post font for Inspector
+            final int fontSize = store.getInt(this.browserIds.get(0).getName(), defaultSize);
+            FontUtil.createOrGetFont(fontSize)
+                    .ifPresent(f -> this.eventBroker.post(RelationsConstants.KEY_TEXT_FONT_SIZE, f));
+        }
 
-		/**
-		 * Sets the combo values to the default value.
-		 */
-		public void setDefaults() {
-			final int lDefaultIndex = getIndex(
-					RelationsConstants.DFT_TEXT_FONT_SIZE);
-			for (final Combo lCombo : this.browserCombos.values()) {
-				lCombo.select(lDefaultIndex);
-			}
-			makeIndividual();
-			this.equalCheckBox.setSelection(false);
-		}
+        private String getTopic(final Class<IRelationsBrowser> id) {
+            return id.getName().replace(".", "_"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
 
-		private int getIndex(final int inValue) {
-			return getIndex(String.valueOf(inValue));
-		}
+        /**
+         * Sets the combo values to the default value.
+         */
+        public void setDefaults() {
+            final int defaultIndex = getIndex(RelationsConstants.DFT_TEXT_FONT_SIZE);
+            for (final Combo combo : this.browserCombos.values()) {
+                combo.select(defaultIndex);
+            }
+            makeIndividual();
+            this.equalCheckBox.setSelection(false);
+        }
 
-		private int getIndex(final String inValue) {
-			for (int i = 0; i < RelationsConstants.INIT_SIZES.length; i++) {
-				if (RelationsConstants.INIT_SIZES[i].equals(inValue)) {
-					return i;
-				}
-			}
-			return 0;
-		}
+        private int getIndex(final int value) {
+            return getIndex(String.valueOf(value));
+        }
 
-		private Label createFPLabel(final Composite inParent,
-				final String inText) {
-			final Label outLabel = new Label(inParent, SWT.LEFT);
-			outLabel.setText(inText);
-			return outLabel;
-		}
+        private int getIndex(final String value) {
+            for (int i = 0; i < RelationsConstants.INIT_SIZES.length; i++) {
+                if (RelationsConstants.INIT_SIZES[i].equals(value)) {
+                    return i;
+                }
+            }
+            return 0;
+        }
 
-		private Combo createComboExtended(final Composite inParent,
-				final String inText, final String[] inItems,
-				final boolean inAddCheckBox) {
-			createFPLabel(inParent, addShortCut(inText));
+        private Label createFPLabel(final Composite parent, final String text) {
+            final Label outLabel = new Label(parent, SWT.LEFT);
+            outLabel.setText(text);
+            return outLabel;
+        }
 
-			final Composite lComposite = new Composite(inParent, SWT.NONE);
-			setLayout(lComposite, 2);
+        private Combo createComboExtended(final Composite parent, final String text, final String[] items,
+                final boolean addCheckBox) {
+            createFPLabel(parent, addShortCut(text));
 
-			final Combo outCombo = createCombo(lComposite, inItems);
-			outCombo.setLayoutData(
-					new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            final Composite composite = new Composite(parent, SWT.NONE);
+            setLayout(composite, 2);
 
-			if (inAddCheckBox) {
-				this.equalCheckBox = createCheckBox(lComposite,
-						RelationsMessages.getString(
-								"RelationsPreferencePage.lbl.font.size.equal")); //$NON-NLS-1$
-			} else {
-				createFPLabel(lComposite, ""); //$NON-NLS-1$
-			}
-			return outCombo;
-		}
+            final Combo outCombo = createCombo(composite, items);
+            outCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
-		private String addShortCut(final String inText) {
-			final String[] lParts = inText.split("\\s"); //$NON-NLS-1$
-			if (lParts.length == 1) {
-				return SHORTCUT_CHAR + inText;
-			}
-			final int lLast = lParts.length - 1;
-			lParts[lLast] = SHORTCUT_CHAR + lParts[lLast];
-			final StringBuilder out = new StringBuilder();
-			for (final String lPart : lParts) {
-				out.append(lPart).append(" "); //$NON-NLS-1$
-			}
-			return new String(out).trim();
-		}
+            if (addCheckBox) {
+                this.equalCheckBox = createCheckBox(composite,
+                        RelationsMessages.getString("RelationsPreferencePage.lbl.font.size.equal")); //$NON-NLS-1$
+            } else {
+                createFPLabel(composite, ""); //$NON-NLS-1$
+            }
+            return outCombo;
+        }
 
-		private Button createCheckBox(final Composite inParent,
-				final String inText) {
-			final Button outButton = new Button(inParent, SWT.CHECK);
-			outButton.setText(inText);
-			outButton.setData(CHECK_BOX_ID);
-			outButton.addSelectionListener(new SelectionListener() {
-				@Override
-				public void widgetSelected(final SelectionEvent inEvent) {
-					handleEqualCheck(((Button) inEvent.widget).getSelection());
-				}
+        private String addShortCut(final String text) {
+            final String[] parts = text.split("\\s"); //$NON-NLS-1$
+            if (parts.length == 1) {
+                return SHORTCUT_CHAR + text;
+            }
+            final int last = parts.length - 1;
+            parts[last] = SHORTCUT_CHAR + parts[last];
+            final StringBuilder out = new StringBuilder();
+            for (final String lPart : parts) {
+                out.append(lPart).append(" "); //$NON-NLS-1$
+            }
+            return new String(out).trim();
+        }
 
-				@Override
-				public void widgetDefaultSelected(
-						final SelectionEvent inEvent) {
-					widgetSelected(inEvent);
-				}
-			});
-			return outButton;
-		}
+        private Button createCheckBox(final Composite parent, final String text) {
+            final Button checkBox = new Button(parent, SWT.CHECK);
+            checkBox.setText(text);
+            checkBox.setData(CHECK_BOX_ID);
+            checkBox.addSelectionListener(new SelectionListener() {
+                @Override
+                public void widgetSelected(final SelectionEvent event) {
+                    handleEqualCheck(((Button) event.widget).getSelection());
+                }
 
-		private void handleEqualCheck(final boolean inIsEqual) {
-			if (inIsEqual) {
-				makeEqual();
-			} else {
-				makeIndividual();
-			}
-		}
+                @Override
+                public void widgetDefaultSelected(final SelectionEvent event) {
+                    widgetSelected(event);
+                }
+            });
+            return checkBox;
+        }
 
-		private void makeIndividual() {
-			for (final Combo lCombo : this.browserCombos.values()) {
-				lCombo.setEnabled(true);
-			}
-		}
+        private void handleEqualCheck(final boolean inIsEqual) {
+            if (inIsEqual) {
+                makeEqual();
+            } else {
+                makeIndividual();
+            }
+        }
 
-		private void makeEqual() {
-			boolean lFirst = true;
-			int lSelectionIndex = 0;
-			for (final Class<IRelationsBrowser> lId : this.browserIds) {
-				if (lFirst) {
-					lSelectionIndex = this.browserCombos.get(lId)
-							.getSelectionIndex();
-				} else {
-					final Combo lCombo = this.browserCombos.get(lId);
-					lCombo.select(lSelectionIndex);
-					lCombo.setEnabled(false);
-				}
-				lFirst = false;
-			}
-		}
-	}
+        private void makeIndividual() {
+            for (final Combo combo : this.browserCombos.values()) {
+                combo.setEnabled(true);
+                combo.removeListener(SWT.Selection, this.setComboValue);
+            }
+        }
+
+        private void makeEqual() {
+            boolean isFirst = true;
+            int selectionIndex = 0;
+            for (final Class<IRelationsBrowser> id : this.browserIds) {
+                if (isFirst) {
+                    final Combo combo = this.browserCombos.get(id);
+                    combo.addListener(SWT.Selection, this.setComboValue);
+                    selectionIndex = combo.getSelectionIndex();
+                } else {
+                    final Combo combo = this.browserCombos.get(id);
+                    combo.select(selectionIndex);
+                    combo.setEnabled(false);
+                }
+                isFirst = false;
+            }
+        }
+
+        Listener setComboValue = e -> {
+            if (e.widget instanceof final Combo current) {
+                this.browserCombos.forEach((k, v) -> {
+                    if (!v.equals(current)) {
+                        v.select(current.getSelectionIndex());
+                    }
+                });
+            }
+        };
+    }
 
 }

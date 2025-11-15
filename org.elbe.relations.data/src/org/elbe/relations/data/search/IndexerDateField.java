@@ -15,7 +15,7 @@ General Public License for more details.
 You should have received a copy of the GNU General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*/
+ */
 
 package org.elbe.relations.data.search;
 
@@ -25,35 +25,33 @@ package org.elbe.relations.data.search;
  * @author Luthiger Created on 21.11.2008
  */
 public class IndexerDateField extends IndexerField {
-	public enum TimeResolution {
-		YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND
-	}
+    public enum TimeResolution {
+        YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND
+    }
 
-	private final long time;
-	private final TimeResolution resolution;
+    private final long time;
+    private final TimeResolution resolution;
 
-	/**
-	 *
-	 * @param inFieldName
-	 *            String
-	 * @param inValue
-	 *            Time as long value
-	 * @param inStore
-	 * @param inType
-	 * @param inResolution
-	 */
-	public IndexerDateField(String inFieldName, long inValue, Store inStore, Type inType, TimeResolution inResolution) {
-		super(inFieldName, "", inStore, inType, 1.0f); //$NON-NLS-1$
-		time = inValue;
-		resolution = inResolution;
-	}
+	/** IndexerDateField constructor.
+     *
+     * @param fieldName String
+     * @param value Time as long value
+     * @param store
+     * @param type
+     * @param resolution */
+    public IndexerDateField(final String fieldName, final long value, final Store store, final Type type,
+            final TimeResolution resolution) {
+        super(fieldName, "", store, type, 1.0f); //$NON-NLS-1$
+        this.time = value;
+        this.resolution = resolution;
+    }
 
-	public long getTime() {
-		return time;
-	}
+    public long getTime() {
+        return this.time;
+    }
 
-	public TimeResolution getResolution() {
-		return resolution;
-	}
+    public TimeResolution getResolution() {
+        return this.resolution;
+    }
 
 }

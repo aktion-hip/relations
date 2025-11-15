@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2016, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -18,8 +18,6 @@
  ***************************************************************************/
 package org.elbe.relations.handlers;
 
-import javax.inject.Named;
-
 import org.eclipse.e4.core.contexts.ContextFunction;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -31,37 +29,33 @@ import org.elbe.relations.internal.e4.wizards.AbstractExtensionWizard;
 import org.elbe.relations.internal.e4.wizards.ExportWizard;
 import org.elbe.relations.internal.e4.wizards.ExportWizardRegistry;
 
-/**
- * The handler for the <code>Export...</code> wizard.
+import jakarta.inject.Named;
+
+/** The handler for the <code>Export...</code> wizard.
  *
- * @author Luthiger
- */
+ * @author Luthiger */
 public class ExportHandler extends AbstractExtensionHandler {
 
-	@Execute
-	void showExportWizards(
-	        @Named(IServiceConstants.ACTIVE_SHELL) final Shell inShell,
-	        final IEclipseContext inContext) {
-		executeHandler(inShell, inContext);
-	}
+    @Execute
+    void showExportWizards(
+            @Named(IServiceConstants.ACTIVE_SHELL) final Shell shell, final IEclipseContext context) {
+        executeHandler(shell, context);
+    }
 
-	private void executeHandler(final Shell inShell,
-	        final IEclipseContext inContext) {
-		// prepare context
-		inContext.set(AbstractExtensionWizard.EXPORT_WIZARD_REGISTRY,
-		        new ContextFunction() {
-			        @Override
-			        public Object compute(final IEclipseContext inContext) {
-				        return ContextInjectionFactory
-		                        .make(ExportWizardRegistry.class, inContext);
-			        }
-		        });
-		final ExportWizard lWizard = ContextInjectionFactory
-		        .make(ExportWizard.class, inContext);
-		lWizard.setCategoryId(null);
-		lWizard.init(StructuredSelection.EMPTY);
+    private void executeHandler(final Shell shell, final IEclipseContext context) {
+        // prepare context
+        context.set(AbstractExtensionWizard.EXPORT_WIZARD_REGISTRY,
+                new ContextFunction() {
+            @Override
+            public Object compute(final IEclipseContext context, final String contextKey) {
+                return ContextInjectionFactory.make(ExportWizardRegistry.class, context);
+            }
+        });
+        final ExportWizard wizard = ContextInjectionFactory.make(ExportWizard.class, context);
+        wizard.setCategoryId(null);
+        wizard.init(StructuredSelection.EMPTY);
 
-		runWizardDialog(inShell, lWizard);
-	}
+        runWizardDialog(shell, wizard);
+    }
 
 }

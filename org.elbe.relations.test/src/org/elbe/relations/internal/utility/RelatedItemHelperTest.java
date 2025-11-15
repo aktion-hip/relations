@@ -94,8 +94,7 @@ public class RelatedItemHelperTest {
                 "Item 'Term 1'", "Item 'Term 2'", "Item 'Term 5'",
                 "Item 'Term 6'", "Item 'The Book'" };
         for (int i = 0; i < lSorted.length; i++) {
-            assertEquals("sorted item " + i, lExpected[i],
-                    lSorted[i].toString());
+            assertEquals(lExpected[i], lSorted[i].toString());
         }
     }
 

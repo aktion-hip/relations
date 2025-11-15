@@ -23,9 +23,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
@@ -47,6 +44,9 @@ import org.elbe.relations.internal.controls.RelationsStatusLineManager;
 import org.elbe.relations.internal.search.RelationsIndexerWithLanguage;
 import org.hip.kernel.exc.VException;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 /**
  * Action responsible to reindex the current database.
  *
@@ -54,186 +54,173 @@ import org.hip.kernel.exc.VException;
  */
 @SuppressWarnings("restriction")
 public class IndexerAction extends Action {
-	private static final String NL = System.getProperty("line.separator"); //$NON-NLS-1$
+    private static final String NL = System.getProperty("line.separator"); //$NON-NLS-1$
 
-	private boolean silent = false;
+    private boolean silent = false;
 
-	@Inject
-	private Logger log;
+    @Inject
+    private Logger log;
 
-	@Inject
-	private IDataService dataService;
+    @Inject
+    private IDataService dataService;
 
-	@Inject
-	private IEclipseContext context;
+    @Inject
+    private IEclipseContext context;
 
-	@Inject
-	private UISynchronize jobManager;
+    @Inject
+    private UISynchronize jobManager;
 
-	@Inject
-	@Named(IServiceConstants.ACTIVE_SHELL)
-	private Shell shell;
+    @Inject
+    @Named(IServiceConstants.ACTIVE_SHELL)
+    private Shell shell;
 
-	@Inject
-	private RelationsStatusLineManager statusLine;
+    @Inject
+    private RelationsStatusLineManager statusLine;
 
-	/**
-	 * Setter for silent switch. If Action is set silent, no message to confirm
-	 * the start of the job is displayed.
-	 *
-	 * @param silent
-	 *            boolean
-	 */
-	public void setSilent(final boolean silent) {
-		this.silent = silent;
-	}
+    /**
+     * Setter for silent switch. If Action is set silent, no message to confirm
+     * the start of the job is displayed.
+     *
+     * @param silent
+     *            boolean
+     */
+    public void setSilent(final boolean silent) {
+        this.silent = silent;
+    }
 
-	/**
-	 * @see IAction#run()
-	 */
-	@Override
-	public void run() {
-		if (this.silent) {
-			indexSilent();
-			return;
-		}
+    /**
+     * @see IAction#run()
+     */
+    @Override
+    public void run() {
+        if (this.silent) {
+            indexSilent();
+            return;
+        }
 
-		final String message1 = RelationsMessages
-				.getString("IndexerAction.msg.1"); //$NON-NLS-1$
-		final String message2 = RelationsMessages
-				.getString("IndexerAction.msg.2"); //$NON-NLS-1$
-		final String message3 = RelationsMessages
-				.getString("IndexerAction.msg.3"); //$NON-NLS-1$
-		final String message4 = RelationsMessages
-				.getString("IndexerAction.msg.4"); //$NON-NLS-1$
+        final String message1 = RelationsMessages
+                .getString("IndexerAction.msg.1"); //$NON-NLS-1$
+        final String message2 = RelationsMessages
+                .getString("IndexerAction.msg.2"); //$NON-NLS-1$
+        final String message3 = RelationsMessages
+                .getString("IndexerAction.msg.3"); //$NON-NLS-1$
+        final String message4 = RelationsMessages
+                .getString("IndexerAction.msg.4"); //$NON-NLS-1$
 
-		final RelationsIndexer indexer = RelationsIndexerWithLanguage
-				.createRelationsIndexer(this.context);
-		int numberOfIndexed = 0;
-		try {
-			numberOfIndexed = indexer.numberOfIndexed();
-		}
-		catch (final IOException exc) {
-			// intentionally left empty
-		}
+        final RelationsIndexer indexer = RelationsIndexerWithLanguage
+                .createRelationsIndexer(this.context);
+        int numberOfIndexed = 0;
+        try {
+            numberOfIndexed = indexer.numberOfIndexed();
+        }
+        catch (final IOException exc) {
+            // intentionally left empty
+        }
 
-		String message = MessageFormat.format(message1,
-				new Object[] { new Integer(numberOfIndexed) });
-		if (numberOfIndexed == this.dataService.getNumberOfItems()) {
-			message += " " + message2; //$NON-NLS-1$
-		}
-		message += NL + NL + // $NON-NLS-1$
-				MessageFormat.format(message3,
-						new Object[] { this.dataService.getDBName() })
-		        + NL + NL + message4; // $NON-NLS-1$
-		if (MessageDialog.openQuestion(new Shell(Display.getCurrent()),
-				RelationsMessages.getString("IndexerAction.dialog.title"), //$NON-NLS-1$
-				message)) {
-			indexWithFeedback();
-		}
-	}
+        String message = MessageFormat.format(message1, new Object[] { Integer.valueOf(numberOfIndexed) });
+        if (numberOfIndexed == this.dataService.getNumberOfItems()) {
+            message += " " + message2; //$NON-NLS-1$
+        }
+        message += NL + NL + // $NON-NLS-1$
+                MessageFormat.format(message3, new Object[] { this.dataService.getDBName() })
+        + NL + NL + message4; // $NON-NLS-1$
+        if (MessageDialog.openQuestion(new Shell(Display.getCurrent()),
+                RelationsMessages.getString("IndexerAction.dialog.title"), //$NON-NLS-1$
+                message)) {
+            indexWithFeedback();
+        }
+    }
 
-	/**
-	 * Index silently and asynchronously.
-	 */
-	private void indexSilent() {
-		this.jobManager.asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				final RelationsIndexer lIndexer = RelationsIndexerWithLanguage
-						.createRelationsIndexer(IndexerAction.this.context);
-				try {
-					lIndexer.refreshIndex(new NullProgressMonitor());
-				}
-				catch (final IOException exc) {
-					IndexerAction.this.log.error(exc, exc.getMessage());
-				}
-				catch (final VException exc) {
-					IndexerAction.this.log.error(exc, exc.getMessage());
-				}
-				catch (final SQLException exc) {
-					IndexerAction.this.log.error(exc, exc.getMessage());
-				}
-			}
-		});
+    /**
+     * Index silently and asynchronously.
+     */
+    private void indexSilent() {
+        this.jobManager.asyncExec(() -> {
+            final RelationsIndexer indexer = RelationsIndexerWithLanguage
+                    .createRelationsIndexer(IndexerAction.this.context);
+            try {
+                indexer.refreshIndex(new NullProgressMonitor());
+            } catch (IOException | VException | SQLException exc) {
+                IndexerAction.this.log.error(exc, exc.getMessage());
+            }
+        });
+    }
 
-	}
+    private void indexWithFeedback() {
+        final IEclipseContext lContext = this.context.createChild();
+        final IndexJob lJob = new IndexJob(lContext, this.dataService,
+                this.log);
+        final ProgressMonitorDialog lDialog = new ProgressMonitorDialog(
+                this.shell);
+        lDialog.open();
+        try {
+            lDialog.run(true, true, lJob);
+            this.statusLine.showStatusLineMessage(
+                    RelationsMessages.getString("IndexerAction.job.feedback", //$NON-NLS-1$
+                            new Object[] { lJob.getIndexed() }));
+        }
+        catch (final InvocationTargetException exc) {
+            this.log.error(exc, exc.getMessage());
+        }
+        catch (final InterruptedException exc) {
+            this.statusLine.showStatusLineMessage(RelationsMessages
+                    .getString("action.indexer.status.cancelled")); //$NON-NLS-1$
+            this.log.error(exc, exc.getMessage());
+        }
+        finally {
+            lContext.dispose();
+        }
 
-	private void indexWithFeedback() {
-		final IEclipseContext lContext = this.context.createChild();
-		final IndexJob lJob = new IndexJob(lContext, this.dataService,
-				this.log);
-		final ProgressMonitorDialog lDialog = new ProgressMonitorDialog(
-				this.shell);
-		lDialog.open();
-		try {
-			lDialog.run(true, true, lJob);
-			this.statusLine.showStatusLineMessage(
-					RelationsMessages.getString("IndexerAction.job.feedback", //$NON-NLS-1$
-							new Object[] { lJob.getIndexed() }));
-		}
-		catch (final InvocationTargetException exc) {
-			this.log.error(exc, exc.getMessage());
-		}
-		catch (final InterruptedException exc) {
-			this.statusLine.showStatusLineMessage(RelationsMessages
-					.getString("action.indexer.status.cancelled")); //$NON-NLS-1$
-			this.log.error(exc, exc.getMessage());
-		}
-		finally {
-			lContext.dispose();
-		}
+    }
 
-	}
+    // --- inner classes ---
 
-	// --- inner classes ---
+    private class IndexJob implements IRunnableWithProgress {
+        private final IEclipseContext context;
+        private final IDataService dataService;
+        private final Logger log;
+        private int indexed = 0;
 
-	private class IndexJob implements IRunnableWithProgress {
-		private final IEclipseContext context;
-		private final IDataService dataService;
-		private final Logger log;
-		private int indexed = 0;
+        public IndexJob(final IEclipseContext inContext,
+                final IDataService inDataService, final Logger inLogger) {
+            this.context = inContext;
+            this.dataService = inDataService;
+            this.log = inLogger;
+        }
 
-		public IndexJob(final IEclipseContext inContext,
-				final IDataService inDataService, final Logger inLogger) {
-			this.context = inContext;
-			this.dataService = inDataService;
-			this.log = inLogger;
-		}
+        @Override
+        public void run(final IProgressMonitor inMonitor) {
+            this.context.set(IProgressMonitor.class.getName(), inMonitor);
+            final SubMonitor lProgress = SubMonitor.convert(inMonitor,
+                    this.dataService.getNumberOfItems());
+            lProgress.beginTask(
+                    RelationsMessages.getString("IndexerAction.job.start"), //$NON-NLS-1$
+                    this.dataService.getNumberOfItems());
+            final RelationsIndexer lIndexer = RelationsIndexerWithLanguage
+                    .createRelationsIndexer(this.context);
+            try {
+                this.indexed = lIndexer.refreshIndex(lProgress);
+            }
+            catch (final IOException exc) {
+                this.log.error(exc, exc.getMessage());
+            }
+            catch (final VException exc) {
+                this.log.error(exc, exc.getMessage());
+            }
+            catch (final SQLException exc) {
+                this.log.error(exc, exc.getMessage());
+            }
+            finally {
+                inMonitor.done();
+            }
+        }
 
-		@Override
-		public void run(final IProgressMonitor inMonitor) {
-			this.context.set(IProgressMonitor.class.getName(), inMonitor);
-			final SubMonitor lProgress = SubMonitor.convert(inMonitor,
-					this.dataService.getNumberOfItems());
-			lProgress.beginTask(
-					RelationsMessages.getString("IndexerAction.job.start"), //$NON-NLS-1$
-					this.dataService.getNumberOfItems());
-			final RelationsIndexer lIndexer = RelationsIndexerWithLanguage
-					.createRelationsIndexer(this.context);
-			try {
-				this.indexed = lIndexer.refreshIndex(lProgress);
-			}
-			catch (final IOException exc) {
-				this.log.error(exc, exc.getMessage());
-			}
-			catch (final VException exc) {
-				this.log.error(exc, exc.getMessage());
-			}
-			catch (final SQLException exc) {
-				this.log.error(exc, exc.getMessage());
-			}
-			finally {
-				inMonitor.done();
-			}
-		}
-
-		/**
-		 * @return int the number of indexed items
-		 */
-		int getIndexed() {
-			return this.indexed;
-		}
-	}
+        /**
+         * @return int the number of indexed items
+         */
+        int getIndexed() {
+            return this.indexed;
+        }
+    }
 
 }

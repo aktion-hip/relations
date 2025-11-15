@@ -5,7 +5,7 @@
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            application="org.eclipse.e4.ui.workbench.swt.E4Application"
+            application="org.eclipse.ui.ide.workbench"
             description="%product.description"
             name="Relations">
          <property
@@ -50,11 +50,11 @@
          </property>
          <property
                name="startupMessageRect"
-               value="5,250,449,23">
+               value="15,261,449,20">
          </property>
          <property
                name="startupProgressRect"
-               value="3,275,449,15">
+               value="3,284,449,12">
          </property>
          <property
                name="applicationCSS"
@@ -137,7 +137,7 @@
             category="org.elbe.relations.wizards.item"
             class="org.elbe.relations.internal.wizards.TermNewWizard"
             hasPages="true"
-            icon="icons/term_new.gif"
+            icon="icons/term_new.svg"
             id="org.elbe.relations.internal.wizards.TermNewWizard"
             name="%wizard.name.new.term">
          <description>
@@ -148,7 +148,7 @@
             category="org.elbe.relations.wizards.item"
             class="org.elbe.relations.internal.wizards.TextNewWizard"
             hasPages="true"
-            icon="icons/text_new.gif"
+            icon="icons/text_new.svg"
             id="org.elbe.relations.internal.wizards.TextNewWizard"
             name="%wizard.name.new.text">
          <description>
@@ -159,7 +159,7 @@
             category="org.elbe.relations.wizards.item"
             class="org.elbe.relations.internal.wizards.PersonNewWizard"
             hasPages="true"
-            icon="icons/person_new.gif"
+            icon="icons/person_new.svg"
             id="org.elbe.relations.internal.wizards.PersonNewWizard"
             name="%wizard.name.new.person">
          <description>

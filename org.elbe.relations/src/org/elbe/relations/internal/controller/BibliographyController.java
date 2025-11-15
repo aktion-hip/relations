@@ -21,7 +21,7 @@ package org.elbe.relations.internal.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.e4.core.di.extensions.Preference;
 import org.elbe.relations.RelationsConstants;

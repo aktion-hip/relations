@@ -59,9 +59,10 @@ public class PdfExtractorTest {
         final String lExpected = "Text Extraction" + NL
                 + "[<i>Author: Luthiger;" + NL + "Size: 16.86 kB;" + NL
                 + "Type: application/pdf;" + NL
-                + "Created: September 6, 2007, 10:21:00 AM CEST;" + NL
-                + "Last Modified: September 29, 2020, 1:36:53 PM CEST</i>]";
-        assertEquals(lExpected, lExtracted.getText());
+                + "Created: September 6, 2007, 10:21:00%sAM CEST;" + NL
+                + "Last Modified: XXX</i>]";
+        assertEquals(String.format(lExpected, TestUtil.NBSP),
+                lExtracted.getText().replaceAll(TestUtil.REGEX, TestUtil.REPLACEMENT));
     }
 
 }

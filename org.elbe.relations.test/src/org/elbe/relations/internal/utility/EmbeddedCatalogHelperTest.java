@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
@@ -21,30 +22,29 @@ import org.junit.jupiter.api.Test;
  *
  * @author lbenno
  */
-@Disabled
-public class EmbeddedCatalogHelperTest {
-    private final static String[] CATALOGS = new String[] { "catalog1",
-            "catalog2", "catalog3" };
+@Disabled("JUnit Plug-in test")
+class EmbeddedCatalogHelperTest {
+    private static final String[] CATALOGS = new String[] { "catalog1", "catalog2", "catalog3" };
     private static File STORE_DIR;
 
     @BeforeAll
-    public static void before() {
-        STORE_DIR = new File(ResourcesPlugin.getWorkspace().getRoot()
-                .getLocation().toFile(), RelationsConstants.DERBY_STORE);
+    static void before() throws IOException {
+        STORE_DIR = new File(ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile(),
+                RelationsConstants.DERBY_STORE);
     }
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() {
         createCatalogs(STORE_DIR);
     }
 
     @AfterEach
-    public void tearDown() {
-        deleteCatalogs();
+    void tearDown() {
+        deleteCatalogs(STORE_DIR);
     }
 
     @Test
-    public void testValidate() {
+    void testValidate() {
         final EmbeddedCatalogHelper lHelper = new EmbeddedCatalogHelper();
         IStatus lStatus = lHelper.validate("test");
         assertEquals("valid input", "OK", lStatus.getMessage());
@@ -63,7 +63,7 @@ public class EmbeddedCatalogHelperTest {
     }
 
     @Test
-    public void testGetCatalogs() throws Exception {
+    void testGetCatalogs() throws Exception {
         String[] lCatalogs = EmbeddedCatalogHelper.getCatalogs();
         assertEquals(3, lCatalogs.length);
         for (int i = 0; i < lCatalogs.length; i++) {
@@ -86,7 +86,7 @@ public class EmbeddedCatalogHelperTest {
     }
 
     @Test
-    public void testHasDefaultEmbedded() throws Exception {
+    void testHasDefaultEmbedded() {
         assertFalse(EmbeddedCatalogHelper.hasDefaultEmbedded());
 
         createCatalog(STORE_DIR, RelationsConstants.DFT_DB_EMBEDDED);
@@ -104,11 +104,10 @@ public class EmbeddedCatalogHelperTest {
         lCatalog.mkdirs();
     }
 
-    private void deleteCatalogs() {
-        final File lDBStore = STORE_DIR;
-        if (lDBStore.exists()) {
-            traverse(lDBStore);
-            ensureDelete(lDBStore);
+    private void deleteCatalogs(final File dbStore) {
+        if (dbStore.exists()) {
+            traverse(dbStore);
+            ensureDelete(dbStore);
         }
     }
 

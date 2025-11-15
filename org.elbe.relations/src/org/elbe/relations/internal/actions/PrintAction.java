@@ -22,9 +22,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
@@ -45,153 +42,144 @@ import org.elbe.relations.internal.controller.PrintOutManager;
 import org.elbe.relations.internal.wizards.PrintOutWizard;
 import org.elbe.relations.services.IBrowserManager;
 
-/**
- * Action to start the print out of selected content.
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+/** Action to start the print out of selected content.
  *
- * @author Luthiger
- */
+ * @author Luthiger */
 @SuppressWarnings("restriction")
 public class PrintAction implements ICommand {
 
-	@Inject
-	private IEclipseContext context;
+    @Inject
+    private IEclipseContext context;
 
-	@Inject
-	@Named(IServiceConstants.ACTIVE_SHELL)
-	private Shell shell;
+    @Inject
+    @Named(IServiceConstants.ACTIVE_SHELL)
+    private Shell shell;
 
-	@Inject
-	private PrintOutManager printOutManager;
+    @Inject
+    private PrintOutManager printOutManager;
 
-	@Inject
-	private IBrowserManager browserManager;
+    @Inject
+    private IBrowserManager browserManager;
 
-	@Inject
-	private Logger log;
+    @Inject
+    private Logger log;
 
-	@Override
-	public void execute() {
-		final PrintOutWizard lWizard = ContextInjectionFactory
-		        .make(PrintOutWizard.class, context);
-		final WizardDialog lDialog = new WizardDialog(shell, lWizard);
-		lDialog.setMinimumPageSize(530, 270);
-		if (lDialog.open() == Window.OK) {
-			if (lWizard.isInitNew()) {
-				if (!printOutManager.initNew(lWizard.getPrintOutFileName(),
-				        lWizard.getPrintOutPlugin())) {
-					return;
-				}
-			} else {
-				if (!printOutManager
-				        .initFurther(lWizard.getPrintOutFileName())) {
-					return;
-				}
-			}
-			printOutManager.setContentScope(lWizard.getPrintOutScope());
-			printOutManager
-			        .setPrintOutReferences(lWizard.getPrintOutReferences());
+    @Override
+    public void execute() {
+        final PrintOutWizard lWizard = ContextInjectionFactory
+                .make(PrintOutWizard.class, this.context);
+        final WizardDialog lDialog = new WizardDialog(this.shell, lWizard);
+        lDialog.setMinimumPageSize(530, 270);
+        if (lDialog.open() == Window.OK) {
+            if (lWizard.isInitNew()) {
+                if (!this.printOutManager.initNew(lWizard.getPrintOutFileName(),
+                        lWizard.getPrintOutPlugin())) {
+                    return;
+                }
+            } else {
+                if (!this.printOutManager
+                        .initFurther(lWizard.getPrintOutFileName())) {
+                    return;
+                }
+            }
+            this.printOutManager.setContentScope(lWizard.getPrintOutScope());
+            this.printOutManager
+            .setPrintOutReferences(lWizard.getPrintOutReferences());
 
-			final PrintJob lJob = new PrintJob(printOutManager,
-			        browserManager.getSelectedModel());
-			final ProgressMonitorDialog lMonitor = new ProgressMonitorDialog(
-			        shell);
-			lMonitor.open();
-			try {
-				lMonitor.run(true, true, lJob);
-			}
-			catch (final InvocationTargetException exc) {
-				log.error(exc, exc.getMessage());
-			}
-			catch (final InterruptedException exc) {
-				log.error(exc, exc.getMessage());
-			}
-			finally {
-				lMonitor.close();
-			}
-		}
-	}
+            final PrintJob lJob = new PrintJob(this.printOutManager,
+                    this.browserManager.getSelectedModel());
+            final ProgressMonitorDialog lMonitor = new ProgressMonitorDialog(
+                    this.shell);
+            lMonitor.open();
+            try {
+                lMonitor.run(true, true, lJob);
+            } catch (final InvocationTargetException exc) {
+                this.log.error(exc, exc.getMessage());
+            } catch (final InterruptedException exc) {
+                this.log.error(exc, exc.getMessage());
+            } finally {
+                lMonitor.close();
+            }
+        }
+    }
 
-	// --- inner classes ---
+    // --- inner classes ---
 
-	private class PrintJob implements IRunnableWithProgress {
-		private final PrintOutManager printManager;
-		private final IItem selectedItem;
+    private class PrintJob implements IRunnableWithProgress {
+        private final PrintOutManager printManager;
+        private final IItem selectedItem;
 
-		public PrintJob(final PrintOutManager inManager,
-		        final IItem inSelected) {
-			printManager = inManager;
-			selectedItem = inSelected;
-		}
+        public PrintJob(final PrintOutManager inManager,
+                final IItem inSelected) {
+            this.printManager = inManager;
+            this.selectedItem = inSelected;
+        }
 
-		@Override
-		public void run(final IProgressMonitor inMonitor) {
-			Collection<IItem> lItems;
-			try {
-				lItems = printManager.getItemSet(selectedItem);
-				final SubMonitor lProgress = SubMonitor.convert(inMonitor,
-				        lItems.size());
-				lProgress.beginTask(
-				        RelationsMessages.getString("PrintAction.job.start"), //$NON-NLS-1$
-				        lItems.size());
-				int lNumberOfPrinted = 0;
-				for (final IItem lItem : lItems) {
-					lNumberOfPrinted += printManager.printItem(lItem);
-					lProgress.worked(1);
-				}
+        @Override
+        public void run(final IProgressMonitor inMonitor) {
+            Collection<IItem> lItems;
+            try {
+                lItems = this.printManager.getItemSet(this.selectedItem);
+                final SubMonitor lProgress = SubMonitor.convert(inMonitor,
+                        lItems.size());
+                lProgress.beginTask(
+                        RelationsMessages.getString("PrintAction.job.start"), //$NON-NLS-1$
+                        lItems.size());
+                int lNumberOfPrinted = 0;
+                for (final IItem lItem : lItems) {
+                    lNumberOfPrinted += this.printManager.printItem(lItem);
+                    lProgress.worked(1);
+                }
 
-				// give feedback
-				giveFeedback(getPrintCompleteAction(lNumberOfPrinted));
-			}
-			catch (final Exception exc) {
-				final String lErrorMsg = exc.getMessage();
-				giveFeedback(getErrorMsgAction(lErrorMsg));
-				log.error(exc, exc.getMessage());
-			}
-			finally {
-				try {
-					printManager.close();
-				}
-				catch (final IOException exc) {
-					// intentionally left empty
-				}
-			}
-		}
+                // give feedback
+                giveFeedback(getPrintCompleteAction(lNumberOfPrinted));
+            } catch (final Exception exc) {
+                final String lErrorMsg = exc.getMessage();
+                giveFeedback(getErrorMsgAction(lErrorMsg));
+                PrintAction.this.log.error(exc, exc.getMessage());
+            } finally {
+                try {
+                    this.printManager.close();
+                } catch (final IOException exc) {
+                    // intentionally left empty
+                }
+            }
+        }
 
-		private void giveFeedback(final Action inAction) {
-			Display.getDefault().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					inAction.run();
-				}
-			});
-		}
-	}
+        private void giveFeedback(final Action inAction) {
+            Display.getDefault().asyncExec(new Runnable() {
+                @Override
+                public void run() {
+                    inAction.run();
+                }
+            });
+        }
+    }
 
-	private Action getPrintCompleteAction(final int inNumberOfProcessed) {
-		return new Action(
-		        RelationsMessages.getString("PrintAction.job.status")) { //$NON-NLS-1$
-			@Override
-			public void run() {
-				MessageDialog.openInformation(shell,
-		                RelationsMessages
-		                        .getString("PrintAction.job.completed"), //$NON-NLS-1$
-		                RelationsMessages.getString(
-		                        "PrintAction.job.completed.msg", new Object[] { //$NON-NLS-1$
-		                                new Integer(inNumberOfProcessed) }));
-			}
-		};
-	}
+    private Action getPrintCompleteAction(final int numberOfProcessed) {
+        return new Action(RelationsMessages.getString("PrintAction.job.status")) { //$NON-NLS-1$
+            @Override
+            public void run() {
+                MessageDialog.openInformation(PrintAction.this.shell,
+                        RelationsMessages.getString("PrintAction.job.completed"), //$NON-NLS-1$
+                        RelationsMessages.getString("PrintAction.job.completed.msg", new Object[] { //$NON-NLS-1$
+                                Integer.valueOf(numberOfProcessed) }));
+            }
+        };
+    }
 
-	private Action getErrorMsgAction(final String inErrorMsg) {
-		return new Action(
-		        RelationsMessages.getString("PrintAction.error.title")) { //$NON-NLS-1$
-			@Override
-			public void run() {
-				MessageDialog.openError(shell,
-		                RelationsMessages.getString("PrintAction.error.msg"), //$NON-NLS-1$
-		                inErrorMsg);
-			}
-		};
-	}
+    private Action getErrorMsgAction(final String inErrorMsg) {
+        return new Action(RelationsMessages.getString("PrintAction.error.title")) { //$NON-NLS-1$
+            @Override
+            public void run() {
+                MessageDialog.openError(PrintAction.this.shell,
+                        RelationsMessages.getString("PrintAction.error.msg"), //$NON-NLS-1$
+                        inErrorMsg);
+            }
+        };
+    }
 
 }

@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2018, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -26,34 +26,28 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 
-/**
- * @author lbenno
- *
- */
+/** @author lbenno */
 @Component(service = CloudConfigurationHelperRegistry.class)
 public class CloudConfigurationHelperRegistry {
-	private final List<ICloudProviderConfigurationHelper> helpers = new ArrayList<>(
-			5);
+    private final List<ICloudProviderConfigurationHelper> helpers = new ArrayList<>(5);
 
-	@Reference(cardinality = ReferenceCardinality.MULTIPLE)
-	void bindConfigurationHelper(
-			final ICloudProviderConfigurationHelper helper) {
-		this.helpers.add(helper);
-	}
+    @Reference(cardinality = ReferenceCardinality.MULTIPLE)
+    void bindConfigurationHelper(final ICloudProviderConfigurationHelper helper) {
+        this.helpers.add(helper);
+    }
 
-	void unbindConfigurationHelper(
-			final ICloudProviderConfigurationHelper helper) {
-		this.helpers.remove(helper);
-	}
+    void unbindConfigurationHelper(final ICloudProviderConfigurationHelper helper) {
+        this.helpers.remove(helper);
+    }
 
-	/**
-	 * @return List&lt;ICloudProviderConfigurationHelper> the list of registered
-	 *         helpers
-	 */
-	public List<ICloudProviderConfigurationHelper> getHelpers() {
-		this.helpers.sort(
-		        (h1, h2) -> h1.getName().compareToIgnoreCase(h2.getName()));
-		return this.helpers;
-	}
+    /**
+     * @return List&lt;ICloudProviderConfigurationHelper> the list of registered
+     *         helpers
+     */
+    public List<ICloudProviderConfigurationHelper> getHelpers() {
+        this.helpers.sort(
+                (h1, h2) -> h1.getName().compareToIgnoreCase(h2.getName()));
+        return this.helpers;
+    }
 
 }

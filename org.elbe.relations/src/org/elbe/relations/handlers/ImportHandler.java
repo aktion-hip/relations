@@ -18,8 +18,6 @@
  ***************************************************************************/
 package org.elbe.relations.handlers;
 
-import javax.inject.Named;
-
 import org.eclipse.e4.core.contexts.ContextFunction;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -31,6 +29,8 @@ import org.elbe.relations.internal.e4.wizards.AbstractExtensionWizard;
 import org.elbe.relations.internal.e4.wizards.ImportWizard;
 import org.elbe.relations.internal.e4.wizards.ImportWizardRegistry;
 
+import jakarta.inject.Named;
+
 /**
  * The handler for the <code>Import...</code> wizard.
  *
@@ -39,30 +39,30 @@ import org.elbe.relations.internal.e4.wizards.ImportWizardRegistry;
  */
 public class ImportHandler extends AbstractExtensionHandler {
 
-	@Execute
-	public void execute(
-	        @Named(IServiceConstants.ACTIVE_SHELL) final Shell inShell,
-	        final IEclipseContext inContext) {
-		executeHandler(inShell, inContext);
-	}
+    @Execute
+    public void execute(
+            @Named(IServiceConstants.ACTIVE_SHELL) final Shell inShell,
+            final IEclipseContext inContext) {
+        executeHandler(inShell, inContext);
+    }
 
-	private void executeHandler(final Shell inShell,
-	        final IEclipseContext inContext) {
-		// prepare context
-		inContext.set(AbstractExtensionWizard.IMPORT_WIZARD_REGISTRY,
-		        new ContextFunction() {
-			        @Override
-			        public Object compute(final IEclipseContext inContext) {
-				        return ContextInjectionFactory
-		                        .make(ImportWizardRegistry.class, inContext);
-			        }
-		        });
-		final ImportWizard lWizard = ContextInjectionFactory
-		        .make(ImportWizard.class, inContext);
-		lWizard.setCategoryId(null);
-		lWizard.init(StructuredSelection.EMPTY);
+    private void executeHandler(final Shell inShell,
+            final IEclipseContext inContext) {
+        // prepare context
+        inContext.set(AbstractExtensionWizard.IMPORT_WIZARD_REGISTRY,
+                new ContextFunction() {
+            @Override
+            public Object compute(final IEclipseContext inContext) {
+                return ContextInjectionFactory
+                        .make(ImportWizardRegistry.class, inContext);
+            }
+        });
+        final ImportWizard lWizard = ContextInjectionFactory
+                .make(ImportWizard.class, inContext);
+        lWizard.setCategoryId(null);
+        lWizard.init(StructuredSelection.EMPTY);
 
-		runWizardDialog(inShell, lWizard);
-	}
+        runWizardDialog(inShell, lWizard);
+    }
 
 }

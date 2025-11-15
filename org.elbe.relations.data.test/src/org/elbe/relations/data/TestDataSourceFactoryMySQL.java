@@ -28,9 +28,10 @@ import javax.sql.XADataSource;
 
 import org.osgi.service.jdbc.DataSourceFactory;
 
-import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
-import com.mysql.jdbc.jdbc2.optional.MysqlXADataSource;
+import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
+import com.mysql.cj.jdbc.MysqlDataSource;
+import com.mysql.cj.jdbc.MysqlXADataSource;
+
 
 /**
  * @author Luthiger Created: 02.02.2012

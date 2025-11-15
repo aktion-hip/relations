@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -18,8 +18,6 @@
  ***************************************************************************/
 package org.elbe.relations.internal.controls;
 
-import javax.inject.Inject;
-
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.e4.core.commands.ECommandService;
@@ -31,13 +29,9 @@ import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.jface.databinding.viewers.ObservableListContentProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceAdapter;
@@ -52,80 +46,58 @@ import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.data.bom.BOMException;
 import org.elbe.relations.data.bom.ILightWeightItem;
 import org.elbe.relations.data.utility.UniqueID;
-import org.elbe.relations.db.IDataService;
 import org.elbe.relations.dnd.ItemTransfer;
 import org.elbe.relations.internal.preferences.LanguageService;
 import org.elbe.relations.models.ItemAdapter;
+import org.hip.kernel.bom.AlternativeModel;
 import org.hip.kernel.exc.VException;
 
-import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 
-/**
- * Base class for all selection lists providing general functionality to select
- * items.
+/** Base class for all selection lists providing general functionality to select items.
  *
- * @author Luthiger
- */
-@SuppressWarnings("restriction")
+ * @author Luthiger */
 public abstract class AbstractSelectionView implements IPartWithSelection {
     private final TableViewer viewer;
 
-    @Inject
-    private LanguageService languageService;
-
-    @Inject
-    private IDataService data;
-
-    @Inject
-    private ESelectionService selectionService;
-
-    @Inject
+    @Inject // NOSONAR
     private Logger log;
 
-    @Inject
-    private EHandlerService handlerService;
+    // @Inject // NOSONAR
+    private final EHandlerService handlerService;
+
+    // @Inject // NOSONAR
+    private final ECommandService commandService;
 
     @Inject
-    private ECommandService commandService;
+    protected AbstractSelectionView(final Composite parent, final LanguageService languageService,
+            final ESelectionService selectionService, final EHandlerService handlerService,
+            final ECommandService commandService) {
+        this.viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        this.handlerService = handlerService;
+        this.commandService = commandService;
 
-    @Inject
-    public AbstractSelectionView(final Composite inParent) {
-        this.viewer = new TableViewer(inParent, SWT.H_SCROLL | SWT.V_SCROLL
-                | SWT.BORDER);
+        this.viewer.setContentProvider(new ObservableListContentProvider<Object>());
+        this.viewer.setComparator(new ViewerComparator(languageService.getComparator()));
+        this.viewer.addSelectionChangedListener(
+                event -> selectionService.setSelection(((IStructuredSelection) event
+                        .getSelection()).getFirstElement()));
+
+        hookDoubleClickAction(this.viewer);
+        hookDragnDrop(this.viewer);
     }
 
-    @PostConstruct
-    public void init(final EMenuService inService) {
-        inService.registerContextMenu(this.viewer.getControl(), getPopupID());
-
-        this.viewer.setContentProvider(new ObservableListContentProvider());
-        this.viewer.setSorter(new ViewerSorter(this.languageService.getContentLanguage()));
+    @Inject
+    public void init(final EMenuService service) {
+        service.registerContextMenu(this.viewer.getControl(), getPopupID());
         this.viewer.setInput(getDBInput());
-        this.viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(final SelectionChangedEvent inEvent) {
-                AbstractSelectionView.this.selectionService.setSelection(((IStructuredSelection) inEvent
-                        .getSelection()).getFirstElement());
-            }
-        });
-
-        hookDoubleClickAction();
-        hookDragnDrop();
     }
 
-    /**
-     * @return {@link WritableList} the data to be selected
-     */
-    abstract protected WritableList getDBInput();
+    /** @return {@link WritableList} the data to be selected */
+    protected abstract WritableList<AlternativeModel> getDBInput();
 
-    /**
-     * @return String the id of the popup menu to display
-     */
-    abstract protected String getPopupID();
-
-    protected IDataService getDataService() {
-        return this.data;
-    }
+    /** @return String the id of the popup menu to display */
+    protected abstract String getPopupID();
 
     @Focus
     public void onFocus() {
@@ -139,66 +111,82 @@ public abstract class AbstractSelectionView implements IPartWithSelection {
     @Inject
     @Optional
     void updateView(
-            @UIEventTopic(RelationsConstants.TOPIC_DB_CHANGED_RELOAD) final String inEvent) {
-        this.viewer.setInput(getDBInput());
+            @UIEventTopic(RelationsConstants.TOPIC_DB_CHANGED_RELOAD) final String event) {
+        if (this.viewer != null) {
+            final WritableList<AlternativeModel> input = getDBInput();
+            if (!input.isEmpty()) {
+                this.viewer.setInput(input);
+            }
+        }
+    }
+
+    @Inject
+    @Optional
+    void adjustView(@UIEventTopic(RelationsConstants.TOPIC_DB_CHANGED_DB) final String event) {
+        if (this.viewer != null) {
+            final WritableList<AlternativeModel> input = getDBInput();
+            this.viewer.setInput(input);
+        }
     }
 
     @Inject
     @Optional
     void initialize(
-            @UIEventTopic(RelationsConstants.TOPIC_DB_CHANGED_INITIALZED) final String inEvent) {
-        this.viewer.setInput(getDBInput());
+            @UIEventTopic(RelationsConstants.TOPIC_DB_CHANGED_INITIALZED) final String event) {
+        if (this.viewer != null) {
+            final WritableList<AlternativeModel> input = getDBInput();
+            if (!input.isEmpty()) {
+                this.viewer.setInput(input);
+            }
+        }
     }
 
     @Inject
     @Optional
     void titleChanged(
-            @UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_CONTENT) final ItemAdapter inItem) {
-        if (this.viewer == null || inItem == null) {
+            @UIEventTopic(RelationsConstants.TOPIC_FROM_BROWSER_MANAGER_SYNC_CONTENT) final ItemAdapter item) {
+        if (this.viewer == null || item == null) {
             return;
         }
 
         try {
-            this.viewer.update(inItem.getLightWeight(),
-                    new String[] { inItem.getTitle() });
-        }
-        catch (final BOMException exc) {
+            this.viewer.update(item.getLightWeight(),
+                    new String[] { item.getTitle() });
+        } catch (BOMException | VException exc) {
             this.log.error(exc, exc.getMessage());
         }
-        catch (final VException exc) {
-            this.log.error(exc, exc.getMessage());
-        }
+
     }
 
-    private void hookDragnDrop() {
+    private void hookDragnDrop(final TableViewer viewer) {
         // make viewer a drag source
-        final ItemTransfer lItemTransfer = ItemTransfer.getInstance(this.log);
-        final Transfer[] lDragTypes = new Transfer[] { lItemTransfer };
-        this.viewer.addDragSupport(DND.DROP_COPY, lDragTypes,
+        final ItemTransfer itemTransfer = ItemTransfer.getInstance(this.log);
+        final Transfer[] dragTypes = new Transfer[] { itemTransfer };
+        viewer.addDragSupport(DND.DROP_COPY, dragTypes,
                 new DragSourceAdapter() {
             @Override
-            public void dragSetData(final DragSourceEvent inEvent) {
-                final IStructuredSelection lSelected = (IStructuredSelection) AbstractSelectionView.this.viewer
+            public void dragSetData(final DragSourceEvent event) {
+                final IStructuredSelection selected = (IStructuredSelection) AbstractSelectionView.this.viewer
                         .getSelection();
-                if (!lSelected.isEmpty()) {
-                    final Object[] lItems = lSelected.toArray();
-                    final UniqueID[] lIDs = new UniqueID[lItems.length];
-                    for (int i = 0; i < lItems.length; i++) {
-                        final ILightWeightItem lItem = (ILightWeightItem) lItems[i];
-                        lIDs[i] = new UniqueID(lItem.getItemType(),
-                                lItem.getID());
+                if (!selected.isEmpty()) {
+                    final Object[] items = selected.toArray();
+                    final UniqueID[] uniqueIDs = new UniqueID[items.length];
+                    for (int i = 0; i < items.length; i++) {
+                        final ILightWeightItem item = (ILightWeightItem) items[i];
+                        uniqueIDs[i] = new UniqueID(item.getItemType(),
+                                item.getID());
                     }
-                    inEvent.data = lIDs;
+                    event.data = uniqueIDs;
                 }
             }
         });
 
         // make viewer a drop target
-        final Transfer[] lDropTypes = new Transfer[] { lItemTransfer };
-        this.viewer.addDropSupport(DND.DROP_MOVE, lDropTypes,
+        final Transfer[] dropTypes = new Transfer[] { itemTransfer };
+        this.viewer.addDropSupport(DND.DROP_MOVE, dropTypes,
                 new DropTargetAdapter() {
             @Override
-            public void drop(final DropTargetEvent inEvent) {
+            public void drop(final DropTargetEvent event) {
                 AbstractSelectionView.this.handlerService.executeHandler(ParameterizedCommand.generateCommand(
                         AbstractSelectionView.this.commandService
                         .getCommand(ICommandIds.CMD_RELATION_REMOVE),
@@ -207,21 +195,14 @@ public abstract class AbstractSelectionView implements IPartWithSelection {
         });
     }
 
-    private void hookDoubleClickAction() {
-        this.viewer.addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(final DoubleClickEvent inEvent) {
-                AbstractSelectionView.this.handlerService.executeHandler(ParameterizedCommand
+    private void hookDoubleClickAction(final TableViewer viewer) {
+        viewer.addDoubleClickListener(
+                event -> AbstractSelectionView.this.handlerService.executeHandler(ParameterizedCommand
                         .generateCommand(AbstractSelectionView.this.commandService
-                                .getCommand(ICommandIds.CMD_ITEM_SHOW), null));
-            }
-        });
+                                .getCommand(ICommandIds.CMD_ITEM_SHOW), null)));
     }
 
-    /**
-     * @return boolean <code>true</code> if the component is filled and at least
-     *         one element is selected
-     */
+    /** @return boolean <code>true</code> if the component is filled and at least one element is selected */
     @Override
     public boolean hasSelection() {
         return !this.viewer.getSelection().isEmpty();

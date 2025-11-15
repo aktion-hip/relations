@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Bibliographical Metadata
 Bundle-SymbolicName: org.elbe.relations.biblio.meta
 Bundle-Version: 1.1.1.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Bundle-Vendor: RelationWare
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.core.runtime;version="3.4.0",
@@ -13,9 +13,9 @@ Import-Package: org.eclipse.core.runtime;version="3.4.0",
  org.elbe.relations.parsing;version="[2.0.0,3.0.0)",
  org.elbe.relations.services;version="[2.0.0,3.0.0)",
  org.elbe.relations.utility;version="[2.0.0,3.0.0)",
- org.htmlcleaner,
+ org.htmlcleaner;version="[2.29.0,3.0.0)",
  org.osgi.framework;version="1.7.0"
-Bundle-ClassPath: libs/poi-4.1.2.jar,
+Bundle-ClassPath: libs/poi-5.4.1.jar,
  .
 Service-Component: OSGI-INF/metadata.xml
 Automatic-Module-Name: org.elbe.relations.biblio.meta

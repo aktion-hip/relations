@@ -31,216 +31,212 @@ import org.elbe.relations.RelationsMessages;
  * @author Luthiger Created on 14.01.2010
  */
 public class ExtractedData {
-	private static final String NL = System.getProperty("line.separator"); //$NON-NLS-1$
-	private static final String ITEM_SEPARATOR = ";"; //$NON-NLS-1$
-	private static final int KB = 1024;
-	private static final DecimalFormat FORMAT_DECIMAL = new DecimalFormat(
-	        "###,##0.00 kB"); //$NON-NLS-1$
+    private static final String NL = System.getProperty("line.separator"); //$NON-NLS-1$
+    private static final String ITEM_SEPARATOR = ";"; //$NON-NLS-1$
+    private static final int KB = 1024;
+    private static final DecimalFormat FORMAT_DECIMAL = new DecimalFormat(
+            "###,##0.00 kB"); //$NON-NLS-1$
 
-	private static final String RESOURCE_FILE = "File"; //$NON-NLS-1$
-	private static final String RESOURCE_URL = "URL"; //$NON-NLS-1$
+    private static final String RESOURCE_FILE = "File"; //$NON-NLS-1$
+    private static final String RESOURCE_URL = "URL"; //$NON-NLS-1$
 
-	private String title = ""; //$NON-NLS-1$
-	private String comment = ""; //$NON-NLS-1$
-	private String fileSize = ""; //$NON-NLS-1$
-	private String filePath = ""; //$NON-NLS-1$
-	private String fileType = ""; //$NON-NLS-1$
-	private String dateCrated = ""; //$NON-NLS-1$
-	private String year = ""; //$NON-NLS-1$
-	private String dateModified = ""; //$NON-NLS-1$
-	private String author = ""; //$NON-NLS-1$
-	private String publisher = ""; //$NON-NLS-1$
-	private String contributor = ""; //$NON-NLS-1$
-	private String resourceType = RESOURCE_FILE;
+    private String title = ""; //$NON-NLS-1$
+    private String comment = ""; //$NON-NLS-1$
+    private String fileSize = ""; //$NON-NLS-1$
+    private String filePath = ""; //$NON-NLS-1$
+    private String fileType = ""; //$NON-NLS-1$
+    private String dateCreated = ""; //$NON-NLS-1$
+    private String year = ""; //$NON-NLS-1$
+    private String dateModified = ""; //$NON-NLS-1$
+    private String author = ""; //$NON-NLS-1$
+    private String publisher = ""; //$NON-NLS-1$
+    private String contributor = ""; //$NON-NLS-1$
+    private String resourceType = RESOURCE_FILE;
 
-	/**
-	 * @return String the title.
-	 */
-	public String getTitle() {
-		return title;
-	}
+    /**
+     * @return String the title.
+     */
+    public String getTitle() {
+        return this.title;
+    }
 
-	/**
-	 * @return String the comment.
-	 */
-	public String getText() {
-		final StringBuilder outText = new StringBuilder();
-		if (hasContent(comment)) {
-			outText.append(comment).append(NL);
-		}
-		final StringBuilder lAdditional = getAdditional();
-		if (lAdditional.length() != 0) {
-			outText.append("[<i>").append(lAdditional).append("</i>]"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return new String(outText).trim();
-	}
+    /**
+     * @return String the comment.
+     */
+    public String getText() {
+        final StringBuilder text = new StringBuilder();
+        if (hasContent(this.comment)) {
+            text.append(this.comment).append(NL);
+        }
+        final StringBuilder additional = getAdditional();
+        if (additional.length() != 0) {
+            text.append("[<i>").append(additional).append("</i>]"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        return new String(text).trim();
+    }
 
-	public void setTitle(final String inTitle) {
-		title = inTitle;
-	}
+    public void setTitle(final String inTitle) {
+        this.title = inTitle;
+    }
 
-	private StringBuilder getAdditional() {
-		final StringBuilder outText = new StringBuilder();
+    private StringBuilder getAdditional() {
+        final StringBuilder outText = new StringBuilder();
 
-		boolean lFirst = true;
-		lFirst = addPart(outText, author,
-		        RelationsMessages.getString("ExtractedData.lbl.author") + ": ", //$NON-NLS-1$ //$NON-NLS-2$
-		        lFirst);
-		lFirst = addPart(outText, publisher,
-		        RelationsMessages.getString("ExtractedData.lbl.publisher") //$NON-NLS-1$
-		                + ": ", //$NON-NLS-1$
-		        lFirst);
-		lFirst = addPart(outText, contributor,
-		        RelationsMessages.getString("ExtractedData.lbl.contributor") //$NON-NLS-1$
-		                + ": ", //$NON-NLS-1$
-		        lFirst);
-		lFirst = addPart(outText, filePath, resourceType + ": ", lFirst); //$NON-NLS-1$
-		lFirst = addPart(outText, fileSize,
-		        RelationsMessages.getString("ExtractedData.lbl.size") + ": ", //$NON-NLS-1$ //$NON-NLS-2$
-		        lFirst);
-		lFirst = addPart(outText, fileType,
-		        RelationsMessages.getString("ExtractedData.lbl.type") + ": ", //$NON-NLS-1$ //$NON-NLS-2$
-		        lFirst);
-		lFirst = addPart(outText, dateCrated,
-		        RelationsMessages.getString("ExtractedData.lbl.created") + ": ", //$NON-NLS-1$ //$NON-NLS-2$
-		        lFirst);
-		lFirst = addPart(outText, dateModified,
-		        RelationsMessages.getString("ExtractedData.lbl.modified") //$NON-NLS-1$
-		                + ": ", //$NON-NLS-1$
-		        lFirst);
-		return outText;
-	}
+        boolean lFirst = true;
+        lFirst = addPart(outText, this.author,
+                RelationsMessages.getString("ExtractedData.lbl.author") + ": ", //$NON-NLS-1$ //$NON-NLS-2$
+                lFirst);
+        lFirst = addPart(outText, this.publisher,
+                RelationsMessages.getString("ExtractedData.lbl.publisher") //$NON-NLS-1$
+                + ": ", //$NON-NLS-1$
+                lFirst);
+        lFirst = addPart(outText, this.contributor,
+                RelationsMessages.getString("ExtractedData.lbl.contributor") //$NON-NLS-1$
+                + ": ", //$NON-NLS-1$
+                lFirst);
+        lFirst = addPart(outText, this.filePath, this.resourceType + ": ", lFirst); //$NON-NLS-1$
+        lFirst = addPart(outText, this.fileSize,
+                RelationsMessages.getString("ExtractedData.lbl.size") + ": ", //$NON-NLS-1$ //$NON-NLS-2$
+                lFirst);
+        lFirst = addPart(outText, this.fileType,
+                RelationsMessages.getString("ExtractedData.lbl.type") + ": ", //$NON-NLS-1$ //$NON-NLS-2$
+                lFirst);
+        lFirst = addPart(outText, this.dateCreated,
+                RelationsMessages.getString("ExtractedData.lbl.created") + ": ", //$NON-NLS-1$ //$NON-NLS-2$
+                lFirst);
+        addPart(outText, this.dateModified,
+                RelationsMessages.getString("ExtractedData.lbl.modified") //$NON-NLS-1$
+                + ": ", //$NON-NLS-1$
+                lFirst);
+        return outText;
+    }
 
-	private boolean addPart(final StringBuilder inText, final String inField,
-	        final String inLabel, boolean inFirst) {
-		if (hasContent(inField)) {
-			if (!inFirst) {
-				inText.append(ITEM_SEPARATOR).append(NL);
-			}
-			inText.append(inLabel).append(inField);
-			inFirst = false;
-		}
-		return inFirst;
-	}
+    private boolean addPart(final StringBuilder text, final String field, final String label, boolean first) {
+        if (hasContent(field)) {
+            if (!first) {
+                text.append(ITEM_SEPARATOR).append(NL);
+            }
+            text.append(label).append(field);
+            first = false;
+        }
+        return first;
+    }
 
-	private boolean hasContent(final String inContent) {
-		return inContent == null ? false : inContent.length() != 0;
-	}
+    private boolean hasContent(final String content) {
+        return content == null || !content.isBlank();
+    }
 
-	public void setFileSize(final long inLength) {
-		if (inLength == 0) {
-			return;
-		}
-		fileSize = FORMAT_DECIMAL.format((double) inLength / KB);
-	}
+    public void setFileSize(final long inLength) {
+        if (inLength == 0) {
+            return;
+        }
+        this.fileSize = FORMAT_DECIMAL.format((double) inLength / KB);
+    }
 
-	public void setFilePath(final String inFilePath) {
-		filePath = inFilePath;
-	}
+    public void setFilePath(final String inFilePath) {
+        this.filePath = inFilePath;
+    }
 
-	public void setURL(final String inUrl) {
-		filePath = inUrl;
-		resourceType = RESOURCE_URL;
-	}
+    public void setURL(final String inUrl) {
+        this.filePath = inUrl;
+        this.resourceType = RESOURCE_URL;
+    }
 
-	public String getPath() {
-		return filePath;
-	}
+    public String getPath() {
+        return this.filePath;
+    }
 
-	public void setFileType(final String inFileType) {
-		fileType = inFileType;
-	}
+    public void setFileType(final String inFileType) {
+        this.fileType = inFileType;
+    }
 
-	public void setDateModified(final long inModified) {
-		if (inModified == 0) {
-			return;
-		}
-		final Date lDate = new Date(inModified);
-		dateModified = String.format("%s, %s", //$NON-NLS-1$
-		        DateFormat.getDateInstance(DateFormat.LONG).format(lDate),
-		        DateFormat.getTimeInstance(DateFormat.LONG).format(lDate));
-	}
+    public void setDateModified(final long inModified) {
+        if (inModified == 0) {
+            return;
+        }
+        final Date lDate = new Date(inModified);
+        this.dateModified = String.format("%s, %s", //$NON-NLS-1$
+                DateFormat.getDateInstance(DateFormat.LONG).format(lDate),
+                DateFormat.getTimeInstance(DateFormat.LONG).format(lDate));
+    }
 
-	/**
-	 * The item's creation date.
-	 *
-	 * @param inCreated
-	 *            long the milliseconds since January 1, 1970, 00:00:00 GMT.
-	 */
-	public void setDateCreated(final long inCreated) {
-		if (inCreated == 0) {
-			return;
-		}
-		setDateCreated(new Date(inCreated));
-	}
+    /**
+     * The item's creation date.
+     *
+     * @param inCreated
+     *            long the milliseconds since January 1, 1970, 00:00:00 GMT.
+     */
+    public void setDateCreated(final long inCreated) {
+        if (inCreated == 0) {
+            return;
+        }
+        setDateCreated(new Date(inCreated));
+    }
 
-	/**
-	 * The item's creation date.
-	 *
-	 * @param inDate
-	 *            Date
-	 */
-	public void setDateCreated(final Date inDate) {
-		if (inDate == null) {
-			return;
-		}
-		dateCrated = String.format("%s, %s", //$NON-NLS-1$
-		        DateFormat.getDateInstance(DateFormat.LONG).format(inDate),
-		        DateFormat.getTimeInstance(DateFormat.LONG).format(inDate)); // $NON-NLS-1$
-		final Calendar lDate = Calendar.getInstance();
-		lDate.setTime(inDate);
-		year = String.valueOf(lDate.get(Calendar.YEAR));
-	}
+    /** The item's creation date.
+     *
+     * @param date {@link Date} */
+    public void setDateCreated(final Date date) {
+        if (date == null) {
+            return;
+        }
+        this.dateCreated = String.format("%s, %s", //$NON-NLS-1$
+                DateFormat.getDateInstance(DateFormat.LONG).format(date),
+                DateFormat.getTimeInstance(DateFormat.LONG).format(date)); // $NON-NLS-1$
+        final Calendar lDate = Calendar.getInstance();
+        lDate.setTime(date);
+        this.year = String.valueOf(lDate.get(Calendar.YEAR));
+    }
 
-	/**
-	 * The item's creation date.
-	 *
-	 * @param inDate
-	 *            String the date in plain string format. (Not checked.)
-	 */
-	public void setDateCreated(final String inDate) {
-		dateCrated = inDate;
-	}
+    /**
+     * The item's creation date.
+     *
+     * @param inDate
+     *            String the date in plain string format. (Not checked.)
+     */
+    public void setDateCreated(final String inDate) {
+        this.dateCreated = inDate;
+    }
 
-	public void setComment(final String inComment) {
-		comment = inComment;
-	}
+    public void setComment(final String inComment) {
+        this.comment = inComment;
+    }
 
-	public void setAuthor(final String inAuthor) {
-		if (inAuthor == null) {
-			return;
-		}
-		author = inAuthor;
-	}
+    public void setAuthor(final String inAuthor) {
+        if (inAuthor == null) {
+            return;
+        }
+        this.author = inAuthor;
+    }
 
-	public String getAuthor() {
-		return author;
-	}
+    public String getAuthor() {
+        return this.author;
+    }
 
-	public void setPublisher(final String inPublisher) {
-		if (inPublisher == null) {
-			return;
-		}
-		publisher = inPublisher;
-	}
+    public void setPublisher(final String inPublisher) {
+        if (inPublisher == null) {
+            return;
+        }
+        this.publisher = inPublisher;
+    }
 
-	public String getPublisher() {
-		return publisher;
-	}
+    public String getPublisher() {
+        return this.publisher;
+    }
 
-	public void setContributor(final String inContributor) {
-		if (inContributor == null) {
-			return;
-		}
-		contributor = inContributor;
-	}
+    public void setContributor(final String inContributor) {
+        if (inContributor == null) {
+            return;
+        }
+        this.contributor = inContributor;
+    }
 
-	public String getContributor() {
-		return contributor;
-	}
+    public String getContributor() {
+        return this.contributor;
+    }
 
-	public String getYear() {
-		return year;
-	}
+    public String getYear() {
+        return this.year;
+    }
 
 }

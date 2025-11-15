@@ -33,7 +33,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
@@ -62,7 +61,6 @@ import org.hip.kernel.exc.VException;
 import org.hip.kernel.sys.VSys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
 /**
  * Utility class for testing purpose. Creating and deleting of entries in
@@ -191,8 +189,7 @@ public enum DataHouseKeeper {
      * @throws TransformerFactoryConfigurationError
      * @see org.elbe.relations.handlers.DbEmbeddedCreateHandler
      */
-    private void createEmbeddedTables()
-            throws IOException, SAXException, ParserConfigurationException, SQLException, TransformerException {
+    private void createEmbeddedTables() throws IOException, SQLException, TransformerException {
         final IDBObjectCreator creator = new TestEmbeddedCreator();
         final DefaultStatement statement = new DefaultStatement();
         for (final String sqlCreate : creator.getCreateStatemens(Constants.XML_CREATE_OBJECTS)) {

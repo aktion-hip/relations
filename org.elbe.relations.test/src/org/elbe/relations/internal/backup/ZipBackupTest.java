@@ -108,26 +108,19 @@ public class ZipBackupTest {
 
         File[] childs = root.listFiles();
         Collection<String> childList = ZipHouseKeeper.getChildNames(childs);
-        assertTrue(
-                childList.contains(ZipHouseKeeper.PARENT));
-        assertTrue(
-                childList.contains(ZipHouseKeeper.FILE1));
+        assertTrue(childList.contains(ZipHouseKeeper.PARENT));
+        assertTrue(childList.contains(ZipHouseKeeper.FILE1));
 
-        File child = ZipHouseKeeper
-                .getChildFile(childs, ZipHouseKeeper.FILE1);
-        ZipHouseKeeper.assertFileContent("content 1", child,
-                ZipHouseKeeper.EXPECTED_CONTENT[0]);
+        File child = ZipHouseKeeper.getChildFile(childs, ZipHouseKeeper.FILE1);
+        ZipHouseKeeper.assertFileContent("content 1", child, ZipHouseKeeper.EXPECTED_CONTENT[0]);
 
         // content of test sub
         root = ZipHouseKeeper.getChildFile(childs, ZipHouseKeeper.PARENT);
         childs = root.listFiles();
         childList = ZipHouseKeeper.getChildNames(childs);
-        assertTrue(
-                childList.contains(ZipHouseKeeper.CHILD));
-        assertTrue(
-                childList.contains(ZipHouseKeeper.FILE2));
-        assertTrue(
-                childList.contains(ZipHouseKeeper.FILE4));
+        assertTrue(childList.contains(ZipHouseKeeper.CHILD));
+        assertTrue(childList.contains(ZipHouseKeeper.FILE2));
+        assertTrue(childList.contains(ZipHouseKeeper.FILE4));
 
         child = ZipHouseKeeper.getChildFile(childs, ZipHouseKeeper.FILE2);
         ZipHouseKeeper.assertFileContent("content 2", child,

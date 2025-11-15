@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2016, Benno Luthiger
+ * Copyright (C) 2016-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -19,23 +19,17 @@
 package org.elbe.relations.handlers;
 
 import org.eclipse.e4.core.di.annotations.Execute;
-import org.eclipse.help.internal.base.BaseHelpSystem;
-import org.eclipse.help.internal.server.WebappManager;
 
 /**
  * Handler to display the Relations help content.
  *
  * @author lbenno
  */
-@SuppressWarnings("restriction")
 public class HelpContentHandler {
-	@Execute
-	public void execute() throws Exception {
-		BaseHelpSystem.ensureWebappRunning();
-		final String helpURL = "http://" //$NON-NLS-1$
-		        + WebappManager.getHost() + ":" //$NON-NLS-1$
-		        + WebappManager.getPort() + "/help/index.jsp"; //$NON-NLS-1$
-		BaseHelpSystem.getHelpBrowser(true).displayURL(helpURL);
-	}
+
+    @Execute
+    public void execute() {
+        // placeholder
+    }
 
 }

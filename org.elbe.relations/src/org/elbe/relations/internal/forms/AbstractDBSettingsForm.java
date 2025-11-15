@@ -18,7 +18,7 @@
  ***************************************************************************/
 package org.elbe.relations.internal.forms;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;

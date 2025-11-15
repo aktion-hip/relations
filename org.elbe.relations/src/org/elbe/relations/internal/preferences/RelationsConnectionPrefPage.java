@@ -18,7 +18,7 @@
  ***************************************************************************/
 package org.elbe.relations.internal.preferences;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.contexts.IEclipseContext;

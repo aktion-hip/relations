@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.core.commands.CommandManager;
 import org.eclipse.core.commands.ParameterizedCommand;
@@ -592,10 +593,8 @@ public class KeyController {
         final SafeRunnable lRunnable = new SafeRunnable() {
             @Override
             public final void run() throws IOException {
-                Writer lFileWriter = null;
-                try {
-                    lFileWriter = new BufferedWriter(new OutputStreamWriter(
-                            new FileOutputStream(lFilePath), "UTF-8")); //$NON-NLS-1$
+                try (Writer fileWriter = new BufferedWriter(new OutputStreamWriter(
+                        new FileOutputStream(lFilePath), StandardCharsets.UTF_8))) {
                     final Object[] lBindingElements = KeyController.this.bindingModel.getBindings()
                             .toArray();
                     for (int i = 0; i < lBindingElements.length; i++) {
@@ -619,19 +618,8 @@ public class KeyController {
                                 : lElement.getContext().getName())
                         .append(ESCAPED_QUOTE);
                         lBuffer.append(System.getProperty("line.separator")); //$NON-NLS-1$
-                        lFileWriter.write(lBuffer.toString());
+                        fileWriter.write(lBuffer.toString());
                     }
-                }
-                finally {
-                    if (lFileWriter != null) {
-                        try {
-                            lFileWriter.close();
-                        }
-                        catch (final IOException e) {
-                            // At least I tried.
-                        }
-                    }
-
                 }
             }
         };
@@ -643,7 +631,7 @@ public class KeyController {
      * the binding manager.
      */
     public void saveBindings() {
-        final Collection<Binding> toAdd = new ArrayList<Binding>();
+        final Collection<Binding> toAdd = new ArrayList<>();
         for (final Entry<ParameterizedCommand, Binding> lEntry : this.sessionChanges
                 .entrySet()) {
             final Collection<Binding> lBindings = this.bindingService

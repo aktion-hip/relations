@@ -5,9 +5,9 @@ Bundle-Name: Help Functionality
 Bundle-SymbolicName: org.elbe.relations.help.base
 Bundle-Version: 1.0.1.qualifier
 Bundle-Vendor: RelationWare
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Export-Package: org.elbe.relations.help.base
-Import-Package: javax.inject;version="1.0.0",
+Import-Package: jakarta.inject;version="[2.0.0,3.0.0)",
  org.eclipse.core.runtime;version="3.4.0",
  org.eclipse.e4.core.contexts,
  org.eclipse.e4.core.services.log,

@@ -18,8 +18,8 @@
  ***************************************************************************/
 package org.elbe.relations.indexer.lucene;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -60,12 +60,12 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.index.StoredFields;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -98,7 +98,8 @@ import org.slf4j.LoggerFactory;
  */
 public class LuceneIndexer implements IIndexer {
     private static final Logger LOG = LoggerFactory.getLogger(LuceneIndexer.class);
-    public static final Version LUCENE_VERSION = Version.LUCENE_4_10_1;
+    //    public static final Version LUCENE_VERSION = Version.LUCENE_4_10_1;
+    public static final Version LUCENE_VERSION = Version.LUCENE_10_2_0;
 
     private final DirectoryFactory directoryFactory = new FileSystemDirectoryFactory();
 
@@ -141,14 +142,13 @@ public class LuceneIndexer implements IIndexer {
         LanguageAnalyzer(final String inISOLanguage, final Analyzer inAnalyzer) {
             this.isoLanguage = inISOLanguage;
             this.analyzer = inAnalyzer;
-            this.analyzer.setVersion(LUCENE_VERSION);
         }
     }
 
     @Override
-    public void processIndexer(final IndexerHelper inIndexer, final File inIndexDir, final String inLanguage,
+    public void processIndexer(final IndexerHelper inIndexer, final Path indexDir, final String inLanguage,
             final boolean inCreate) throws IOException {
-        try (IndexWriter lWriter = new IndexWriter(this.directoryFactory.getDirectory(inIndexDir),
+        try (IndexWriter lWriter = new IndexWriter(this.directoryFactory.getDirectory(indexDir),
                 createConfiguration(inLanguage, inCreate))) {
             for (final IndexerDocument lDoc : inIndexer.getDocuments()) {
                 final Document lDocument = transformDoc(lDoc);
@@ -161,15 +161,15 @@ public class LuceneIndexer implements IIndexer {
     }
 
     private IndexWriterConfig createConfiguration(final String inLanguage, final boolean inCreateNew) {
-        final IndexWriterConfig out = new IndexWriterConfig(LUCENE_VERSION, getAnalyzer(inLanguage));
+        final IndexWriterConfig out = new IndexWriterConfig( getAnalyzer(inLanguage));
         out.setOpenMode(inCreateNew ? OpenMode.CREATE : OpenMode.CREATE_OR_APPEND);
         return out;
     }
 
     @Override
-    public void processIndexer(final IndexerHelper inIndexer, final File inIndexDir, final String inLanguage)
+    public void processIndexer(final IndexerHelper inIndexer, final Path indexDir, final String inLanguage)
             throws IOException {
-        processIndexer(inIndexer, inIndexDir, inLanguage, false);
+        processIndexer(inIndexer, indexDir, inLanguage, false);
     }
 
     private Analyzer getAnalyzer(final String inLanguage) {
@@ -183,8 +183,8 @@ public class LuceneIndexer implements IIndexer {
 
     private Document transformDoc(final IndexerDocument inDoc) {
         final Document outDocument = new Document();
-        for (final IndexerField lField : inDoc.getFields()) {
-            outDocument.add(createField(lField));
+        for (final IndexerField field : inDoc.getFields()) {
+            outDocument.add(createField(field));
         }
         return outDocument;
     }
@@ -195,15 +195,10 @@ public class LuceneIndexer implements IIndexer {
                 : new TextFieldFactory();
 
         String value = field.getValue();
-        if (field instanceof IndexerDateField) {
-            value = DateTools.timeToString(((IndexerDateField) field).getTime(),
-                    getResolution(((IndexerDateField) field).getResolution()));
+        if (field instanceof final IndexerDateField indexed) {
+            value = DateTools.timeToString(indexed.getTime(), getResolution(indexed.getResolution()));
         }
-        final Field out = factory.createField(field.getFieldName(), value, store);
-        if (out.fieldType().indexed()) {
-            out.setBoost(field.getBoost());
-        }
-        return out;
+        return factory.createField(field.getFieldName(), value, store);
     }
 
     private DateTools.Resolution getResolution(final TimeResolution inResolution) {
@@ -225,9 +220,9 @@ public class LuceneIndexer implements IIndexer {
     }
 
     @Override
-    public int numberOfIndexed(final File inIndexDir) throws IOException {
+    public int numberOfIndexed(final Path indexDir) throws IOException {
         int outNumber = 0;
-        try (IndexReader lReader = DirectoryReader.open(this.directoryFactory.getDirectory(inIndexDir))) {
+        try (IndexReader lReader = DirectoryReader.open(this.directoryFactory.getDirectory(indexDir))) {
             outNumber = lReader.numDocs();
         }
         return outNumber;
@@ -243,9 +238,9 @@ public class LuceneIndexer implements IIndexer {
     }
 
     @Override
-    public void deleteItemInIndex(final String inUniqueID, final String inFieldName, final File inIndexDir,
+    public void deleteItemInIndex(final String inUniqueID, final String inFieldName, final Path indexDir,
             final String inLanguage) throws IOException {
-        try (IndexWriter lWriter = new IndexWriter(this.directoryFactory.getDirectory(inIndexDir),
+        try (IndexWriter lWriter = new IndexWriter(this.directoryFactory.getDirectory(indexDir),
                 createConfiguration(inLanguage, false))) {
             lWriter.deleteDocuments(new Term(inFieldName, inUniqueID));
             lWriter.commit();
@@ -255,37 +250,35 @@ public class LuceneIndexer implements IIndexer {
     }
 
     @Override
-    public void initializeIndex(final File inIndexDir, final String inLanguage) throws IOException {
-        final Directory directory = this.directoryFactory.getDirectory(inIndexDir);
+    public void initializeIndex(final Path indexDir, final String inLanguage) throws IOException {
+        final Directory directory = this.directoryFactory.getDirectory(indexDir);
         final IndexWriter lNew = new IndexWriter(directory, createConfiguration(inLanguage, true));
         lNew.commit();
         lNew.close();
     }
 
     @Override
-    public List<RetrievedItem> search(final String inQueryTerm, final File inIndexDir, final String inLanguage,
-            final int inMaxHits) throws IOException, RException {
-        try (IndexReader lReader = DirectoryReader.open(this.directoryFactory.getDirectory(inIndexDir))) {
-            final IndexSearcher lSearcher = new IndexSearcher(lReader);
-            final TopDocs lDocs = lSearcher.search(parseQuery(inQueryTerm, inLanguage), inMaxHits);
-            return createResults(lDocs, lSearcher);
-
+    public List<RetrievedItem> search(final String queryTerm, final Path indexDir, final String language,
+            final int maxHits) throws IOException, RException {
+        try (IndexReader reader = DirectoryReader.open(this.directoryFactory.getDirectory(indexDir))) {
+            final IndexSearcher searcher = new IndexSearcher(reader);
+            final TopDocs docs = searcher.search(parseQuery(queryTerm, language), maxHits);
+            return createResults(docs, searcher);
         } catch (final ParseException exc) {
             throw new RException(exc.getMessage());
         }
     }
 
-    private List<RetrievedItem> createResults(final TopDocs inDocs, final IndexSearcher inSearcher)
-            throws CorruptIndexException, IOException {
-        final ScoreDoc[] lDocs = inDocs.scoreDocs;
-        final List<RetrievedItem> out = new ArrayList<>(lDocs.length);
-        for (int i = 0; i < lDocs.length; i++) {
-            final int lDocID = lDocs[i].doc;
-            final Document lDocument = inSearcher.doc(lDocID);
-            out.add(new RetrievedItemWithIcon(new UniqueID(lDocument.get(AbstractSearching.UNIQUE_ID)),
-                    lDocument.get(AbstractSearching.TITLE)));
+    private List<RetrievedItem> createResults(final TopDocs docs, final IndexSearcher searcher) throws IOException {
+        final StoredFields storedFields = searcher.storedFields();
+        final ScoreDoc[] scoreDocs = docs.scoreDocs;
+        final List<RetrievedItem> results = new ArrayList<>(scoreDocs.length);
+        for (final ScoreDoc scoreDoc : scoreDocs) {
+            final Document document = storedFields.document(scoreDoc.doc);
+            results.add(new RetrievedItemWithIcon(new UniqueID(document.get(AbstractSearching.UNIQUE_ID)),
+                    document.get(AbstractSearching.TITLE)));
         }
-        return out;
+        return results;
     }
 
     private Query parseQuery(final String inQueryTerm, final String inLanguage) throws ParseException {
@@ -298,14 +291,14 @@ public class LuceneIndexer implements IIndexer {
     private static class FileSystemDirectoryFactory implements DirectoryFactory {
 
         @Override
-        public Directory getDirectory(final File inIndexDir) throws IOException {
-            return FSDirectory.open(inIndexDir);
+        public Directory getDirectory(final Path indexDir) throws IOException {
+            return FSDirectory.open(indexDir);
         }
     }
 
     // ---
 
-    private static interface IFieldFactory {
+    private interface IFieldFactory {
         Field createField(String inName, String inValue, Field.Store inStored);
     }
 

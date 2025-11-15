@@ -20,8 +20,6 @@ package org.elbe.relations.internal.utility;
 
 import java.sql.SQLException;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.elbe.relations.RelationsConstants;
@@ -30,6 +28,8 @@ import org.elbe.relations.internal.data.DBSettings;
 import org.elbe.relations.internal.data.IDBSettings;
 import org.hip.kernel.dbaccess.DataSourceRegistry;
 import org.hip.kernel.exc.VException;
+
+import jakarta.inject.Inject;
 
 /**
  * This class tests whether the selected database tables have the structure
@@ -40,43 +40,34 @@ import org.hip.kernel.exc.VException;
 @Creatable
 public class DBStructureChecker {
 
-	@Inject
-	private IEclipseContext context;
+    @Inject
+    private IEclipseContext context;
 
-	@Inject
-	private DBSettings dbSettings;
+    @Inject
+    private DBSettings dbSettings;
 
-	/**
-	 * Performs the check for the database structure.
-	 *
-	 * @param tempSettings
-	 *            {@link IDBSettings} temporary DB settings to use for the test
-	 * @return boolean <code>true</code> if the database structure fulfills the
-	 *         requirements.
-	 * @throws SQLException
-	 * @throws VException
-	 */
-	public boolean hasExpectedStructure(final IDBSettings tempSettings)
-			throws SQLException, VException {
-		final DataSourceRegistry dbAccess = (DataSourceRegistry) this.context
-				.get(RelationsConstants.DB_ACCESS_HANDLER);
+    /** Performs the check for the database structure.
+     *
+     * @param tempSettings {@link IDBSettings} temporary DB settings to use for the test
+     * @return boolean <code>true</code> if the database structure fulfills the requirements.
+     * @throws SQLException
+     * @throws VException */
+    public boolean hasExpectedStructure(final IDBSettings tempSettings) throws SQLException, VException {
+        final DataSourceRegistry dbAccess = (DataSourceRegistry) this.context.get(RelationsConstants.DB_ACCESS_HANDLER);
 
-		dbAccess.setActiveConfiguration(
-				ActionHelper.createDBConfiguration(tempSettings));
-		try {
-			if (BOMHelper.getPersonHome().checkStructure(null)
-					&& BOMHelper.getTextHome().checkStructure(null)
-					&& BOMHelper.getTermHome().checkStructure(null)
-					&& BOMHelper.getRelationHome().checkStructure(null)) {
-				// && BOMHelper.getEventStoreHome().checkStructure(null)
-				return true;
-			}
-		} finally {
-			dbAccess.setActiveConfiguration(
-					ActionHelper
-					.createDBConfiguration(this.dbSettings));
-		}
-		return false;
-	}
+        dbAccess.setActiveConfiguration(ActionHelper.createDBConfiguration(tempSettings));
+        try {
+            if (BOMHelper.getPersonHome().checkStructure(null)
+                    && BOMHelper.getTextHome().checkStructure(null)
+                    && BOMHelper.getTermHome().checkStructure(null)
+                    && BOMHelper.getRelationHome().checkStructure(null)) {
+                // && BOMHelper.getEventStoreHome().checkStructure(null)
+                return true;
+            }
+        } finally {
+            dbAccess.setActiveConfiguration(ActionHelper.createDBConfiguration(this.dbSettings));
+        }
+        return false;
+    }
 
 }

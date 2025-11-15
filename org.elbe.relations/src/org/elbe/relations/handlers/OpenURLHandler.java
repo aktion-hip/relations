@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2016, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -19,8 +19,6 @@
 
 package org.elbe.relations.handlers;
 
-import javax.inject.Named;
-
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -31,6 +29,8 @@ import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.internal.services.ISelectedTextProvider;
 import org.elbe.relations.internal.utility.BrowserUtil;
 
+import jakarta.inject.Named;
+
 /**
  * Handler that gets selected text from the inspector view and pastes this text
  * as url in the default browser.
@@ -39,24 +39,21 @@ import org.elbe.relations.internal.utility.BrowserUtil;
  */
 public class OpenURLHandler {
 
-	@Execute
-	void openURL(final EPartService inPartService,
-	        final MApplication inApplication,
-	        @Named(IServiceConstants.ACTIVE_SHELL) final Shell inShell) {
-		final MPart lPart = inPartService
-		        .findPart(RelationsConstants.PART_INSPECTOR);
-		if (lPart != null) {
-			if (lPart.getObject() instanceof ISelectedTextProvider) { // NOPMD
-				String lURL = ((ISelectedTextProvider) lPart.getObject())
-				        .getSelection();
-				if (!lURL.isEmpty()) {
-					if (!BrowserUtil.textIsURL(lURL)) {
-						lURL = BrowserUtil.PREFIX_HTTP + lURL;
-					}
-					BrowserUtil.startBrowser(lURL);
-				}
-			}
-		}
-	}
+    @Execute
+    void openURL(final EPartService partService, final MApplication application,
+            @Named(IServiceConstants.ACTIVE_SHELL) final Shell shell) {
+        final MPart part = partService.findPart(RelationsConstants.PART_INSPECTOR);
+        if (part != null) {
+            if (part.getObject() instanceof final ISelectedTextProvider provider) { // NOPMD
+                String url = provider.getSelection();
+                if (!url.isEmpty()) {
+                    if (!BrowserUtil.textIsURL(url)) {
+                        url = BrowserUtil.PREFIX_HTTP + url;
+                    }
+                    BrowserUtil.startBrowser(url);
+                }
+            }
+        }
+    }
 
 }

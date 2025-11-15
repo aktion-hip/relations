@@ -20,8 +20,6 @@ package org.elbe.relations.handlers;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.services.log.Logger;
@@ -32,6 +30,8 @@ import org.elbe.relations.internal.data.IDBSettings;
 import org.elbe.relations.internal.search.RelationsIndexerWithLanguage;
 import org.hip.kernel.bom.impl.DefaultStatement;
 
+import jakarta.inject.Inject;
+
 /**
  * Handler responsible for creating the tables of an embedded (i.e. Derby)
  * database.
@@ -41,42 +41,36 @@ import org.hip.kernel.bom.impl.DefaultStatement;
 @SuppressWarnings("restriction")
 public class DbEmbeddedCreateHandler {
 
-	@Inject
-	private Logger log;
+    @Inject
+    private Logger log;
 
-	@Execute
-	public void execute(final IDBSettings dbSettings,
-			final IEclipseContext inContext) {
-		createEmbedded(dbSettings);
-		prepareIndex(inContext);
-	}
+    @Execute
+    public void execute(final IDBSettings dbSettings, final IEclipseContext inContext) {
+        createEmbedded(dbSettings);
+        prepareIndex(inContext);
+    }
 
-	private void createEmbedded(final IDBSettings dbSettings) {
-		try {
-			final IDBObjectCreator creator = dbSettings
-					.getDBConnectionConfig().getCreator();
-			final DefaultStatement statement = new DefaultStatement();
-			for (final String sqlCreate : creator
-					.getCreateStatemens(Constants.XML_CREATE_OBJECTS)) {
-				statement.execute(sqlCreate);
-			}
-		}
-		catch (final Exception exc) {
-			this.log.error(exc, exc.getMessage());
-		}
-	}
+    private void createEmbedded(final IDBSettings dbSettings) {
+        try {
+            final IDBObjectCreator creator = dbSettings.getDBConnectionConfig().getCreator();
+            final DefaultStatement statement = new DefaultStatement();
+            for (final String sqlCreate : creator.getCreateStatemens(Constants.XML_CREATE_OBJECTS)) {
+                statement.execute(sqlCreate);
+            }
+        } catch (final Exception exc) {
+            this.log.error(exc, exc.getMessage());
+        }
+    }
 
-	private void prepareIndex(final IEclipseContext context) {
-		try {
-			final RelationsIndexer indexer = RelationsIndexerWithLanguage
-			        .createRelationsIndexer(context);
-			if (!indexer.isIndexAvailable()) {
-				indexer.initializeIndex();
-			}
-		}
-		catch (final IOException exc) {
-			this.log.error(exc, exc.getMessage());
-		}
-	}
+    private void prepareIndex(final IEclipseContext context) {
+        try {
+            final RelationsIndexer indexer = RelationsIndexerWithLanguage.createRelationsIndexer(context);
+            if (!indexer.isIndexAvailable()) {
+                indexer.initializeIndex();
+            }
+        } catch (final IOException exc) {
+            this.log.error(exc, exc.getMessage());
+        }
+    }
 
 }

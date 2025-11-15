@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2016, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -19,9 +19,6 @@
 package org.elbe.relations.internal.wizards;
 
 import java.sql.SQLException;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
@@ -46,7 +43,8 @@ import org.elbe.relations.models.LightWeightAdapter;
 import org.elbe.relations.services.IBrowserManager;
 import org.hip.kernel.exc.VException;
 
-import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Abstract wizard class to create new items.
@@ -55,25 +53,23 @@ import jakarta.annotation.PostConstruct;
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractNewWizard extends Wizard implements INewWizard {
-    protected final static String ERROR_DIALOG = RelationsMessages
-            .getString("AbstractNewWizard.title.error"); //$NON-NLS-1$
+    protected static final String ERROR_DIALOG = RelationsMessages.getString("AbstractNewWizard.title.error"); //$NON-NLS-1$
 
-    private RelationsNewWizardPage pageRelations;
     private UnsavedAssociationsModel model = null;
 
-    @Inject
+    @Inject // NOSONAR
     private Logger log;
 
-    @Inject
+    @Inject // NOSONAR
     private IEclipseContext context;
 
-    @Inject
+    @Inject // NOSONAR
     private IBrowserManager browserManager;
 
     /**
      * AbstractNewWizard
      */
-    public AbstractNewWizard() {
+    protected AbstractNewWizard() {
         super();
     }
 
@@ -85,29 +81,27 @@ public abstract class AbstractNewWizard extends Wizard implements INewWizard {
         return this.context;
     }
 
-    /**
-     * Adds the <code>RelationsNewWizardPage</code> to this wizard.
+    /** Adds the <code>RelationsNewWizardPage</code> to this wizard.
      *
-     * @param inTitle
-     *            String to display
-     * @param inDescription
-     *            String to display
-     */
-    protected void addPages(final String inTitle, final String inDescription) {
-        this.pageRelations = ContextInjectionFactory
-                .make(RelationsNewWizardPage.class, this.context);
-        this.pageRelations.setTitle(inTitle);
-        this.pageRelations.setDescription(inDescription);
-        addPage(this.pageRelations);
+     * @param title String to display
+     * @param description String to display */
+    protected void addPages(final String title, final String description) {
+        final RelationsNewWizardPage pageRelations = ContextInjectionFactory.make(RelationsNewWizardPage.class,
+                this.context);
+        pageRelations.setTitle(title);
+        pageRelations.setDescription(description);
+        addPage(pageRelations);
     }
 
-    protected void prepareFinish(final AbstractRelationsWizardPage inPage,
-            final Image inImage) {
-        inPage.setRelationsSaveHelper(new IRelationsSaveHelper() {
+    protected void prepareFinish(final AbstractRelationsWizardPage page, final Image image) {
+        page.setRelationsSaveHelper(new IRelationsSaveHelper() {
             @Override
-            public void saveWith(final IItem inItem) throws BOMException {
-                AbstractNewWizard.this.model.replaceCenter(new ItemAdapter(inItem, inImage, AbstractNewWizard.this.context));
-                AbstractNewWizard.this.model.saveChanges();
+            public void saveWith(final IItem item) throws BOMException {
+                if (AbstractNewWizard.this.model != null) {
+                    AbstractNewWizard.this.model
+                    .replaceCenter(new ItemAdapter(item, image, AbstractNewWizard.this.context));
+                    AbstractNewWizard.this.model.saveChanges();
+                }
             }
         });
     }
@@ -117,33 +111,29 @@ public abstract class AbstractNewWizard extends Wizard implements INewWizard {
      *
      * @see org.elbe.relations.internal.wizards.interfaces.INewWizard#init(org.eclipse.jface.viewers.IStructuredSelection)
      */
-    @PostConstruct
+    @Inject
     public void init(
-            @Named(IServiceConstants.ACTIVE_SELECTION) @Optional final IStructuredSelection inSelection) {
+            @Named(IServiceConstants.ACTIVE_SELECTION) @Optional final IStructuredSelection selection) {
         try {
-            ItemAdapter lSelected = null;
-            if (inSelection != null && !inSelection.isEmpty() && inSelection
-                    .getFirstElement() instanceof IBrowserItem) {
-                lSelected = (ItemAdapter) ((IBrowserItem) inSelection
-                        .getFirstElement()).getModel();
+            ItemAdapter selected = null;
+            if (selection != null && !selection.isEmpty() && selection.getFirstElement() instanceof IBrowserItem) {
+                selected = (ItemAdapter) ((IBrowserItem) selection.getFirstElement()).getModel();
             }
-            if (lSelected == null) {
-                lSelected = this.browserManager.getSelectedModel();
+            if (selected == null) {
+                selected = this.browserManager.getSelectedModel();
             }
-            if (lSelected == null) {
-                this.model = UnsavedAssociationsModel.createModel(createDummy(),
-                        this.context, RelationsImages.TEXT.getImage());
+            if (selected == null) {
+                this.model = UnsavedAssociationsModel.createModel(createDummy(), this.context,
+                        RelationsImages.TEXT.getImage());
             } else {
                 this.model = UnsavedAssociationsModel.createModel(createDummy(),
-                        this.context, lSelected);
+                        this.context, selected);
             }
         }
-        catch (final VException exc) {
+        catch (VException | SQLException exc) {
             this.log.error(exc, exc.getMessage());
         }
-        catch (final SQLException exc) {
-            this.log.error(exc, exc.getMessage());
-        }
+
         setWindowTitle(
                 RelationsMessages.getString("AbstractNewWizard.view.title")); //$NON-NLS-1$
     }

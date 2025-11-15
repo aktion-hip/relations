@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -18,8 +18,6 @@
  ***************************************************************************/
 package org.elbe.relations.internal.controls;
 
-import javax.inject.Inject;
-
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.di.PersistState;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
@@ -35,7 +33,7 @@ import org.elbe.relations.RelationsConstants;
 import org.elbe.relations.internal.controller.BookmarksController;
 import org.elbe.relations.search.RetrievedItemWithIcon;
 
-import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 
 /**
  * View to display the bookmarks.
@@ -43,56 +41,43 @@ import jakarta.annotation.PostConstruct;
  * @author Luthiger
  */
 public class BookmarksView extends AbstractToolPart {
-    private final TableViewer bookmarksView;
+    private final TableViewer bookmarksViewer;
 
-    @Inject
+    @Inject // NOSONAR
     private BookmarksController bookmarksController;
 
     @Inject
-    public BookmarksView(final Composite inParent) {
-        this.bookmarksView = new TableViewer(inParent, SWT.H_SCROLL | SWT.V_SCROLL
-                | SWT.BORDER | SWT.MULTI);
-        this.bookmarksView.setContentProvider(new ObservableListContentProvider());
-        this.bookmarksView.setLabelProvider(getLabelProvider());
-        this.bookmarksView.addDoubleClickListener(getDoubleClickListener());
-        this.bookmarksView.addDragSupport(DND.DROP_COPY, getDragTypes(),
-                getDragSourceAdapter(this.bookmarksView));
-        this.bookmarksView
-        .addSelectionChangedListener(getSelectionChangedListener());
+    public BookmarksView(final Composite parent) {
+        this.bookmarksViewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.MULTI);
+        this.bookmarksViewer.setContentProvider(new ObservableListContentProvider<RetrievedItemWithIcon>());
+        this.bookmarksViewer.setLabelProvider(getLabelProvider());
+        this.bookmarksViewer.addDoubleClickListener(getDoubleClickListener());
+        this.bookmarksViewer.addDragSupport(DND.DROP_COPY, getDragTypes(), getDragSourceAdapter(this.bookmarksViewer));
+        this.bookmarksViewer.addSelectionChangedListener(getSelectionChangedListener());
     }
 
-    @PostConstruct
-    void initialize(final MPart inPart, final EMenuService inService) {
-        afterInit(inPart, inService);
-        this.bookmarksController.initialize(inPart);
+    // @PostConstruct
+    @Inject
+    void initialize(final MPart part, final EMenuService service) {
+        afterInit(part, service);
+        this.bookmarksController.initialize(part);
     }
 
     @Focus
     void setFocus() {
-        this.bookmarksView.setInput(this.bookmarksController.getBookmarks());
-        final Table lTable = this.bookmarksView.getTable();
-        lTable.setFocus();
-        if (this.bookmarksView.getSelection().isEmpty()) {
-            lTable.select(0);
+        this.bookmarksViewer.setInput(this.bookmarksController.getBookmarks());
+        final Table table = this.bookmarksViewer.getTable();
+        table.setFocus();
+        if (this.bookmarksViewer.getSelection().isEmpty()) {
+            table.select(0);
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.elbe.relations.internal.controls.AbstractToolPart#getControl()
-     */
     @Override
     protected Object getControl() {
-        return this.bookmarksView.getControl();
+        return this.bookmarksViewer.getControl();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.elbe.relations.internal.controls.AbstractToolPart#getContextMenuID()
-     */
     @Override
     protected String getContextMenuID() {
         return RelationsConstants.POPUP_TOOLS_BOOKMARKS;
@@ -109,18 +94,17 @@ public class BookmarksView extends AbstractToolPart {
      */
     @Override
     public boolean hasSelection() {
-        return !this.bookmarksView.getSelection().isEmpty();
+        return !this.bookmarksViewer.getSelection().isEmpty();
     }
 
     /**
      * Removes the selected item.
      */
     public void removeSelected() {
-        final Object lSelected = ((IStructuredSelection) this.bookmarksView
-                .getSelection()).getFirstElement();
-        if (lSelected instanceof RetrievedItemWithIcon) {
-            this.bookmarksView.remove(lSelected);
-            this.bookmarksController.removeItem(lSelected);
+        final Object selected = ((IStructuredSelection) this.bookmarksViewer.getSelection()).getFirstElement();
+        if (selected instanceof RetrievedItemWithIcon) {
+            this.bookmarksViewer.remove(selected);
+            this.bookmarksController.removeItem(selected);
         }
     }
 

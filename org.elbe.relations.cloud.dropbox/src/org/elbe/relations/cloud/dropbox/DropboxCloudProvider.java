@@ -42,7 +42,6 @@ import com.google.gson.JsonObject;
  * @see https://github.com/dropbox/dropbox-sdk-java/blob/master/examples/upload-file/src/main/java/com/dropbox/core/examples/upload_file/Main.java
  * @see https://github.com/dropbox/dropbox-sdk-java/blob/master/examples/authorize/src/main/java/com/dropbox/core/examples/authorize/Main.java
  * @see https://dropbox.github.io/dropbox-sdk-java/api-docs/v2.0.x/com/dropbox/core/DbxWebAuth.html */
-@SuppressWarnings("restriction")
 public class DropboxCloudProvider implements ICloudProvider {
     private static final String DROP_BOX_ROOT = "/synchronization"; //$NON-NLS-1$
     private static final String DROP_BOX_PATH = DROP_BOX_ROOT + "/%s"; //$NON-NLS-1$

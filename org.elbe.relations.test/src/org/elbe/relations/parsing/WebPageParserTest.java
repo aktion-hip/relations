@@ -5,11 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.URL;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,9 +33,23 @@ import org.mockito.junit.jupiter.MockitoExtension;
  */
 @SuppressWarnings("restriction")
 @ExtendWith(MockitoExtension.class)
-public class WebPageParserTest {
-    private static final String NL = System.getProperty("line.separator");
+class WebPageParserTest {
+    private static final String NBSP = "\u202F";
+    private static final String REGEX = "(title=Relations: Metadata&)(.+)(&text=Metadata)";
+    private static final String REPLACEMENT = "$1###$3";
+
     private static final String FILE_NAME = "/resources/html_extract2.html";
+
+    // note: CR added for Windows line endings
+    private static final String TEXT = """
+            title=Relations: Metadata&###&text=Metadata\r
+            This page is testing Dublin Core matadata.\r
+            [<i>Author: Benno Luthiger;\r
+            Publisher: Relations;\r
+            Contributor: John Foo;\r
+            URL: %s;\r
+            Type: Text;\r
+            Created: December 15, 2010, 8:49:37%sAM CET</i>]""";
 
     @Mock
     private Logger log;
@@ -49,7 +61,7 @@ public class WebPageParserTest {
     private WebPageParser parser;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         this.localeOld = Locale.getDefault();
         Locale.setDefault(Locale.US);
 
@@ -61,30 +73,21 @@ public class WebPageParserTest {
     }
 
     @AfterEach
-    public void tearDown() throws Exception {
+    void tearDown() throws Exception {
         Locale.setDefault(this.localeOld);
         DataHouseKeeper.INSTANCE.deleteAllInAll();
     }
 
     @Test
-    public void testParse() throws Exception {
-        final String lUrl = getPath();
-        final WebDropResult lResult = this.parser.parse(lUrl);
-
-        final String lExpected = "title=Relations: Metadata&author=Benno Luthiger&coAuthor=John Foo&subTitle=&year=2010&publication=%s&pages=&volume=0&number=0&publisher=Relations&place=%s&type=3&text=%s";
-        final String lText = String.format("Metadata" + NL
-                + "This page is testing Dublin Core matadata." + NL
-                + "[<i>Author: Benno Luthiger;" + NL + "Publisher: Relations;"
-                + NL + "Contributor: John Foo;" + NL + "URL: %s;" + NL
-                + "Type: Text;" + NL
-                + "Created: December 15, 2010, 8:49:37 AM CET</i>]", lUrl);
-        assertEquals("new text action", String.format(lExpected, lUrl,
-                DateFormat.getDateInstance(DateFormat.LONG).format(new Date()),
-                lText), lResult.getNewTextAction().toString());
+    void testParse() throws Exception {
+        final String url = getPath();
+        final WebDropResult result = this.parser.parse(url);
+        assertEquals(String.format(TEXT, url, NBSP),
+                result.getNewTextAction().toString().replaceAll(REGEX, REPLACEMENT));
     }
 
     @Test
-    public void testCompare() throws Exception {
+    void testCompare() {
         final List<IBibliographyProvider> lProviders = new ArrayList<IBibliographyProvider>();
         lProviders.add(new TestBibliographyProvider("a", false));
         lProviders.add(new TestBibliographyProvider("b", false));
@@ -107,9 +110,9 @@ public class WebPageParserTest {
         }
 
         @Override
-        public void evaluate(final XPathHelper inXPathHelper,
-                final WebDropResult inWebDrop, final IEclipseContext inContext)
-                        throws ParserException {
+        public void evaluate(final XPathHelper inXPathHelper, final WebDropResult inWebDrop,
+                final IEclipseContext inContext) throws ParserException {
+            // intentionally left empty
         }
 
         @Override

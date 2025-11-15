@@ -36,7 +36,6 @@ import org.junit.jupiter.api.Test;
  * @author lbenno
  */
 public class ExcelExtractorTest {
-
     private static final String NL = System.getProperty("line.separator");
     private static final String FILE_NAME = "resources/excelExtractorTest.xls";
     private static final String FILE_NAME2 = "resources/dummy.txt";
@@ -45,7 +44,7 @@ public class ExcelExtractorTest {
     private Locale localeOld;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws FileNotFoundException {
         this.localeOld = Locale.getDefault();
         Locale.setDefault(Locale.US);
 
@@ -56,12 +55,12 @@ public class ExcelExtractorTest {
     }
 
     @AfterEach
-    public void tearDown() throws Exception {
+    void tearDown() {
         Locale.setDefault(this.localeOld);
     }
 
     @Test
-    public void testAcceptsFile() throws Exception {
+    void testAcceptsFile() throws Exception {
         final ExcelExtractor lExtractor = new ExcelExtractor();
         assertTrue(lExtractor.acceptsFile(this.file));
 
@@ -69,7 +68,7 @@ public class ExcelExtractorTest {
     }
 
     @Test
-    public void testProcess() throws Exception {
+    void testProcess() throws Exception {
         final AbstractMSOfficeExtractor lExtractor = new ExcelExtractor();
         final ExtractedData lExtacted = lExtractor.process(this.file);
 
@@ -79,9 +78,10 @@ public class ExcelExtractorTest {
         final String lExpected = "This Excel Workbook is for testing only."
                 + NL + "[<i>Author: Luthiger;" + NL + "Size: 16.00 kB;" + NL
                 + "Type: application/vnd.ms-excel;" + NL
-                + "Created: September 6, 2007, 12:24:19 AM CEST;" + NL
-                + "Last Modified: September 29, 2020, 1:36:53 PM CEST</i>]";
-        assertEquals(lExpected, lExtacted.getText());
+                + "Created: September 6, 2007, 12:24:19%sAM CEST;" + NL
+                + "Last Modified: XXX</i>]";
+        assertEquals(String.format(lExpected, TestUtil.NBSP),
+                lExtacted.getText().replaceAll(TestUtil.REGEX, TestUtil.REPLACEMENT));
     }
 
 }

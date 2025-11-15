@@ -20,7 +20,7 @@ package org.elbe.relations.internal.forms;
 
 import java.sql.SQLException;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import javax.naming.NamingException;
 
 import org.eclipse.core.runtime.IStatus;

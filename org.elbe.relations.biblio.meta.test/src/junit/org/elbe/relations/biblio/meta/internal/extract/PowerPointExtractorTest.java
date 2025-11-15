@@ -59,9 +59,10 @@ public class PowerPointExtractorTest {
         final String lExpected = "This slide show is for testing only." + NL
                 + "[<i>Author: Luthiger;" + NL + "Size: 96.50 kB;" + NL
                 + "Type: application/vnd.ms-powerpoint;" + NL
-                + "Created: September 6, 2007, 12:25:07 AM CEST;" + NL
-                + "Last Modified: September 29, 2020, 1:36:53 PM CEST</i>]";
-        assertEquals(lExpected, lExtacted.getText());
+                + "Created: September 6, 2007, 12:25:07%sAM CEST;" + NL
+                + "Last Modified: XXX</i>]";
+        assertEquals(String.format(lExpected, TestUtil.NBSP),
+                lExtacted.getText().replaceAll(TestUtil.REGEX, TestUtil.REPLACEMENT));
     }
 
 }

@@ -20,8 +20,8 @@ package org.elbe.relations.handlers.item;
 
 import java.sql.SQLException;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.eclipse.e4.core.contexts.Active;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;

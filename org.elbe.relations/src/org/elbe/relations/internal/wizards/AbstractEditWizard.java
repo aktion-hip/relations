@@ -20,7 +20,7 @@ package org.elbe.relations.internal.wizards;
 
 import java.sql.SQLException;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.services.log.Logger;

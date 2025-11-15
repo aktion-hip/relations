@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;

@@ -19,11 +19,9 @@
 
 package org.elbe.relations.indexer.lucene;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Locale;
-
-import org.elbe.relations.data.Constants;
 
 /**
  * Utility class for testing purpose, provides helper methods for managing the
@@ -32,47 +30,21 @@ import org.elbe.relations.data.Constants;
  * @author lbenno
  */
 public class IndexHouseKeeper {
-	public final static File ROOT = new File(System.getProperty("java.io.tmpdir"));
-	public final static String INDEX_DIR = "rel_test";
-	public static final String LANGUAGE = Locale.ENGLISH.getLanguage();
+    public final static String INDEX_DIR = "rel_test";
+    public static final String LANGUAGE = Locale.ENGLISH.getLanguage();
 
-	private LuceneIndexer index;
+    private LuceneIndexer index;
 
-	public void setUp() throws IOException {
-		index = new LuceneIndexer();
-		index.initializeIndex(getDirectory(), LANGUAGE);
-		// IndexerRegistration.getInstance().register(index);
-	}
+    public void setUp(final Path tempDir) throws IOException {
+        this.index = new LuceneIndexer();
+        this.index.initializeIndex(tempDir, LANGUAGE);
+        // IndexerRegistration.getInstance().register(index);
+    }
 
-	public void tearDown() throws IOException {
-		// IndexerRegistration.getInstance().unregister(index);
-		index = null;
-		deleteContent(getDirectory());
-	}
-
-	// ---
-
-	public static File getDirectory() throws IOException {
-		final File lIndexContainer = checkDir(new File(ROOT, Constants.LUCENE_STORE));
-		return checkDir(new File(lIndexContainer, INDEX_DIR));
-	}
-
-	private static File checkDir(final File inFileToCheck) {
-		if (!inFileToCheck.exists()) {
-			inFileToCheck.mkdir();
-		}
-		return inFileToCheck;
-	}
-
-	private void deleteContent(final File inDirectory) {
-		final File[] lContent = inDirectory.listFiles();
-		for (int i = 0; i < lContent.length; i++) {
-			if (lContent[i].isDirectory()) {
-				deleteContent(lContent[i]);
-			}
-			lContent[i].delete();
-		}
-		inDirectory.delete();
-	}
+    public void tearDown(final Path tempDir) throws IOException {
+        // IndexerRegistration.getInstance().unregister(index);
+        this.index = null;
+        // Files.delete(tempDir); not needed, as tempDir is JUnit @TempDir
+    }
 
 }

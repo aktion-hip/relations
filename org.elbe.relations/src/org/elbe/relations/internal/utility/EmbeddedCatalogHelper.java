@@ -44,312 +44,311 @@ import org.elbe.relations.internal.search.RelationsIndexerWithLanguage;
  */
 @SuppressWarnings("restriction")
 public class EmbeddedCatalogHelper {
-	public final static String DELETED_MARKER = ".deleted"; //$NON-NLS-1$
-	public final static String REINDEX_MARKER = ".reindex"; //$NON-NLS-1$
+    public static final String DELETED_MARKER = ".deleted"; //$NON-NLS-1$
+    public static final String REINDEX_MARKER = ".reindex"; //$NON-NLS-1$
 
-	private final static IStatus ERROR_EXISTS = new Status(Status.ERROR,
-			Activator.getSymbolicName(), 1,
-			RelationsMessages.getString("EmbeddedCatalogHelper.error.exists"), //$NON-NLS-1$
-			null);
-	private final static IStatus ERROR_CHAR = new Status(Status.ERROR,
-			Activator.getSymbolicName(), 1,
-			RelationsMessages.getString("EmbeddedCatalogHelper.error.chars"), //$NON-NLS-1$
-			null);
-	private final static Pattern ALLOWED_CHAR = Pattern.compile("\\w*"); //$NON-NLS-1$
+    private static final IStatus ERROR_EXISTS = new Status(IStatus.ERROR,
+            Activator.getSymbolicName(), 1,
+            RelationsMessages.getString("EmbeddedCatalogHelper.error.exists"), //$NON-NLS-1$
+            null);
+    private static final IStatus ERROR_CHAR = new Status(IStatus.ERROR,
+            Activator.getSymbolicName(), 1,
+            RelationsMessages.getString("EmbeddedCatalogHelper.error.chars"), //$NON-NLS-1$
+            null);
+    private static final Pattern ALLOWED_CHAR = Pattern.compile("\\w*"); //$NON-NLS-1$
 
-	private final String[] catalogs;
+    private final String[] catalogs;
 
-	/**
-	 * EmbeddedCatalogHelper constructor.
-	 */
-	public EmbeddedCatalogHelper() {
-		this.catalogs = getCatalogs();
-	}
+    /**
+     * EmbeddedCatalogHelper constructor.
+     */
+    public EmbeddedCatalogHelper() {
+        this.catalogs = getCatalogs();
+    }
 
-	/**
-	 * This method returns all catalogs of the embedded database.
-	 *
-	 * @return String[] containing the name of all catalogs of the embedded
-	 *         (Derby) database.
-	 */
-	public static String[] getCatalogs() {
-		final File dbStore = getDBStorePath();
+    /**
+     * This method returns all catalogs of the embedded database.
+     *
+     * @return String[] containing the name of all catalogs of the embedded
+     *         (Derby) database.
+     */
+    public static String[] getCatalogs() {
+        final File dbStore = getDBStorePath();
 
-		// we retrieve all directories in the db store except those marked
-		// deleted, i.e. containing the delete marker file.
-		final File[] dbDirs = dbStore.listFiles(new FileFilter() {
-			@Override
-			public boolean accept(final File inFile) {
-				if (!inFile.isDirectory()) {
-					return false;
-				}
-				final String[] lContent = inFile.list(new FilenameFilter() {
-					@Override
-					public boolean accept(final File inArg0,
-							final String inFileName) {
-						return DELETED_MARKER.equals(inFileName);
-					}
-				});
-				return lContent == null || lContent.length == 0;
-			}
-		});
-		final String[] outEmbeddedDBs = new String[dbDirs == null ? 0
-				: dbDirs.length];
-		for (int i = 0; i < outEmbeddedDBs.length; i++) {
-			outEmbeddedDBs[i] = dbDirs[i].getName();
-		}
-		return outEmbeddedDBs;
-	}
+        // we retrieve all directories in the db store except those marked
+        // deleted, i.e. containing the delete marker file.
+        final File[] dbDirs = dbStore.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(final File inFile) {
+                if (!inFile.isDirectory()) {
+                    return false;
+                }
+                final String[] lContent = inFile.list(new FilenameFilter() {
+                    @Override
+                    public boolean accept(final File inArg0,
+                            final String inFileName) {
+                        return DELETED_MARKER.equals(inFileName);
+                    }
+                });
+                return lContent == null || lContent.length == 0;
+            }
+        });
+        final String[] outEmbeddedDBs = new String[dbDirs == null ? 0
+                : dbDirs.length];
+        for (int i = 0; i < outEmbeddedDBs.length; i++) {
+            outEmbeddedDBs[i] = dbDirs[i].getName();
+        }
+        return outEmbeddedDBs;
+    }
 
-	/**
-	 * Validates the specified input.
-	 *
-	 * @param input
-	 *            String
-	 * @return IStatus <code>ERROR_EXISTS</code> if the inputed value equals an
-	 *         existing embedded database, <code>ERROR_CHAR</code> if the input
-	 *         contains characters that are not allowed, <code>OK_STATUS</code>
-	 *         else.
-	 */
-	public IStatus validate(final String input) {
-		if (checkCatalogExists(input)) {
-			return ERROR_EXISTS;
-		}
-		if (!ALLOWED_CHAR.matcher(input).matches()) {
-			return ERROR_CHAR;
-		}
-		return Status.OK_STATUS;
-	}
+    /**
+     * Validates the specified input.
+     *
+     * @param input
+     *            String
+     * @return IStatus <code>ERROR_EXISTS</code> if the inputed value equals an
+     *         existing embedded database, <code>ERROR_CHAR</code> if the input
+     *         contains characters that are not allowed, <code>OK_STATUS</code>
+     *         else.
+     */
+    public IStatus validate(final String input) {
+        if (checkCatalogExists(input)) {
+            return ERROR_EXISTS;
+        }
+        if (!ALLOWED_CHAR.matcher(input).matches()) {
+            return ERROR_CHAR;
+        }
+        return Status.OK_STATUS;
+    }
 
-	/**
-	 * Validates the specified input, checks for allowed characters only.
-	 *
-	 * @param input
-	 *            String
-	 * @return IStatus <code>OK_STATUS</code> if the inputed data contains only
-	 *         allowed characters, else returns <code>ERROR_CHAR</code>.
-	 */
-	public IStatus validateForAllowedChars(final String input) {
-		if (!ALLOWED_CHAR.matcher(input).matches()) {
-			return ERROR_CHAR;
-		}
-		return Status.OK_STATUS;
-	}
+    /**
+     * Validates the specified input, checks for allowed characters only.
+     *
+     * @param input
+     *            String
+     * @return IStatus <code>OK_STATUS</code> if the inputed data contains only
+     *         allowed characters, else returns <code>ERROR_CHAR</code>.
+     */
+    public IStatus validateForAllowedChars(final String input) {
+        if (!ALLOWED_CHAR.matcher(input).matches()) {
+            return ERROR_CHAR;
+        }
+        return Status.OK_STATUS;
+    }
 
-	/**
-	 * Checks for the existence of a catalog (of an embedded database) with the
-	 * specified name.
-	 *
-	 * @param catalogName
-	 *            String the name of the catalog to check
-	 * @return boolean <code>true</code> if a catalog with the name exists, else
-	 *         <code>false</code>.
-	 */
-	public boolean checkCatalogExists(final String catalogName) {
-		for (final String nameOfCatatlog : this.catalogs) {
-			if (catalogName.equals(nameOfCatatlog)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    /**
+     * Checks for the existence of a catalog (of an embedded database) with the
+     * specified name.
+     *
+     * @param catalogName
+     *            String the name of the catalog to check
+     * @return boolean <code>true</code> if a catalog with the name exists, else
+     *         <code>false</code>.
+     */
+    public boolean checkCatalogExists(final String catalogName) {
+        for (final String nameOfCatatlog : this.catalogs) {
+            if (catalogName.equals(nameOfCatatlog)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	/**
-	 * Convenience method: checks whether the default embedded database exists.
-	 * If not, we may have to do initial DB setup.
-	 *
-	 * @return boolean <code>true</code> if there is a directory having the name
-	 *         of the default database.
-	 */
-	public static boolean hasDefaultEmbedded() {
-		final File dbStore = getDBStorePath();
-		final File[] dbDirs = dbStore.listFiles(new FileFilter() {
-			@Override
-			public boolean accept(final File inFile) {
-				return inFile.isDirectory();
-			}
-		});
-		if (dbDirs == null) {
-			return false;
-		}
-		for (int i = 0; i < dbDirs.length; i++) {
-			if (RelationsConstants.DFT_DB_EMBEDDED
-					.equals(dbDirs[i].getName())) {
-				return true;
-			}
-		}
-		return false;
-	}
+    /**
+     * Convenience method: checks whether the default embedded database exists.
+     * If not, we may have to do initial DB setup.
+     *
+     * @return boolean <code>true</code> if there is a directory having the name
+     *         of the default database.
+     */
+    public static boolean hasDefaultEmbedded() {
+        final File dbStore = getDBStorePath();
+        final File[] dbDirs = dbStore.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(final File inFile) {
+                return inFile.isDirectory();
+            }
+        });
+        if (dbDirs == null) {
+            return false;
+        }
+        for (int i = 0; i < dbDirs.length; i++) {
+            if (RelationsConstants.DFT_DB_EMBEDDED
+                    .equals(dbDirs[i].getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	/**
-	 * Workaround: we're not able to delete the traces in the filesystem of an
-	 * embedded database that has been deleted during a session, therefore, we
-	 * do this in the next session during system start.
-	 */
-	public static void cleanUp() {
-		final File dbStore = getDBStorePath();
-		cleanUp(dbStore);
-		cleanUp(new File(dbStore.getParentFile(),
-				RelationsConstants.LUCENE_STORE));
-	}
+    /**
+     * Workaround: we're not able to delete the traces in the filesystem of an
+     * embedded database that has been deleted during a session, therefore, we
+     * do this in the next session during system start.
+     */
+    public static void cleanUp() {
+        final File dbStore = getDBStorePath();
+        cleanUp(dbStore);
+        cleanUp(new File(dbStore.getParentFile(), RelationsConstants.LUCENE_STORE));
+    }
 
-	private static void cleanUp(final File inParent) {
-		if (!inParent.exists()) {
-			return;
-		}
+    private static void cleanUp(final File inParent) {
+        if (!inParent.exists()) {
+            return;
+        }
 
-		// we retrieve all directories marked deleted, i.e. containing the
-		// delete marker file.
-		final File[] lDBDirs = inParent.listFiles(new FileFilter() {
-			@Override
-			public boolean accept(final File inFile) {
-				if (!inFile.isDirectory()) {
-					return false;
-				}
-				final String[] lContent = inFile.list(new FilenameFilter() {
-					@Override
-					public boolean accept(final File inArg,
-							final String inFileName) {
-						return DELETED_MARKER.equals(inFileName);
-					}
-				});
-				return lContent != null && lContent.length == 1;
-			}
-		});
+        // we retrieve all directories marked deleted, i.e. containing the
+        // delete marker file.
+        final File[] lDBDirs = inParent.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(final File inFile) {
+                if (!inFile.isDirectory()) {
+                    return false;
+                }
+                final String[] lContent = inFile.list(new FilenameFilter() {
+                    @Override
+                    public boolean accept(final File inArg,
+                            final String inFileName) {
+                        return DELETED_MARKER.equals(inFileName);
+                    }
+                });
+                return lContent != null && lContent.length == 1;
+            }
+        });
 
-		if (lDBDirs != null) {
-			for (int i = 0; i < lDBDirs.length; i++) {
-				deleteContent(lDBDirs[i]);
-			}
-		}
-	}
+        if (lDBDirs != null) {
+            for (int i = 0; i < lDBDirs.length; i++) {
+                deleteContent(lDBDirs[i]);
+            }
+        }
+    }
 
-	private static void deleteContent(final File inDirectory) {
-		final File[] lContent = inDirectory.listFiles();
-		if (lContent != null) {
-			for (int i = 0; i < lContent.length; i++) {
-				if (lContent[i].isDirectory()) {
-					deleteContent(lContent[i]);
-				}
-				if (!lContent[i].delete()) {
-					lContent[i].deleteOnExit();
-				}
-			}
-		}
-		if (!inDirectory.delete()) {
-			inDirectory.deleteOnExit();
-		}
-	}
+    private static void deleteContent(final File inDirectory) {
+        final File[] lContent = inDirectory.listFiles();
+        if (lContent != null) {
+            for (int i = 0; i < lContent.length; i++) {
+                if (lContent[i].isDirectory()) {
+                    deleteContent(lContent[i]);
+                }
+                if (!lContent[i].delete()) {
+                    lContent[i].deleteOnExit();
+                }
+            }
+        }
+        if (!inDirectory.delete()) {
+            inDirectory.deleteOnExit();
+        }
+    }
 
-	/**
-	 * Delete the marker file in case we want to recreated the embedded database
-	 * in the same session.
-	 *
-	 * @param inCatalog
-	 *            String Name of the new database
-	 * @return boolean <code>true</code> if the file is successfully deleted;
-	 *         <code>false</code> otherwise.
-	 */
-	public static boolean deleteMarker(final String inCatalog) {
-		return deleteMarker(inCatalog, DELETED_MARKER);
-	}
+    /**
+     * Delete the marker file in case we want to recreated the embedded database
+     * in the same session.
+     *
+     * @param inCatalog
+     *            String Name of the new database
+     * @return boolean <code>true</code> if the file is successfully deleted;
+     *         <code>false</code> otherwise.
+     */
+    public static boolean deleteMarker(final String inCatalog) {
+        return deleteMarker(inCatalog, DELETED_MARKER);
+    }
 
-	private static boolean deleteMarker(final String inCatalog,
-			final String inMarkerFile) {
-		final File lMarker = new File(new File(getDBStorePath(), inCatalog),
-				inMarkerFile);
-		if (lMarker.exists()) {
-			return lMarker.delete();
-		}
-		return false;
-	}
+    private static boolean deleteMarker(final String inCatalog,
+            final String inMarkerFile) {
+        final File lMarker = new File(new File(getDBStorePath(), inCatalog),
+                inMarkerFile);
+        if (lMarker.exists()) {
+            return lMarker.delete();
+        }
+        return false;
+    }
 
-	/**
-	 * Check for reindex marker in the embedded database's catalog and reindex
-	 * the catalog if marker exists. This is a workaround because a restore is
-	 * not effective until a restart of the application.
-	 *
-	 * @param inDBSettings
-	 *            {@link IDBSettings}
-	 * @param inContext
-	 *            {@link IEclipseContext}
-	 */
-	public static void reindexChecked(final IDBSettings lDBSettings,
-			final IEclipseContext inContext) {
+    /**
+     * Check for reindex marker in the embedded database's catalog and reindex
+     * the catalog if marker exists. This is a workaround because a restore is
+     * not effective until a restart of the application.
+     *
+     * @param inDBSettings
+     *            {@link IDBSettings}
+     * @param inContext
+     *            {@link IEclipseContext}
+     */
+    public static void reindexChecked(final IDBSettings lDBSettings,
+            final IEclipseContext inContext) {
 
-		// return, if not embedded database
-		if (!lDBSettings.getDBConnectionConfig().isEmbedded()) {
-			return;
-		}
+        // return, if not embedded database
+        if (!lDBSettings.getDBConnectionConfig().isEmbedded()) {
+            return;
+        }
 
-		final String lCatalog = lDBSettings.getCatalog();
-		// return, if not marked to reindex
-		if (!isMarkedToReindex(lCatalog)) {
-			return;
-		}
+        final String lCatalog = lDBSettings.getCatalog();
+        // return, if not marked to reindex
+        if (!isMarkedToReindex(lCatalog)) {
+            return;
+        }
 
-		// delete marker file and start reindex
-		deleteMarker(lCatalog, REINDEX_MARKER);
+        // delete marker file and start reindex
+        deleteMarker(lCatalog, REINDEX_MARKER);
 
-		final RelationsIndexer lIndexer = RelationsIndexerWithLanguage
-				.createRelationsIndexer(inContext);
-		if (!lIndexer.isIndexAvailable()) {
-			try {
-				lIndexer.initializeIndex();
-			}
-			catch (final IOException exc) {
-				final Logger lLog = inContext.get(Logger.class);
-				lLog.error(exc, exc.getMessage());
-			}
-		}
-	}
+        final RelationsIndexer lIndexer = RelationsIndexerWithLanguage
+                .createRelationsIndexer(inContext);
+        if (!lIndexer.isIndexAvailable()) {
+            try {
+                lIndexer.initializeIndex();
+            }
+            catch (final IOException exc) {
+                final Logger lLog = inContext.get(Logger.class);
+                lLog.error(exc, exc.getMessage());
+            }
+        }
+    }
 
-	private static boolean isMarkedToReindex(final String inCatalog) {
-		final File lDirectory = new File(getDBStorePath(), inCatalog);
-		final String[] lContent = lDirectory.list(new FilenameFilter() {
-			@Override
-			public boolean accept(final File inArg0, final String inFileName) {
-				return REINDEX_MARKER.equals(inFileName);
-			}
-		});
-		return lContent != null ? lContent.length == 1 : false;
-	}
+    private static boolean isMarkedToReindex(final String inCatalog) {
+        final File lDirectory = new File(getDBStorePath(), inCatalog);
+        final String[] lContent = lDirectory.list(new FilenameFilter() {
+            @Override
+            public boolean accept(final File inArg0, final String inFileName) {
+                return REINDEX_MARKER.equals(inFileName);
+            }
+        });
+        return lContent != null ? lContent.length == 1 : false;
+    }
 
-	/**
-	 * Convenience method to retrieve the path to the embedded DB's data in the
-	 * file system.
-	 *
-	 * @return File the path to the location in the file system where the
-	 *         embedded DB's data is stored.
-	 */
-	public static File getDBStorePath() {
-		final File lRoot = ResourcesPlugin.getWorkspace().getRoot()
-				.getLocation().toFile();
-		final File outStore = new File(lRoot, RelationsConstants.DERBY_STORE);
-		if (!outStore.exists()) {
-			outStore.mkdir();
-		}
-		return outStore;
-	}
+    /**
+     * Convenience method to retrieve the path to the embedded DB's data in the
+     * file system.
+     *
+     * @return File the path to the location in the file system where the
+     *         embedded DB's data is stored.
+     */
+    public static File getDBStorePath() {
+        final File lRoot = ResourcesPlugin.getWorkspace().getRoot()
+                .getLocation().toFile();
+        final File outStore = new File(lRoot, RelationsConstants.DERBY_STORE);
+        if (!outStore.exists()) {
+            outStore.mkdir();
+        }
+        return outStore;
+    }
 
-	/**
-	 * @return String the absolute path of the embedded's default DB.
-	 */
-	public static String getEmbeddedDftDBChecked() {
-		return getEmbeddedDBChecked(RelationsConstants.DFT_DB_EMBEDDED);
-	}
+    /**
+     * @return String the absolute path of the embedded's default DB.
+     */
+    public static String getEmbeddedDftDBChecked() {
+        return getEmbeddedDBChecked(RelationsConstants.DFT_DB_EMBEDDED);
+    }
 
-	/**
-	 * Returns the absolute path of the embedded DB for the specified catalog.
-	 *
-	 * @param String
-	 *            inCatalog the DB catalog
-	 * @return String the absolute path of the embedded DB for the specified
-	 *         catalog.
-	 */
-	public static String getEmbeddedDBChecked(final String inCatalog) {
-		final File lDirectory = new File(getDBStorePath(), inCatalog);
-		return lDirectory.getAbsolutePath();
-	}
+    /**
+     * Returns the absolute path of the embedded DB for the specified catalog.
+     *
+     * @param String
+     *            inCatalog the DB catalog
+     * @return String the absolute path of the embedded DB for the specified
+     *         catalog.
+     */
+    public static String getEmbeddedDBChecked(final String inCatalog) {
+        final File lDirectory = new File(getDBStorePath(), inCatalog);
+        return lDirectory.getAbsolutePath();
+    }
 
 }

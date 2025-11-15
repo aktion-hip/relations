@@ -13,7 +13,10 @@
 store the information created by the Relations application in a Derby
 database. The SQL commands for other databases (e.g. MySQL) are
 analogous.</p>
+
+<h2>Derby Database</h2>
 <br>
+
 <p class="Code">
 CREATE TABLE tblTerm (<br>
 &nbsp; TermID&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;BIGINT generated always
@@ -58,19 +61,8 @@ as identity,<br>
 
 <p class="Code"><br>
 CREATE INDEX idxText_01 ON tblText(sTitle);</p>
-
-
 <p class="Code">CREATE INDEX idxText_02 ON tblText(sAuthor, sCoAuthors);</p>
 <br>
-
-
-
-
-
-
-
-
-
 <p class="Code">
 CREATE TABLE tblPerson (<br>
 &nbsp; PersonID&nbsp;&nbsp;&nbsp; BIGINT generated
@@ -114,9 +106,78 @@ CREATE INDEX idxRelation_01 ON tblRelation(nType1, nItem1);</p>
 <p class="Code">
 CREATE INDEX idxRelation_02 ON tblRelation(nType2, nItem2);</p>
 
-<p class="Code"><br>
 <br>
+
+<h2>MariaDB</h2>
+<br>
+
+<p class="Code">
+<code>
+CREATE&nbsp;TABLE&nbsp;tblTerm&nbsp;(<br>
+&nbsp;&nbsp;TermID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BIGINT&nbsp;AUTO_INCREMENT,<br>
+&nbsp;&nbsp;sTitle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VARCHAR(99)&nbsp;not&nbsp;null,<br>
+&nbsp;&nbsp;sText&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LONGTEXT,<br>
+&nbsp;&nbsp;dtCreation&nbsp;&nbsp;&nbsp;TIMESTAMP&nbsp;not&nbsp;null,<br>
+&nbsp;&nbsp;dtMutation&nbsp;&nbsp;&nbsp;TIMESTAMP&nbsp;not&nbsp;null,<br>
+&nbsp;&nbsp;PRIMARY&nbsp;KEY&nbsp;(TermID)<br>
+);<br>
+<br>
+CREATE&nbsp;INDEX&nbsp;idxTerm_01&nbsp;ON&nbsp;tblTerm(sTitle);<br>
+<br>
+CREATE&nbsp;TABLE&nbsp;tblText&nbsp;(<br>
+&nbsp;&nbsp;TextID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BIGINT&nbsp;AUTO_INCREMENT,<br>
+&nbsp;&nbsp;sTitle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VARCHAR(150)&nbsp;not&nbsp;null,<br>
+&nbsp;&nbsp;sText&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LONGTEXT,<br>
+&nbsp;&nbsp;sAuthor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VARCHAR(100),<br>
+&nbsp;&nbsp;sCoAuthors&nbsp;&nbsp;VARCHAR(150),<br>
+&nbsp;&nbsp;sSubtitle&nbsp;&nbsp;&nbsp;VARCHAR(200),<br>
+&nbsp;&nbsp;sYear&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VARCHAR(15),<br>
+&nbsp;&nbsp;sPublication&nbsp;VARCHAR(100),<br>
+&nbsp;&nbsp;sPages&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VARCHAR(20),<br>
+&nbsp;&nbsp;nVolume&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INT,<br>
+&nbsp;&nbsp;nNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INT,<br>
+&nbsp;&nbsp;sPublisher&nbsp;&nbsp;VARCHAR(99),<br>
+&nbsp;&nbsp;sPlace&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VARCHAR(99),<br>
+&nbsp;&nbsp;nType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INT,<br>
+&nbsp;&nbsp;dtCreation&nbsp;&nbsp;&nbsp;TIMESTAMP&nbsp;not&nbsp;null,<br>
+&nbsp;&nbsp;dtMutation&nbsp;&nbsp;&nbsp;TIMESTAMP&nbsp;not&nbsp;null,<br>
+&nbsp;&nbsp;PRIMARY&nbsp;KEY&nbsp;(TextID)<br>
+);<br>
+<br>
+CREATE&nbsp;INDEX&nbsp;idxText_01&nbsp;ON&nbsp;tblText(sTitle);<br>
+CREATE&nbsp;INDEX&nbsp;idxText_02&nbsp;ON&nbsp;tblText(sAuthor,&nbsp;sCoAuthors);<br>
+<br>
+CREATE&nbsp;TABLE&nbsp;tblPerson&nbsp;(<br>
+&nbsp;&nbsp;PersonID&nbsp;&nbsp;&nbsp;&nbsp;BIGINT&nbsp;AUTO_INCREMENT,<br>
+&nbsp;&nbsp;sName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VARCHAR(99)&nbsp;not&nbsp;null,<br>
+&nbsp;&nbsp;sFirstname&nbsp;&nbsp;VARCHAR(50),<br>
+&nbsp;&nbsp;sText&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LONGTEXT,<br>
+&nbsp;&nbsp;sFrom&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VARCHAR(30),<br>
+&nbsp;&nbsp;sTo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VARCHAR(30),<br>
+&nbsp;&nbsp;dtCreation&nbsp;&nbsp;&nbsp;TIMESTAMP&nbsp;not&nbsp;null,<br>
+&nbsp;&nbsp;dtMutation&nbsp;&nbsp;&nbsp;TIMESTAMP&nbsp;not&nbsp;null,<br>
+&nbsp;&nbsp;PRIMARY&nbsp;KEY&nbsp;(PersonID)<br>
+);<br>
+<br>
+CREATE&nbsp;INDEX&nbsp;idxPerson_01&nbsp;ON&nbsp;tblPerson(sName,&nbsp;sFirstname);<br>
+CREATE&nbsp;INDEX&nbsp;idxPerson_02&nbsp;ON&nbsp;tblPerson(sFrom,&nbsp;sTo);<br>
+<br>
+CREATE&nbsp;TABLE&nbsp;tblRelation&nbsp;(<br>
+&nbsp;&nbsp;RelationID&nbsp;&nbsp;BIGINT&nbsp;AUTO_INCREMENT,<br>
+&nbsp;&nbsp;nType1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SMALLINT&nbsp;not&nbsp;null,<br>
+&nbsp;&nbsp;nItem1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BIGINT&nbsp;not&nbsp;null,<br>
+&nbsp;&nbsp;nType2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SMALLINT&nbsp;not&nbsp;null,<br>
+&nbsp;&nbsp;nItem2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BIGINT&nbsp;not&nbsp;null,<br>
+&nbsp;&nbsp;PRIMARY&nbsp;KEY&nbsp;(RelationID)<br>
+);<br>
+<br>
+CREATE&nbsp;INDEX&nbsp;idxRelation_01&nbsp;ON&nbsp;tblRelation(nType1,&nbsp;nItem1);<br>
+CREATE&nbsp;INDEX&nbsp;idxRelation_02&nbsp;ON&nbsp;tblRelation(nType2,&nbsp;nItem2);<br>
+</code>
+
 </p>
+
+<br>
 
 <img src="../img/ngrelr.png" />
 <ul>

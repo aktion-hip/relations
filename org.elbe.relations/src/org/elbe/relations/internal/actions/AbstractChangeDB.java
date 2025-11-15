@@ -21,8 +21,6 @@ package org.elbe.relations.internal.actions;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.xml.transform.TransformerException;
 
 import org.eclipse.e4.core.services.events.IEventBroker;
@@ -42,138 +40,125 @@ import org.elbe.relations.internal.utility.DBStructureChecker;
 import org.hip.kernel.dbaccess.DataSourceRegistry;
 import org.hip.kernel.exc.VException;
 
-/**
- * Base class for helper classes to change the application's database (catalog).
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+/** Base class for helper classes to change the application's database (catalog).
  *
- * @author Luthiger
- */
+ * @author Luthiger */
 @SuppressWarnings("restriction")
 public abstract class AbstractChangeDB implements IDBChange {
-	private IDBSettings dbSettings;
-	private IDBSettings restoreSettings;
+    private IDBSettings dbSettings;
+    private IDBSettings restoreSettings;
 
-	@Inject
-	private DBSettings origDbSettings;
+    @Inject
+    private DBSettings origDbSettings;
 
-	@Inject
-	private IEventBroker eventBroker;
+    @Inject
+    private IEventBroker eventBroker;
 
-	@Inject
-	private DBStructureChecker checker;
+    @Inject
+    private DBStructureChecker checker;
 
-	@Inject
-	@Named(value = RelationsConstants.DB_ACCESS_HANDLER)
-	private DataSourceRegistry dbAccess;
+    @Inject
+    @Named(value = RelationsConstants.DB_ACCESS_HANDLER)
+    private DataSourceRegistry dbAccess;
 
-	@Inject
-	private Logger log;
+    @Inject
+    private Logger log;
 
-	@Override
-	public void setTemporarySettings(final IDBSettings dbSettings) {
-		this.dbSettings = dbSettings;
-	}
+    @Override
+    public void setTemporarySettings(final IDBSettings dbSettings) {
+        this.dbSettings = dbSettings;
+    }
 
-	protected IDBSettings getTempSettings() {
-		return this.dbSettings;
-	}
+    protected IDBSettings getTempSettings() {
+        return this.dbSettings;
+    }
 
-	@Override
-	public void execute() {
-		try {
-			// check structure with temporary settings
-			if (!this.checker.hasExpectedStructure(this.dbSettings)) {
-				MessageDialog.openError(new Shell(Display.getCurrent()),
-						RelationsMessages
-						.getString("FormDBConnection.error.title"), //$NON-NLS-1$
-						RelationsMessages
-						.getString("FormDBConnection.error.msg")); //$NON-NLS-1$
-				this.log.warn(String.format("Unable to open DB at '%s'!", //$NON-NLS-1$
-						getDBInfo(this.dbSettings)));
-				return;
-			}
+    @Override
+    public void execute() {
+        try {
+            // check structure with temporary settings
+            if (!this.checker.hasExpectedStructure(this.dbSettings)) {
+                MessageDialog.openError(new Shell(Display.getCurrent()),
+                        RelationsMessages.getString("FormDBConnection.error.title"), //$NON-NLS-1$
+                        RelationsMessages.getString("FormDBConnection.error.msg")); //$NON-NLS-1$
+                this.log.warn(String.format("Unable to open DB at '%s'!", //$NON-NLS-1$
+                        getDBInfo(this.dbSettings)));
+                return;
+            }
 
-			// make temporary settings active
-			setTempDBSettings();
-			doDBChange();
-		}
-		catch (final SQLException exc) {
-			this.log.error(exc, exc.getMessage());
-			MessageDialog
-			.openError(new Shell(Display.getCurrent()),
-					RelationsMessages
-					.getString("FormDBConnection.error.title"), //$NON-NLS-1$
-					RelationsMessages.getString(
-							"FormDBConnection.error.connection.msg", //$NON-NLS-1$
-							new Object[] { this.dbSettings.getDBName(),
-									this.dbSettings.getUser() }));
-		}
-		catch (final VException exc) {
-			this.log.error(exc, exc.getMessage());
-		}
-	}
+            // make temporary settings active
+            setTempDBSettings();
+            doDBChange();
+        } catch (final SQLException exc) {
+            this.log.error(exc, exc.getMessage());
+            MessageDialog.openError(new Shell(Display.getCurrent()),
+                    RelationsMessages.getString("FormDBConnection.error.title"), //$NON-NLS-1$
+                    RelationsMessages.getString("FormDBConnection.error.connection.msg", //$NON-NLS-1$
+                            new Object[] { this.dbSettings.getDBName(), this.dbSettings.getUser() }));
+        } catch (final VException exc) {
+            this.log.error(exc, exc.getMessage());
+        }
+    }
 
-	private String getDBInfo(final IDBSettings settings) {
-		return ActionHelper.createDBConfiguration(this.dbSettings)
-				.getProperties().get("databaseName").toString(); //$NON-NLS-1$
-	}
+    private String getDBInfo(final IDBSettings settings) {
+        return ActionHelper.createDBConfiguration(this.dbSettings)
+                .getProperties().get("databaseName").toString(); //$NON-NLS-1$
+    }
 
-	/**
-	 * Execute the DB change: save settings to preferences and notify
-	 * application about change.
-	 */
-	protected void doDBChange() {
-		this.restoreSettings = new TempSettings(this.origDbSettings.getHost(),
-				this.origDbSettings.getCatalog(), this.origDbSettings.getUser(),
-				this.origDbSettings.getPassword(),
-				this.origDbSettings.getDBConnectionConfig());
+    /** Execute the DB change: save settings to preferences and notify application about change. */
+    protected void doDBChange() {
+        this.restoreSettings = new TempSettings(this.origDbSettings.getHost(),
+                this.origDbSettings.getCatalog(), this.origDbSettings.getUser(),
+                this.origDbSettings.getPassword(),
+                this.origDbSettings.getDBConnectionConfig());
 
-		// persist temporary settings
-		((TempSettings) this.dbSettings).saveToPreferences();
+        // persist temporary settings
+        ((TempSettings) this.dbSettings).saveToPreferences();
 
-		// schema upgrade: checked creation of EventStore table
-		try {
-			new EventStoreChecker().createEventStoreChecked(
-					this.dbSettings.getDBConnectionConfig().getCreator());
-		}
-		catch (IOException | TransformerException | SQLException exc) {
-			this.log.error(exc, "Unable to create the EventStore table!"); //$NON-NLS-1$
-		}
+        // schema upgrade: checked creation of EventStore table
+        try {
+            new EventStoreChecker().createEventStoreChecked(
+                    this.dbSettings.getDBConnectionConfig().getCreator());
+        } catch (IOException | TransformerException | SQLException exc) {
+            this.log.error(exc, "Unable to create the EventStore table!"); //$NON-NLS-1$
+        }
 
-		// trigger change
-		this.eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_DB, "changeDB"); //$NON-NLS-1$
-	}
+        // trigger change
+        this.eventBroker.post(RelationsConstants.TOPIC_DB_CHANGED_DB, "changeDB"); //$NON-NLS-1$
+    }
 
-	@Override
-	public void restore() {
-		if (this.restoreSettings == null) {
-			return;
-		}
+    @Override
+    public void restore() {
+        if (this.restoreSettings == null) {
+            return;
+        }
 
-		((TempSettings) this.restoreSettings).saveToPreferences();
-		this.dbAccess.setActiveConfiguration(ActionHelper
-				.createDBConfiguration(this.restoreSettings));
-	}
+        ((TempSettings) this.restoreSettings).saveToPreferences();
+        this.dbAccess.setActiveConfiguration(ActionHelper
+                .createDBConfiguration(this.restoreSettings));
+    }
 
-	/**
-	 * Activate temporary DB settings.
-	 */
-	protected void setTempDBSettings() {
-		this.dbAccess.setActiveConfiguration(ActionHelper
-				.createDBConfiguration(this.dbSettings));
-	}
+    /** Activate temporary DB settings. */
+    protected void setTempDBSettings() {
+        this.dbAccess.setActiveConfiguration(ActionHelper
+                .createDBConfiguration(this.dbSettings));
+    }
 
-	protected void setOrigDBSettings() {
-		this.dbAccess.setActiveConfiguration(ActionHelper
-				.createDBConfiguration(this.origDbSettings));
-	}
+    protected void setOrigDBSettings() {
+        this.dbAccess.setActiveConfiguration(ActionHelper
+                .createDBConfiguration(this.origDbSettings));
+    }
 
-	protected Logger getLog() {
-		return this.log;
-	}
+    protected Logger getLog() {
+        return this.log;
+    }
 
-	@Override
-	public void checkPreconditions() throws DBPreconditionException {
-		// default implementation doing nothing
-	}
+    @Override
+    public void checkPreconditions() throws DBPreconditionException {
+        // default implementation doing nothing
+    }
 
 }

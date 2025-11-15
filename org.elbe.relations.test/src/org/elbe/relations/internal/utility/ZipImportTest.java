@@ -10,105 +10,90 @@ import java.util.Collection;
 import org.eclipse.e4.core.services.log.Logger;
 import org.elbe.relations.ZipHouseKeeper;
 import org.elbe.relations.internal.backup.ZipBackup;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-/**
- * JUnit test
+/** JUnit test
  *
- * @author lbenno
- */
+ * @author lbenno */
 @SuppressWarnings("restriction")
 @ExtendWith(MockitoExtension.class)
-public class ZipImportTest {
+class ZipImportTest {
+    private static final String DESTINATION = "test_import";
 
     @Mock
     private Logger log;
 
+    @BeforeEach
+    void setUp() {
+        ZipHouseKeeper.deleteTestFiles(DESTINATION);
+    }
+
     @Test
-    public void testImport() throws Exception {
-        // preparation: we have to create a backup containing the files to
-        // import
-        File lRoot = ZipHouseKeeper.createFiles();
-        final File lBackupFile = new File(ZipHouseKeeper.ZIP_FILE);
+    void testImport() throws Exception {
+        // preparation: we have to create a backup containing the files to import
+        File root = ZipHouseKeeper.createFiles();
+        final File backupFile = new File(ZipHouseKeeper.ZIP_FILE);
+        final ZipBackup backup = new ZipBackup(root.getCanonicalPath(), backupFile.getCanonicalPath());
+        backup.backup();
 
-        final ZipBackup lBackup = new ZipBackup(lRoot.getCanonicalPath(),
-                lBackupFile.getCanonicalPath());
-        lBackup.backup();
-
-        assertTrue(lBackupFile.exists());
+        assertTrue(backupFile.exists());
         // end preparation
 
         final File lWorkspace = new File("").getAbsoluteFile();
-        final String lDestination = "test_import";
-        assertNull(ZipHouseKeeper.getChildFile(lWorkspace.listFiles(),
-                lDestination));
+        assertNull(ZipHouseKeeper.getChildFile(lWorkspace.listFiles(), DESTINATION));
 
-        final ZipImport lImport = new ZipImport(lWorkspace,
-                lBackupFile.getCanonicalPath(), lDestination, this.log);
-        // here we do the import, i.e. unpack the content of the ZipFile to the
-        // destination folder.
+        final ZipImport lImport = new ZipImport(lWorkspace, backupFile.getCanonicalPath(), DESTINATION, this.log);
+        // here we do the import, i.e. unpack the content of the ZipFile to the destination folder.
         lImport.restore();
 
         // cleanup
         ZipHouseKeeper.deleteTestFiles(ZipHouseKeeper.ROOT);
-        ZipHouseKeeper.ensureDelete(lBackupFile);
+        ZipHouseKeeper.ensureDelete(backupFile);
 
-        assertNotNull(
-                ZipHouseKeeper.getChildFile(lWorkspace.listFiles(),
-                        lDestination));
+        assertNotNull(ZipHouseKeeper.getChildFile(lWorkspace.listFiles(), DESTINATION));
 
         // *** the test of the imported directory structure starts here ***
         // check the imported files
         // content of test root
-        lRoot = new File(lDestination);
-        assertTrue(lRoot.exists());
-        assertTrue(lRoot.isDirectory());
+        root = new File(DESTINATION);
+        assertTrue(root.exists());
+        assertTrue(root.isDirectory());
 
-        File[] lChilds = lRoot.listFiles();
+        File[] lChilds = root.listFiles();
         Collection<String> lChildList = ZipHouseKeeper.getChildNames(lChilds);
-        assertTrue(
-                lChildList.contains(ZipHouseKeeper.PARENT));
-        assertTrue(
-                lChildList.contains(ZipHouseKeeper.FILE1));
+        assertTrue(lChildList.contains(ZipHouseKeeper.PARENT));
+        assertTrue(lChildList.contains(ZipHouseKeeper.FILE1));
 
-		File lChild = ZipHouseKeeper
-		        .getChildFile(lChilds, ZipHouseKeeper.FILE1);
-		ZipHouseKeeper.assertFileContent("content 1", lChild,
-		        ZipHouseKeeper.EXPECTED_CONTENT[0]);
+        File lChild = ZipHouseKeeper.getChildFile(lChilds, ZipHouseKeeper.FILE1);
+        ZipHouseKeeper.assertFileContent("content 1", lChild, ZipHouseKeeper.EXPECTED_CONTENT[0]);
 
         // content of test sub
-        lRoot = ZipHouseKeeper.getChildFile(lChilds, ZipHouseKeeper.PARENT);
-        lChilds = lRoot.listFiles();
+        root = ZipHouseKeeper.getChildFile(lChilds, ZipHouseKeeper.PARENT);
+        lChilds = root.listFiles();
         lChildList = ZipHouseKeeper.getChildNames(lChilds);
-        assertTrue(
-                lChildList.contains(ZipHouseKeeper.CHILD));
-        assertTrue(
-                lChildList.contains(ZipHouseKeeper.FILE2));
-        assertTrue(
-                lChildList.contains(ZipHouseKeeper.FILE4));
+        assertTrue(lChildList.contains(ZipHouseKeeper.CHILD));
+        assertTrue(lChildList.contains(ZipHouseKeeper.FILE2));
+        assertTrue(lChildList.contains(ZipHouseKeeper.FILE4));
 
-		lChild = ZipHouseKeeper.getChildFile(lChilds, ZipHouseKeeper.FILE2);
-		ZipHouseKeeper.assertFileContent("content 2", lChild,
-		        ZipHouseKeeper.EXPECTED_CONTENT[1]);
-		lChild = ZipHouseKeeper.getChildFile(lChilds, ZipHouseKeeper.FILE4);
-		ZipHouseKeeper.assertFileContent("content 4", lChild,
-		        ZipHouseKeeper.EXPECTED_CONTENT[3]);
+        lChild = ZipHouseKeeper.getChildFile(lChilds, ZipHouseKeeper.FILE2);
+        ZipHouseKeeper.assertFileContent("content 2", lChild, ZipHouseKeeper.EXPECTED_CONTENT[1]);
+        lChild = ZipHouseKeeper.getChildFile(lChilds, ZipHouseKeeper.FILE4);
+        ZipHouseKeeper.assertFileContent("content 4", lChild, ZipHouseKeeper.EXPECTED_CONTENT[3]);
 
         // content of test sub sub
-        lRoot = ZipHouseKeeper.getChildFile(lChilds, ZipHouseKeeper.CHILD);
-        lChilds = lRoot.listFiles();
+        root = ZipHouseKeeper.getChildFile(lChilds, ZipHouseKeeper.CHILD);
+        lChilds = root.listFiles();
         lChildList = ZipHouseKeeper.getChildNames(lChilds);
-        assertTrue(
-                lChildList.contains(ZipHouseKeeper.FILE3));
+        assertTrue(lChildList.contains(ZipHouseKeeper.FILE3));
 
-		lChild = ZipHouseKeeper.getChildFile(lChilds, ZipHouseKeeper.FILE3);
-		ZipHouseKeeper.assertFileContent("content 3", lChild,
-		        ZipHouseKeeper.EXPECTED_CONTENT[2]);
+        lChild = ZipHouseKeeper.getChildFile(lChilds, ZipHouseKeeper.FILE3);
+        ZipHouseKeeper.assertFileContent("content 3", lChild, ZipHouseKeeper.EXPECTED_CONTENT[2]);
 
-        ZipHouseKeeper.deleteTestFiles(lDestination);
+        ZipHouseKeeper.deleteTestFiles(DESTINATION);
     }
 
 }

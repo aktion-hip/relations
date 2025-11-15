@@ -4,7 +4,7 @@ Bundle-Name: The data model bundle for Relations.
 Bundle-SymbolicName: org.elbe.relations.data
 Bundle-Version: 1.1.1.qualifier
 Bundle-Vendor: RelationWare
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Eclipse-BuddyPolicy: registered
 Eclipse-RegisterBuddy: org.hip.viffw
 Import-Package: org.eclipse.core.runtime;version="[3.5.0,4.0.0)",

@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2018, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -32,58 +32,45 @@ import com.google.gson.JsonObject;
  */
 public interface ICloudProviderConfig {
 
-	/**
-	 *
-	 * @return String the name of the cloud provider.
-	 */
-	String getName();
+    /**
+     *
+     * @return String the name of the cloud provider.
+     */
+    String getName();
 
-	/**
-	 * Creates and returns the SWT control for the customized group body.
-	 *
-	 * @param parent
-	 *            {@link Group} the parent composite (SWT group)
-	 * @param signalIsValid
-	 *            {@link Consumer} the lambda function to signal that the
-	 *            configuration is valid
-	 * @return {@link Control}
-	 */
-	Control createConfigContents(Group parent, Consumer<Boolean> signalIsValid);
+    /** Creates and returns the SWT control for the customized group body.
+     *
+     * @param parent {@link Group} the parent composite (SWT group)
+     * @param signalIsValid {@link Consumer} the lambda function to signal that the configuration is valid
+     * @return {@link Control} */
+    Control createConfigContents(Group parent, Consumer<Boolean> signalIsValid);
 
-	/**
-	 * @return boolean <code>true</code> if this configuration is valid
-	 */
-	boolean isValid();
+    /**
+     * @return boolean <code>true</code> if this configuration is valid
+     */
+    boolean isValid();
 
-	/**
-	 * Call to enable or disable the widgets created in
-	 * {@link #createConfigContents(Group)}.
-	 *
-	 * @param enabled
-	 *            boolean
-	 */
-	void setEnabled(boolean enabled);
+    /** Call to enable or disable the widgets created in {@link #createConfigContents(Group)}.
+     *
+     * @param enabled boolean */
+    void setEnabled(boolean enabled);
 
-	/**
-	 * Returns the configuration as JSON object.
-	 *
-	 * @return {@link JsonObject} the configuration
-	 */
-	JsonObject getConfig();
+    /**
+     * Returns the configuration as JSON object.
+     *
+     * @return {@link JsonObject} the configuration
+     */
+    JsonObject getConfig();
 
-	/**
-	 * Initialize the values of the SWT controls by evaluating the passed json
-	 * object.
-	 *
-	 * @param values
-	 *            {@link JsonObject} the json containing the values
-	 */
-	void initialize(JsonObject values);
+    /** Initialize the values of the SWT controls by evaluating the passed json object.
+     *
+     * @param values {@link JsonObject} the json containing the values */
+    void initialize(JsonObject values);
 
-	/**
-	 * @return {@link ICloudProvider} the functionality to interact with the
-	 *         configured cloud
-	 */
-	ICloudProvider getProvider();
+    /**
+     * @return {@link ICloudProvider} the functionality to interact with the
+     *         configured cloud
+     */
+    ICloudProvider getProvider();
 
 }

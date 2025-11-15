@@ -56,9 +56,8 @@ public class JpgExtractorTest {
         lExtracted.setFilePath("");
         final String lExpected = "Test Image for Metadata Extractor" + NL
                 + "[<i>Size: 4.18 kB;" + NL + "Type: image/jpeg;" + NL
-                + "Last Modified: September 29, 2020, 1:36:53 PM CEST</i>]";
-        assertEquals(lExpected, lExtracted.getText());
-        // System.out.println(lExtracted.getText());
+                + "Last Modified: XXX</i>]";
+        assertEquals(lExpected, lExtracted.getText().replaceAll(TestUtil.REGEX, TestUtil.REPLACEMENT));
     }
 
 }

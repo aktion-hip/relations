@@ -58,47 +58,11 @@ BELOW, THEN YOU MAY NOT USE THE CONTENT.
          version="0.0.0"/>
 
    <plugin
-         id="com.mysql.jdbc"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.apache.servicemix.bundles.derby"
-         version="0.0.0"/>
-
-   <plugin
-         id="osgi.enterprise"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.gef"
          version="0.0.0"/>
 
    <plugin
          id="org.eclipse.nebula.widgets.gallery"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.apache.servicemix.bundles.lucene"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.apache.servicemix.bundles.lucene-analyzers-common"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.apache.servicemix.bundles.lucene-queryparser"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.apache.servicemix.bundles.lucene-queries"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.apache.servicemix.bundles.lucene-sandbox"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.apache.servicemix.bundles.regexp"
          version="0.0.0"/>
 
    <plugin
@@ -114,15 +78,7 @@ BELOW, THEN YOU MAY NOT USE THE CONTENT.
          version="0.0.0"/>
 
    <plugin
-         id="org.mortbay.jetty.server"
-         version="0.0.0"/>
-
-   <plugin
          id="com.fasterxml.jackson.core.jackson-core"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.mortbay.jetty.util"
          version="0.0.0"/>
 
    <plugin

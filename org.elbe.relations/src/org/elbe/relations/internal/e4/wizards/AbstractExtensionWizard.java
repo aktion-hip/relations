@@ -20,7 +20,7 @@ package org.elbe.relations.internal.e4.wizards;
 
 import java.util.StringTokenizer;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.jface.wizard.IWizard;

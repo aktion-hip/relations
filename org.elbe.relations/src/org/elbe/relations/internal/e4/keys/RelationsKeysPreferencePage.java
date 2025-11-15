@@ -23,8 +23,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import javax.inject.Inject;
-
 import org.eclipse.core.commands.Category;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -99,6 +97,7 @@ import org.elbe.relations.internal.e4.keys.model.SchemeModel;
 import org.elbe.relations.internal.preferences.AbstractPreferencePage;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
 
 /**
  * <p>
@@ -1020,9 +1019,9 @@ public class RelationsKeysPreferencePage extends AbstractPreferencePage {
          * @param treeStyle
          * @param inFilter
          */
-        protected CategoryFilterTree(final Composite inParent,
-                final int treeStyle, final CategoryPatternFilter inFilter) {
-            super(inParent, treeStyle, inFilter, true);
+        protected CategoryFilterTree(final Composite inParent, final int treeStyle,
+                final CategoryPatternFilter inFilter) {
+            super(inParent, treeStyle, inFilter, true, true);
             this.filter = inFilter;
         }
 
@@ -1045,7 +1044,7 @@ public class RelationsKeysPreferencePage extends AbstractPreferencePage {
 
         public BindingModelComparator() {
             for (int i = 0; i < NUM_OF_COLUMNS; i++) {
-                this.sortColumns.add(new Integer(i));
+                this.sortColumns.add(Integer.valueOf(i));
             }
         }
 
@@ -1057,7 +1056,7 @@ public class RelationsKeysPreferencePage extends AbstractPreferencePage {
             if (inColumn == getSortColumn()) {
                 return;
             }
-            final Integer lSortColumn = new Integer(inColumn);
+            final Integer lSortColumn = Integer.valueOf(inColumn);
             this.sortColumns.remove(lSortColumn);
             this.sortColumns.addFirst(lSortColumn);
         }
@@ -1078,7 +1077,7 @@ public class RelationsKeysPreferencePage extends AbstractPreferencePage {
         }
 
         @Override
-        public final int compare(final Viewer inViewer, final Object inA,
+        public int compare(final Viewer inViewer, final Object inA,
                 final Object inB) {
             int lResult = 0;
             final Iterator<Integer> lIterator = this.sortColumns.iterator();
@@ -1089,20 +1088,14 @@ public class RelationsKeysPreferencePage extends AbstractPreferencePage {
             return this.ascending ? lResult : -1 * lResult;
         }
 
-        @SuppressWarnings("unchecked")
-        private int compareColumn(final Viewer inViewer, final Object inA,
-                final Object inB, final int inColumnNumber) {
+        private int compareColumn(final Viewer inViewer, final Object inA, final Object inB, final int inColumnNumber) {
             if (inColumnNumber == USER_DELTA_COLUMN) {
                 return sortUser(inA, inB);
             }
-            final IBaseLabelProvider lBaseLabel = ((TreeViewer) inViewer)
-                    .getLabelProvider();
-            if (lBaseLabel instanceof ITableLabelProvider) {
-                final ITableLabelProvider lTableProvider = (ITableLabelProvider) lBaseLabel;
-                final String lProvider1 = lTableProvider.getColumnText(inA,
-                        inColumnNumber);
-                final String lProvider2 = lTableProvider.getColumnText(inB,
-                        inColumnNumber);
+            final IBaseLabelProvider baseLabel = ((TreeViewer) inViewer).getLabelProvider();
+            if (baseLabel instanceof final ITableLabelProvider tableProvider) {
+                final String lProvider1 = tableProvider.getColumnText(inA, inColumnNumber);
+                final String lProvider2 = tableProvider.getColumnText(inB, inColumnNumber);
                 if (lProvider1 != null && lProvider2 != null) {
                     return getComparator().compare(lProvider1, lProvider2);
                 }

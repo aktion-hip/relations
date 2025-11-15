@@ -55,8 +55,8 @@ public class GifExtractorTest {
         lExtracted.setFilePath("");
         final String lExpected = "Test GIF fuer Relations" + NL
                 + "[<i>Size: 3.30 kB;" + NL + "Type: image/gif;" + NL
-                + "Last Modified: September 29, 2020, 1:36:53 PM CEST</i>]";
-        assertEquals(lExpected, lExtracted.getText());
+                + "Last Modified: XXX</i>]";
+        assertEquals(lExpected, lExtracted.getText().replaceAll(TestUtil.REGEX, TestUtil.REPLACEMENT));
     }
 
 }

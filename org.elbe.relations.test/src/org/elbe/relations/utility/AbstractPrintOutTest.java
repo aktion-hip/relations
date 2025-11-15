@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 public class AbstractPrintOutTest {
     private static final String NL = "\n";
     private static final String XML1 = "<para><b>Dynamic Services (OSGI DS)</b> in Relations-RCP:" + NL
-            + "Wenn eine neue Komponente erzeugt worden ist, muss Inhalt von C:/Data/eclipse/workbenches/Relations/.metadata.pluginsorg.eclipse.pde.core/relations.product gelöscht werden (<b>ausser</b> <i>config.ini</i>), damit die neue Komponente vom System erkannt wird.</para>"
+            + "Wenn eine neue Komponente erzeugt worden ist, muss Inhalt von C:/Data/eclipse/workbenches/Relations/.metadata.pluginsorg.eclipse.pde.core/relations.product gelï¿½scht werden (<b>ausser</b> <i>config.ini</i>), damit die neue Komponente vom System erkannt wird.</para>"
             + NL
             + "<para>Wird DS verwendet, so ist es vorteilhaft, wenn die Service-Konsumenten laufen, bevor die Service-Provider gestartet werden:"
             + NL + "Beispiele:</para>";
@@ -44,10 +44,10 @@ public class AbstractPrintOutTest {
 
     @Test
     public void testPrepareItemXML() {
-        final String expected1 = "<para><b>Dynamic Services (OSGI DS)</b> in Relations-RCP:<br/>Wenn eine neue Komponente erzeugt worden ist, muss Inhalt von C:/Data/eclipse/workbenches/Relations/.metadata.pluginsorg.eclipse.pde.core/relations.product gelöscht werden (<b>ausser</b> <i>config.ini</i>), damit die neue Komponente vom System erkannt wird.</para><para>Wird DS verwendet, so ist es vorteilhaft, wenn die Service-Konsumenten laufen, bevor die Service-Provider gestartet werden:<br/>Beispiele:</para>";
+        final String expected1 = "<para><b>Dynamic Services (OSGI DS)</b> in Relations-RCP:<br/>Wenn eine neue Komponente erzeugt worden ist, muss Inhalt von C:/Data/eclipse/workbenches/Relations/.metadata.pluginsorg.eclipse.pde.core/relations.product gelï¿½scht werden (<b>ausser</b> <i>config.ini</i>), damit die neue Komponente vom System erkannt wird.</para><para>Wird DS verwendet, so ist es vorteilhaft, wenn die Service-Konsumenten laufen, bevor die Service-Provider gestartet werden:<br/>Beispiele:</para>";
         final String expected2 = "<para>Wird DS verwendet, so ist es vorteilhaft, wenn die Service-Konsumenten laufen, bevor die Service-Provider gestartet werden:<br/>Beispiele:</para>";
         final String expected3 = "<para>$> tar czvf Relations-x.y.z_gtk.x86.tgz Relations/*</para>";
-        final String expected4 = "";
+        final String expected4 = "<ul indent=\"0\"><li>111</li><li>222</li><li>333<ul indent=\"1\"><li>aaa<ul indent=\"2\"><li>bbb</li></ul></li><li>ccc</li><li>444</li></ul></li><li>555</li></ul>";
 
         final TestPrintOut printOut = new TestPrintOut();
         assertEquals("", printOut.prepareItemXML(""));

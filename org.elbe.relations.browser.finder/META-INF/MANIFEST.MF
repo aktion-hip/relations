@@ -7,8 +7,8 @@ Bundle-Version: 2.0.1.qualifier
 Bundle-Activator: org.elbe.relations.browser.finder.Activator
 Bundle-Vendor: %relations.finder.browser.vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-17
-Import-Package: javax.annotation;version="1.1.0",
- javax.inject;version="1.0.0",
+Import-Package: jakarta.annotation;version="[2.1.0,3.0.0)",
+ jakarta.inject;version="[2.0.0,3.0.0)",
  org.eclipse.core.commands,
  org.eclipse.core.runtime.preferences;version="3.3.0",
  org.eclipse.e4.core.commands,

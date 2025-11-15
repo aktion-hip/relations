@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2013, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -19,9 +19,11 @@
 package org.elbe.relations.internal.preferences;
 
 import java.text.Collator;
+import java.util.Comparator;
 import java.util.Locale;
+import java.util.Locale.Builder;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -36,78 +38,83 @@ import org.elbe.relations.internal.actions.RelationsPreferences;
  * @author Luthiger
  */
 @Creatable
-@SuppressWarnings("restriction")
 public class LanguageService {
+    private final Locale appLocale;
+    private Locale contentLocale;
 
-	private final Locale appLocale;
-	private Locale contentLocale;
+    /**
+     * LanguageService constructor.
+     *
+     * @param inLanguageContent
+     *            String the content language (ISO 639 code)
+     */
+    @Inject
+    public LanguageService(
+            @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_LANGUAGE_CONTENT) final String inLanguageContent) {
+        this.appLocale = createLocale();
+        setContentLanguage(inLanguageContent);
+    }
 
-	/**
-	 * LanguageService constructor.
-	 *
-	 * @param inLanguageContent
-	 *            String the content language (ISO 639 code)
-	 */
-	@Inject
-	public LanguageService(
-			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_LANGUAGE_CONTENT) final String inLanguageContent) {
-		this.appLocale = createLocale();
-		setContentLanguage(inLanguageContent);
-	}
+    private Locale createLocale() {
+        try {
+            final String localeName = Platform.getNL();
+            final Builder builder = new Locale.Builder().setLanguage(localeName.substring(0, 2));
+            return localeName.length() > 2 ? builder.setRegion(localeName.substring(3)).build()
+                    : builder.build();
+        }
+        catch (final NullPointerException exc) {
+            // for testing purpose
+            return new Locale.Builder().setLanguage("en").build(); //$NON-NLS-1$
+        }
+    }
 
-	private Locale createLocale() {
-		try {
-			final String lNL = Platform.getNL();
-			return lNL.length() > 2 ? new Locale(lNL.substring(0, 2),
-					lNL.substring(3)) : new Locale(lNL);
-		}
-		catch (final NullPointerException exc) {
-			// for testing purpose
-			return new Locale("en"); //$NON-NLS-1$
-		}
-	}
+    /**
+     * Tracker for changes of the content language.
+     *
+     * @param languageContent
+     *            String language ISO 639 code
+     */
+    @Inject
+    void setContentLanguage(
+            @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_LANGUAGE_CONTENT) final String languageContent) {
+        this.contentLocale = new Locale.Builder()
+                .setLanguage(languageContent == null || languageContent.isEmpty() ? RelationsConstants.DFT_LANGUAGE
+                        : languageContent)
+                .build();
+    }
 
-	/**
-	 * Tracker for changes of the content language.
-	 *
-	 * @param inLanguageContent
-	 *            String language ISO 639 code
-	 */
-	@Inject
-	void setContentLanguage(
-			@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_LANGUAGE_CONTENT) final String inLanguageContent) {
-		this.contentLocale = new Locale(
-				inLanguageContent == null || inLanguageContent.isEmpty() ? RelationsConstants.DFT_LANGUAGE
-						: inLanguageContent);
-	}
+    /**
+     * @return {@link Collator} the language of the content (i.e. for
+     *         indexing/searching the database).
+     */
+    public Collator getContentLanguage() {
+        return Collator.getInstance(this.contentLocale);
+    }
 
-	/**
-	 * @return {@link Collator} the language of the content (i.e. for
-	 *         indexing/searching the database).
-	 */
-	public Collator getContentLanguage() {
-		return Collator.getInstance(this.contentLocale);
-	}
+    /** @return {@link Comparator} a comparator aware of the current language */
+    public Comparator<String> getComparator() {
+        final Collator collator = getContentLanguage();
+        return collator::compare;
+    }
 
-	/**
-	 * @return {@link Locale} the application's locale (i.e. for the labels to
-	 *         display).
-	 */
-	public Locale getAppLocale() {
-		return this.appLocale;
-	}
+    /**
+     * @return {@link Locale} the application's locale (i.e. for the labels to
+     *         display).
+     */
+    public Locale getAppLocale() {
+        return this.appLocale;
+    }
 
-	/**
-	 * Convenience method: returns the content language from the preferences.
-	 *
-	 * @return {@link Locale}
-	 */
-	public static Locale getContentLocale() {
-		final IEclipsePreferences lPreferences = RelationsPreferences
-		        .getPreferences();
-		return new Locale(lPreferences.get(
-				RelationsConstants.KEY_LANGUAGE_CONTENT,
-				Locale.ENGLISH.getLanguage()));
-	}
+    /**
+     * Convenience method: returns the content language from the preferences.
+     *
+     * @return {@link Locale}
+     */
+    public static Locale getContentLocale() {
+        final IEclipsePreferences preferences = RelationsPreferences.getPreferences();
+        return new Locale.Builder().setLanguage(preferences.get(
+                RelationsConstants.KEY_LANGUAGE_CONTENT,
+                Locale.ENGLISH.getLanguage())).build();
+    }
 
 }

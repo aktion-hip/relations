@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author lbenno
  */
-public class DCHtmlExtractorTest {
+class DCHtmlExtractorTest {
     private static final String NL = System.getProperty("line.separator");
 
     private static final String FILE_NAME1 = "/resources/html_extract1.html";
@@ -28,7 +28,7 @@ public class DCHtmlExtractorTest {
     private URL url;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() {
         this.url = DCHtmlExtractorTest.class.getResource(FILE_NAME2);
 
         this.localeOld = Locale.getDefault();
@@ -36,12 +36,12 @@ public class DCHtmlExtractorTest {
     }
 
     @AfterEach
-    public void tearDown() throws Exception {
+    void tearDown() {
         Locale.setDefault(this.localeOld);
     }
 
     @Test
-    public void testCheckDCMeta() throws Exception {
+    void testCheckDCMeta() throws Exception {
         assertTrue(DCHtmlExtractor.checkDCMeta(XPathHelper.newInstance(this.url)));
 
         assertFalse(DCHtmlExtractor.checkDCMeta(XPathHelper
@@ -50,22 +50,21 @@ public class DCHtmlExtractorTest {
     }
 
     @Test
-    public void testExtract() throws Exception {
-        final IHtmlExtractor lExtractor = new DCHtmlExtractor();
-        final ExtractedData lExtracted = lExtractor
-                .extractData(XPathHelper.newInstance(this.url), "something",
-                        this.url.toExternalForm());
+    void testExtract() throws Exception {
+        final IHtmlExtractor extractor = new DCHtmlExtractor();
+        final ExtractedData extracted = extractor.extractData(XPathHelper.newInstance(this.url), "something",
+                this.url.toExternalForm());
 
-        assertEquals("Relations: Metadata", lExtracted.getTitle());
+        assertEquals("Relations: Metadata", extracted.getTitle());
 
-        lExtracted.setFilePath("");
+        extracted.setFilePath("");
 
-        final String lExpected = "Metadata" + NL
+        final String expected = "Metadata" + NL
                 + "This page is testing Dublin Core matadata." + NL
                 + "[<i>Author: Benno Luthiger;" + NL + "Publisher: Relations;"
                 + NL + "Contributor: John Foo;" + NL + "Type: Text;" + NL
-                + "Created: December 15, 2010, 8:49:37 AM CET</i>]";
-        assertEquals(lExpected, lExtracted.getText());
+                + "Created: December 15, 2010, 8:49:37 AM CET</i>]";
+        assertEquals(expected, extracted.getText());
 
     }
 

@@ -1,6 +1,6 @@
 Fehler Relations:
 ===
-- Return funktioniert nicht im Suchresultat. Gilt nur für die erste Suche nach dem Programmstart!
+- Return funktioniert nicht im Suchresultat. Gilt nur fï¿½r die erste Suche nach dem Programmstart!
 ===
 - Wenn in Finder aufgestartet wird, dann ist beim Wechsel auf den RelationsBrowser immer das Zentrums-Item aktiviert, 
   auch wenn im Finder ein zugeordnetes Item aktiv ist. Dieses Verhalten gilt nur, bis der RelationsBrowser das erste Mal
@@ -12,8 +12,8 @@ Fehler Relations:
 - Drop von Webseiten. Beisp:
   http://www.economist.com/news/briefing/21677228-technology-behind-bitcoin-lets-people-who-do-not-know-or-trust-each-other-build-dependable
 
-- Änderung von Titel in Inspector oder Editor ändert Title von Zentrums-Item, auch wenn aktives Item nicht im Zentrum ist.
-- Wird ein Item (nicht zentral) geändert, so wird sein Item in Finder nicht nachgeführt.
+- Ã„nderung von Titel in Inspector oder Editor Ã¤ndert Title von Zentrums-Item, auch wenn aktives Item nicht im Zentrum ist.
+- Wird ein Item (nicht zentral) geÃ¤ndert, so wird sein Item in Finder nicht nachgefï¿½hrt.
 - Lucene: neue als Bundle einbauen
 
 ===
@@ -32,4 +32,11 @@ plugin.xml:
    </extension>
    
 org.elbe.relations.product
-   
+
+===
+
+org.eclipse.help.feature.group
+- https://help.eclipse.org/latest/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fua_help_setup_preferences.htm
+org.eclipse.help.ui
+org.eclipse.help.webapp
+

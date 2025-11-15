@@ -401,12 +401,11 @@ public class XMLImport {
         private final int itemType;
         private Long expectedID;
 
-        public Inserter(final DomainObject inModel,
-                final IInsertBehaviour inBehaviour, final int inItemType) {
+        public Inserter(final DomainObject inModel, final IInsertBehaviour inBehaviour, final int inItemType) {
             this.model = inModel;
             this.insertBehaviour = inBehaviour;
             this.itemType = inItemType;
-            this.expectedID = new Long(0);
+            this.expectedID = Long.valueOf(0);
         }
 
         public void insert() throws SAXException {
@@ -452,7 +451,7 @@ public class XMLImport {
             try {
                 final String lValue = this.value.toString().trim();
                 if (this.field.setValueTo(this.model, lValue)) {
-                    this.expectedID = new Long(lValue);
+                    this.expectedID = Long.valueOf(lValue);
                 }
                 this.value = new StringBuilder();
                 this.field = null;
@@ -592,7 +591,7 @@ public class XMLImport {
         @Override
         public boolean setValueTo(final DomainObject inModel,
                 final String inValue) throws VException {
-            inModel.set(this.fieldName, new Long(inValue));
+            inModel.set(this.fieldName, Long.valueOf(inValue));
             return false;
         }
     }
@@ -609,7 +608,7 @@ public class XMLImport {
                     .getKeyName(0))) {
                 return true;
             }
-            inModel.set(this.fieldName, new Long(inValue));
+            inModel.set(this.fieldName, Long.valueOf(inValue));
             return false;
         }
     }
@@ -622,7 +621,7 @@ public class XMLImport {
         @Override
         public boolean setValueTo(final DomainObject inModel,
                 final String inValue) throws VException {
-            inModel.set(this.fieldName, new Integer(inValue));
+            inModel.set(this.fieldName, Integer.valueOf(inValue));
             return false;
         }
     }
@@ -639,7 +638,7 @@ public class XMLImport {
                     .getKeyName(0))) {
                 return true;
             }
-            inModel.set(this.fieldName, new Integer(inValue));
+            inModel.set(this.fieldName, Integer.valueOf(inValue));
             return false;
         }
     }

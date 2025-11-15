@@ -20,6 +20,8 @@ package org.elbe.relations.data.search;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.elbe.relations.data.Constants;
@@ -59,6 +61,10 @@ public abstract class AbstractSearching {
         return getDirectoryFactory().getDirectory(this.indexName);
     }
 
+    protected Path getIndexPath() {
+        return getDirectoryFactory().getDirectoryPath(this.indexName);
+    }
+
     protected File getIndexContainer() {
         return getDirectoryFactory().getIndexContainer(this.indexName);
     }
@@ -77,7 +83,7 @@ public abstract class AbstractSearching {
      * @throws IOException
      */
     public int numberOfIndexed() throws IOException {
-        return getIndexer().numberOfIndexed(getIndexDir());
+        return getIndexer().numberOfIndexed(getIndexPath());
     }
 
     /**
@@ -90,9 +96,11 @@ public abstract class AbstractSearching {
     // --- inner classes ---
 
     protected interface DirectoryFactory {
-        File getDirectory(String inIndexName) throws IOException;
+        File getDirectory(String indexName) throws IOException;
 
-        File getIndexContainer(String inIndexName);
+        File getIndexContainer(String indexName);
+
+        Path getDirectoryPath(String indexName);
     }
 
     private class FileSystemDirectoryFactory implements DirectoryFactory {
@@ -123,6 +131,11 @@ public abstract class AbstractSearching {
         public File getIndexContainer(final String inIndexName) {
             final File lIndexContainer = checkDir(new File(this.root, Constants.LUCENE_STORE));
             return checkDir(new File(lIndexContainer, inIndexName));
+        }
+
+        @Override
+        public Path getDirectoryPath(final String indexName) {
+            return FileSystems.getDefault().getPath(indexName);
         }
     }
 

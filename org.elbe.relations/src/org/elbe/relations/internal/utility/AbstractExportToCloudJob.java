@@ -21,6 +21,7 @@ package org.elbe.relations.internal.utility;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.Locale;
 
@@ -42,105 +43,98 @@ import com.google.gson.JsonObject;
  *
  * @author lbenno
  */
-@SuppressWarnings("restriction")
-public abstract class AbstractExportToCloudJob
-implements IRunnableWithProgress {
-	private final ICloudProvider cloudProvider;
-	private final JsonObject jsonObject;
-	private final LanguageService languageService;
-	private final Logger log;
-	private final RelationsStatusLineManager statusLine;
-	private final int numberOfItems;
-	private boolean isFullExport;
+public abstract class AbstractExportToCloudJob implements IRunnableWithProgress {
+    private final ICloudProvider cloudProvider;
+    private final JsonObject jsonObject;
+    private final LanguageService languageService;
+    private final Logger log;
+    private final RelationsStatusLineManager statusLine;
+    private final int numberOfItems;
+    private boolean isFullExport;
 
-	/**
-	 * AbstractExportToCloudJob constructor.
-	 *
-	 * @param cloudProvider
-	 *            {@link ICloudProvider}
-	 * @param jsonObject
-	 *            {@link JsonObject}
-	 * @param languageService
-	 *            {@link LanguageService}
-	 * @param log
-	 *            {@link Logger}
-	 * @param statusLine
-	 *            {@link RelationsStatusLineManager}
-	 * @param numberOfItems
-	 *            int
-	 */
-	public AbstractExportToCloudJob(final ICloudProvider cloudProvider,
-			final JsonObject jsonObject, final LanguageService languageService,
-			final Logger log, final RelationsStatusLineManager statusLine,
-			final int numberOfItems) {
-		this.cloudProvider = cloudProvider;
-		this.jsonObject = jsonObject;
-		this.languageService = languageService;
-		this.log = log;
-		this.statusLine = statusLine;
-		this.numberOfItems = numberOfItems;
-	}
+    /** AbstractExportToCloudJob constructor.
+     *
+     * @param cloudProvider {@link ICloudProvider}
+     * @param jsonObject {@link JsonObject}
+     * @param languageService {@link LanguageService}
+     * @param log {@link Logger}
+     * @param statusLine {@link RelationsStatusLineManager}
+     * @param numberOfItems int */
+    public AbstractExportToCloudJob(final ICloudProvider cloudProvider,
+            final JsonObject jsonObject, final LanguageService languageService,
+            final Logger log, final RelationsStatusLineManager statusLine,
+            final int numberOfItems) {
+        this.cloudProvider = cloudProvider;
+        this.jsonObject = jsonObject;
+        this.languageService = languageService;
+        this.log = log;
+        this.statusLine = statusLine;
+        this.numberOfItems = numberOfItems;
+    }
 
-	protected void setFullExport(final boolean fullExportFlag) {
-		this.isFullExport = fullExportFlag;
-	}
+    protected void setFullExport(final boolean fullExportFlag) {
+        this.isFullExport = fullExportFlag;
+    }
 
-	@Override
-	public void run(final IProgressMonitor monitor)
-			throws InvocationTargetException, InterruptedException {
-		File tempExport = null;
-		try {
-			final String fileName = createTempFileName();
-			tempExport = File.createTempFile(fileName, ".zip"); //$NON-NLS-1$
+    @Override
+    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        File tempExport = null;
+        try {
+            final String fileName = createTempFileName();
+            tempExport = File.createTempFile(fileName, ".zip"); //$NON-NLS-1$
 
-			// 1) export DB content to zipped XML in temporary file
-			prepareContentForExport(tempExport, monitor);
+            // 1) export DB content to zipped XML in temporary file
+            prepareContentForExport(tempExport, monitor);
 
-			// 2) upload temporary file to cloud
-			if (this.cloudProvider.upload(tempExport,
-					String.format("%s.zip", fileName), //$NON-NLS-1$
-			        this.jsonObject, this.isFullExport, this.log)) {
-				Display.getDefault().asyncExec(() -> {
-					this.statusLine.showStatusLineMessage(
-							RelationsMessages.getString("AbstractExportToCloudJob.status.msg")); //$NON-NLS-1$
-				});
-			} else {
-				Display.getDefault().asyncExec(() -> {
-					MessageDialog.openError(
-							Display.getDefault().getActiveShell(),
-							RelationsMessages.getString("AbstractExportToCloudJob.err.title"), //$NON-NLS-1$
-							RelationsMessages.getString("AbstractExportToCloudJob.err.msg")); //$NON-NLS-1$
-				});
-			}
+            // 2) upload temporary file to cloud
+            if (this.cloudProvider.upload(tempExport,
+                    String.format("%s.zip", fileName), //$NON-NLS-1$
+                    this.jsonObject, this.isFullExport, this.log)) {
+                Display.getDefault().asyncExec(() ->
+                this.statusLine.showStatusLineMessage(
+                        RelationsMessages.getString("AbstractExportToCloudJob.status.msg")) //$NON-NLS-1$
+                        );
+            } else {
+                Display.getDefault().asyncExec(() ->
+                MessageDialog.openError(
+                        Display.getDefault().getActiveShell(),
+                        RelationsMessages.getString("AbstractExportToCloudJob.err.title"), //$NON-NLS-1$
+                        RelationsMessages.getString("AbstractExportToCloudJob.err.msg")) //$NON-NLS-1$
+                        );
+            }
 
-			// 3) clear entries in EventStore
-			new EventStoreChecker().clear();
-		}
-		catch (final IOException | SQLException exc) {
-			this.log.error(exc, exc.getMessage());
-		}
-		finally {
-			if (tempExport != null) {
-				tempExport.delete();
-			}
-		}
-	}
+            // 3) clear entries in EventStore
+            new EventStoreChecker().clear();
+        }
+        catch (final IOException | SQLException exc) {
+            this.log.error(exc, exc.getMessage());
+        }
+        finally {
+            if (tempExport != null) {
+                try {
+                    Files.delete(tempExport.toPath());
+                } catch (final IOException exc) {
+                    this.log.error(exc, "Unable to delete \"" + tempExport.toString() + "\"!");
+                }
+            }
+        }
+    }
 
-	protected abstract String createTempFileName();
+    protected abstract String createTempFileName();
 
-	protected abstract void prepareContentForExport(File tempExport,
-			final IProgressMonitor monitor) throws IOException;
+    protected abstract void prepareContentForExport(File tempExport,
+            final IProgressMonitor monitor) throws IOException;
 
-	protected Locale getAppLocale() {
-		return this.languageService.getAppLocale();
-	}
+    protected Locale getAppLocale() {
+        return this.languageService.getAppLocale();
+    }
 
-	protected Logger getLog() {
-		return this.log;
-	}
+    protected Logger getLog() {
+        return this.log;
+    }
 
-	protected int getNumberOfItems() {
-		return this.numberOfItems;
-	}
+    protected int getNumberOfItems() {
+        return this.numberOfItems;
+    }
 
 }

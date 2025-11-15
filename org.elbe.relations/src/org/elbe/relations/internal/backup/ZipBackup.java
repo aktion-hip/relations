@@ -34,121 +34,66 @@ import java.util.zip.ZipOutputStream;
  * @author Luthiger Created on 04.05.2007
  */
 public class ZipBackup {
-	private final static int LEN = 2048;
+    private static final int LEN = 2048;
 
-	private final File dataDirectory;
-	private final File backupFileName;
-	private final String parent;
+    private final File dataDirectory;
+    private final File backupFileName;
+    private final String parent;
 
-	/**
-	 * ZipBackup constructor
-	 *
-	 * @param inDataDirectory
-	 *            String The path to directory where the embedded databases are
-	 *            stored.
-	 * @param inBackupFileName
-	 *            String The fully qualified name of the backup file (Zip file).
-	 */
-	public ZipBackup(final String inDataDirectory,
-	        final String inBackupFileName) {
-		dataDirectory = new File(inDataDirectory);
-		parent = dataDirectory.getName();
-		backupFileName = new File(inBackupFileName);
-	}
+    /** ZipBackup constructor
+     *
+     * @param dataDirectory String The path to directory where the embedded databases are stored.
+     * @param backupFileName String The fully qualified name of the backup file (Zip file). */
+    public ZipBackup(final String dataDirectory, final String backupFileName) {
+        this.dataDirectory = new File(dataDirectory);
+        this.parent = this.dataDirectory.getName();
+        this.backupFileName = new File(backupFileName);
+    }
 
-	/**
-	 * Executes the backup of the actual embedded database.
-	 *
-	 * @throws IOException
-	 */
-	public void backup() throws IOException {
-		if (!dataDirectory.exists()) {
-			return;
-		}
+    /**
+     * Executes the backup of the actual embedded database.
+     *
+     * @throws IOException
+     */
+    public void backup() throws IOException {
+        if (!this.dataDirectory.exists()) {
+            return;
+        }
 
-		FileOutputStream lOutput = null;
-		ZipOutputStream lZipOut = null;
+        try (FileOutputStream output = new FileOutputStream(this.backupFileName);) {
+            final ZipOutputStream zipOut = new ZipOutputStream(output);
+            traverse(this.dataDirectory, this.parent, zipOut);
+            zipOut.close();
+        }
+    }
 
-		try {
-			lOutput = new FileOutputStream(backupFileName);
-			lZipOut = new ZipOutputStream(lOutput);
-			traverse(dataDirectory, parent, lZipOut);
-		}
-		finally {
-			if (lZipOut != null) {
-				try {
-					lZipOut.close();
-				}
-				catch (final IOException exc) {
-					// intentionally left empty
-				}
-			}
-			if (lOutput != null) {
-				try {
-					lOutput.close();
-				}
-				catch (final IOException exc) {
-					// intentionally left empty
-				}
-			}
-		}
-	}
+    private void traverse(final File directory, final String prefix, final ZipOutputStream out) throws IOException {
+        final File[] children = directory.listFiles();
+        if (children != null) {
+            for (int i = 0; i < children.length; i++) {
+                if (children[i].isDirectory()) {
+                    traverse(children[i], prefix + File.separator + children[i].getName(), out);
+                } else {
+                    process(children[i], prefix, out);
+                }
+            }
+        }
+    }
 
-	private void traverse(final File inDirectory, final String inPrefix,
-	        final ZipOutputStream inOut) throws IOException {
-		final File[] lChildren = inDirectory.listFiles();
-		if (lChildren != null) {
-			for (int i = 0; i < lChildren.length; i++) {
-				if (lChildren[i].isDirectory()) {
-					traverse(lChildren[i],
-					        inPrefix + File.separator + lChildren[i].getName(),
-					        inOut);
-				} else {
-					process(lChildren[i], inPrefix, inOut);
-				}
-			}
-		}
-	}
+    private void process(final File file, final String prefix, final ZipOutputStream out) throws IOException {
+        final ZipEntry entry = new ZipEntry(prefix + File.separator + file.getName());
 
-	private void process(final File inFile, final String inPrefix,
-	        final ZipOutputStream inOut) throws IOException {
-		FileInputStream lInput = null;
-		BufferedInputStream lInputBuffer = null;
+        try (FileInputStream input = new FileInputStream(file)) {
+            out.putNextEntry(entry);
 
-		final ZipEntry lEntry = new ZipEntry(
-		        inPrefix + File.separator + inFile.getName());
-
-		try {
-			inOut.putNextEntry(lEntry);
-
-			lInput = new FileInputStream(inFile);
-			lInputBuffer = new BufferedInputStream(lInput, LEN);
-
-			final byte[] lTransfer = new byte[LEN];
-			int lRead = 0;
-			while ((lRead = lInputBuffer.read(lTransfer, 0, LEN)) != -1) {
-				inOut.write(lTransfer, 0, lRead);
-			}
-			inOut.closeEntry();
-		}
-		finally {
-			if (lInputBuffer != null) {
-				try {
-					lInputBuffer.close();
-				}
-				catch (final IOException exc) {
-					// intentionally left empty
-				}
-			}
-			if (lInput != null) {
-				try {
-					lInput.close();
-				}
-				catch (final IOException exc) {
-					// intentionally left empty
-				}
-			}
-		}
-	}
+            final BufferedInputStream inputBuffer = new BufferedInputStream(input, LEN);
+            final byte[] transfer = new byte[LEN];
+            int read = 0;
+            while ((read = inputBuffer.read(transfer, 0, LEN)) != -1) {
+                out.write(transfer, 0, read);
+            }
+            out.closeEntry();
+        }
+    }
 
 }

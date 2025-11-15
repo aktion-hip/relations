@@ -20,7 +20,8 @@ package org.elbe.relations.internal.backup;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -40,7 +41,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.unitils.io.IOUnitils;
 import org.w3c.dom.Document;
 
 /**
@@ -50,11 +50,12 @@ import org.w3c.dom.Document;
  */
 @ExtendWith(MockitoExtension.class)
 public class XMLExportTest {
-    private static final String FILE_NAME = "export.tmp";
+    private static final String FILE_PREFIX = "export_";
+    private static final String FILE_SUFFIX = ".tmp";
 
     private static DataHouseKeeper data;
 
-    private File exportFile;
+    private Path exportFile;
 
     @Mock
     private IProgressMonitor monitor;
@@ -74,24 +75,24 @@ public class XMLExportTest {
         data.createText("test text", "Test, Text");
         data.createRelation(lTerm, lPerson);
 
-        this.exportFile = IOUnitils.createTempFile(FILE_NAME);
+        this.exportFile = Files.createTempFile(FILE_PREFIX, FILE_SUFFIX);
     }
 
     @AfterEach
     public void tearDown() throws Exception {
         data.deleteAllInAll();
-        IOUnitils.deleteTempFileOrDir(new File(FILE_NAME));
+        Files.deleteIfExists(this.exportFile);
     }
 
     @Test
     public void testExport() throws Exception {
-        this.exporter = new XMLExport(this.exportFile.getAbsolutePath(), Locale.ENGLISH, 0);
+        this.exporter = new XMLExport(this.exportFile.toAbsolutePath().toString(), Locale.ENGLISH, 0);
         this.exporter.export(this.monitor);
         this.exporter.close();
 
         final DocumentBuilder lDocBuilder = DocumentBuilderFactory
                 .newInstance().newDocumentBuilder();
-        final Document lDoc = lDocBuilder.parse(this.exportFile);
+        final Document lDoc = lDocBuilder.parse(Files.newInputStream(this.exportFile));
 
         // term entry
         final XPath lXPath = XPathFactory.newInstance().newXPath();

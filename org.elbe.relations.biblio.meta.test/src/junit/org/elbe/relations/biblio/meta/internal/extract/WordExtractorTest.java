@@ -59,9 +59,10 @@ public class WordExtractorTest {
         final String lExpected = "Text Extraction" + NL
                 + "[<i>Author: Luthiger;" + NL + "Size: 28.50 kB;" + NL
                 + "Type: application/ms-word;" + NL
-                + "Created: September 6, 2007, 11:21:00 AM CEST;" + NL
-                + "Last Modified: September 29, 2020, 1:36:53 PM CEST</i>]";
-        assertEquals(lExpected, lExtacted.getText());
+                + "Created: September 6, 2007, 11:21:00%sAM CEST;" + NL
+                + "Last Modified: XXX</i>]";
+        assertEquals(String.format(lExpected, TestUtil.NBSP),
+                lExtacted.getText().replaceAll(TestUtil.REGEX, TestUtil.REPLACEMENT));
     }
 
 }

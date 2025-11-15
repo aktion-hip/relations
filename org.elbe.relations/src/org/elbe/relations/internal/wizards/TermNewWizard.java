@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2016, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -25,7 +25,6 @@ import org.elbe.relations.RelationsImages;
 import org.elbe.relations.RelationsMessages;
 import org.elbe.relations.data.bom.BOMException;
 import org.elbe.relations.data.bom.BOMTruncationException;
-import org.elbe.relations.internal.wizards.interfaces.IItemWizardPage;
 
 /**
  * Wizard to create a new term entry.
@@ -35,33 +34,31 @@ import org.elbe.relations.internal.wizards.interfaces.IItemWizardPage;
 @SuppressWarnings("restriction")
 public class TermNewWizard extends AbstractNewWizard {
 
-	private TermNewWizardPage page;
+    private TermNewWizardPage page;
 
-	@Override
-	public void addPages() {
-		page = ContextInjectionFactory.make(TermNewWizardPage.class,
-		        getEclipseContext());
-		addPage(page);
-		addPages(RelationsMessages.getString("TermNewWizard.page.title"), //$NON-NLS-1$
-		        RelationsMessages.getString("TermNewWizard.page.msg")); //$NON-NLS-1$
-	}
+    @Override
+    public void addPages() {
+        this.page = ContextInjectionFactory.make(TermNewWizardPage.class, getEclipseContext());
+        addPage(this.page);
+        addPages(RelationsMessages.getString("TermNewWizard.page.title"), //$NON-NLS-1$
+                RelationsMessages.getString("TermNewWizard.page.msg")); //$NON-NLS-1$
+    }
 
-	@Override
-	public boolean performFinish() {
-		prepareFinish(page, RelationsImages.TERM.getImage());
-		try {
-			((IItemWizardPage) page).save();
-		}
-		catch (final BOMTruncationException exc) {
-			MessageDialog.openError(Display.getCurrent().getActiveShell(),
-			        ERROR_DIALOG, exc.getMessage());
-			return false;
-		}
-		catch (final BOMException exc) {
-			log().error(exc, exc.getMessage());
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public boolean performFinish() {
+        prepareFinish(this.page, RelationsImages.TERM.getImage());
+        try {
+            this.page.save();
+        }
+        catch (final BOMTruncationException exc) {
+            MessageDialog.openError(Display.getCurrent().getActiveShell(), ERROR_DIALOG, exc.getMessage());
+            return false;
+        }
+        catch (final BOMException exc) {
+            log().error(exc, exc.getMessage());
+            return false;
+        }
+        return true;
+    }
 
 }

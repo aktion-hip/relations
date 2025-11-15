@@ -18,8 +18,6 @@
  ***************************************************************************/
 package org.elbe.relations.internal.controls;
 
-import javax.inject.Inject;
-
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -28,13 +26,11 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.dnd.DragSourceEvent;
@@ -48,6 +44,8 @@ import org.elbe.relations.data.utility.UniqueID;
 import org.elbe.relations.dnd.ItemTransfer;
 import org.elbe.relations.models.ILightWeightModel;
 
+import jakarta.inject.Inject;
+
 /**
  * Abstract base class for Relations <code>ViewPart</code>s, providing generic
  * functionality for views.
@@ -57,113 +55,93 @@ import org.elbe.relations.models.ILightWeightModel;
 @SuppressWarnings("restriction")
 public abstract class AbstractToolPart implements IPartWithSelection {
 
-	@Inject
-	private EHandlerService handlerService;
+    @Inject
+    private EHandlerService handlerService;
 
-	@Inject
-	private ECommandService commandService;
+    @Inject
+    private ECommandService commandService;
 
-	@Inject
-	private ESelectionService selectionService;
+    @Inject
+    private ESelectionService selectionService;
 
-	@Inject
-	private Logger log;
+    @Inject
+    private Logger log;
 
-	private MPart part;
+    private MPart part;
 
-	protected IBaseLabelProvider getLabelProvider() {
-		return new LabelProvider() {
-			@Override
-			public Image getImage(final Object inElement) {
-				return ((ILightWeightModel) inElement).getImage();
-			}
+    protected IBaseLabelProvider getLabelProvider() {
+        return new LabelProvider() {
+            @Override
+            public Image getImage(final Object element) {
+                return ((ILightWeightModel) element).getImage();
+            }
 
-			@Override
-			public String getText(final Object inElement) {
-				return inElement.toString();
-			}
-		};
-	}
+            @Override
+            public String getText(final Object element) {
+                return element.toString();
+            }
+        };
+    }
 
-	protected void afterInit(final MPart inPart, final EMenuService inService) {
-		part = inPart;
-		inService.registerContextMenu(getControl(), getContextMenuID());
-	}
+    protected void afterInit(final MPart part, final EMenuService service) {
+        this.part = part;
+        service.registerContextMenu(getControl(), getContextMenuID());
+    }
 
-	abstract protected Object getControl();
+    protected abstract Object getControl();
 
-	abstract protected String getContextMenuID();
+    protected abstract String getContextMenuID();
 
-	/**
-	 * Set the part's title.
-	 *
-	 * @param inTitle
-	 *            String
-	 */
-	protected void setPartName(final String inTitle) {
-		if (part != null) {
-			part.setLabel(inTitle);
-		}
-	}
+    /** Set the part's title.
+     *
+     * @param title String */
+    protected void setPartName(final String title) {
+        if (this.part != null) {
+            this.part.setLabel(title);
+        }
+    }
 
-	protected IDoubleClickListener getDoubleClickListener() {
-		return new IDoubleClickListener() {
-			@Override
-			public void doubleClick(final DoubleClickEvent inEvent) {
-				handlerService
-		                .executeHandler(
-		                        ParameterizedCommand.generateCommand(
-		                                commandService.getCommand(
-		                                        ICommandIds.CMD_ITEM_SHOW),
-		                                null));
-			}
-		};
-	}
+    protected IDoubleClickListener getDoubleClickListener() {
+        return event -> AbstractToolPart.this.handlerService.executeHandler(
+                ParameterizedCommand.generateCommand(
+                        AbstractToolPart.this.commandService.getCommand(ICommandIds.CMD_ITEM_SHOW), null));
+    }
 
-	protected Transfer[] getDragTypes() {
-		return new Transfer[] { ItemTransfer.getInstance(log) };
-	}
+    protected Transfer[] getDragTypes() {
+        return new Transfer[] { ItemTransfer.getInstance(this.log) };
+    }
 
-	protected DragSourceListener getDragSourceAdapter(
-	        final TableViewer inViewer) {
-		return new DragSourceAdapter() {
-			@Override
-			public void dragSetData(final DragSourceEvent inEvent) {
-				final IStructuredSelection lSelected = (IStructuredSelection) inViewer
-		                .getSelection();
-				if (!lSelected.isEmpty()) {
-					final Object[] lItems = lSelected.toArray();
-					final UniqueID[] lIDs = new UniqueID[lItems.length];
-					for (int i = 0; i < lItems.length; i++) {
-						final ILightWeightItem lItem = (ILightWeightItem) lItems[i];
-						lIDs[i] = new UniqueID(lItem.getItemType(),
-		                        lItem.getID());
-					}
-					inEvent.data = lIDs;
-				}
-			}
-		};
-	}
+    protected DragSourceListener getDragSourceAdapter(final TableViewer viewer) {
+        return new DragSourceAdapter() {
+            @Override
+            public void dragSetData(final DragSourceEvent event) {
+                final IStructuredSelection selected = (IStructuredSelection) viewer.getSelection();
+                if (!selected.isEmpty()) {
+                    final Object[] lItems = selected.toArray();
+                    final UniqueID[] lIDs = new UniqueID[lItems.length];
+                    for (int i = 0; i < lItems.length; i++) {
+                        final ILightWeightItem lItem = (ILightWeightItem) lItems[i];
+                        lIDs[i] = new UniqueID(lItem.getItemType(), lItem.getID());
+                    }
+                    event.data = lIDs;
+                }
+            }
+        };
+    }
 
-	protected MenuManager getMenuManager(final Control inControl) {
-		final MenuManager outMenuManager = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		inControl.setMenu(outMenuManager.createContextMenu(inControl));
-		return outMenuManager;
-	}
+    protected MenuManager getMenuManager(final Control control) {
+        final MenuManager menuManager = new MenuManager("#PopupMenu"); //$NON-NLS-1$
+        control.setMenu(menuManager.createContextMenu(control));
+        return menuManager;
+    }
 
-	protected ISelectionChangedListener getSelectionChangedListener() {
-		return new ISelectionChangedListener() {
-			@Override
-			public void selectionChanged(final SelectionChangedEvent inEvent) {
-				selectionService.setSelection(
-		                ((IStructuredSelection) inEvent.getSelection())
-		                        .getFirstElement());
-			}
-		};
-	}
+    protected ISelectionChangedListener getSelectionChangedListener() {
+        return event -> AbstractToolPart.this.selectionService
+                .setSelection(((IStructuredSelection) event.getSelection()).getFirstElement());
+    }
 
-	protected MPart getPart() {
-		return part;
-	}
+    protected MPart getPart() {
+        return this.part;
+    }
 
 }

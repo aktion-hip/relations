@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2016, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -18,8 +18,6 @@
  ***************************************************************************/
 package org.elbe.relations.handlers.item;
 
-import javax.inject.Named;
-
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Execute;
@@ -29,6 +27,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.elbe.relations.internal.wizards.TermNewWizard;
 import org.elbe.relations.services.IBrowserManager;
 
+import jakarta.inject.Named;
+
 /**
  * The handler executed when the <code>new term</code> toolbar button is
  * clicked.
@@ -37,15 +37,12 @@ import org.elbe.relations.services.IBrowserManager;
  */
 public class NewTermHandler extends AbastractNewItemHandler {
 
-	@Execute
-	public void execute(
-	        @Named(IServiceConstants.ACTIVE_SHELL) final Shell inShell,
-	        final IEclipseContext inContext,
-	        final IBrowserManager inBrowserManager) {
-		final TermNewWizard lWizard = ContextInjectionFactory
-		        .make(TermNewWizard.class, inContext);
-		// lWizard.init(createSelection(inBrowserManager));
-		final WizardDialog lDialog = new WizardDialog(inShell, lWizard);
-		lDialog.open();
-	}
+    @Execute
+    public void execute(
+            @Named(IServiceConstants.ACTIVE_SHELL) final Shell shell,
+            final IEclipseContext context, final IBrowserManager rowserManager) {
+        final TermNewWizard wizard = ContextInjectionFactory.make(TermNewWizard.class, context);
+        // lWizard.init(createSelection(inBrowserManager));
+        new WizardDialog(shell, wizard).open();
+    }
 }

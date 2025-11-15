@@ -27,7 +27,7 @@ import org.elbe.relations.data.bom.LightWeightTerm;
 import org.elbe.relations.data.bom.LightWeightText;
 import org.elbe.relations.data.utility.UniqueID;
 import org.elbe.relations.models.IItemModel;
-import org.elbe.relations.models.ILightWeightModel;
+import org.hip.kernel.bom.AlternativeModel;
 
 /**
  * Interface for all data handling concerns.<br />
@@ -38,105 +38,105 @@ import org.elbe.relations.models.ILightWeightModel;
  */
 public interface IDataService {
 
-	/**
-	 * @return List&lt;ILightWeightModel> all term items
-	 */
-	Collection<ILightWeightModel> getTerms();
+    /**
+     * @return List&lt;ILightWeightModel> all term items
+     */
+    Collection<AlternativeModel> getTerms();
 
-	/**
-	 * @return List&lt;ILightWeightModel> all text items
-	 */
-	Collection<ILightWeightModel> getTexts();
+    /**
+     * @return List&lt;ILightWeightModel> all text items
+     */
+    Collection<AlternativeModel> getTexts();
 
-	/**
-	 * @return List&lt;ILightWeightModel> all person items
-	 */
-	Collection<ILightWeightModel> getPersons();
+    /**
+     * @return List&lt;ILightWeightModel> all person items
+     */
+    Collection<AlternativeModel> getPersons();
 
-	/**
-	 * @return List&lt;ILightWeightModel> all items
-	 */
-	Collection<ILightWeightModel> getAll();
+    /**
+     * @return List&lt;ILightWeightModel> all items
+     */
+    Collection<AlternativeModel> getAll();
 
-	/**
-	 * Adds the newly created term item to the relevant collections and sends a
-	 * notification.
-	 *
-	 * @param inTerm
-	 *            {@link LightWeightTerm}
-	 */
-	void loadNew(final LightWeightTerm inTerm);
+    /**
+     * Adds the newly created term item to the relevant collections and sends a
+     * notification.
+     *
+     * @param inTerm
+     *            {@link LightWeightTerm}
+     */
+    void loadNew(final LightWeightTerm inTerm);
 
-	/**
-	 * Adds the newly created text item to the relevant collections and sends a
-	 * notification.
-	 *
-	 * @param inText
-	 *            {@link LightWeightText}
-	 */
-	void loadNew(final LightWeightText inText);
+    /**
+     * Adds the newly created text item to the relevant collections and sends a
+     * notification.
+     *
+     * @param inText
+     *            {@link LightWeightText}
+     */
+    void loadNew(final LightWeightText inText);
 
-	/**
-	 * Adds the newly created person item to the relevant collections and sends
-	 * a notification.
-	 *
-	 * @param inPerson
-	 *            {@link LightWeightPerson}
-	 */
-	void loadNew(final LightWeightPerson inPerson);
+    /**
+     * Adds the newly created person item to the relevant collections and sends
+     * a notification.
+     *
+     * @param inPerson
+     *            {@link LightWeightPerson}
+     */
+    void loadNew(final LightWeightPerson inPerson);
 
-	/**
-	 * Loads the data from the configured data store.
-	 *
-	 * @param inEventTopic
-	 *            String the event topic to post after data loading has been
-	 *            done
-	 */
-	void loadData(final String inEventTopic);
+    /**
+     * Loads the data from the configured data store.
+     *
+     * @param inEventTopic
+     *            String the event topic to post after data loading has been
+     *            done
+     */
+    void loadData(final String inEventTopic);
 
-	/**
-	 * Retrieves an item with an UniqueID.
-	 *
-	 * @param inID
-	 *            {@link UniqueID}
-	 * @return {@link IItemModel}
-	 * @throws BOMException
-	 */
-	IItemModel retrieveItem(final UniqueID inID) throws BOMException;
+    /**
+     * Retrieves an item with an UniqueID.
+     *
+     * @param inID
+     *            {@link UniqueID}
+     * @return {@link IItemModel}
+     * @throws BOMException
+     */
+    IItemModel retrieveItem(final UniqueID inID) throws BOMException;
 
-	/**
-	 * Removes the deleted item from the relevant collections and notifies the
-	 * listeners.
-	 *
-	 * @param inItem
-	 *            ILightWeightItem
-	 */
-	void removeDeleted(final ILightWeightItem inItem);
+    /**
+     * Removes the deleted item from the relevant collections and notifies the
+     * listeners.
+     *
+     * @param inItem
+     *            ILightWeightItem
+     */
+    void removeDeleted(final ILightWeightItem inItem);
 
-	/**
-	 * Convenience method for StatusLine.
-	 *
-	 * @return int The number of items in the database (without items in the
-	 *         Relations table).
-	 */
-	int getNumberOfItems();
+    /**
+     * Convenience method for StatusLine.
+     *
+     * @return int The number of items in the database (without items in the
+     *         Relations table).
+     */
+    int getNumberOfItems();
 
-	/**
-	 *
-	 * @return int The number of items in the Relations table.
-	 */
-	int getNumberOfRelations();
+    /**
+     *
+     * @return int The number of items in the Relations table.
+     */
+    int getNumberOfRelations();
 
-	/**
-	 * @return int The number of events in the store.
-	 */
-	int getNumberOfEvents();
+    /**
+     * @return int The number of events in the store.
+     */
+    int getNumberOfEvents();
 
-	/**
-	 * Convenience method for StatusLine.
-	 *
-	 * @return String e.g. <i>jdbc:mysql://localhost/relations</i>
-	 */
-	String getDBName();
+    /**
+     * Convenience method for StatusLine.
+     *
+     * @return String e.g. <i>jdbc:mysql://localhost/relations</i>
+     */
+    String getDBName();
 
 }

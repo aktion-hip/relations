@@ -24,7 +24,7 @@ public class GenericHtmlExtractorTest {
     private URL url;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() {
         this.url = GenericHtmlExtractorTest.class.getResource(FILE_NAME);
 
         this.localeOld = Locale.getDefault();
@@ -32,25 +32,25 @@ public class GenericHtmlExtractorTest {
     }
 
     @AfterEach
-    public void tearDown() throws Exception {
+    void tearDown() {
         Locale.setDefault(this.localeOld);
     }
 
     @Test
-    public void testExtract() throws Exception {
+    void testExtract() throws Exception {
         final String lTitle = "The html title";
         final IHtmlExtractor lExtractor = new GenericHtmlExtractor();
         final ExtractedData lExtracted = lExtractor.extractData(
                 XPathHelper.newInstance(this.url), lTitle, this.url.toExternalForm());
 
-        assertEquals("title", lTitle, lExtracted.getTitle());
+        assertEquals(lTitle, lExtracted.getTitle());
 
         lExtracted.setFilePath("");
 
-        final String lExpected = "This is a only a test" + NL
+        final String expected = "This is a only a test" + NL
                 + "relations, test" + NL + "[<i>Author: Jane Doe;" + NL
-                + "Created: December 15, 2009, 8:49:00 AM CET</i>]";
-        assertEquals("text", lExpected, lExtracted.getText());
+                + "Created: December 15, 2009, 8:49:00 AM CET</i>]";
+        assertEquals(expected, lExtracted.getText());
     }
 
 }

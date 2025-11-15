@@ -1,6 +1,6 @@
 /***************************************************************************
  * This package is part of Relations application.
- * Copyright (C) 2004-2018, Benno Luthiger
+ * Copyright (C) 2004-2025, Benno Luthiger
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -34,78 +34,66 @@ import com.google.gson.JsonObject;
  * @author lbenno
  */
 public abstract class AbstractCloudProviderConfig {
-	private static final int WIDTH_HINT = 75; // width hint for labels
+    private static final int WIDTH_HINT = 75; // width hint for labels
 
-	/**
-	 * Creates a label text field in a two column grid layout.
-	 *
-	 * @param parent
-	 *            {@link Composite} the parent component
-	 * @param label
-	 *            String the label text
-	 * @return {@link Text} the created text component
-	 */
-	protected Text createLabelText(final Composite parent, final String label) {
-		createLabel(parent, label);
-		return createText(parent);
-	}
+    /** Creates a label text field in a two column grid layout.
+     *
+     * @param parent {@link Composite} the parent component
+     * @param label String the label text
+     * @return {@link Text} the created text component */
+    protected Text createLabelText(final Composite parent, final String label) {
+        createLabel(parent, label);
+        return createText(parent);
+    }
 
-	private Text createText(final Composite parent) {
-		return createText(parent, SWT.BORDER | SWT.SINGLE);
-	}
+    private Text createText(final Composite parent) {
+        return createText(parent, SWT.BORDER | SWT.SINGLE);
+    }
 
-	protected Text createText(final Composite parent, final int style) {
-		final Text outText = new Text(parent, style);
-		outText.setLayoutData(createGridData());
-		return outText;
-	}
+    /** Create a text widget using the passed style.
+     *
+     * @param parent {@link Composite}
+     * @param style int
+     * @return {@link Text} */
+    protected Text createText(final Composite parent, final int style) {
+        final Text outText = new Text(parent, style);
+        outText.setLayoutData(createGridData());
+        return outText;
+    }
 
-	/**
-	 * Utility method that creates a label instance and sets the default layout
-	 * data.
-	 *
-	 * @param parent
-	 *            the inParent for the new label
-	 * @param label
-	 *            the text for the new label
-	 * @return the new label
-	 */
-	protected Label createLabel(final Composite parent, final String label) {
-		final Label outLabel = new Label(parent, SWT.LEFT);
-		outLabel.setText(label);
-		final GridData lData = new GridData();
-		lData.horizontalAlignment = GridData.FILL;
-		lData.widthHint = getWidthHint();
-		outLabel.setLayoutData(lData);
-		return outLabel;
-	}
+    /** Utility method that creates a label instance and sets the default layout data.
+     *
+     * @param parent the inParent for the new label
+     * @param label the text for the new label
+     * @return the new label */
+    protected Label createLabel(final Composite parent, final String label) {
+        final Label outLabel = new Label(parent, SWT.LEFT);
+        outLabel.setText(label);
+        final GridData lData = new GridData();
+        lData.horizontalAlignment = GridData.FILL;
+        lData.widthHint = getWidthHint();
+        outLabel.setLayoutData(lData);
+        return outLabel;
+    }
 
-	protected GridData createGridData() {
-		return new GridData(SWT.FILL, SWT.CENTER, true, false);
-	}
+    protected GridData createGridData() {
+        return new GridData(SWT.FILL, SWT.CENTER, true, false);
+    }
 
-	/**
-	 * @return int the widht hint for the labels, defaults to
-	 *         <code>WIDTH_HINT</code>
-	 */
-	protected int getWidthHint() {
-		return WIDTH_HINT;
-	}
+    /** @return int the width hint for the labels, defaults to <code>WIDTH_HINT</code> */
+    protected int getWidthHint() {
+        return WIDTH_HINT;
+    }
 
-	/**
-	 * Initializes the passed text widget with the values passed as JsonObject.
-	 *
-	 * @param key
-	 *            String
-	 * @param values
-	 *            {@link JsonObject} (possibly) containing the value
-	 * @param field
-	 *            {@link Text} the text widget to initialize
-	 */
-	protected void setChecked(final String key, final JsonObject values, final Text field) {
-		if (values.has(key)) {
-			field.setText(values.get(key).getAsString());
-		}
-	}
+    /** Initializes the passed text widget with the values passed as JsonObject.
+     *
+     * @param key String
+     * @param values {@link JsonObject} (possibly) containing the value
+     * @param field {@link Text} the text widget to initialize */
+    protected void setChecked(final String key, final JsonObject values, final Text field) {
+        if (values.has(key)) {
+            field.setText(values.get(key).getAsString());
+        }
+    }
 
 }

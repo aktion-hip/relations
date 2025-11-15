@@ -22,9 +22,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
@@ -44,6 +41,9 @@ import org.elbe.relations.internal.data.DBSettings;
 import org.elbe.relations.internal.preferences.LanguageService;
 import org.hip.kernel.exc.VException;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 /**
  * Class for searching a Lucene index of a Relations database.
  *
@@ -52,80 +52,70 @@ import org.hip.kernel.exc.VException;
 @SuppressWarnings("restriction")
 @Creatable
 public class RelationsSearcher extends AbstractSearching {
-	private final String language;
+    private final String language;
 
-	@Inject
-	@Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_MAX_SEARCH_HITS)
-	private final int maxSearchHits = RelationsConstants.DFT_MAX_SEARCH_HITS;
+    @Inject
+    @Preference(nodePath = RelationsConstants.PREFERENCE_NODE, value = RelationsConstants.KEY_MAX_SEARCH_HITS)
+    private final int maxSearchHits = RelationsConstants.DFT_MAX_SEARCH_HITS;
 
-	@Inject
-	@Named(IServiceConstants.ACTIVE_SHELL)
-	private Shell shell;
+    @Inject
+    @Named(IServiceConstants.ACTIVE_SHELL)
+    private Shell shell;
 
-	@Inject
-	private EHandlerService handlerService;
+    @Inject
+    private EHandlerService handlerService;
 
-	@Inject
-	private ECommandService commandService;
+    @Inject
+    private ECommandService commandService;
 
-	/**
-	 * RelationsSearcher constructor, used for DI. Note: clients must not create
-	 * instances of RelationsSearcher using this constructor.
-	 *
-	 * @param inIndexDir
-	 * @param inLanguage
-	 */
-	public RelationsSearcher(final String inIndexDir, final String inLanguage) {
-		super(inIndexDir);
-		language = inLanguage;
-	}
+    /**
+     * RelationsSearcher constructor, used for DI. Note: clients must not create
+     * instances of RelationsSearcher using this constructor.
+     *
+     * @param inIndexDir
+     * @param inLanguage
+     */
+    public RelationsSearcher(final String inIndexDir, final String inLanguage) {
+        super(inIndexDir);
+        this.language = inLanguage;
+    }
 
-	/**
-	 * Factory method to create instances of <code>RelationsSearcher</code>.
-	 *
-	 * @param inContext
-	 *            {@link IEclipseContext}
-	 * @param inDbSettings
-	 *            {@link DBSettings}
-	 * @return {@link RelationsSearcher}
-	 */
-	public static RelationsSearcher createRelationsSearcher(
-	        final IEclipseContext inContext, final DBSettings inDbSettings) {
-		final RelationsSearcher out = new RelationsSearcher(
-		        inDbSettings.getCatalog(),
-		        LanguageService.getContentLocale().getLanguage());
-		ContextInjectionFactory.inject(out, inContext);
-		return out;
-	}
+    /**
+     * Factory method to create instances of <code>RelationsSearcher</code>.
+     *
+     * @param inContext
+     *            {@link IEclipseContext}
+     * @param inDbSettings
+     *            {@link DBSettings}
+     * @return {@link RelationsSearcher}
+     */
+    public static RelationsSearcher createRelationsSearcher(
+            final IEclipseContext inContext, final DBSettings inDbSettings) {
+        final RelationsSearcher out = new RelationsSearcher(
+                inDbSettings.getCatalog(),
+                LanguageService.getContentLocale().getLanguage());
+        ContextInjectionFactory.inject(out, inContext);
+        return out;
+    }
 
-	/**
-	 * Do the search with the specified query and return the collection of items
-	 * found.
-	 *
-	 * @param inQueryTerm
-	 *            String
-	 * @return List<RetrievedItem>
-	 * @throws IOException
-	 * @throws VException
-	 */
-	public List<RetrievedItem> search(final String inQueryTerm)
-	        throws IOException, VException {
-		final String[] files = getIndexDir().list();
-		if (files == null || files.length == 0) {
-			if (MessageDialog.openQuestion(shell,
-			        RelationsMessages
-			                .getString("RelationsSearcher.warning.title"), //$NON-NLS-1$
-			        RelationsMessages
-			                .getString("RelationsSearcher.warning.message"))) { //$NON-NLS-1$
-				handlerService.activateHandler(ICommandIds.CMD_SEARCH,
-				        new ReindexHandler());
-				handlerService.executeHandler(commandService
-				        .createCommand(ICommandIds.CMD_SEARCH, null));
-			}
-			return Collections.emptyList();
-		}
-		return getIndexer().search(inQueryTerm, getIndexDir(), language,
-		        maxSearchHits);
-	}
+    /** Do the search with the specified query and return the collection of items found.
+     *
+     * @param queryTerm String
+     * @return List<RetrievedItem>
+     * @throws IOException
+     * @throws VException */
+    public List<RetrievedItem> search(final String queryTerm) throws IOException, VException {
+        final String[] files = getIndexDir().list();
+        if (files == null || files.length == 0) {
+            if (MessageDialog.openQuestion(this.shell,
+                    RelationsMessages.getString("RelationsSearcher.warning.title"), //$NON-NLS-1$
+                    RelationsMessages.getString("RelationsSearcher.warning.message"))) { //$NON-NLS-1$
+                this.handlerService.activateHandler(ICommandIds.CMD_SEARCH, new ReindexHandler());
+                this.handlerService.executeHandler(this.commandService.createCommand(ICommandIds.CMD_SEARCH, null));
+            }
+            return Collections.emptyList();
+        }
+        return getIndexer().search(queryTerm, getIndexPath(), this.language, this.maxSearchHits);
+    }
 
 }

@@ -18,13 +18,13 @@
  ***************************************************************************/
 package org.elbe.relations.handlers;
 
-import javax.inject.Named;
-
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.swt.widgets.Shell;
 import org.elbe.relations.internal.about.AboutDialog;
+
+import jakarta.inject.Named;
 
 /**
  * Handler to show the <code>About Relations</code>dialog.
@@ -32,12 +32,12 @@ import org.elbe.relations.internal.about.AboutDialog;
  * @author lbenno
  */
 public class AboutHandler {
-	@Execute
-	public void execute(
-	        @Named(IServiceConstants.ACTIVE_SHELL) final Shell shell,
-	        final IEclipseContext context) {
-		final AboutDialog about = new AboutDialog(shell);
-		about.open();
-	}
+    @Execute
+    public void execute(
+            @Named(IServiceConstants.ACTIVE_SHELL) final Shell shell,
+            final IEclipseContext context) {
+        final AboutDialog about = new AboutDialog(shell);
+        about.open();
+    }
 
 }
