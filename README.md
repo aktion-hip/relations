@@ -1,7 +1,5 @@
-relations
-=========
+# relations (deprecated)
 
-Source code for the Relations Application (Eclipse e4 RCP)
+This code base is deprecated.
 
-Project page: http://sourceforge.net/projects/relations-rcp/
-Project documentation: http://relations-rcp.sourceforge.net/
+The application is being developed on the new code base (see https://github.com/aktion-hip/relations.rcp ), implementing Tychon conventions to build the application. 
